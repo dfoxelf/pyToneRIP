@@ -1,0 +1,23 @@
+{
+  "backend_family": "epson_escp2_gutenprint_model_98",
+  "backend_runtime_file": "backend-runtime.json",
+  "backend_runtime_sha256": "214564456de1b0d55b1092db71e0b609b99a38659a40b91d343c291ae7cd366d",
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson Stylus Photo R2880",
+  "model_id": "Stylus_Photo_R2880",
+  "package_id": "gp--escp2-r2880",
+  "ppd_file": "vendor.ppd",
+  "ppd_sha256": "d1d64428ed006bd54e53cfe94bfbac4c6f266f45584d59ff924e59cd88c19efc",
+  "ppd_source": "vendor.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "gutenprint-model-98",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "90a826bff6ad6ea4b9670b28c13c02a29457200019ebeef968d04fb07273c418",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "0c5c84f639ff664f53a8705c027cd901cad3e2e24eb92fe37a1904e0b0a5c283",
+  "version": 1,
+  "visible": true,
+  "warnings": []
+}

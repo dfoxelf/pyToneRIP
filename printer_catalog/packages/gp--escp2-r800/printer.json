@@ -1,0 +1,140 @@
+{
+  "channels": [],
+  "device_features": [],
+  "driver": {
+    "gutenprint_model_id": "64"
+  },
+  "feeds": [],
+  "identity": {
+    "gutenprint_driver": "escp2-r800",
+    "gutenprint_model_id": "64",
+    "manufacturer": "Epson",
+    "name": "Epson Stylus Photo R800"
+  },
+  "media": [],
+  "media_sizes": [],
+  "paper_types": [
+    {
+      "class": "plain",
+      "name": "Plain",
+      "params": {},
+      "text": "Plain Paper"
+    },
+    {
+      "class": "plain",
+      "name": "Postcard",
+      "params": {},
+      "text": "Postcard"
+    },
+    {
+      "class": "photo",
+      "name": "GlossyFilm",
+      "params": {},
+      "text": "Glossy Film"
+    },
+    {
+      "class": "transparency",
+      "name": "Transparency",
+      "params": {},
+      "text": "Transparencies"
+    },
+    {
+      "class": "plain",
+      "name": "Envelope",
+      "params": {},
+      "text": "Envelopes"
+    },
+    {
+      "class": "transparency",
+      "name": "BackFilm",
+      "params": {},
+      "text": "Back Light Film"
+    },
+    {
+      "class": "good",
+      "name": "Matte",
+      "params": {},
+      "text": "Matte Paper"
+    },
+    {
+      "class": "good",
+      "name": "MatteHeavy",
+      "params": {},
+      "text": "Matte Paper Heavyweight"
+    },
+    {
+      "class": "good",
+      "name": "Inkjet",
+      "params": {},
+      "text": "Inkjet Paper"
+    },
+    {
+      "class": "good",
+      "name": "Coated",
+      "params": {},
+      "text": "Photo Quality Inkjet Paper"
+    },
+    {
+      "class": "photo",
+      "name": "Photo",
+      "params": {},
+      "text": "Photo Paper"
+    },
+    {
+      "class": "premium",
+      "name": "GlossyPhoto",
+      "params": {},
+      "text": "Premium Glossy Photo Paper"
+    },
+    {
+      "class": "premium",
+      "name": "Semigloss",
+      "params": {},
+      "text": "Premium Semigloss Photo Paper"
+    },
+    {
+      "class": "premium",
+      "name": "Luster",
+      "params": {},
+      "text": "Premium Luster Photo Paper"
+    },
+    {
+      "class": "premium",
+      "name": "ArchivalMatte",
+      "params": {},
+      "text": "Archival Matte Paper"
+    },
+    {
+      "class": "premium",
+      "name": "WaterColorRadiant",
+      "params": {},
+      "text": "Watercolor Paper - Radiant White"
+    },
+    {
+      "class": "photo",
+      "name": "GlossyPaper",
+      "params": {},
+      "text": "Photo Quality Glossy Paper"
+    },
+    {
+      "class": "premium",
+      "name": "ColorLife",
+      "params": {},
+      "text": "ColorLife Paper"
+    },
+    {
+      "class": "plain",
+      "name": "Other",
+      "params": {},
+      "text": "Other"
+    }
+  ],
+  "protocol": {
+    "cls": "escp2-esci",
+    "commandSet": null,
+    "family": "gutenprint-model-64",
+    "note": "codes from gutenprint XML formula (not live-verified)",
+    "raster_command": "ESC i <color|sub<<4> <comp=1> <bitwidth> <nwidth:2LE> <nlines:2LE> <TIFF PackBits>"
+  },
+  "schema": "rip-printer-v1"
+}

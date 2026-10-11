@@ -1,0 +1,23 @@
+{
+  "backend_family": "epson_escp2_gutenprint_model_107",
+  "backend_runtime_file": "backend-runtime.json",
+  "backend_runtime_sha256": "63462b5dcbddac11ad5a4355d44d4268598d108847dfc7b2094692089fc70904",
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson Stylus Pro 3880",
+  "model_id": "Stylus_Pro_3880",
+  "package_id": "gp--escp2-3880",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "9d1c453b74beae0c1a67e8abadd05b319bda1fcfea8a0cc6e8fdbfc758c613c5",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "gutenprint-model-107",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "90a826bff6ad6ea4b9670b28c13c02a29457200019ebeef968d04fb07273c418",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "15eaa9450acb208a8f976a77995c52947e96f4a519850265c9d087dcc23a3f25",
+  "version": 1,
+  "visible": true,
+  "warnings": []
+}

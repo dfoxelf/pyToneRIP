@@ -1,0 +1,25 @@
+{
+  "backend_family": "epson_escp2_wf7610",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson EcoTank ET-16680",
+  "model_id": "EcoTank_ET16680",
+  "package_id": "pf--Epson_EcoTank_ET16680",
+  "ppd_file": "vendor.ppd",
+  "ppd_sha256": "40111c2b9c608f3c83b13d815a7d92335ed315969868e8e9d56ff8ba6aef6a83",
+  "ppd_source": "vendor.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "WF7610",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "8b49ca27375e38255f51ea99db073d33358675ead85c7fc1e3b5cf3f04c42028",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "00db84f6fd2158031d2d05a6e8fb59f1ca5b73d649085897fa4f9467bfda26bd",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "FAMILY_ALIAS: ReferenceDriver printers.lst [Epson_EcoTank_ET16680] Driver=Epson_EcoTank_ET16650; technical driver pf--Epson_EcoTank_ET16650; exact capabilities from Epson-ET-16680_Series-epson-escpr2-en.ppd"
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "backend_family": "epson_escp2_gutenprint_model_15",
+  "backend_runtime_file": "backend-runtime.json",
+  "backend_runtime_sha256": "b13fe52c61d3fb25781b8d626cc3af8ccc73ab88a10f2505ee4430bfbdbbfb03",
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson Stylus Photo 1200",
+  "model_id": "Stylus_Photo_1200",
+  "package_id": "gp--escp2-1200",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "1100d9692ac063ebd513a34d18c4d2b1d6bcc7793cb61fe8d851b0951aab8c8e",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "gutenprint-model-15",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "90a826bff6ad6ea4b9670b28c13c02a29457200019ebeef968d04fb07273c418",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "efb7c6ecbcea9add3b6b857b058d5cd419f49f3ca6659363615dfb1b1a634ef2",
+  "version": 1,
+  "visible": true,
+  "warnings": []
+}

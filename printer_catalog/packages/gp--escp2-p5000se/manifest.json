@@ -1,0 +1,23 @@
+{
+  "backend_family": "epson_escp2_gutenprint_model_137",
+  "backend_runtime_file": "backend-runtime.json",
+  "backend_runtime_sha256": "3471b52f9356a980024c6555ec7a5069446e538eb26698b97c070243677e9bc1",
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson SureColor P5000 Standard Edition",
+  "model_id": "SureColor_P5000_Standard_Edition",
+  "package_id": "gp--escp2-p5000se",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "6057eedc64e9ad4697ed71b6a06c024e2ba87e29f5e3bc3a004b09aa58316c80",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "gutenprint-model-137",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "90a826bff6ad6ea4b9670b28c13c02a29457200019ebeef968d04fb07273c418",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "65eb3fa66cf84a2a36f0f209656b7cd851209d99acd82a8db6a2c9a6cee6d012",
+  "version": 1,
+  "visible": true,
+  "warnings": []
+}

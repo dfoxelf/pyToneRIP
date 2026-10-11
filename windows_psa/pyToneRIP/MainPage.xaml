@@ -1,0 +1,248 @@
+<Page x:Class="pyToneRIP.MainPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Grid x:Name="MainRoot" Background="{StaticResource AppSurfaceBrush}" Visibility="Collapsed">
+    <VisualStateManager.VisualStateGroups>
+      <VisualStateGroup>
+        <VisualState x:Name="NarrowLayout">
+          <VisualState.StateTriggers><AdaptiveTrigger MinWindowWidth="0"/></VisualState.StateTriggers>
+          <VisualState.Setters>
+            <Setter Target="HeaderCommandBar.DefaultLabelPosition" Value="Collapsed"/>
+            <Setter Target="HeaderPanel.Padding" Value="12,12,12,8"/>
+            <Setter Target="PrinterTableHost.Margin" Value="12,0,12,12"/>
+            <Setter Target="JobProgressPanel.Margin" Value="12,0,12,10"/>
+            <Setter Target="LogPanel.Margin" Value="12,0,12,10"/>
+            <Setter Target="StatusBar.Padding" Value="12,10"/>
+            <Setter Target="StatusText.(Grid.ColumnSpan)" Value="2"/>
+            <Setter Target="FooterActions.(Grid.Row)" Value="1"/>
+            <Setter Target="FooterActions.(Grid.Column)" Value="0"/>
+            <Setter Target="FooterActions.(Grid.ColumnSpan)" Value="2"/>
+            <Setter Target="FooterActions.Margin" Value="0,8,0,0"/>
+            <Setter Target="FooterActions.Orientation" Value="Vertical"/>
+            <Setter Target="FooterActions.HorizontalAlignment" Value="Stretch"/>
+            <Setter Target="SendLogsButton.Margin" Value="0,8,0,0"/>
+            <Setter Target="JobProgressValueColumn.Width" Value="0"/>
+            <Setter Target="JobProgressValues.(Grid.Row)" Value="1"/>
+            <Setter Target="JobProgressValues.(Grid.Column)" Value="0"/>
+            <Setter Target="JobProgressValues.Margin" Value="0,10,0,0"/>
+          </VisualState.Setters>
+        </VisualState>
+        <VisualState x:Name="CompactLayout">
+          <VisualState.StateTriggers><AdaptiveTrigger MinWindowWidth="640"/></VisualState.StateTriggers>
+          <VisualState.Setters>
+            <Setter Target="HeaderCommandBar.DefaultLabelPosition" Value="Collapsed"/>
+            <Setter Target="HeaderPanel.Padding" Value="12,12,12,8"/>
+            <Setter Target="PrinterTableHost.Margin" Value="12,0,12,12"/>
+            <Setter Target="JobProgressPanel.Margin" Value="12,0,12,10"/>
+            <Setter Target="LogPanel.Margin" Value="12,0,12,10"/>
+            <Setter Target="StatusBar.Padding" Value="12,10"/>
+            <Setter Target="StatusText.(Grid.ColumnSpan)" Value="2"/>
+            <Setter Target="FooterActions.(Grid.Row)" Value="1"/>
+            <Setter Target="FooterActions.(Grid.Column)" Value="0"/>
+            <Setter Target="FooterActions.(Grid.ColumnSpan)" Value="2"/>
+            <Setter Target="FooterActions.Margin" Value="0,8,0,0"/>
+            <Setter Target="FooterActions.Orientation" Value="Vertical"/>
+            <Setter Target="FooterActions.HorizontalAlignment" Value="Stretch"/>
+            <Setter Target="SendLogsButton.Margin" Value="0,8,0,0"/>
+            <Setter Target="JobProgressValueColumn.Width" Value="260"/>
+            <Setter Target="JobProgressValues.(Grid.Row)" Value="0"/>
+            <Setter Target="JobProgressValues.(Grid.Column)" Value="1"/>
+            <Setter Target="JobProgressValues.Margin" Value="0"/>
+          </VisualState.Setters>
+        </VisualState>
+        <VisualState x:Name="ExpandedLayout">
+          <VisualState.StateTriggers><AdaptiveTrigger MinWindowWidth="1000"/></VisualState.StateTriggers>
+          <VisualState.Setters>
+            <Setter Target="HeaderCommandBar.DefaultLabelPosition" Value="Right"/>
+            <Setter Target="HeaderPanel.Padding" Value="28,24,28,16"/>
+            <Setter Target="PrinterTableHost.Margin" Value="28,0,28,20"/>
+            <Setter Target="JobProgressPanel.Margin" Value="28,0,28,12"/>
+            <Setter Target="LogPanel.Margin" Value="28,0,28,12"/>
+            <Setter Target="StatusBar.Padding" Value="28,12"/>
+            <Setter Target="StatusText.(Grid.ColumnSpan)" Value="1"/>
+            <Setter Target="FooterActions.(Grid.Row)" Value="0"/>
+            <Setter Target="FooterActions.(Grid.Column)" Value="1"/>
+            <Setter Target="FooterActions.(Grid.ColumnSpan)" Value="1"/>
+            <Setter Target="FooterActions.Margin" Value="0"/>
+            <Setter Target="FooterActions.Orientation" Value="Horizontal"/>
+            <Setter Target="FooterActions.HorizontalAlignment" Value="Right"/>
+            <Setter Target="JobProgressValueColumn.Width" Value="260"/>
+            <Setter Target="JobProgressValues.(Grid.Row)" Value="0"/>
+            <Setter Target="JobProgressValues.(Grid.Column)" Value="1"/>
+            <Setter Target="JobProgressValues.Margin" Value="0"/>
+          </VisualState.Setters>
+        </VisualState>
+      </VisualStateGroup>
+    </VisualStateManager.VisualStateGroups>
+    <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+    <Grid x:Name="HeaderPanel" Padding="28,24,28,16">
+      <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+      <StackPanel>
+        <TextBlock x:Uid="MainPage/Title" Text="pyToneRIP" Style="{StaticResource PageTitleStyle}"/>
+        <TextBlock x:Uid="MainPage/Subtitle" Text="Printer Manager" FontSize="15" Foreground="{StaticResource SecondaryTextBrush}" Margin="0,3,0,0"/>
+      </StackPanel>
+      <CommandBar x:Name="HeaderCommandBar" Grid.Column="1" Background="Transparent" DefaultLabelPosition="Right" IsDynamicOverflowEnabled="True" HorizontalAlignment="Stretch">
+        <AppBarButton x:Uid="MainPage/Add" Icon="Add" Label="Add printer" Click="AddPrinter"/>
+        <AppBarButton x:Uid="MainPage/Preferences" Icon="Setting" Label="Preferences" Click="OpenPreferences"/>
+        <AppBarButton x:Uid="MainPage/Rename" Icon="Edit" Label="Rename" Click="RenamePrinter"/>
+        <AppBarButton x:Uid="MainPage/SetDefault" x:Name="SetDefaultPrinterButton" Icon="Accept" Label="Set default"
+                      Click="SetDefaultPrinter" IsEnabled="False"/>
+        <AppBarButton x:Uid="MainPage/Remove" Icon="Delete" Label="Remove" Click="RemovePrinter"/>
+        <AppBarButton x:Uid="MainPage/About" Icon="Help" Label="About..." Click="OpenAbout"/>
+        <AppBarSeparator/>
+        <AppBarButton x:Uid="MainPage/Refresh" Icon="Refresh" Label="Refresh" Click="Refresh"/>
+        <AppBarButton x:Uid="MainPage/Language" x:Name="HeaderLanguageButton"
+                    Icon="World" Label="Language" IsCompact="True" VerticalAlignment="Center">
+          <AppBarButton.Flyout>
+            <MenuFlyout>
+              <MenuFlyoutItem x:Uid="Language/Automatic" Text="Automatic (Windows)" Tag="" Click="SelectLanguage" />
+              <MenuFlyoutSeparator />
+              <MenuFlyoutItem x:Uid="Language/English" Text="English" Tag="en-US" Click="SelectLanguage" />
+              <MenuFlyoutItem x:Uid="Language/German" Text="Deutsch" Tag="de-DE" Click="SelectLanguage" />
+              <MenuFlyoutItem x:Uid="Language/French" Text="Français" Tag="fr-FR" Click="SelectLanguage" />
+              <MenuFlyoutItem x:Uid="Language/Italian" Text="Italiano" Tag="it-IT" Click="SelectLanguage" />
+              <MenuFlyoutItem x:Uid="Language/Russian" Text="Русский" Tag="ru-RU" Click="SelectLanguage" />
+              <MenuFlyoutItem x:Uid="Language/Ukrainian" Text="Українська" Tag="uk-UA" Click="SelectLanguage" />
+              <MenuFlyoutSeparator />
+              <MenuFlyoutItem x:Uid="Auto/9FF897788C56" Text="Български" Tag="bg-BG" Click="SelectLanguage" />
+              <MenuFlyoutItem x:Uid="Auto/080EF646AD2E" Text="Čeština" Tag="cs-CZ" Click="SelectLanguage" />
+              <MenuFlyoutItem x:Uid="Auto/51B6A044B047" Text="Dansk" Tag="da-DK" Click="SelectLanguage" />
+              <MenuFlyoutItem x:Uid="Auto/8D4F76B2DE0B" Text="Eesti" Tag="et-EE" Click="SelectLanguage" />
+              <MenuFlyoutItem x:Uid="Auto/06FA3AF93910" Text="English (United Kingdom)" Tag="en-GB" Click="SelectLanguage" />
+              <MenuFlyoutItem x:Uid="Auto/50B1849E4639" Text="Español" Tag="es-ES" Click="SelectLanguage" />
+              <MenuFlyoutItem x:Uid="Auto/27EC957D8654" Text="Ελληνικά" Tag="el-GR" Click="SelectLanguage" />
+              <MenuFlyoutItem x:Uid="Auto/7E03696C3D62" Text="Gaeilge" Tag="ga-IE" Click="SelectLanguage" />
+              <MenuFlyoutItem x:Uid="Auto/9766CC7E62A5" Text="Hrvatski" Tag="hr-HR" Click="SelectLanguage" />
+              <MenuFlyoutItem x:Uid="Auto/E1F21AE0F5A6" Text="Latviešu" Tag="lv-LV" Click="SelectLanguage" />
+              <MenuFlyoutItem x:Uid="Auto/F9AE80C5AFC7" Text="Lietuvių" Tag="lt-LT" Click="SelectLanguage" />
+              <MenuFlyoutItem x:Uid="Auto/87C098D28E0A" Text="Magyar" Tag="hu-HU" Click="SelectLanguage" />
+              <MenuFlyoutItem x:Uid="Auto/1D5F5BBEB9D7" Text="Malti" Tag="mt-MT" Click="SelectLanguage" />
+              <MenuFlyoutItem x:Uid="Auto/96BEEF7814DA" Text="Nederlands" Tag="nl-NL" Click="SelectLanguage" />
+              <MenuFlyoutItem x:Uid="Auto/7271B9AADDD1" Text="Polski" Tag="pl-PL" Click="SelectLanguage" />
+              <MenuFlyoutItem x:Uid="Auto/BC47386AA149" Text="Português (Portugal)" Tag="pt-PT" Click="SelectLanguage" />
+              <MenuFlyoutItem x:Uid="Auto/92A25C83D429" Text="Română" Tag="ro-RO" Click="SelectLanguage" />
+              <MenuFlyoutItem x:Uid="Auto/FA9ADD07DC58" Text="Slovenčina" Tag="sk-SK" Click="SelectLanguage" />
+              <MenuFlyoutItem x:Uid="Auto/71EFE8F0394E" Text="Slovenščina" Tag="sl-SI" Click="SelectLanguage" />
+              <MenuFlyoutItem x:Uid="Auto/665B23AA791E" Text="Suomi" Tag="fi-FI" Click="SelectLanguage" />
+              <MenuFlyoutItem x:Uid="Auto/D885E6F03ED5" Text="Svenska" Tag="sv-SE" Click="SelectLanguage" />
+            </MenuFlyout>
+          </AppBarButton.Flyout>
+        </AppBarButton>
+      </CommandBar>
+    </Grid>
+
+    <Grid x:Name="PrinterTableHost" Grid.Row="1" Margin="28,0,28,20">
+      <ScrollViewer HorizontalScrollMode="Auto" HorizontalScrollBarVisibility="Auto" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch">
+      <Border Background="{StaticResource CardBackgroundBrush}" BorderBrush="{StaticResource SectionBorderBrush}" BorderThickness="1" CornerRadius="8">
+        <Grid MinWidth="760">
+          <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+          <Grid Background="{StaticResource TableHeaderBrush}" Padding="16,8" MinHeight="48">
+            <Grid.ColumnDefinitions><ColumnDefinition Width="2*"/><ColumnDefinition Width="1.35*"/><ColumnDefinition Width="1.15*"/><ColumnDefinition Width="80"/><ColumnDefinition x:Name="ConfigurationHeaderColumn" Width="Auto"/><ColumnDefinition x:Name="NetworkHeaderColumn" Width="105"/></Grid.ColumnDefinitions>
+            <TextBlock x:Uid="MainPage/Table/Printer" Text="Printer" VerticalAlignment="Center" FontWeight="SemiBold" TextWrapping="Wrap"/>
+            <TextBlock x:Uid="MainPage/Table/Model" Grid.Column="1" Text="Model" VerticalAlignment="Center" FontWeight="SemiBold" TextWrapping="Wrap"/>
+            <TextBlock x:Uid="MainPage/Table/Connection" Grid.Column="2" Text="Connection" VerticalAlignment="Center" FontWeight="SemiBold" TextWrapping="Wrap"/>
+            <TextBlock x:Uid="MainPage/Table/Default" Grid.Column="3" Text="Default" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" FontWeight="SemiBold" TextWrapping="Wrap"/>
+            <TextBlock x:Uid="MainPage/Table/Configuration" Grid.Column="4" Text="Configuration" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" FontWeight="SemiBold" TextWrapping="Wrap"/>
+            <TextBlock x:Uid="MainPage/Table/Network" Grid.Column="5" Text="Network" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" FontWeight="SemiBold" TextWrapping="Wrap"/>
+          </Grid>
+          <ListView x:Name="PrinterList" Grid.Row="1" SelectionMode="Single"
+                    SelectionChanged="PrinterSelectionChanged" DoubleTapped="PrinterItemDoubleTapped">
+            <ListView.ItemContainerStyle>
+              <Style TargetType="ListViewItem">
+                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+              </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.ItemTemplate>
+              <DataTemplate>
+                <Grid MinHeight="58" Padding="8,0" Background="Transparent">
+                  <Grid.ContextFlyout>
+                    <MenuFlyout Opening="PrinterContextMenuOpening">
+                      <MenuFlyoutItem Tag="jobs" Text="Open Print Jobs" Click="OpenPrintJobs"/>
+                      <MenuFlyoutItem Tag="preferences" Text="Preferences" Click="OpenPreferences"/>
+                      <MenuFlyoutItem Tag="rename" Text="Rename" Click="RenamePrinter"/>
+                      <MenuFlyoutItem Tag="remove" Text="Remove" Click="RemovePrinter"/>
+                      <MenuFlyoutItem Tag="default" Text="Set default" Click="SetDefaultPrinter"/>
+                      <MenuFlyoutSeparator/>
+                      <MenuFlyoutItem Tag="cancel-job" Text="Cancel the current print job"
+                                      Click="CancelCurrentPrintJob" IsEnabled="False"/>
+                    </MenuFlyout>
+                  </Grid.ContextFlyout>
+                  <Grid.ColumnDefinitions><ColumnDefinition Width="2*"/><ColumnDefinition Width="1.35*"/><ColumnDefinition Width="1.15*"/><ColumnDefinition Width="80"/><ColumnDefinition Width="{Binding ConfigurationColumnWidth}"/><ColumnDefinition Width="{Binding NetworkColumnWidth}"/></Grid.ColumnDefinitions>
+                  <TextBlock Text="{Binding QueueName}" VerticalAlignment="Center" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+                  <TextBlock Grid.Column="1" Text="{Binding ModelName}" VerticalAlignment="Center" HorizontalAlignment="Stretch" TextAlignment="Left" TextTrimming="CharacterEllipsis"/>
+                  <TextBlock Grid.Column="2" Text="{Binding ConnectionSummary}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                  <TextBlock Grid.Column="3" Text="{Binding DefaultPrinterMark}"
+                             Foreground="{Binding DefaultPrinterBrush}" FontSize="21"
+                             FontWeight="SemiBold" HorizontalAlignment="Center"
+                             VerticalAlignment="Center"/>
+                  <Border Grid.Column="4" Background="{Binding ConfigurationStatusBrush}" CornerRadius="4" Padding="6,4" HorizontalAlignment="Center" VerticalAlignment="Center"><TextBlock Text="{Binding ConfigurationStatus}" Foreground="{Binding ConfigurationStatusTextBrush}" HorizontalAlignment="Center" TextAlignment="Center" VerticalAlignment="Center"/></Border>
+                  <TextBlock Grid.Column="5" Text="{Binding NetworkStatus}" Foreground="{Binding NetworkStatusBrush}" FontWeight="SemiBold" HorizontalAlignment="Center" TextAlignment="Center" VerticalAlignment="Center"/>
+                </Grid>
+              </DataTemplate>
+            </ListView.ItemTemplate>
+          </ListView>
+          <StackPanel x:Name="EmptyState" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed">
+            <FontIcon Glyph="&#xE710;" FontSize="38" Foreground="{StaticResource AccentBrush}" HorizontalAlignment="Center"/>
+            <TextBlock x:Uid="MainPage/Empty/Title" Text="No registered printers" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,14,0,4"/>
+            <TextBlock x:Uid="MainPage/Empty/Description" x:Name="EmptyDescription" Text="Install a supported model and create a Windows virtual printer." Foreground="{StaticResource SecondaryTextBrush}" TextWrapping="Wrap" TextAlignment="Center" MaxWidth="600"/>
+            <Button x:Uid="MainPage/Empty/Add" Content="Add printer" Click="AddPrinter" HorizontalAlignment="Center" Margin="0,18,0,0"/>
+          </StackPanel>
+        </Grid>
+      </Border>
+      </ScrollViewer>
+    </Grid>
+
+    <Border x:Name="JobProgressPanel" Grid.Row="2" Margin="28,0,28,12" Padding="16,12"
+            Background="{StaticResource CardBackgroundBrush}" BorderBrush="{StaticResource SectionBorderBrush}"
+            BorderThickness="1" CornerRadius="8" Visibility="Collapsed">
+      <Grid x:Name="JobProgressGrid">
+        <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition x:Name="JobProgressValueColumn" Width="260"/></Grid.ColumnDefinitions>
+        <StackPanel>
+          <TextBlock x:Uid="MainPage/Progress/Title" x:Name="JobProgressTitle" Text="Print job" FontWeight="SemiBold"/>
+          <TextBlock x:Name="JobProgressMessage" Foreground="{StaticResource SecondaryTextBrush}" Margin="0,3,16,0" TextTrimming="CharacterEllipsis"/>
+        </StackPanel>
+        <StackPanel x:Name="JobProgressValues" Grid.Column="1" VerticalAlignment="Center">
+          <Grid>
+            <TextBlock x:Uid="MainPage/Progress/Label" Text="RIP progress" Foreground="{StaticResource SecondaryTextBrush}"/>
+            <TextBlock x:Name="JobProgressPercent" HorizontalAlignment="Right" FontWeight="SemiBold"/>
+          </Grid>
+          <ProgressBar x:Name="JobProgressBar" Minimum="0" Maximum="100" Height="8" Margin="0,7,0,0"/>
+        </StackPanel>
+      </Grid>
+    </Border>
+
+    <Border x:Name="LogPanel" Grid.Row="3" Margin="28,0,28,12" Padding="12"
+            Background="{StaticResource CardBackgroundBrush}" BorderBrush="{StaticResource SectionBorderBrush}"
+            BorderThickness="1" CornerRadius="8" Visibility="Collapsed">
+      <ScrollViewer x:Name="LogScrollViewer" Height="180"
+                    HorizontalScrollMode="Enabled" VerticalScrollMode="Enabled"
+                    HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+        <TextBlock x:Name="LogTextBlock" FontFamily="Consolas" FontSize="12"
+                   IsTextSelectionEnabled="True" TextWrapping="NoWrap">
+          <TextBlock.ContextFlyout>
+            <MenuFlyout Opening="LogContextMenuOpening">
+              <MenuFlyoutItem x:Uid="MainPage/Log/Copy" x:Name="CopyLogSelectionItem"
+                              Text="Copy" Click="CopyLogSelection"/>
+              <MenuFlyoutItem x:Uid="MainPage/Log/SelectAll"
+                              Text="Select all" Click="SelectAllLogText"/>
+            </MenuFlyout>
+          </TextBlock.ContextFlyout>
+        </TextBlock>
+      </ScrollViewer>
+    </Border>
+
+    <Grid x:Name="StatusBar" Grid.Row="4" Padding="28,12" Background="{StaticResource StatusBarBrush}">
+      <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+      <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+      <TextBlock x:Uid="MainPage/Status/Ready" x:Name="StatusText" Text="Ready" VerticalAlignment="Center" TextWrapping="Wrap" Margin="0,0,12,0"/>
+      <StackPanel x:Name="FooterActions" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+        <CheckBox x:Uid="MainPage/ShowLog" x:Name="ShowLogCheckBox" Content="Show log" VerticalAlignment="Center" Margin="0,0,16,0"
+                  Checked="ShowLogChanged" Unchecked="ShowLogChanged"/>
+        <Button x:Uid="MainPage/PrintJobs" x:Name="OpenJobsButton" Content="Print jobs" Click="OpenPrintJobs"
+                IsEnabled="False" Margin="0,0,8,0"/>
+        <Button x:Uid="MainPage/WindowsPrinters" Content="Windows printers" Click="OpenWindowsPrinters"/>
+        <Button x:Uid="MainPage/SendLogs" x:Name="SendLogsButton" Content="Prepare log files"
+                Click="CollectSupportReport" Margin="8,0,0,0"/>
+      </StackPanel>
+    </Grid>
+  </Grid>
+</Page>

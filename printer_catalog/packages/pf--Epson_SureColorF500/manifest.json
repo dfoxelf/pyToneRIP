@@ -1,0 +1,25 @@
+{
+  "backend_family": "epson_escp2_sc_t5400",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson SureColor F500",
+  "model_id": "SureColorF500",
+  "package_id": "pf--Epson_SureColorF500",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "28dcc51c822536ef821f94d0b98cac542c67f2fab8c76eebc5fc96f696b20334",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "SC-T5400",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "35adeed214efb7f2132cf7d4ac3a469bcc0812c12e92d710a784b1c6163e9cc6",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "be54e32994a45abb4dd8fa2cdc0880f4d585433a0c4e4a0964de9ed816cd827b",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "SYNTHETIC_PPD: no exact Epson PPD in the local source corpus; ReferenceDriver technical driver id T3100; no manufacturer paper list inherited"
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "backend_family": "epson_escp2_xp305",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson EcoTank ET-4500",
+  "model_id": "EcoTank_ET4500",
+  "package_id": "pf--Epson_EcoTank_ET4500",
+  "ppd_file": "vendor.ppd",
+  "ppd_sha256": "72529fc82d03f5e0b2d52c65e37e2e484de749d87694e91a9bedee83d6c9f326",
+  "ppd_source": "vendor.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "XP305",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "22b428520c1f704e01f3d8ece0d05443a73dd805280b4a4555aca72244c0ae96",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "8937f0e07aafdf6009c3c92434a5fc8624ff8d0eaad7f0993d43199845d6982b",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "FAMILY_ALIAS: ReferenceDriver printers.lst [Epson_EcoTank_ET4500] Driver=Epson_EcoTank_ET2500; technical driver pf--Epson_EcoTank_ET2500; exact capabilities from Epson-ET-4500_Series-epson-escpr-en.ppd"
+  ]
+}

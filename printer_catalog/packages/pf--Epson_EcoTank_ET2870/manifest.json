@@ -1,0 +1,25 @@
+{
+  "backend_family": "epson_escp2_xp305",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson EcoTank ET-2870",
+  "model_id": "EcoTank_ET2870",
+  "package_id": "pf--Epson_EcoTank_ET2870",
+  "ppd_file": "vendor.ppd",
+  "ppd_sha256": "9d378a8837f5fc86b858b002418b3ad9af2edd00b058858a3e51475cbf54e2a0",
+  "ppd_source": "vendor.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "XP305",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "e327b2ef36aed2db3cb4fc974e87d970b671c435b23d28b64383bb265399cf13",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "425e7be1a6cbd9534b1f085459506c29b13bf3ee79cb12b09d7e6ba4b8fc0b46",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "FAMILY_ALIAS: ReferenceDriver printers.lst [Epson_EcoTank_ET2870] Driver=Epson_EcoTank_ET2860; technical driver pf--Epson_EcoTank_ET2860; exact capabilities from Epson-ET-2870_Series-epson-escpr-en.ppd"
+  ]
+}

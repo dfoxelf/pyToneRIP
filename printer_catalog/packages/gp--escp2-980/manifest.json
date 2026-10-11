@@ -1,0 +1,23 @@
+{
+  "backend_family": "epson_escp2_gutenprint_model_34",
+  "backend_runtime_file": "backend-runtime.json",
+  "backend_runtime_sha256": "a73004b7359d935b87da2074289525c1fc26ab04c535f68332eaa299ad3771af",
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson Stylus Color 980",
+  "model_id": "Stylus_Color_980",
+  "package_id": "gp--escp2-980",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "a45ed32ece3af791f9e4cceabc7d21c84c92bc46f465aa86e85e9d9d80a38962",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "gutenprint-model-34",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "90a826bff6ad6ea4b9670b28c13c02a29457200019ebeef968d04fb07273c418",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "3a069ee87a2159d07065ab564f3677efeeaaae026bda69af70b072df96238821",
+  "version": 1,
+  "visible": true,
+  "warnings": []
+}

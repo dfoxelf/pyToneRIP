@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:uap10="http://schemas.microsoft.com/appx/manifest/uap/windows10/10"
+  xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  xmlns:virtualization="http://schemas.microsoft.com/appx/manifest/virtualization/windows10"
+  xmlns:printsupport="http://schemas.microsoft.com/appx/manifest/printsupport/windows10"
+  xmlns:printsupport2="http://schemas.microsoft.com/appx/manifest/printsupport/windows10/2"
+  IgnorableNamespaces="mp uap uap10 desktop rescap printsupport printsupport2 virtualization">
+  <Identity Name="pyToneRIP.Manager" Publisher="CN=pyToneRIP" Version="1.0.0.78" />
+  <mp:PhoneIdentity PhoneProductId="2cf48caf-ad89-4722-a109-8d30a9ba033a" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
+  <Properties>
+    <DisplayName>pyToneRIP</DisplayName>
+    <PublisherDisplayName>pyToneRIP Open Source Project</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+    <!-- SetDefaultPrinterW is per-user. Windows must see changes to this key
+         outside the package's private HKCU registry view. -->
+    <virtualization:RegistryWriteVirtualization>
+      <virtualization:ExcludedKeys>
+        <virtualization:ExcludedKey>HKEY_CURRENT_USER\Software\Microsoft\Windows NT\CurrentVersion\Windows</virtualization:ExcludedKey>
+      </virtualization:ExcludedKeys>
+    </virtualization:RegistryWriteVirtualization>
+  </Properties>
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.26100.0" MaxVersionTested="10.0.26100.0" />
+  </Dependencies>
+  <Resources>
+    <Resource Language="en-US" />
+    <Resource Language="en-GB" />
+    <Resource Language="bg-BG" />
+    <Resource Language="hr-HR" />
+    <Resource Language="cs-CZ" />
+    <Resource Language="da-DK" />
+    <Resource Language="nl-NL" />
+    <Resource Language="et-EE" />
+    <Resource Language="fi-FI" />
+    <Resource Language="de-DE" />
+    <Resource Language="el-GR" />
+    <Resource Language="hu-HU" />
+    <Resource Language="ga-IE" />
+    <Resource Language="fr-FR" />
+    <Resource Language="it-IT" />
+    <Resource Language="lv-LV" />
+    <Resource Language="lt-LT" />
+    <Resource Language="mt-MT" />
+    <Resource Language="pl-PL" />
+    <Resource Language="pt-PT" />
+    <Resource Language="ro-RO" />
+    <Resource Language="sk-SK" />
+    <Resource Language="sl-SI" />
+    <Resource Language="es-ES" />
+    <Resource Language="sv-SE" />
+    <Resource Language="ru-RU" />
+    <Resource Language="uk-UA" />
+  </Resources>
+  <Applications>
+    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="pyToneRIP.App" uap10:SupportsMultipleInstances="true">
+      <uap:VisualElements DisplayName="pyToneRIP" Description="ms-resource:AppDescription" BackgroundColor="#F3F5F8" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" />
+      <Extensions>
+        <printsupport:Extension Category="windows.printSupportExtension" EntryPoint="pyToneRIP.Tasks.PrintSupportExtensionBackgroundTask" />
+        <printsupport:Extension Category="windows.printSupportSettingsUI" EntryPoint="pyToneRIP.App" />
+        <printsupport2:Extension Category="windows.printSupportVirtualPrinterWorkflow" EntryPoint="pyToneRIP.Tasks.VirtualPrinterBackgroundTask">
+          <printsupport2:PrintSupportVirtualPrinter DisplayName="pyToneRIP Workflow Bootstrap" PrinterUri="pytone-rip:workflow-bootstrap" PreferredInputFormat="application/oxps" PdcFile="Assets\PdcModels\model.XP750.pdc.xml" />
+        </printsupport2:Extension>
+        <uap:Extension Category="windows.appService" EntryPoint="pyToneRIP.Tasks.CoreAppServiceTask">
+          <uap:AppService Name="pytone-rip.core.v1" />
+        </uap:Extension>
+        <desktop:Extension Category="windows.fullTrustProcess" Executable="pyToneRIP.QueueHelper.exe">
+          <desktop:FullTrustProcess>
+            <desktop:ParameterGroup GroupId="QueueCommand" Parameters="--process-requests" />
+            <desktop:ParameterGroup GroupId="RipCommand" Parameters="--process-rip-requests" />
+          </desktop:FullTrustProcess>
+        </desktop:Extension>
+      </Extensions>
+    </Application>
+  </Applications>
+  <Extensions>
+    <Extension Category="windows.publisherCacheFolders">
+      <PublisherCacheFolders>
+        <Folder Name="pyToneRIP.Shared" />
+      </PublisherCacheFolders>
+    </Extension>
+  </Extensions>
+  <Capabilities>
+    <Capability Name="internetClient" />
+    <Capability Name="privateNetworkClientServer" />
+    <rescap:Capability Name="runFullTrust" />
+    <rescap:Capability Name="unvirtualizedResources" />
+  </Capabilities>
+</Package>

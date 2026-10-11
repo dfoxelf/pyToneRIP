@@ -1,0 +1,1799 @@
+{
+  "base_separation_dpi": 360,
+  "command_set": "2000",
+  "device_features": [
+    "PaperMedia",
+    "PrintMethod"
+  ],
+  "feeds": [
+    {
+      "feed_mechanics": {
+        "cutter_edge_trim_mode": null,
+        "deinitialization_commands": [
+          {
+            "command": "IR",
+            "payload_hex": "0000"
+          }
+        ],
+        "initialization_commands": [
+          {
+            "command": "IR",
+            "payload_hex": "0001"
+          },
+          {
+            "command": "EX",
+            "payload_hex": "000000000500"
+          },
+          {
+            "command": "PP",
+            "payload_hex": "0001ff"
+          }
+        ],
+        "medium_kind": "automatic_cut_sheet",
+        "remote_paper_path": {
+          "number": 255,
+          "type": 1
+        },
+        "roll_cut_mode": "none",
+        "suppress_form_feed_after_page": false
+      },
+      "name": "Standard",
+      "params": {},
+      "text": "Standard"
+    },
+    {
+      "feed_mechanics": {
+        "cutter_edge_trim_mode": null,
+        "deinitialization_commands": [
+          {
+            "command": "IR",
+            "payload_hex": "0000"
+          }
+        ],
+        "initialization_commands": [
+          {
+            "command": "IR",
+            "payload_hex": "0001"
+          },
+          {
+            "command": "EX",
+            "payload_hex": "000000000500"
+          },
+          {
+            "command": "PP",
+            "payload_hex": "000300"
+          }
+        ],
+        "medium_kind": "automatic_cut_sheet",
+        "remote_paper_path": {
+          "number": 0,
+          "type": 3
+        },
+        "roll_cut_mode": "none",
+        "suppress_form_feed_after_page": false
+      },
+      "name": "Velvet",
+      "params": {},
+      "text": "Manual Sheet Guide"
+    },
+    {
+      "feed_mechanics": {
+        "cutter_edge_trim_mode": null,
+        "deinitialization_commands": [
+          {
+            "command": "IR",
+            "payload_hex": "0000"
+          }
+        ],
+        "initialization_commands": [
+          {
+            "command": "IR",
+            "payload_hex": "0001"
+          },
+          {
+            "command": "EX",
+            "payload_hex": "000000000500"
+          },
+          {
+            "command": "PP",
+            "payload_hex": "000200"
+          }
+        ],
+        "medium_kind": "automatic_cut_sheet",
+        "remote_paper_path": {
+          "number": 0,
+          "type": 2
+        },
+        "roll_cut_mode": "none",
+        "suppress_form_feed_after_page": false
+      },
+      "name": "Matte",
+      "params": {},
+      "text": "Manual Feed (Front)"
+    },
+    {
+      "feed_mechanics": {
+        "cutter_edge_trim_mode": null,
+        "deinitialization_commands": [
+          {
+            "command": "IR",
+            "payload_hex": "0002"
+          }
+        ],
+        "initialization_commands": [
+          {
+            "command": "IR",
+            "payload_hex": "0001"
+          },
+          {
+            "command": "EX",
+            "payload_hex": "000000000501"
+          },
+          {
+            "command": "PP",
+            "payload_hex": "000301"
+          }
+        ],
+        "medium_kind": "roll",
+        "remote_paper_path": {
+          "number": 1,
+          "type": 3
+        },
+        "roll_cut_mode": "none",
+        "suppress_form_feed_after_page": true
+      },
+      "name": "Roll",
+      "params": {},
+      "text": "Roll Feed"
+    },
+    {
+      "feed_mechanics": {
+        "cutter_edge_trim_mode": null,
+        "deinitialization_commands": [
+          {
+            "command": "IR",
+            "payload_hex": "0000"
+          }
+        ],
+        "initialization_commands": [
+          {
+            "command": "PM",
+            "payload_hex": "0000"
+          },
+          {
+            "command": "IR",
+            "payload_hex": "0001"
+          },
+          {
+            "command": "EX",
+            "payload_hex": "000000000500"
+          },
+          {
+            "command": "FP",
+            "payload_hex": "000000"
+          },
+          {
+            "command": "PP",
+            "payload_hex": "000201"
+          }
+        ],
+        "medium_kind": "automatic_cut_sheet",
+        "remote_paper_path": {
+          "number": 1,
+          "type": 2
+        },
+        "roll_cut_mode": "none",
+        "suppress_form_feed_after_page": false
+      },
+      "name": "CD",
+      "params": {},
+      "text": "Print to CD"
+    }
+  ],
+  "inksets": [
+    {
+      "channels": [
+        {
+          "esc_i_code": "0x40",
+          "head_offset": 1,
+          "role": "black",
+          "slot": "Black",
+          "subchannel": 4
+        },
+        {
+          "esc_i_code": "0x02",
+          "head_offset": 1,
+          "role": "cyan",
+          "slot": "Cyan",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x01",
+          "head_offset": 0,
+          "role": "magenta",
+          "slot": "Magenta",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x04",
+          "head_offset": 1,
+          "role": "yellow",
+          "slot": "Yellow",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x07",
+          "head_offset": 0,
+          "role": "red",
+          "slot": "Red",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x08",
+          "head_offset": 1,
+          "role": "blue",
+          "slot": "Blue",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x09",
+          "head_offset": 0,
+          "role": "gloss",
+          "slot": "Gloss",
+          "subchannel": -1
+        }
+      ],
+      "configuration_id": "cmykrbphoto",
+      "configuration_name": "Photo Black",
+      "display_name": "Six Color Photo",
+      "name": "CMYKRBG"
+    },
+    {
+      "channels": [
+        {
+          "esc_i_code": "0x02",
+          "head_offset": 1,
+          "role": "cyan",
+          "slot": "Cyan",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x01",
+          "head_offset": 0,
+          "role": "magenta",
+          "slot": "Magenta",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x04",
+          "head_offset": 1,
+          "role": "yellow",
+          "slot": "Yellow",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x07",
+          "head_offset": 0,
+          "role": "red",
+          "slot": "Red",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x08",
+          "head_offset": 1,
+          "role": "blue",
+          "slot": "Blue",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x09",
+          "head_offset": 0,
+          "role": "gloss",
+          "slot": "Gloss",
+          "subchannel": -1
+        }
+      ],
+      "configuration_id": "cmykrbphoto",
+      "configuration_name": "Photo Black",
+      "display_name": "Five Color Photo Composite",
+      "name": "CMYRBG"
+    },
+    {
+      "channels": [
+        {
+          "esc_i_code": "0x40",
+          "head_offset": 1,
+          "role": "black",
+          "slot": "Black",
+          "subchannel": 4
+        },
+        {
+          "esc_i_code": "0x02",
+          "head_offset": 1,
+          "role": "cyan",
+          "slot": "Cyan",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x01",
+          "head_offset": 0,
+          "role": "magenta",
+          "slot": "Magenta",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x04",
+          "head_offset": 1,
+          "role": "yellow",
+          "slot": "Yellow",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x09",
+          "head_offset": 0,
+          "role": "gloss",
+          "slot": "Gloss",
+          "subchannel": -1
+        }
+      ],
+      "configuration_id": "cmykrbphoto",
+      "configuration_name": "Photo Black",
+      "display_name": "Four Color Standard",
+      "name": "CMYKG"
+    },
+    {
+      "channels": [
+        {
+          "esc_i_code": "0x02",
+          "head_offset": 1,
+          "role": "cyan",
+          "slot": "Cyan",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x01",
+          "head_offset": 0,
+          "role": "magenta",
+          "slot": "Magenta",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x04",
+          "head_offset": 1,
+          "role": "yellow",
+          "slot": "Yellow",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x09",
+          "head_offset": 0,
+          "role": "gloss",
+          "slot": "Gloss",
+          "subchannel": -1
+        }
+      ],
+      "configuration_id": "cmykrbphoto",
+      "configuration_name": "Photo Black",
+      "display_name": "Three Color Composite",
+      "name": "RGBG"
+    },
+    {
+      "channels": [
+        {
+          "esc_i_code": "0x00",
+          "head_offset": 0,
+          "role": "black",
+          "slot": "Black",
+          "subchannel": -1
+        }
+      ],
+      "configuration_id": "cmykrbphoto",
+      "configuration_name": "Photo Black",
+      "display_name": "One Color Raw",
+      "name": "PhysicalBlack"
+    },
+    {
+      "channels": [
+        {
+          "esc_i_code": "0x40",
+          "head_offset": 1,
+          "role": "black",
+          "slot": "Black",
+          "subchannel": 4
+        },
+        {
+          "esc_i_code": "0x09",
+          "head_offset": 0,
+          "role": "gloss",
+          "slot": "Gloss",
+          "subchannel": -1
+        }
+      ],
+      "configuration_id": "cmykrbphoto",
+      "configuration_name": "Photo Black",
+      "display_name": "One Color Raw Enhanced Gloss",
+      "name": "PhysicalBlackGloss"
+    },
+    {
+      "channels": [
+        {
+          "esc_i_code": "0x02",
+          "head_offset": 1,
+          "role": "cyan",
+          "slot": "Cyan",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x01",
+          "head_offset": 0,
+          "role": "magenta",
+          "slot": "Magenta",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x04",
+          "head_offset": 1,
+          "role": "yellow",
+          "slot": "Yellow",
+          "subchannel": -1
+        }
+      ],
+      "configuration_id": "cmykrbphoto",
+      "configuration_name": "Photo Black",
+      "display_name": "Three Color Raw",
+      "name": "PhysicalCMY"
+    },
+    {
+      "channels": [
+        {
+          "esc_i_code": "0x02",
+          "head_offset": 1,
+          "role": "cyan",
+          "slot": "Cyan",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x01",
+          "head_offset": 0,
+          "role": "magenta",
+          "slot": "Magenta",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x04",
+          "head_offset": 1,
+          "role": "yellow",
+          "slot": "Yellow",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x09",
+          "head_offset": 0,
+          "role": "gloss",
+          "slot": "Gloss",
+          "subchannel": -1
+        }
+      ],
+      "configuration_id": "cmykrbphoto",
+      "configuration_name": "Photo Black",
+      "display_name": "Three Color Raw Gloss",
+      "name": "PhysicalCMYGloss"
+    },
+    {
+      "channels": [
+        {
+          "esc_i_code": "0x40",
+          "head_offset": 1,
+          "role": "black",
+          "slot": "Black",
+          "subchannel": 4
+        },
+        {
+          "esc_i_code": "0x02",
+          "head_offset": 1,
+          "role": "cyan",
+          "slot": "Cyan",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x01",
+          "head_offset": 0,
+          "role": "magenta",
+          "slot": "Magenta",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x04",
+          "head_offset": 1,
+          "role": "yellow",
+          "slot": "Yellow",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x09",
+          "head_offset": 0,
+          "role": "gloss",
+          "slot": "Gloss",
+          "subchannel": -1
+        }
+      ],
+      "configuration_id": "cmykrbphoto",
+      "configuration_name": "Photo Black",
+      "display_name": "Four Color Raw Gloss",
+      "name": "PhysicalCMYKGloss"
+    },
+    {
+      "channels": [
+        {
+          "esc_i_code": "0x40",
+          "head_offset": 1,
+          "role": "black",
+          "slot": "Black",
+          "subchannel": 4
+        },
+        {
+          "esc_i_code": "0x02",
+          "head_offset": 1,
+          "role": "cyan",
+          "slot": "Cyan",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x01",
+          "head_offset": 0,
+          "role": "magenta",
+          "slot": "Magenta",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x04",
+          "head_offset": 1,
+          "role": "yellow",
+          "slot": "Yellow",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x07",
+          "head_offset": 0,
+          "role": "red",
+          "slot": "Red",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x08",
+          "head_offset": 1,
+          "role": "blue",
+          "slot": "Blue",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x09",
+          "head_offset": 0,
+          "role": "gloss",
+          "slot": "Gloss",
+          "subchannel": -1
+        }
+      ],
+      "configuration_id": "cmykrbphoto",
+      "configuration_name": "Photo Black",
+      "display_name": "Six Color Enhanced Gloss Raw",
+      "name": "PhysicalCMYKRB"
+    },
+    {
+      "channels": [
+        {
+          "esc_i_code": "0x00",
+          "head_offset": 0,
+          "role": "matteblack",
+          "slot": "MatteBlack",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x40",
+          "head_offset": 1,
+          "role": "black",
+          "slot": "Black",
+          "subchannel": 4
+        },
+        {
+          "esc_i_code": "0x02",
+          "head_offset": 1,
+          "role": "cyan",
+          "slot": "Cyan",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x01",
+          "head_offset": 0,
+          "role": "magenta",
+          "slot": "Magenta",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x04",
+          "head_offset": 1,
+          "role": "yellow",
+          "slot": "Yellow",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x07",
+          "head_offset": 0,
+          "role": "red",
+          "slot": "Red",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x08",
+          "head_offset": 1,
+          "role": "blue",
+          "slot": "Blue",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x09",
+          "head_offset": 0,
+          "role": "gloss",
+          "slot": "Gloss",
+          "subchannel": -1
+        }
+      ],
+      "configuration_id": "cmykrbphoto",
+      "configuration_name": "Photo Black",
+      "display_name": "Seven Color Enhanced Gloss Raw",
+      "name": "PhysicalCMYKPRB"
+    },
+    {
+      "channels": [
+        {
+          "esc_i_code": "0x00",
+          "head_offset": 0,
+          "role": "black",
+          "slot": "Black",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x02",
+          "head_offset": 1,
+          "role": "cyan",
+          "slot": "Cyan",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x01",
+          "head_offset": 0,
+          "role": "magenta",
+          "slot": "Magenta",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x04",
+          "head_offset": 1,
+          "role": "yellow",
+          "slot": "Yellow",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x07",
+          "head_offset": 0,
+          "role": "red",
+          "slot": "Red",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x08",
+          "head_offset": 1,
+          "role": "blue",
+          "slot": "Blue",
+          "subchannel": -1
+        }
+      ],
+      "configuration_id": "cmykrbmatte",
+      "configuration_name": "Matte Black",
+      "display_name": "Six Color Photo",
+      "name": "CMYKRB"
+    },
+    {
+      "channels": [
+        {
+          "esc_i_code": "0x02",
+          "head_offset": 1,
+          "role": "cyan",
+          "slot": "Cyan",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x01",
+          "head_offset": 0,
+          "role": "magenta",
+          "slot": "Magenta",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x04",
+          "head_offset": 1,
+          "role": "yellow",
+          "slot": "Yellow",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x07",
+          "head_offset": 0,
+          "role": "red",
+          "slot": "Red",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x08",
+          "head_offset": 1,
+          "role": "blue",
+          "slot": "Blue",
+          "subchannel": -1
+        }
+      ],
+      "configuration_id": "cmykrbmatte",
+      "configuration_name": "Matte Black",
+      "display_name": "Five Color Photo Composite",
+      "name": "CMYRB"
+    },
+    {
+      "channels": [
+        {
+          "esc_i_code": "0x00",
+          "head_offset": 0,
+          "role": "black",
+          "slot": "Black",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x02",
+          "head_offset": 1,
+          "role": "cyan",
+          "slot": "Cyan",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x01",
+          "head_offset": 0,
+          "role": "magenta",
+          "slot": "Magenta",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x04",
+          "head_offset": 1,
+          "role": "yellow",
+          "slot": "Yellow",
+          "subchannel": -1
+        }
+      ],
+      "configuration_id": "cmykrbmatte",
+      "configuration_name": "Matte Black",
+      "display_name": "Four Color Standard",
+      "name": "CMYKG"
+    },
+    {
+      "channels": [
+        {
+          "esc_i_code": "0x02",
+          "head_offset": 1,
+          "role": "cyan",
+          "slot": "Cyan",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x01",
+          "head_offset": 0,
+          "role": "magenta",
+          "slot": "Magenta",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x04",
+          "head_offset": 1,
+          "role": "yellow",
+          "slot": "Yellow",
+          "subchannel": -1
+        }
+      ],
+      "configuration_id": "cmykrbmatte",
+      "configuration_name": "Matte Black",
+      "display_name": "Three Color Composite",
+      "name": "RGBG"
+    },
+    {
+      "channels": [
+        {
+          "esc_i_code": "0x00",
+          "head_offset": 0,
+          "role": "black",
+          "slot": "Black",
+          "subchannel": -1
+        }
+      ],
+      "configuration_id": "cmykrbmatte",
+      "configuration_name": "Matte Black",
+      "display_name": "One Color Raw",
+      "name": "PhysicalBlack"
+    },
+    {
+      "channels": [
+        {
+          "esc_i_code": "0x02",
+          "head_offset": 1,
+          "role": "cyan",
+          "slot": "Cyan",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x01",
+          "head_offset": 0,
+          "role": "magenta",
+          "slot": "Magenta",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x04",
+          "head_offset": 1,
+          "role": "yellow",
+          "slot": "Yellow",
+          "subchannel": -1
+        }
+      ],
+      "configuration_id": "cmykrbmatte",
+      "configuration_name": "Matte Black",
+      "display_name": "Three Color Raw",
+      "name": "PhysicalCMY"
+    },
+    {
+      "channels": [
+        {
+          "esc_i_code": "0x00",
+          "head_offset": 0,
+          "role": "black",
+          "slot": "Black",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x02",
+          "head_offset": 1,
+          "role": "cyan",
+          "slot": "Cyan",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x01",
+          "head_offset": 0,
+          "role": "magenta",
+          "slot": "Magenta",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x04",
+          "head_offset": 1,
+          "role": "yellow",
+          "slot": "Yellow",
+          "subchannel": -1
+        }
+      ],
+      "configuration_id": "cmykrbmatte",
+      "configuration_name": "Matte Black",
+      "display_name": "Four Color Raw",
+      "name": "PhysicalCMYKGloss"
+    },
+    {
+      "channels": [
+        {
+          "esc_i_code": "0x00",
+          "head_offset": 0,
+          "role": "black",
+          "slot": "Black",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x02",
+          "head_offset": 1,
+          "role": "cyan",
+          "slot": "Cyan",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x01",
+          "head_offset": 0,
+          "role": "magenta",
+          "slot": "Magenta",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x04",
+          "head_offset": 1,
+          "role": "yellow",
+          "slot": "Yellow",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x07",
+          "head_offset": 0,
+          "role": "red",
+          "slot": "Red",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x08",
+          "head_offset": 1,
+          "role": "blue",
+          "slot": "Blue",
+          "subchannel": -1
+        }
+      ],
+      "configuration_id": "cmykrbmatte",
+      "configuration_name": "Matte Black",
+      "display_name": "Six Color Raw",
+      "name": "PhysicalCMYKRB"
+    }
+  ],
+  "interchangeable_ink": false,
+  "media_sizes": [
+    {
+      "name": "A4",
+      "paper_media_size_code": 0,
+      "type": "sheet"
+    },
+    {
+      "name": "Letter",
+      "paper_media_size_code": 1,
+      "type": "sheet"
+    },
+    {
+      "name": "Legal",
+      "paper_media_size_code": 2,
+      "type": "sheet"
+    },
+    {
+      "name": "A5",
+      "paper_media_size_code": 3,
+      "type": "sheet"
+    },
+    {
+      "name": "A6",
+      "paper_media_size_code": 4,
+      "type": "sheet"
+    },
+    {
+      "name": "B5",
+      "paper_media_size_code": 5,
+      "type": "sheet"
+    },
+    {
+      "name": "Executive",
+      "paper_media_size_code": 6,
+      "type": "sheet"
+    },
+    {
+      "name": "Statement",
+      "paper_media_size_code": 7,
+      "type": "sheet"
+    },
+    {
+      "name": "w324h495",
+      "paper_media_size_code": 9,
+      "type": "sheet"
+    },
+    {
+      "name": "w288h432",
+      "paper_media_size_code": 10,
+      "type": "sheet"
+    },
+    {
+      "name": "w360h576",
+      "paper_media_size_code": 11,
+      "type": "sheet"
+    },
+    {
+      "name": "c8x10",
+      "paper_media_size_code": 12,
+      "type": "sheet"
+    },
+    {
+      "name": "w283h425",
+      "paper_media_size_code": 13,
+      "type": "sheet"
+    },
+    {
+      "name": "w566h850",
+      "paper_media_size_code": 14,
+      "type": "sheet"
+    },
+    {
+      "name": "w252h360",
+      "paper_media_size_code": 15,
+      "type": "sheet"
+    },
+    {
+      "name": "COM10_l",
+      "paper_media_size_code": 18,
+      "type": "sheet"
+    },
+    {
+      "name": "C6_l",
+      "paper_media_size_code": 19,
+      "type": "sheet"
+    },
+    {
+      "name": "DL_l",
+      "paper_media_size_code": 20,
+      "type": "sheet"
+    },
+    {
+      "name": "w360h504",
+      "paper_media_size_code": 28,
+      "type": "sheet"
+    },
+    {
+      "name": "COM10",
+      "paper_media_size_code": 29,
+      "type": "sheet"
+    },
+    {
+      "name": "C6",
+      "paper_media_size_code": 30,
+      "type": "sheet"
+    },
+    {
+      "name": "DL",
+      "paper_media_size_code": 31,
+      "type": "sheet"
+    },
+    {
+      "name": "SuperB",
+      "paper_media_size_code": 61,
+      "type": "sheet"
+    },
+    {
+      "name": "A3",
+      "paper_media_size_code": 62,
+      "type": "sheet"
+    },
+    {
+      "name": "B4",
+      "paper_media_size_code": 63,
+      "type": "sheet"
+    },
+    {
+      "name": "Tabloid",
+      "paper_media_size_code": 64,
+      "type": "sheet"
+    },
+    {
+      "name": "w792h1008",
+      "paper_media_size_code": 65,
+      "type": "sheet"
+    },
+    {
+      "name": "B3",
+      "paper_media_size_code": 66,
+      "type": "sheet"
+    },
+    {
+      "name": "A2",
+      "paper_media_size_code": 67,
+      "type": "sheet"
+    },
+    {
+      "name": "EngineeringC",
+      "paper_media_size_code": 68,
+      "type": "sheet"
+    },
+    {
+      "name": null,
+      "paper_media_size_code": 99,
+      "type": "default"
+    }
+  ],
+  "model_id": "67",
+  "modes": [
+    {
+      "backend_status": "IMPORTED_INCOMPLETE",
+      "base_resolution_dpi": 360,
+      "bit_depth": 2,
+      "density": 2.8,
+      "display_name": "360 x 180 DPI Draft",
+      "dot_size": 16,
+      "drop_sizes": [
+        1.0
+      ],
+      "horizontal_dpi": 360,
+      "horizontal_passes": 1,
+      "identity": "360x180sw",
+      "nozzle_count": 180,
+      "nozzle_separation": 2,
+      "physical_horizontal_dpi": 360,
+      "physical_vertical_dpi": 180,
+      "printer_weave_mode": null,
+      "source": "C:\\Dev\\EpsonRIP\\gutenprint-5.3.5\\src\\xml\\escp2\\model\\model_67.xml",
+      "vertical_dpi": 180,
+      "vertical_passes": 1
+    },
+    {
+      "backend_status": "IMPORTED_INCOMPLETE",
+      "base_resolution_dpi": 360,
+      "bit_depth": 2,
+      "density": 1.4,
+      "display_name": "360 DPI",
+      "dot_size": 16,
+      "drop_sizes": [
+        1.0
+      ],
+      "horizontal_dpi": 360,
+      "horizontal_passes": 1,
+      "identity": "360sw",
+      "nozzle_count": 180,
+      "nozzle_separation": 2,
+      "physical_horizontal_dpi": 360,
+      "physical_vertical_dpi": 360,
+      "printer_weave_mode": null,
+      "source": "C:\\Dev\\EpsonRIP\\gutenprint-5.3.5\\src\\xml\\escp2\\model\\model_67.xml",
+      "vertical_dpi": 360,
+      "vertical_passes": 1
+    },
+    {
+      "backend_status": "IMPORTED_INCOMPLETE",
+      "base_resolution_dpi": 720,
+      "bit_depth": 2,
+      "density": 1.0,
+      "display_name": "720 x 360 DPI",
+      "dot_size": 16,
+      "drop_sizes": [
+        0.35,
+        0.7,
+        1.0
+      ],
+      "horizontal_dpi": 720,
+      "horizontal_passes": 1,
+      "identity": "720x360sw",
+      "nozzle_count": 180,
+      "nozzle_separation": 2,
+      "physical_horizontal_dpi": 720,
+      "physical_vertical_dpi": 360,
+      "printer_weave_mode": null,
+      "source": "C:\\Dev\\EpsonRIP\\gutenprint-5.3.5\\src\\xml\\escp2\\model\\model_67.xml",
+      "vertical_dpi": 360,
+      "vertical_passes": 1
+    },
+    {
+      "backend_status": "IMPORTED_INCOMPLETE",
+      "base_resolution_dpi": 720,
+      "bit_depth": 2,
+      "density": 1.0,
+      "display_name": "720 DPI",
+      "dot_size": 17,
+      "drop_sizes": [
+        0.35,
+        0.7,
+        1.0
+      ],
+      "horizontal_dpi": 720,
+      "horizontal_passes": 1,
+      "identity": "720sw",
+      "nozzle_count": 180,
+      "nozzle_separation": 2,
+      "physical_horizontal_dpi": 720,
+      "physical_vertical_dpi": 720,
+      "printer_weave_mode": null,
+      "source": "C:\\Dev\\EpsonRIP\\gutenprint-5.3.5\\src\\xml\\escp2\\model\\model_67.xml",
+      "vertical_dpi": 720,
+      "vertical_passes": 1
+    },
+    {
+      "backend_status": "IMPORTED_INCOMPLETE",
+      "base_resolution_dpi": 720,
+      "bit_depth": 2,
+      "density": 0.869,
+      "display_name": "1440 x 720 DPI",
+      "dot_size": 18,
+      "drop_sizes": [
+        0.2,
+        0.5,
+        1.0
+      ],
+      "horizontal_dpi": 1440,
+      "horizontal_passes": 2,
+      "identity": "1440x720sw",
+      "nozzle_count": 180,
+      "nozzle_separation": 2,
+      "physical_horizontal_dpi": 1440,
+      "physical_vertical_dpi": 720,
+      "printer_weave_mode": null,
+      "source": "C:\\Dev\\EpsonRIP\\gutenprint-5.3.5\\src\\xml\\escp2\\model\\model_67.xml",
+      "vertical_dpi": 720,
+      "vertical_passes": 1
+    },
+    {
+      "backend_status": "IMPORTED_INCOMPLETE",
+      "base_resolution_dpi": 720,
+      "bit_depth": 2,
+      "density": 0.942,
+      "display_name": "1440 x 1440 DPI",
+      "dot_size": 19,
+      "drop_sizes": [
+        0.25,
+        0.47,
+        1.0
+      ],
+      "horizontal_dpi": 1440,
+      "horizontal_passes": 2,
+      "identity": "1440x1440ov",
+      "nozzle_count": 180,
+      "nozzle_separation": 2,
+      "physical_horizontal_dpi": 2880,
+      "physical_vertical_dpi": 1440,
+      "printer_weave_mode": null,
+      "source": "C:\\Dev\\EpsonRIP\\gutenprint-5.3.5\\src\\xml\\escp2\\model\\model_67.xml",
+      "vertical_dpi": 1440,
+      "vertical_passes": 1
+    },
+    {
+      "backend_status": "IMPORTED_INCOMPLETE",
+      "base_resolution_dpi": 720,
+      "bit_depth": 2,
+      "density": 0.471,
+      "display_name": "2880 x 1440 DPI",
+      "dot_size": 19,
+      "drop_sizes": [
+        0.25,
+        0.47,
+        1.0
+      ],
+      "horizontal_dpi": 2880,
+      "horizontal_passes": 4,
+      "identity": "2880x1440sw",
+      "nozzle_count": 180,
+      "nozzle_separation": 2,
+      "physical_horizontal_dpi": 2880,
+      "physical_vertical_dpi": 1440,
+      "printer_weave_mode": null,
+      "source": "C:\\Dev\\EpsonRIP\\gutenprint-5.3.5\\src\\xml\\escp2\\model\\model_67.xml",
+      "vertical_dpi": 1440,
+      "vertical_passes": 1
+    },
+    {
+      "backend_status": "IMPORTED_INCOMPLETE",
+      "base_resolution_dpi": 720,
+      "bit_depth": 2,
+      "density": 0.235,
+      "display_name": "5760 x 1440 DPI",
+      "dot_size": 19,
+      "drop_sizes": [
+        0.2491,
+        0.47,
+        1.0
+      ],
+      "horizontal_dpi": 5760,
+      "horizontal_passes": 8,
+      "identity": "5760x1440sw",
+      "nozzle_count": 180,
+      "nozzle_separation": 2,
+      "physical_horizontal_dpi": 5760,
+      "physical_vertical_dpi": 1440,
+      "printer_weave_mode": null,
+      "source": "C:\\Dev\\EpsonRIP\\gutenprint-5.3.5\\src\\xml\\escp2\\model\\model_67.xml",
+      "vertical_dpi": 1440,
+      "vertical_passes": 1
+    },
+    {
+      "backend_status": "IMPORTED_INCOMPLETE",
+      "base_resolution_dpi": 720,
+      "bit_depth": 2,
+      "density": 0.235,
+      "display_name": "2880 x 2880 DPI",
+      "dot_size": 19,
+      "drop_sizes": [
+        0.2491,
+        0.47,
+        1.0
+      ],
+      "horizontal_dpi": 2880,
+      "horizontal_passes": 4,
+      "identity": "2880x2880sw",
+      "nozzle_count": 180,
+      "nozzle_separation": 2,
+      "physical_horizontal_dpi": 2880,
+      "physical_vertical_dpi": 2880,
+      "printer_weave_mode": null,
+      "source": "C:\\Dev\\EpsonRIP\\gutenprint-5.3.5\\src\\xml\\escp2\\model\\model_67.xml",
+      "vertical_dpi": 2880,
+      "vertical_passes": 1
+    },
+    {
+      "backend_status": "IMPORTED_INCOMPLETE",
+      "base_resolution_dpi": 720,
+      "bit_depth": 2,
+      "density": 0.132023,
+      "display_name": "5760 x 2880 DPI",
+      "dot_size": 19,
+      "drop_sizes": [
+        0.2491,
+        0.47,
+        1.0
+      ],
+      "horizontal_dpi": 5760,
+      "horizontal_passes": 8,
+      "identity": "5760x2880sw",
+      "nozzle_count": 180,
+      "nozzle_separation": 2,
+      "physical_horizontal_dpi": 5760,
+      "physical_vertical_dpi": 2880,
+      "printer_weave_mode": null,
+      "source": "C:\\Dev\\EpsonRIP\\gutenprint-5.3.5\\src\\xml\\escp2\\model\\model_67.xml",
+      "vertical_dpi": 2880,
+      "vertical_passes": 1
+    }
+  ],
+  "page_margins": [
+    {
+      "interleave": "soft",
+      "media": "sheet",
+      "points": [
+        9.0,
+        9.0,
+        0.0,
+        11.0
+      ]
+    },
+    {
+      "interleave": "printer",
+      "media": "sheet",
+      "points": [
+        9.0,
+        9.0,
+        0.0,
+        11.0
+      ]
+    },
+    {
+      "interleave": "soft",
+      "media": "roll",
+      "points": [
+        9.0,
+        9.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "interleave": "printer",
+      "media": "roll",
+      "points": [
+        9.0,
+        9.0,
+        0.0,
+        0.0
+      ]
+    }
+  ],
+  "paper_types": [
+    {
+      "class": "plain",
+      "name": "Plain",
+      "params": {
+        "PaperMedia": [
+          "0"
+        ],
+        "PrintMethod": [
+          "0x40",
+          "0x20",
+          "0x22",
+          "0x40",
+          "0x50",
+          "0x70",
+          "0x70",
+          "0x70",
+          "0x70",
+          "0x70",
+          "0x70"
+        ]
+      },
+      "text": "Plain Paper"
+    },
+    {
+      "class": "plain",
+      "name": "Postcard",
+      "params": {
+        "PaperMedia": [
+          "1"
+        ],
+        "PrintMethod": [
+          "0x41",
+          "0x21",
+          "0x23",
+          "0x41",
+          "0x51",
+          "0x73",
+          "0x73",
+          "0x73",
+          "0x73",
+          "0x73",
+          "0x73"
+        ]
+      },
+      "text": "Postcard"
+    },
+    {
+      "class": "photo",
+      "name": "GlossyFilm",
+      "params": {
+        "PaperMedia": [
+          "7"
+        ],
+        "PrintMethod": [
+          "0x40",
+          "0x20",
+          "0x22",
+          "0x40",
+          "0x50",
+          "0x70",
+          "0x70",
+          "0x70",
+          "0x70",
+          "0x70",
+          "0x70"
+        ]
+      },
+      "text": "Glossy Film"
+    },
+    {
+      "class": "transparency",
+      "name": "Transparency",
+      "params": {
+        "PaperMedia": [
+          "9"
+        ],
+        "PrintMethod": [
+          "0x40",
+          "0x20",
+          "0x22",
+          "0x40",
+          "0x50",
+          "0x70",
+          "0x70",
+          "0x70",
+          "0x70",
+          "0x70",
+          "0x70"
+        ]
+      },
+      "text": "Transparencies"
+    },
+    {
+      "class": "plain",
+      "name": "Envelope",
+      "params": {
+        "PaperMedia": [
+          "1"
+        ],
+        "PrintMethod": [
+          "0x41",
+          "0x21",
+          "0x23",
+          "0x41",
+          "0x51",
+          "0x71",
+          "0x71",
+          "0x71",
+          "0x71",
+          "0x71",
+          "0x71"
+        ]
+      },
+      "text": "Envelopes"
+    },
+    {
+      "class": "transparency",
+      "name": "BackFilm",
+      "params": {
+        "PaperMedia": [
+          "10"
+        ],
+        "PrintMethod": [
+          "0x40",
+          "0x20",
+          "0x22",
+          "0x40",
+          "0x50",
+          "0x70",
+          "0x70",
+          "0x70",
+          "0x70",
+          "0x70",
+          "0x70"
+        ]
+      },
+      "text": "Back Light Film"
+    },
+    {
+      "class": "good",
+      "name": "Matte",
+      "params": {
+        "PaperMedia": [
+          "3"
+        ],
+        "PrintMethod": [
+          "0x41",
+          "0x21",
+          "0x23",
+          "0x41",
+          "0x51",
+          "0x73",
+          "0x73",
+          "0x73",
+          "0x73",
+          "0x73",
+          "0x73"
+        ]
+      },
+      "text": "Matte Paper"
+    },
+    {
+      "class": "good",
+      "name": "MatteHeavy",
+      "params": {
+        "PaperMedia": [
+          "5"
+        ],
+        "PrintMethod": [
+          "0x41",
+          "0x21",
+          "0x23",
+          "0x41",
+          "0x51",
+          "0x72",
+          "0x80",
+          "0x90",
+          "0x90",
+          "0x90",
+          "0x90"
+        ]
+      },
+      "text": "Matte Paper Heavyweight"
+    },
+    {
+      "class": "good",
+      "name": "Inkjet",
+      "params": {
+        "PaperMedia": [
+          "1"
+        ],
+        "PrintMethod": [
+          "0x41",
+          "0x21",
+          "0x23",
+          "0x41",
+          "0x51",
+          "0x71",
+          "0x71",
+          "0x71",
+          "0x71",
+          "0x71",
+          "0x71"
+        ]
+      },
+      "text": "Inkjet Paper"
+    },
+    {
+      "class": "good",
+      "name": "Coated",
+      "params": {
+        "PaperMedia": [
+          "3"
+        ],
+        "PrintMethod": [
+          "0x40",
+          "0x20",
+          "0x22",
+          "0x40",
+          "0x50",
+          "0x70",
+          "0x70",
+          "0x70",
+          "0x70",
+          "0x70",
+          "0x70"
+        ]
+      },
+      "text": "Photo Quality Inkjet Paper"
+    },
+    {
+      "class": "photo",
+      "name": "Photo",
+      "params": {
+        "PaperMedia": [
+          "6"
+        ],
+        "PrintMethod": [
+          "0x41",
+          "0x21",
+          "0x23",
+          "0x41",
+          "0x51",
+          "0x72",
+          "0x72",
+          "0x72",
+          "0x72",
+          "0x72",
+          "0x72"
+        ]
+      },
+      "text": "Photo Paper"
+    },
+    {
+      "class": "premium",
+      "name": "GlossyPhoto",
+      "params": {
+        "PaperMedia": [
+          "11"
+        ],
+        "PrintMethod": [
+          "0x41",
+          "0x21",
+          "0x23",
+          "0x41",
+          "0x51",
+          "0x73",
+          "0x80",
+          "0x90",
+          "0x90",
+          "0x90",
+          "0x90"
+        ]
+      },
+      "text": "Premium Glossy Photo Paper"
+    },
+    {
+      "class": "premium",
+      "name": "Semigloss",
+      "params": {
+        "PaperMedia": [
+          "12"
+        ],
+        "PrintMethod": [
+          "0x41",
+          "0x21",
+          "0x23",
+          "0x41",
+          "0x51",
+          "0x73",
+          "0x80",
+          "0x90",
+          "0x90",
+          "0x90",
+          "0x90"
+        ]
+      },
+      "text": "Premium Semigloss Photo Paper"
+    },
+    {
+      "class": "premium",
+      "name": "Luster",
+      "params": {
+        "PaperMedia": [
+          "13"
+        ],
+        "PrintMethod": [
+          "0x41",
+          "0x21",
+          "0x23",
+          "0x41",
+          "0x51",
+          "0x73",
+          "0x80",
+          "0x90",
+          "0x90",
+          "0x90",
+          "0x90"
+        ]
+      },
+      "text": "Premium Luster Photo Paper"
+    },
+    {
+      "class": "premium",
+      "name": "ArchivalMatte",
+      "params": {
+        "PaperMedia": [
+          "15"
+        ],
+        "PrintMethod": [
+          "0x41",
+          "0x21",
+          "0x23",
+          "0x41",
+          "0x51",
+          "0x73",
+          "0x80",
+          "0x90",
+          "0x90",
+          "0x90",
+          "0x90"
+        ]
+      },
+      "text": "Archival Matte Paper"
+    },
+    {
+      "class": "premium",
+      "name": "WaterColorRadiant",
+      "params": {
+        "PaperMedia": [
+          "16"
+        ],
+        "PrintMethod": [
+          "0x41",
+          "0x21",
+          "0x23",
+          "0x41",
+          "0x51",
+          "0x73",
+          "0x80",
+          "0x90",
+          "0x90",
+          "0x90",
+          "0x90"
+        ]
+      },
+      "text": "Watercolor Paper - Radiant White"
+    },
+    {
+      "class": "photo",
+      "name": "GlossyPaper",
+      "params": {
+        "PaperMedia": [
+          "19"
+        ],
+        "PrintMethod": [
+          "0x41",
+          "0x21",
+          "0x23",
+          "0x41",
+          "0x51",
+          "0x72",
+          "0x72",
+          "0x72",
+          "0x72",
+          "0x72",
+          "0x72"
+        ]
+      },
+      "text": "Photo Quality Glossy Paper"
+    },
+    {
+      "class": "premium",
+      "name": "ColorLife",
+      "params": {
+        "PaperMedia": [
+          "23"
+        ],
+        "PrintMethod": [
+          "0x41",
+          "0x21",
+          "0x23",
+          "0x41",
+          "0x51",
+          "0x73",
+          "0x80",
+          "0x90",
+          "0x90",
+          "0x90",
+          "0x90"
+        ]
+      },
+      "text": "ColorLife Paper"
+    },
+    {
+      "class": "plain",
+      "name": "Other",
+      "params": {},
+      "text": "Other"
+    }
+  ],
+  "schema": "pytone-rip.gutenprint-runtime",
+  "unit_scale": 5760,
+  "version": 1
+}

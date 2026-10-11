@@ -1,0 +1,26 @@
+{
+  "backend_family": "epson_escp2_gutenprint_model_115",
+  "backend_runtime_file": "backend-runtime.json",
+  "backend_runtime_sha256": "4d35826a8567a3b91a229f2b12d83fba130da804ac6007bd42347558e226c61e",
+  "backend_source_file": "backend-source.json",
+  "backend_source_sha256": "866afd3f56e333c0ac0039c7643262e3036a8a97957e1e0d5866b2703d089df0",
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson SureColor P600",
+  "model_id": "SureColorP600",
+  "package_id": "pf--Epson_SureColorP600",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "0aac210fd9b904e9b7f55e599e910c606464621418466a9358ddf7ba3a6bc373",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "gutenprint-model-115",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "684bad5470296d52671b8c7b86fab76af3239a6c4ea3aab62097099cf510191f",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "be3628e5928709cfd6d400922f602f8b2b1680de28c1ea5b55ac9056ba3961ba",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "SOURCE_CORRECTION: protocol family resolved by an explicit compatible driver descriptor",
+    "SYNTHETIC_PPD: no exact Epson PPD in the local source corpus; ReferenceDriver technical driver id P600; no manufacturer paper list inherited"
+  ]
+}

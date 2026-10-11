@@ -1,0 +1,26 @@
+{
+  "backend_family": "epson_escp2_gutenprint_model_91",
+  "backend_runtime_file": "backend-runtime.json",
+  "backend_runtime_sha256": "a3fa8111d2fff9f5cb6b0c1db3f49fc135742986defdead5f8406b936888751b",
+  "backend_source_file": "backend-source.json",
+  "backend_source_sha256": "90918e550a4d82c71987296b16b6b09798d846eac46ab9ecfa7ddf660f3c02a2",
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson XP-520 Series",
+  "model_id": "XP520series",
+  "package_id": "pf--Epson_XP520series",
+  "ppd_file": "vendor.ppd",
+  "ppd_sha256": "88b07f3140a15d8dc325977c4be96794e0bf880cd8227929bb818534033bf7d6",
+  "ppd_source": "vendor.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "gutenprint-model-91",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "ab0be319cb375147322aaca0a5a301cdece36bad4c82b4c8bb4cc284edd1becb",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "1a6756468e239a440679636d1064b791699da96d4a31de920ee26caadad22fcf",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "SOURCE_CORRECTION: protocol family resolved by an explicit compatible driver descriptor",
+    "FAMILY_ALIAS: ReferenceDriver driver id XP510 and exact Epson PPD; technical driver pf--Epson_XP510series; exact capabilities from vendor.ppd"
+  ]
+}

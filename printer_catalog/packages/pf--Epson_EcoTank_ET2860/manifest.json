@@ -1,0 +1,23 @@
+{
+  "backend_family": "epson_escp2_xp305",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson EcoTank ET-2860",
+  "model_id": "EcoTank_ET2860",
+  "package_id": "pf--Epson_EcoTank_ET2860",
+  "ppd_file": "vendor.ppd",
+  "ppd_sha256": "25b560da417d7e23cc6875e251894b0dcf9b68d8b074b2dbe44097d92024bf6d",
+  "ppd_source": "vendor.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "XP305",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "e327b2ef36aed2db3cb4fc974e87d970b671c435b23d28b64383bb265399cf13",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "9b3772cd35bf2df2b326e50a2c620cdf778515494634e6e60ab7b4504c4c7705",
+  "version": 1,
+  "visible": true,
+  "warnings": []
+}

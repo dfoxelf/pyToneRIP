@@ -1,0 +1,23 @@
+{
+  "backend_family": "epson_escp2_gutenprint_model_17",
+  "backend_runtime_file": "backend-runtime.json",
+  "backend_runtime_sha256": "f1971c32feb53d0e4a88f73cc432bb7171c8ed02d430cda82b42a9e5779f2380",
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson Stylus Color 1160",
+  "model_id": "Stylus_Color_1160",
+  "package_id": "gp--escp2-1160",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "8251dfd22b4491570a4993a6369c1cd4364161f168e436417b31883a4bb964e7",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "gutenprint-model-17",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "90a826bff6ad6ea4b9670b28c13c02a29457200019ebeef968d04fb07273c418",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "e4e9029a9947d902d3e22739fabd3ea1388c9997dccd5cca179cbf781352399b",
+  "version": 1,
+  "visible": true,
+  "warnings": []
+}

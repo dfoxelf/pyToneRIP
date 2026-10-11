@@ -1,0 +1,25 @@
+{
+  "backend_family": "epson_escp2_gutenprint_model_131",
+  "backend_runtime_file": "backend-runtime.json",
+  "backend_runtime_sha256": "03a2db5a440b56cd4f3fddc4e818d90ca94e7713ba09988c5552e65f9e7b5068",
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson Stylus Pro 4900",
+  "model_id": "Stylus_Pro_4900",
+  "package_id": "gp--escp2-4900",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "bc17e3424ab63e34adae93628008fed2dd7f93acd3a356cf3009c5c66f4c13a0",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "gutenprint-model-131",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "90a826bff6ad6ea4b9670b28c13c02a29457200019ebeef968d04fb07273c418",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "98883817f509f84c96ff9d2485b54bc61a102658549d86e3b577f9a0ff8a52ae",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "SOURCE_CORRECTION: media selectors and MI size byte use model-specific ReferenceDriver stream captures"
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "backend_family": "epson_escp2_gutenprint_model_124",
+  "backend_runtime_file": "backend-runtime.json",
+  "backend_runtime_sha256": "e5657159d6e57b24780316d7738fe16a1c102be5fb228d407a540afa34275b9a",
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson SureColor P7000",
+  "model_id": "SureColor_P7000",
+  "package_id": "gp--escp2-p7000",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "a6acb2bd25d94ec6be97e4c4374ab5b00b0b919143821ada079abcd56fd00699",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "gutenprint-model-124",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "90a826bff6ad6ea4b9670b28c13c02a29457200019ebeef968d04fb07273c418",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "88a5bcb0d099e530bfb9154fe76fd1f00c9458c5b0d43c9bf7ee6f44af02b97c",
+  "version": 1,
+  "visible": true,
+  "warnings": []
+}

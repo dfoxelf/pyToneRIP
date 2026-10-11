@@ -1,0 +1,23 @@
+{
+  "backend_family": "epson_escp2_gutenprint_model_89",
+  "backend_runtime_file": "backend-runtime.json",
+  "backend_runtime_sha256": "f246c2e3c14cb13ae33a058616dd45da84c48322651ad708e8898490ca0f3137",
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson Stylus Pro 7880",
+  "model_id": "Stylus_Pro_7880",
+  "package_id": "gp--escp2-7880",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "1b447265ab176cabfe6fe30ce229818500b7208920bf52992d47906d9ff4b849",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "gutenprint-model-89",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "90a826bff6ad6ea4b9670b28c13c02a29457200019ebeef968d04fb07273c418",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "3fdad1d835d0155f1f41f9475b7cdf2be2aa69b937bcdeab88b54577fe49b632",
+  "version": 1,
+  "visible": true,
+  "warnings": []
+}

@@ -1,0 +1,23 @@
+{
+  "backend_family": "epson_escp2_gutenprint_model_37",
+  "backend_runtime_file": "backend-runtime.json",
+  "backend_runtime_sha256": "7772da05fbf4019486c8060262c8466ea90b3aa49b53ba6309664badce55a055",
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson Stylus Photo 1280",
+  "model_id": "Stylus_Photo_1280",
+  "package_id": "gp--escp2-1280",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "cc146f1a6c64b541d89dfc6102bad8f7082e92d2858c4077f7effd7d288a97b5",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "gutenprint-model-37",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "90a826bff6ad6ea4b9670b28c13c02a29457200019ebeef968d04fb07273c418",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "24ec94c35362086908f653d31bae4a49247b01ab18014b8ea78f564b907339ef",
+  "version": 1,
+  "visible": true,
+  "warnings": []
+}

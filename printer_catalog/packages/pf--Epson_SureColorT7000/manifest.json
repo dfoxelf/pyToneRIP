@@ -1,0 +1,25 @@
+{
+  "backend_family": "epson_escp2_pro3880",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson SureColor T7000",
+  "model_id": "SureColorT7000",
+  "package_id": "pf--Epson_SureColorT7000",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "84c1ba1f26f2f3fb54b22b6e521d546d0251592f91dac7ddccf2973f025f74a3",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "PRO3880",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "7566d94c6c8227322efe2f45bf4f226620ebc0eeca5a21f6f78c334b1031686c",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "18323e28834bc27a53c296b2c0d4fb63104b5afe36381793780ac6af9e536df7",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "SYNTHETIC_PPD: no exact Epson PPD in the local source corpus; ReferenceDriver technical driver id PRO4800; no manufacturer paper list inherited"
+  ]
+}

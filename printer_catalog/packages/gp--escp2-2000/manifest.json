@@ -1,0 +1,23 @@
+{
+  "backend_family": "epson_escp2_gutenprint_model_26",
+  "backend_runtime_file": "backend-runtime.json",
+  "backend_runtime_sha256": "fd50e6017dd5d53def1c6331dceeceb07e02d3ddf8432c20ac9f2d1574a63e60",
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson Stylus Photo 2000P",
+  "model_id": "Stylus_Photo_2000P",
+  "package_id": "gp--escp2-2000",
+  "ppd_file": "vendor.ppd",
+  "ppd_sha256": "631a0be5732a0fd6d0856a0ec63ff8da684583614dc7b8d695b8369a7de70233",
+  "ppd_source": "vendor.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "gutenprint-model-26",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "90a826bff6ad6ea4b9670b28c13c02a29457200019ebeef968d04fb07273c418",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "7baff0427ec7cbcc2deb34a74af432d40932fee61daa35e021fbb45a07de4800",
+  "version": 1,
+  "visible": true,
+  "warnings": []
+}

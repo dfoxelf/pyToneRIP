@@ -1,0 +1,23 @@
+{
+  "backend_family": "epson_escp2_gutenprint_model_135",
+  "backend_runtime_file": "backend-runtime.json",
+  "backend_runtime_sha256": "bbabb14911b373cce9ffeb4f7a24b1dab40c3542a0d1febb39980ddc67c23888",
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson Expression Home XP-240",
+  "model_id": "Expression_Home_XP_240",
+  "package_id": "gp--escp2-xp240",
+  "ppd_file": "vendor.ppd",
+  "ppd_sha256": "73b428f8c29033d78ed901f4db6b400427ac042fc6e62942b7e0b907619ce9a0",
+  "ppd_source": "vendor.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "gutenprint-model-135",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "90a826bff6ad6ea4b9670b28c13c02a29457200019ebeef968d04fb07273c418",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "87f6f9e7dd25ea121f3c4207e33ee721ef99155190d6d2f314493f9afc38634d",
+  "version": 1,
+  "visible": true,
+  "warnings": []
+}

@@ -1,0 +1,23 @@
+{
+  "backend_family": "epson_escp2_wf7610",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson EcoTank ET-16600",
+  "model_id": "EcoTank_ET16600",
+  "package_id": "pf--Epson_EcoTank_ET16600",
+  "ppd_file": "vendor.ppd",
+  "ppd_sha256": "c082d337c358012af4f79f9c25389e29425e67a806f93da0d6653b3ed0435b2f",
+  "ppd_source": "vendor.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "WF7610",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "0d559749fd75f217039048356cd9f9a261c5f5b3dae3862533a41d1df64aaf2c",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "f5925bed3ea8ee14ce5c132a1e420a9b27afa093d0ce57e786271b94df98518a",
+  "version": 1,
+  "visible": true,
+  "warnings": []
+}

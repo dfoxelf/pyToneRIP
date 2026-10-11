@@ -1,0 +1,25 @@
+{
+  "backend_family": "epson_escp2_wf7610",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson EcoTank ET-3850",
+  "model_id": "EcoTank_ET3850",
+  "package_id": "pf--Epson_EcoTank_ET3850",
+  "ppd_file": "vendor.ppd",
+  "ppd_sha256": "e6902f519aa764a3105ca39f9371df3c805dcd2f8dc0bf12e23ce6d2caa9ab97",
+  "ppd_source": "vendor.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "WF7610",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "3eab4f8826657531df74a995bd18da360c66cf2f745f207839a778afda8ab03b",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "7867dc7668e05b21a8710c2d1a79e5cbd5ddc760fdaab744492f34171d5ab3b8",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "FAMILY_ALIAS: ReferenceDriver printers.lst [Epson_EcoTank_ET3850] Driver=Epson_EcoTank_ET3700; technical driver pf--Epson_EcoTank_ET3700; exact capabilities from Epson-ET-3850_Series-epson-escpr2-en.ppd"
+  ]
+}

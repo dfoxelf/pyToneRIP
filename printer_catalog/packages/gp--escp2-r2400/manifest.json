@@ -1,0 +1,23 @@
+{
+  "backend_family": "epson_escp2_gutenprint_model_71",
+  "backend_runtime_file": "backend-runtime.json",
+  "backend_runtime_sha256": "27d59fb89b260897c60308699dd48f174670934a013878dfcdf23a0a1fa725cb",
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson Stylus Photo R2400",
+  "model_id": "Stylus_Photo_R2400",
+  "package_id": "gp--escp2-r2400",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "d0b58dd1768e3a4ea60db23d0447d6683274e05c3e183bc1305329e6a37fdc7b",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "gutenprint-model-71",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "90a826bff6ad6ea4b9670b28c13c02a29457200019ebeef968d04fb07273c418",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "323d8c5007791b5ad6c9e3f2bfe982f4f82cd947427f4143c9c1d04de92eff8c",
+  "version": 1,
+  "visible": true,
+  "warnings": []
+}

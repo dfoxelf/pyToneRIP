@@ -1,0 +1,26 @@
+{
+  "backend_family": "epson_escp2_p700rip",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson SureColor P700",
+  "model_id": "SureColorP700RIP",
+  "package_id": "pf--Epson_SureColorP700_RIP",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "030e87fc86c4a8befb2ccb29fe6c2abeb32cccb30b55ad0b996c927faf235bf3",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "P700RIP",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "07a1f0b2e82e2c7087311c9527930dfc5d4587ce5a089eab32f20167280ff34a",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "bc89cfa09aa60c764888624c571c118f821452a9de7928502e3d783791d38bef",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "SOURCE_CORRECTION: direct ESC i mode established by captured RIP streams",
+    "SYNTHETIC_PPD: no exact Epson PPD in the local source corpus; ReferenceDriver technical driver id P700; no manufacturer paper list inherited"
+  ]
+}

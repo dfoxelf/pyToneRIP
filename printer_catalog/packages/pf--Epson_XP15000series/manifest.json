@@ -1,0 +1,25 @@
+{
+  "backend_family": "epson_escp2_gutenprint_model_132",
+  "backend_runtime_file": "backend-runtime.json",
+  "backend_runtime_sha256": "b5194321e5011b601ddad695eba5ec091034f712abde5b719e6c0a9feef7f416",
+  "backend_source_file": "backend-source.json",
+  "backend_source_sha256": "763cf074f2c2e6667f5cf3d5a6d8962ebc6a33da1c279b9c34dad73550208606",
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson XP-15000 Series",
+  "model_id": "XP15000series",
+  "package_id": "pf--Epson_XP15000series",
+  "ppd_file": "vendor.ppd",
+  "ppd_sha256": "04f2a6d83e132d62801232f54824daf68e166afd868ecb9bfb15311dc2c8187b",
+  "ppd_source": "vendor.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "gutenprint-model-132",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "c9a19fe3602465b2716361c1bd985733c084f63bd08b449c7e9d4c5fcd9696dd",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "ab2a52cc6fd19edbd8bea5e5468628cf44cf1701543cef5b592edddfcb628136",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "SOURCE_CORRECTION: protocol family resolved by an explicit compatible driver descriptor"
+  ]
+}

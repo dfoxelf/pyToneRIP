@@ -1,0 +1,25 @@
+{
+  "backend_family": "epson_escp2_wf7610",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson L15150",
+  "model_id": "L15150",
+  "package_id": "pf--Epson_L15150",
+  "ppd_file": "vendor.ppd",
+  "ppd_sha256": "1481f33bf3caf0da65638abbb20c76a5902674888c8265e68af0ff70b8523edb",
+  "ppd_source": "vendor.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "WF7610",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "0d559749fd75f217039048356cd9f9a261c5f5b3dae3862533a41d1df64aaf2c",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "625ad503b4cd2004ea41d18d537960245dfe7e13d6b11a450e1ecf62d7b1bd84",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "FAMILY_ALIAS: ReferenceDriver printers.lst [Epson_L15150] Driver=Epson_EcoTank_ET16600; technical driver pf--Epson_EcoTank_ET16600; exact capabilities from Epson-L15150_Series-epson-escpr2-en.ppd"
+  ]
+}

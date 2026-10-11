@@ -1,0 +1,26 @@
+{
+  "backend_family": "epson_escp2_gutenprint_model_130",
+  "backend_runtime_file": "backend-runtime.json",
+  "backend_runtime_sha256": "865bbd9a88cc994cc35e3b7f036d03b8c61cb7d501094c27b0e3c3658642f246",
+  "backend_source_file": "backend-source.json",
+  "backend_source_sha256": "00ccd93d6130b4c5c116a109280c37552bcbfeed10a30c89a32ce1a2073a0a45",
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson SureColor P800",
+  "model_id": "SureColorP800",
+  "package_id": "pf--Epson_SureColorP800",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "d5d4615cd98ce8be8f14ee9d43accfc0fcb8a74a7fdb7e050ef7237dbe320dbf",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "gutenprint-model-130",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "f6fd45d0395cd4108110592a8bdabe33e723fb26f8e86f03f728ed25a086c4cc",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "80903ad1a6aa3e23966751ee243c48668e163570141bc28ac785bf42d753de18",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "SOURCE_CORRECTION: protocol family resolved by an explicit compatible driver descriptor",
+    "SYNTHETIC_PPD: no exact Epson PPD in the local source corpus; ReferenceDriver technical driver id P800; no manufacturer paper list inherited"
+  ]
+}

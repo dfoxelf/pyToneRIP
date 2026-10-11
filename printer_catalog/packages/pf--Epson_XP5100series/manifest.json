@@ -1,0 +1,25 @@
+{
+  "backend_family": "epson_escp2_wf7610",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson XP-5100 Series",
+  "model_id": "XP5100series",
+  "package_id": "pf--Epson_XP5100series",
+  "ppd_file": "vendor.ppd",
+  "ppd_sha256": "ce494d46864d8e417a4a00e1724334a4366cf90bd0200f844233309b0b09489d",
+  "ppd_source": "vendor.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "WF7610",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "3eab4f8826657531df74a995bd18da360c66cf2f745f207839a778afda8ab03b",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "5309e5053cb866f32e40a8b5c378ace9c6376f43cdc39287696b52e75e341c4a",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "FAMILY_ALIAS: ReferenceDriver printers.lst [Epson_XP5100series] Driver=Epson_EcoTank_ET3700; technical driver pf--Epson_EcoTank_ET3700; exact capabilities from Epson-XP-5100_Series-epson-escpr2-en.ppd"
+  ]
+}

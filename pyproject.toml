@@ -1,0 +1,35 @@
+[project]
+name = "xp750-rip"
+version = "0.1.0"
+description = "pyToneRIP native Epson print rasterizer and Windows print support runtime"
+readme = "README.md"
+license = "GPL-3.0-only"
+requires-python = ">=3.12"
+dependencies = [
+    "numpy>=2.5.2",
+    "pillow>=12.3.0",
+    "scipy>=1.18.0",
+]
+
+[project.scripts]
+epson-rip = "xp750_rip.cli:main"
+xp750-rip = "xp750_rip.cli:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[build-system]
+requires = ["uv_build>=0.12.3,<0.13.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "cython>=3.2.0,<3.4.0",
+    "pyinstaller>=6.22.2",
+    "pytest>=9.1.1",
+    "ruff>=0.16.2",
+]

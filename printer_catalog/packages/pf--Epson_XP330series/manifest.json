@@ -1,0 +1,25 @@
+{
+  "backend_family": "epson_escp2_xp305",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson XP-330 Series",
+  "model_id": "XP330series",
+  "package_id": "pf--Epson_XP330series",
+  "ppd_file": "vendor.ppd",
+  "ppd_sha256": "dc106fc9be9e694ea68f42ee1a27536f332d0b42ea75fb4b3c1a11cbd0e564cf",
+  "ppd_source": "vendor.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "XP305",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "43417b8387d3b353abe10d6151d6d885d30380a7928b2fcd92e223da3e54f4ff",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "f9c1016e78159fd8a8ff54d70cb887e7929166069a3d1b8c6411d2dc0895360c",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "FAMILY_ALIAS: ReferenceDriver printers.lst [Epson_XP330series] Driver=Epson_XP320series; technical driver pf--Epson_XP320series; exact capabilities from Epson-XP-330_Series-epson-escpr-en.ppd"
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "channels": [],
+  "device_features": [],
+  "driver": {
+    "gutenprint_model_id": "137"
+  },
+  "feeds": [],
+  "identity": {
+    "gutenprint_driver": "escp2-p5000se",
+    "gutenprint_model_id": "137",
+    "manufacturer": "Epson",
+    "name": "Epson SureColor P5000 Standard Edition"
+  },
+  "media": [],
+  "media_sizes": [],
+  "paper_types": [],
+  "protocol": {
+    "cls": "escp2-esci",
+    "commandSet": null,
+    "family": "gutenprint-model-137",
+    "note": "codes from gutenprint XML formula (not live-verified)",
+    "raster_command": "ESC i <color|sub<<4> <comp=1> <bitwidth> <nwidth:2LE> <nlines:2LE> <TIFF PackBits>"
+  },
+  "schema": "rip-printer-v1"
+}

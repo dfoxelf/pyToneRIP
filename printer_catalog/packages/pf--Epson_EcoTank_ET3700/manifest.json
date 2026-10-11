@@ -1,0 +1,23 @@
+{
+  "backend_family": "epson_escp2_wf7610",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson EcoTank ET-3700",
+  "model_id": "EcoTank_ET3700",
+  "package_id": "pf--Epson_EcoTank_ET3700",
+  "ppd_file": "vendor.ppd",
+  "ppd_sha256": "099d8c76f0405fbf524698947d0e1c62f2b3c815ae4bad0dbe45e0835d48c603",
+  "ppd_source": "vendor.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "WF7610",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "3eab4f8826657531df74a995bd18da360c66cf2f745f207839a778afda8ab03b",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "42a15fc0ee56159693c0572567fb84ea61ed295a4319d11d4d7acfcbca0df982",
+  "version": 1,
+  "visible": true,
+  "warnings": []
+}

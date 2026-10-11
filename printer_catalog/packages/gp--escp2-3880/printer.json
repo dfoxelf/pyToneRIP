@@ -1,0 +1,1057 @@
+{
+  "channels": [
+    {
+      "esc_i_code": "0x00",
+      "head_offset": 0,
+      "inkset": "PhotoCMYK8",
+      "role": "black",
+      "slot": "Black",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x10",
+      "head_offset": 0,
+      "inkset": "PhotoCMYK8",
+      "role": "lightblack",
+      "slot": "LightBlack",
+      "subchannel": 1
+    },
+    {
+      "esc_i_code": "0x30",
+      "head_offset": 0,
+      "inkset": "PhotoCMYK8",
+      "role": "lightlightblack",
+      "slot": "LightLightBlack",
+      "subchannel": 3
+    },
+    {
+      "esc_i_code": "0x02",
+      "head_offset": 0,
+      "inkset": "PhotoCMYK8",
+      "role": "cyan",
+      "slot": "Cyan",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x12",
+      "head_offset": 0,
+      "inkset": "PhotoCMYK8",
+      "role": "lightcyan",
+      "slot": "LightCyan",
+      "subchannel": 1
+    },
+    {
+      "esc_i_code": "0x01",
+      "head_offset": 0,
+      "inkset": "PhotoCMYK8",
+      "role": "magenta",
+      "slot": "Magenta",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x11",
+      "head_offset": 0,
+      "inkset": "PhotoCMYK8",
+      "role": "lightmagenta",
+      "slot": "LightMagenta",
+      "subchannel": 1
+    },
+    {
+      "esc_i_code": "0x04",
+      "head_offset": 0,
+      "inkset": "PhotoCMYK8",
+      "role": "yellow",
+      "slot": "Yellow",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x00",
+      "head_offset": 0,
+      "inkset": "PhotoCMYK7",
+      "role": "black",
+      "slot": "Black",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x10",
+      "head_offset": 0,
+      "inkset": "PhotoCMYK7",
+      "role": "lightblack",
+      "slot": "LightBlack",
+      "subchannel": 1
+    },
+    {
+      "esc_i_code": "0x02",
+      "head_offset": 0,
+      "inkset": "PhotoCMYK7",
+      "role": "cyan",
+      "slot": "Cyan",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x12",
+      "head_offset": 0,
+      "inkset": "PhotoCMYK7",
+      "role": "lightcyan",
+      "slot": "LightCyan",
+      "subchannel": 1
+    },
+    {
+      "esc_i_code": "0x01",
+      "head_offset": 0,
+      "inkset": "PhotoCMYK7",
+      "role": "magenta",
+      "slot": "Magenta",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x11",
+      "head_offset": 0,
+      "inkset": "PhotoCMYK7",
+      "role": "lightmagenta",
+      "slot": "LightMagenta",
+      "subchannel": 1
+    },
+    {
+      "esc_i_code": "0x04",
+      "head_offset": 0,
+      "inkset": "PhotoCMYK7",
+      "role": "yellow",
+      "slot": "Yellow",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x00",
+      "head_offset": 0,
+      "inkset": "PhotoCMYK",
+      "role": "black",
+      "slot": "Black",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x02",
+      "head_offset": 0,
+      "inkset": "PhotoCMYK",
+      "role": "cyan",
+      "slot": "Cyan",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x12",
+      "head_offset": 0,
+      "inkset": "PhotoCMYK",
+      "role": "lightcyan",
+      "slot": "LightCyan",
+      "subchannel": 1
+    },
+    {
+      "esc_i_code": "0x01",
+      "head_offset": 0,
+      "inkset": "PhotoCMYK",
+      "role": "magenta",
+      "slot": "Magenta",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x11",
+      "head_offset": 0,
+      "inkset": "PhotoCMYK",
+      "role": "lightmagenta",
+      "slot": "LightMagenta",
+      "subchannel": 1
+    },
+    {
+      "esc_i_code": "0x04",
+      "head_offset": 0,
+      "inkset": "PhotoCMYK",
+      "role": "yellow",
+      "slot": "Yellow",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x02",
+      "head_offset": 0,
+      "inkset": "PhotoCMY",
+      "role": "cyan",
+      "slot": "Cyan",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x12",
+      "head_offset": 0,
+      "inkset": "PhotoCMY",
+      "role": "lightcyan",
+      "slot": "LightCyan",
+      "subchannel": 1
+    },
+    {
+      "esc_i_code": "0x01",
+      "head_offset": 0,
+      "inkset": "PhotoCMY",
+      "role": "magenta",
+      "slot": "Magenta",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x11",
+      "head_offset": 0,
+      "inkset": "PhotoCMY",
+      "role": "lightmagenta",
+      "slot": "LightMagenta",
+      "subchannel": 1
+    },
+    {
+      "esc_i_code": "0x04",
+      "head_offset": 0,
+      "inkset": "PhotoCMY",
+      "role": "yellow",
+      "slot": "Yellow",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x00",
+      "head_offset": 0,
+      "inkset": "CMYK",
+      "role": "black",
+      "slot": "Black",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x02",
+      "head_offset": 0,
+      "inkset": "CMYK",
+      "role": "cyan",
+      "slot": "Cyan",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x01",
+      "head_offset": 0,
+      "inkset": "CMYK",
+      "role": "magenta",
+      "slot": "Magenta",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x04",
+      "head_offset": 0,
+      "inkset": "CMYK",
+      "role": "yellow",
+      "slot": "Yellow",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x02",
+      "head_offset": 0,
+      "inkset": "CMY",
+      "role": "cyan",
+      "slot": "Cyan",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x01",
+      "head_offset": 0,
+      "inkset": "CMY",
+      "role": "magenta",
+      "slot": "Magenta",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x04",
+      "head_offset": 0,
+      "inkset": "CMY",
+      "role": "yellow",
+      "slot": "Yellow",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x00",
+      "head_offset": 0,
+      "inkset": "PhysicalCMYKkk",
+      "role": "black",
+      "slot": "Black",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x10",
+      "head_offset": 0,
+      "inkset": "PhysicalCMYKkk",
+      "role": "lightblack",
+      "slot": "LightBlack",
+      "subchannel": 1
+    },
+    {
+      "esc_i_code": "0x30",
+      "head_offset": 0,
+      "inkset": "PhysicalCMYKkk",
+      "role": "lightlightblack",
+      "slot": "LightLightBlack",
+      "subchannel": 3
+    },
+    {
+      "esc_i_code": "0x02",
+      "head_offset": 0,
+      "inkset": "PhysicalCMYKkk",
+      "role": "cyan",
+      "slot": "Cyan",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x12",
+      "head_offset": 0,
+      "inkset": "PhysicalCMYKkk",
+      "role": "lightcyan",
+      "slot": "LightCyan",
+      "subchannel": 1
+    },
+    {
+      "esc_i_code": "0x01",
+      "head_offset": 0,
+      "inkset": "PhysicalCMYKkk",
+      "role": "magenta",
+      "slot": "Magenta",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x11",
+      "head_offset": 0,
+      "inkset": "PhysicalCMYKkk",
+      "role": "lightmagenta",
+      "slot": "LightMagenta",
+      "subchannel": 1
+    },
+    {
+      "esc_i_code": "0x04",
+      "head_offset": 0,
+      "inkset": "PhysicalCMYKkk",
+      "role": "yellow",
+      "slot": "Yellow",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x00",
+      "head_offset": 0,
+      "inkset": "PhotoCMYK8",
+      "role": "black",
+      "slot": "Black",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x10",
+      "head_offset": 0,
+      "inkset": "PhotoCMYK8",
+      "role": "lightblack",
+      "slot": "LightBlack",
+      "subchannel": 1
+    },
+    {
+      "esc_i_code": "0x30",
+      "head_offset": 0,
+      "inkset": "PhotoCMYK8",
+      "role": "lightlightblack",
+      "slot": "LightLightBlack",
+      "subchannel": 3
+    },
+    {
+      "esc_i_code": "0x02",
+      "head_offset": 0,
+      "inkset": "PhotoCMYK8",
+      "role": "cyan",
+      "slot": "Cyan",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x12",
+      "head_offset": 0,
+      "inkset": "PhotoCMYK8",
+      "role": "lightcyan",
+      "slot": "LightCyan",
+      "subchannel": 1
+    },
+    {
+      "esc_i_code": "0x01",
+      "head_offset": 0,
+      "inkset": "PhotoCMYK8",
+      "role": "magenta",
+      "slot": "Magenta",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x11",
+      "head_offset": 0,
+      "inkset": "PhotoCMYK8",
+      "role": "lightmagenta",
+      "slot": "LightMagenta",
+      "subchannel": 1
+    },
+    {
+      "esc_i_code": "0x04",
+      "head_offset": 0,
+      "inkset": "PhotoCMYK8",
+      "role": "yellow",
+      "slot": "Yellow",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x00",
+      "head_offset": 0,
+      "inkset": "PhotoCMYK7",
+      "role": "black",
+      "slot": "Black",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x10",
+      "head_offset": 0,
+      "inkset": "PhotoCMYK7",
+      "role": "lightblack",
+      "slot": "LightBlack",
+      "subchannel": 1
+    },
+    {
+      "esc_i_code": "0x02",
+      "head_offset": 0,
+      "inkset": "PhotoCMYK7",
+      "role": "cyan",
+      "slot": "Cyan",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x12",
+      "head_offset": 0,
+      "inkset": "PhotoCMYK7",
+      "role": "lightcyan",
+      "slot": "LightCyan",
+      "subchannel": 1
+    },
+    {
+      "esc_i_code": "0x01",
+      "head_offset": 0,
+      "inkset": "PhotoCMYK7",
+      "role": "magenta",
+      "slot": "Magenta",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x11",
+      "head_offset": 0,
+      "inkset": "PhotoCMYK7",
+      "role": "lightmagenta",
+      "slot": "LightMagenta",
+      "subchannel": 1
+    },
+    {
+      "esc_i_code": "0x04",
+      "head_offset": 0,
+      "inkset": "PhotoCMYK7",
+      "role": "yellow",
+      "slot": "Yellow",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x00",
+      "head_offset": 0,
+      "inkset": "PhotoCMYK",
+      "role": "black",
+      "slot": "Black",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x02",
+      "head_offset": 0,
+      "inkset": "PhotoCMYK",
+      "role": "cyan",
+      "slot": "Cyan",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x12",
+      "head_offset": 0,
+      "inkset": "PhotoCMYK",
+      "role": "lightcyan",
+      "slot": "LightCyan",
+      "subchannel": 1
+    },
+    {
+      "esc_i_code": "0x01",
+      "head_offset": 0,
+      "inkset": "PhotoCMYK",
+      "role": "magenta",
+      "slot": "Magenta",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x11",
+      "head_offset": 0,
+      "inkset": "PhotoCMYK",
+      "role": "lightmagenta",
+      "slot": "LightMagenta",
+      "subchannel": 1
+    },
+    {
+      "esc_i_code": "0x04",
+      "head_offset": 0,
+      "inkset": "PhotoCMYK",
+      "role": "yellow",
+      "slot": "Yellow",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x02",
+      "head_offset": 0,
+      "inkset": "PhotoCMY",
+      "role": "cyan",
+      "slot": "Cyan",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x12",
+      "head_offset": 0,
+      "inkset": "PhotoCMY",
+      "role": "lightcyan",
+      "slot": "LightCyan",
+      "subchannel": 1
+    },
+    {
+      "esc_i_code": "0x01",
+      "head_offset": 0,
+      "inkset": "PhotoCMY",
+      "role": "magenta",
+      "slot": "Magenta",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x11",
+      "head_offset": 0,
+      "inkset": "PhotoCMY",
+      "role": "lightmagenta",
+      "slot": "LightMagenta",
+      "subchannel": 1
+    },
+    {
+      "esc_i_code": "0x04",
+      "head_offset": 0,
+      "inkset": "PhotoCMY",
+      "role": "yellow",
+      "slot": "Yellow",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x00",
+      "head_offset": 0,
+      "inkset": "CMYK",
+      "role": "black",
+      "slot": "Black",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x02",
+      "head_offset": 0,
+      "inkset": "CMYK",
+      "role": "cyan",
+      "slot": "Cyan",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x01",
+      "head_offset": 0,
+      "inkset": "CMYK",
+      "role": "magenta",
+      "slot": "Magenta",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x04",
+      "head_offset": 0,
+      "inkset": "CMYK",
+      "role": "yellow",
+      "slot": "Yellow",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x02",
+      "head_offset": 0,
+      "inkset": "CMY",
+      "role": "cyan",
+      "slot": "Cyan",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x01",
+      "head_offset": 0,
+      "inkset": "CMY",
+      "role": "magenta",
+      "slot": "Magenta",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x04",
+      "head_offset": 0,
+      "inkset": "CMY",
+      "role": "yellow",
+      "slot": "Yellow",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x00",
+      "head_offset": 0,
+      "inkset": "PhysicalCMYKkk",
+      "role": "black",
+      "slot": "Black",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x10",
+      "head_offset": 0,
+      "inkset": "PhysicalCMYKkk",
+      "role": "lightblack",
+      "slot": "LightBlack",
+      "subchannel": 1
+    },
+    {
+      "esc_i_code": "0x30",
+      "head_offset": 0,
+      "inkset": "PhysicalCMYKkk",
+      "role": "lightlightblack",
+      "slot": "LightLightBlack",
+      "subchannel": 3
+    },
+    {
+      "esc_i_code": "0x02",
+      "head_offset": 0,
+      "inkset": "PhysicalCMYKkk",
+      "role": "cyan",
+      "slot": "Cyan",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x12",
+      "head_offset": 0,
+      "inkset": "PhysicalCMYKkk",
+      "role": "lightcyan",
+      "slot": "LightCyan",
+      "subchannel": 1
+    },
+    {
+      "esc_i_code": "0x01",
+      "head_offset": 0,
+      "inkset": "PhysicalCMYKkk",
+      "role": "magenta",
+      "slot": "Magenta",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x11",
+      "head_offset": 0,
+      "inkset": "PhysicalCMYKkk",
+      "role": "lightmagenta",
+      "slot": "LightMagenta",
+      "subchannel": 1
+    },
+    {
+      "esc_i_code": "0x04",
+      "head_offset": 0,
+      "inkset": "PhysicalCMYKkk",
+      "role": "yellow",
+      "slot": "Yellow",
+      "subchannel": -1
+    }
+  ],
+  "device_features": [],
+  "driver": {
+    "gutenprint_model_id": "107"
+  },
+  "feeds": [
+    {
+      "name": "Standard",
+      "params": {},
+      "text": "Standard"
+    },
+    {
+      "name": "Velvet",
+      "params": {},
+      "text": "Manual Sheet Guide"
+    },
+    {
+      "name": "Matte",
+      "params": {},
+      "text": "Manual Feed (Front)"
+    }
+  ],
+  "identity": {
+    "gutenprint_driver": "escp2-3880",
+    "gutenprint_model_id": "107",
+    "manufacturer": "Epson",
+    "name": "Epson Stylus Pro 3880"
+  },
+  "media": [],
+  "media_sizes": [],
+  "paper_types": [
+    {
+      "class": "plain",
+      "name": "Plain",
+      "params": {
+        "FeedAdjustment": [
+          "107"
+        ],
+        "PaperMedia": [
+          "0"
+        ],
+        "PaperThickness": [
+          "1"
+        ],
+        "VacuumIntensity": [
+          "26"
+        ]
+      },
+      "text": "Plain Paper"
+    },
+    {
+      "class": "plain",
+      "name": "Postcard",
+      "params": {
+        "FeedAdjustment": [
+          "0"
+        ],
+        "PaperMedia": [
+          "1"
+        ],
+        "PaperThickness": [
+          "2"
+        ],
+        "VacuumIntensity": [
+          "0"
+        ]
+      },
+      "text": "Postcard"
+    },
+    {
+      "class": "photo",
+      "name": "GlossyFilm",
+      "params": {
+        "FeedAdjustment": [
+          "109"
+        ],
+        "PaperMedia": [
+          "7"
+        ],
+        "PaperThickness": [
+          "1"
+        ],
+        "VacuumIntensity": [
+          "0"
+        ]
+      },
+      "text": "Glossy Film"
+    },
+    {
+      "class": "transparency",
+      "name": "Transparency",
+      "params": {
+        "FeedAdjustment": [
+          "109"
+        ],
+        "PaperMedia": [
+          "9"
+        ],
+        "PaperThickness": [
+          "2"
+        ],
+        "VacuumIntensity": [
+          "0"
+        ]
+      },
+      "text": "Transparencies"
+    },
+    {
+      "class": "plain",
+      "name": "Envelope",
+      "params": {
+        "FeedAdjustment": [
+          "107"
+        ],
+        "PaperMedia": [
+          "1"
+        ],
+        "PaperThickness": [
+          "1"
+        ],
+        "VacuumIntensity": [
+          "26"
+        ]
+      },
+      "text": "Envelopes"
+    },
+    {
+      "class": "transparency",
+      "name": "BackFilm",
+      "params": {
+        "FeedAdjustment": [
+          "109"
+        ],
+        "PaperMedia": [
+          "10"
+        ],
+        "PaperThickness": [
+          "1"
+        ],
+        "VacuumIntensity": [
+          "0"
+        ]
+      },
+      "text": "Back Light Film"
+    },
+    {
+      "class": "good",
+      "name": "Matte",
+      "params": {
+        "FeedAdjustment": [
+          "0"
+        ],
+        "PaperMedia": [
+          "3"
+        ],
+        "PaperThickness": [
+          "2"
+        ],
+        "VacuumIntensity": [
+          "0"
+        ]
+      },
+      "text": "Matte Paper"
+    },
+    {
+      "class": "good",
+      "name": "MatteHeavy",
+      "params": {
+        "FeedAdjustment": [
+          "0"
+        ],
+        "PaperMedia": [
+          "5"
+        ],
+        "PaperThickness": [
+          "2"
+        ],
+        "VacuumIntensity": [
+          "0"
+        ]
+      },
+      "text": "Matte Paper Heavyweight"
+    },
+    {
+      "class": "good",
+      "name": "Inkjet",
+      "params": {
+        "FeedAdjustment": [
+          "107"
+        ],
+        "PaperMedia": [
+          "1"
+        ],
+        "PaperThickness": [
+          "1"
+        ],
+        "VacuumIntensity": [
+          "26"
+        ]
+      },
+      "text": "Inkjet Paper"
+    },
+    {
+      "class": "good",
+      "name": "Coated",
+      "params": {
+        "FeedAdjustment": [
+          "107"
+        ],
+        "PaperMedia": [
+          "3"
+        ],
+        "PaperThickness": [
+          "1"
+        ],
+        "VacuumIntensity": [
+          "26"
+        ]
+      },
+      "text": "Photo Quality Inkjet Paper"
+    },
+    {
+      "class": "photo",
+      "name": "Photo",
+      "params": {
+        "FeedAdjustment": [
+          "103"
+        ],
+        "PaperMedia": [
+          "6"
+        ],
+        "PaperThickness": [
+          "2"
+        ],
+        "VacuumIntensity": [
+          "0"
+        ]
+      },
+      "text": "Photo Paper"
+    },
+    {
+      "class": "premium",
+      "name": "GlossyPhoto",
+      "params": {
+        "FeedAdjustment": [
+          "128"
+        ],
+        "PaperMedia": [
+          "11"
+        ],
+        "PaperThickness": [
+          "2"
+        ],
+        "VacuumIntensity": [
+          "0"
+        ]
+      },
+      "text": "Premium Glossy Photo Paper"
+    },
+    {
+      "class": "premium",
+      "name": "Semigloss",
+      "params": {
+        "FeedAdjustment": [
+          "128"
+        ],
+        "PaperMedia": [
+          "12"
+        ],
+        "PaperThickness": [
+          "2"
+        ],
+        "VacuumIntensity": [
+          "0"
+        ]
+      },
+      "text": "Premium Semigloss Photo Paper"
+    },
+    {
+      "class": "premium",
+      "name": "Luster",
+      "params": {
+        "FeedAdjustment": [
+          "128"
+        ],
+        "PaperMedia": [
+          "13"
+        ],
+        "PaperThickness": [
+          "2"
+        ],
+        "VacuumIntensity": [
+          "0"
+        ]
+      },
+      "text": "Premium Luster Photo Paper"
+    },
+    {
+      "class": "premium",
+      "name": "ArchivalMatte",
+      "params": {
+        "FeedAdjustment": [
+          "0"
+        ],
+        "PaperMedia": [
+          "15"
+        ],
+        "PaperThickness": [
+          "2"
+        ],
+        "VacuumIntensity": [
+          "0"
+        ]
+      },
+      "text": "Archival Matte Paper"
+    },
+    {
+      "class": "premium",
+      "name": "WaterColorRadiant",
+      "params": {
+        "FeedAdjustment": [
+          "0"
+        ],
+        "PaperMedia": [
+          "15"
+        ],
+        "PaperThickness": [
+          "2"
+        ],
+        "VacuumIntensity": [
+          "0"
+        ]
+      },
+      "text": "Watercolor Paper - Radiant White"
+    },
+    {
+      "class": "photo",
+      "name": "GlossyPaper",
+      "params": {
+        "FeedAdjustment": [
+          "107"
+        ],
+        "PaperMedia": [
+          "19"
+        ],
+        "PaperThickness": [
+          "1"
+        ],
+        "VacuumIntensity": [
+          "26"
+        ]
+      },
+      "text": "Photo Quality Glossy Paper"
+    },
+    {
+      "class": "premium",
+      "name": "ColorLife",
+      "params": {
+        "FeedAdjustment": [
+          "103"
+        ],
+        "PaperMedia": [
+          "23"
+        ],
+        "PaperThickness": [
+          "2"
+        ],
+        "VacuumIntensity": [
+          "0"
+        ]
+      },
+      "text": "ColorLife Paper"
+    },
+    {
+      "class": "plain",
+      "name": "Other",
+      "params": {
+        "FeedAdjustment": [
+          "107"
+        ],
+        "PaperThickness": [
+          "1"
+        ],
+        "VacuumIntensity": [
+          "26"
+        ]
+      },
+      "text": "Other"
+    }
+  ],
+  "protocol": {
+    "cls": "escp2-esci",
+    "commandSet": null,
+    "family": "gutenprint-model-107",
+    "note": "codes from gutenprint XML formula (not live-verified)",
+    "raster_command": "ESC i <color|sub<<4> <comp=1> <bitwidth> <nwidth:2LE> <nlines:2LE> <TIFF PackBits>"
+  },
+  "schema": "rip-printer-v1"
+}

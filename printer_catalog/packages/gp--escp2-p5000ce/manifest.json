@@ -1,0 +1,23 @@
+{
+  "backend_family": "epson_escp2_gutenprint_model_138",
+  "backend_runtime_file": "backend-runtime.json",
+  "backend_runtime_sha256": "ae2992f234a91ab3d71c12a7f7b64a385a57b4ef969036a750c1c1efa959f969",
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson SureColor P5000 Commercial Edition",
+  "model_id": "SureColor_P5000_Commercial_Edition",
+  "package_id": "gp--escp2-p5000ce",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "3818200fd9acf7def38666320d1f3c408f8c322bd86ec0c2de7847e9c96d16cf",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "gutenprint-model-138",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "90a826bff6ad6ea4b9670b28c13c02a29457200019ebeef968d04fb07273c418",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "410fc06cd9b6269ea93ec91bc870164eedb1eb483eca695bf7d3de7654f4e13d",
+  "version": 1,
+  "visible": true,
+  "warnings": []
+}

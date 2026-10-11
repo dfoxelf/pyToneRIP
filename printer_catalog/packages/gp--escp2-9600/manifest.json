@@ -1,0 +1,23 @@
+{
+  "backend_family": "epson_escp2_gutenprint_model_49",
+  "backend_runtime_file": "backend-runtime.json",
+  "backend_runtime_sha256": "b77d4953c32e7b2d12f7df1619e454bbb0b82838d24c331b2df8b20ca942bd36",
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson Stylus Pro 9600",
+  "model_id": "Stylus_Pro_9600",
+  "package_id": "gp--escp2-9600",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "17ad3604edecb3eaff7f14b44ba92b3e7fa06084b3885c2ad9b1731bfffc3ab2",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "gutenprint-model-49",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "90a826bff6ad6ea4b9670b28c13c02a29457200019ebeef968d04fb07273c418",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "7f2ab972e8f9d96d0479e8301affd9e2dc4ed115edac003edf3ee7c5754e9d8e",
+  "version": 1,
+  "visible": true,
+  "warnings": []
+}

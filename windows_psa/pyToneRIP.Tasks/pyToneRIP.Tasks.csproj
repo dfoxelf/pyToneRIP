@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
+    <ProjectGuid>{8F0552BE-2C66-4BDE-8A71-8E9C0F1E35D4}</ProjectGuid>
+    <OutputType>winmdobj</OutputType>
+    <RootNamespace>pyToneRIP.Tasks</RootNamespace>
+    <AssemblyName>pyToneRIP.Tasks</AssemblyName>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
+    <TargetPlatformVersion>10.0.26100.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.26100.0</TargetPlatformMinVersion>
+    <MinimumVisualStudioVersion>17.0</MinimumVisualStudioVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <IntermediateOutputPath>obj\x64\Debug\</IntermediateOutputPath>
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <IntermediateOutputPath>obj\x64\Release\</IntermediateOutputPath>
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugSymbols>false</DebugSymbols>
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\pyToneRIP\Models\RipRuntimeContract.cs">
+      <Link>Models\RipRuntimeContract.cs</Link>
+    </Compile>
+    <Compile Include="..\pyToneRIP\Services\QueueConfigurationStorage.cs">
+      <Link>Services\QueueConfigurationStorage.cs</Link>
+    </Compile>
+    <Compile Include="..\pyToneRIP\Services\QueueIdentity.cs">
+      <Link>Services\QueueIdentity.cs</Link>
+    </Compile>
+    <Compile Include="..\pyToneRIP\Services\SharedApplicationStorage.cs">
+      <Link>Services\SharedApplicationStorage.cs</Link>
+    </Compile>
+    <Compile Include="..\pyToneRIP\Services\ExternalCurveAccessStore.cs">
+      <Link>Services\ExternalCurveAccessStore.cs</Link>
+    </Compile>
+    <Compile Include="..\pyToneRIP\Services\JobRecordWriter.cs">
+      <Link>Services\JobRecordWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\pyToneRIP\Services\RipRuntimeClient.cs">
+      <Link>Services\RipRuntimeClient.cs</Link>
+    </Compile>
+    <Compile Include="..\pyToneRIP\Services\PrinterAssignmentGate.cs">
+      <Link>Services\PrinterAssignmentGate.cs</Link>
+    </Compile>
+    <Compile Include="..\pyToneRIP\Services\PrintTicketSynchronization.cs">
+      <Link>Services\PrintTicketSynchronization.cs</Link>
+    </Compile>
+    <Compile Include="..\pyToneRIP\Services\RipConfigurationProjection.cs">
+      <Link>Services\RipConfigurationProjection.cs</Link>
+    </Compile>
+    <Compile Include="..\pyToneRIP\Services\ModelPdcProvider.cs">
+      <Link>Services\ModelPdcProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\pyToneRIP\Tasks\PrintSupportExtensionBackgroundTask.cs">
+      <Link>PrintSupportExtensionBackgroundTask.cs</Link>
+    </Compile>
+    <Compile Include="..\pyToneRIP\Tasks\VirtualPrinterBackgroundTask.cs">
+      <Link>VirtualPrinterBackgroundTask.cs</Link>
+    </Compile>
+    <Compile Include="..\pyToneRIP\Tasks\CoreAppServiceTask.cs">
+      <Link>CoreAppServiceTask.cs</Link>
+    </Compile>
+    <Compile Include="..\pyToneRIP\Services\CoreAppServiceClient.cs">
+      <Link>Services\CoreAppServiceClient.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.2.14" />
+    <SDKReference Include="WindowsDesktop, Version=10.0.26100.0" />
+  </ItemGroup>
+  <PropertyGroup>
+    <WindowsXamlTargetsVersion Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets')">$(VisualStudioVersion)</WindowsXamlTargetsVersion>
+    <WindowsXamlTargetsVersion Condition="'$(WindowsXamlTargetsVersion)' == '' and Exists('$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v17.0\Microsoft.Windows.UI.Xaml.CSharp.targets')">17.0</WindowsXamlTargetsVersion>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(WindowsXamlTargetsVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
+</Project>

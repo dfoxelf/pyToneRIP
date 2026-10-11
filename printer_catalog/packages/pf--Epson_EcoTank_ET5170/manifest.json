@@ -1,0 +1,25 @@
+{
+  "backend_family": "epson_escp2_wf7610",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson EcoTank ET-5170",
+  "model_id": "EcoTank_ET5170",
+  "package_id": "pf--Epson_EcoTank_ET5170",
+  "ppd_file": "vendor.ppd",
+  "ppd_sha256": "ae662603d9b73d63b9a7fbc9c89330adbcf9be7483c0dd24e507856b3d98731f",
+  "ppd_source": "vendor.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "WF7610",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "3fb89deb47d7d3109fdd9cc28830cea24974c2fbd1842539bcdd8596b74f883c",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "26d5e0cd539c105fab00c8bbb92fc6b37104c77cc4f184f9cc58daf792963a5d",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "FAMILY_ALIAS: ReferenceDriver printers.lst [Epson_EcoTank_ET5170] Driver=Epson_EcoTank_ET15000; technical driver pf--Epson_EcoTank_ET15000; exact capabilities from Epson-ET-5170_Series-epson-escpr2-en.ppd"
+  ]
+}

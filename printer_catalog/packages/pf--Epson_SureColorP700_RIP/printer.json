@@ -1,0 +1,749 @@
+{
+  "channels": [],
+  "device_features": [
+    "platen_gap"
+  ],
+  "driver": {
+    "driver_mechanics": {
+      "command_level": 21,
+      "leading_feed_offset_mils": -1000,
+      "mechanical_feature_set": 39
+    },
+    "id": "P700",
+    "module": "Epson",
+    "number": "570"
+  },
+  "feeds": [
+    {
+      "feed_mechanics": {
+        "medium_kind": "automatic_cut_sheet",
+        "remote_paper_path": {
+          "number": 0,
+          "type": 1
+        },
+        "roll_cut_mode": "none",
+        "suppress_form_feed_after_page": false
+      },
+      "idx": 0,
+      "name": "Top Feed"
+    },
+    {
+      "feed_mechanics": {
+        "medium_kind": "selected_cut_sheet_path",
+        "remote_paper_path": {
+          "number": 2,
+          "type": 2
+        },
+        "roll_cut_mode": "none",
+        "suppress_form_feed_after_page": false
+      },
+      "idx": 1,
+      "name": "Front Fineart"
+    },
+    {
+      "feed_mechanics": {
+        "medium_kind": "selected_cut_sheet_path",
+        "remote_paper_path": {
+          "number": 0,
+          "type": 2
+        },
+        "roll_cut_mode": "none",
+        "suppress_form_feed_after_page": false
+      },
+      "idx": 2,
+      "name": "Front Board"
+    },
+    {
+      "feed_mechanics": {
+        "medium_kind": "roll",
+        "remote_paper_path": {
+          "number": 0,
+          "type": 3
+        },
+        "roll_cut_mode": "none",
+        "suppress_form_feed_after_page": false
+      },
+      "idx": 3,
+      "name": "Roll Paper"
+    }
+  ],
+  "identity": {
+    "manufacturer": "Epson",
+    "marketing": "SureColor P700",
+    "name": "Epson_SureColorP700_RIP"
+  },
+  "media": [
+    {
+      "idx": 0,
+      "match": "plain_paper",
+      "media_mechanics": {
+        "legacy_media_type_code": 0,
+        "physical_raster_layout_variant": 2,
+        "remote_media_type_code": 0,
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "name": "Plain paper"
+    },
+    {
+      "idx": 1,
+      "match": "epson_inkjet",
+      "media_mechanics": {
+        "legacy_media_type_code": 29,
+        "physical_raster_layout_variant": 2,
+        "remote_media_type_code": 29,
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "name": "Epson Inkjet Paper"
+    },
+    {
+      "idx": 2,
+      "match": "epson_inkjet",
+      "media_mechanics": {
+        "legacy_media_type_code": 15,
+        "physical_raster_layout_variant": 2,
+        "remote_media_type_code": 15,
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "name": "Archival Matte"
+    },
+    {
+      "idx": 3,
+      "match": "epson_premium",
+      "media_mechanics": {
+        "legacy_media_type_code": 11,
+        "physical_raster_layout_variant": 1,
+        "remote_media_type_code": 11,
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "name": "Epson Photo Glossy"
+    },
+    {
+      "idx": 4,
+      "match": "epson_premium",
+      "media_mechanics": {
+        "legacy_media_type_code": 11,
+        "physical_raster_layout_variant": 1,
+        "remote_media_type_code": 11,
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "name": "Epson Premium Glossy"
+    },
+    {
+      "idx": 5,
+      "match": "epson_premium",
+      "media_mechanics": {
+        "legacy_media_type_code": 12,
+        "physical_raster_layout_variant": 1,
+        "remote_media_type_code": 12,
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "name": "Epson Premium Semiglossy"
+    },
+    {
+      "idx": 6,
+      "match": "epson_premium",
+      "media_mechanics": {
+        "legacy_media_type_code": 13,
+        "physical_raster_layout_variant": 1,
+        "remote_media_type_code": 13,
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "name": "Epson Premium Luster"
+    },
+    {
+      "idx": 7,
+      "match": "epson_premium",
+      "media_mechanics": {
+        "legacy_media_type_code": 12,
+        "physical_raster_layout_variant": 1,
+        "remote_media_type_code": 12,
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "name": "Epson Proof Paper"
+    },
+    {
+      "idx": 8,
+      "match": "epson_transparency",
+      "media_mechanics": {
+        "legacy_media_type_code": 9,
+        "physical_raster_layout_variant": 2,
+        "remote_media_type_code": 9,
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "name": "Transparency"
+    },
+    {
+      "idx": 13,
+      "match": "cd_matte",
+      "media_mechanics": {
+        "legacy_media_type_code": 1,
+        "physical_raster_layout_variant": 0,
+        "remote_media_type_code": 91,
+        "special_media": {
+          "kind": "printable_disc",
+          "selector": 513
+        }
+      },
+      "name": "CD printable"
+    },
+    {
+      "idx": 14,
+      "match": "cd_glossy",
+      "media_mechanics": {
+        "legacy_media_type_code": 1,
+        "physical_raster_layout_variant": 0,
+        "remote_media_type_code": 92,
+        "special_media": {
+          "kind": "printable_disc",
+          "selector": 513
+        }
+      },
+      "name": "CD verbatim glossy"
+    }
+  ],
+  "media_sizes": [
+    {
+      "anumber": "4",
+      "height_mils": 129000,
+      "idx": 0,
+      "name": "Custom",
+      "page_mechanics": {
+        "media_size_code": 99,
+        "sheet_geometry_class": "standard_sheet",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "width_mils": 12950
+    },
+    {
+      "anumber": "0",
+      "height_mils": 11000,
+      "idx": 1,
+      "name": "US-Letter",
+      "page_mechanics": {
+        "media_size_code": 1,
+        "sheet_geometry_class": "standard_sheet",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "width_mils": 8500
+    },
+    {
+      "anumber": "1,8,7,6,5,3",
+      "height_mils": 14000,
+      "idx": 2,
+      "name": "US-Legal",
+      "page_mechanics": {
+        "media_size_code": 2,
+        "sheet_geometry_class": "standard_sheet",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "width_mils": 8500
+    },
+    {
+      "anumber": "9",
+      "height_mils": 11693,
+      "idx": 3,
+      "name": "A4",
+      "page_mechanics": {
+        "media_size_code": 0,
+        "sheet_geometry_class": "standard_sheet",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "width_mils": 8268
+    },
+    {
+      "anumber": "10",
+      "height_mils": 8268,
+      "idx": 4,
+      "name": "A5",
+      "page_mechanics": {
+        "media_size_code": 3,
+        "sheet_geometry_class": "standard_sheet",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "width_mils": 5846
+    },
+    {
+      "anumber": "8,7,6,5",
+      "height_mils": 16535,
+      "idx": 5,
+      "name": "A3",
+      "page_mechanics": {
+        "media_size_code": 62,
+        "sheet_geometry_class": "standard_sheet",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "width_mils": 11693
+    },
+    {
+      "anumber": "16,3",
+      "height_mils": 19000,
+      "idx": 6,
+      "name": "A3+ / US B+",
+      "page_mechanics": {
+        "media_size_code": 61,
+        "sheet_geometry_class": "standard_sheet",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "width_mils": 13000
+    },
+    {
+      "anumber": "17",
+      "height_mils": 10118,
+      "idx": 7,
+      "name": "B5",
+      "page_mechanics": {
+        "media_size_code": 5,
+        "sheet_geometry_class": "standard_sheet",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "width_mils": 7165
+    },
+    {
+      "anumber": "18",
+      "height_mils": 14331,
+      "idx": 8,
+      "name": "B4",
+      "page_mechanics": {
+        "media_size_code": 63,
+        "sheet_geometry_class": "standard_sheet",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "width_mils": 10118
+    },
+    {
+      "anumber": "19",
+      "height_mils": 17000,
+      "idx": 9,
+      "name": "US B",
+      "page_mechanics": {
+        "media_size_code": 64,
+        "sheet_geometry_class": "standard_sheet",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "width_mils": 11000
+    },
+    {
+      "anumber": "20",
+      "height_mils": 10500,
+      "idx": 10,
+      "name": "Executive",
+      "page_mechanics": {
+        "media_size_code": 6,
+        "sheet_geometry_class": "standard_sheet",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "width_mils": 7250
+    },
+    {
+      "anumber": "21",
+      "height_mils": 8500,
+      "idx": 11,
+      "name": "Half Letter",
+      "page_mechanics": {
+        "media_size_code": 7,
+        "sheet_geometry_class": "standard_sheet",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "width_mils": 5500
+    },
+    {
+      "anumber": "11,12,13,14",
+      "height_mils": 5827,
+      "idx": 12,
+      "name": "A6",
+      "page_mechanics": {
+        "media_size_code": 4,
+        "sheet_geometry_class": "photo_or_card",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "width_mils": 4134
+    },
+    {
+      "anumber": "22",
+      "height_mils": 8000,
+      "idx": 13,
+      "name": "5x8\"",
+      "page_mechanics": {
+        "media_size_code": 11,
+        "sheet_geometry_class": "photo_or_card",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "width_mils": 5000
+    },
+    {
+      "anumber": "23",
+      "height_mils": 10000,
+      "idx": 14,
+      "name": "Card 8x10\"",
+      "page_mechanics": {
+        "media_size_code": 12,
+        "sheet_geometry_class": "photo_or_card",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "width_mils": 8000
+    },
+    {
+      "anumber": "24",
+      "height_mils": 9500,
+      "idx": 15,
+      "name": "Envelope #10",
+      "page_mechanics": {
+        "media_size_code": 18,
+        "sheet_geometry_class": "envelope",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "width_mils": 4125
+    },
+    {
+      "anumber": "25",
+      "height_mils": 8661,
+      "idx": 16,
+      "name": "Envelope DL",
+      "page_mechanics": {
+        "media_size_code": 20,
+        "sheet_geometry_class": "envelope",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "width_mils": 4331
+    },
+    {
+      "anumber": "26",
+      "height_mils": 6378,
+      "idx": 17,
+      "name": "Envelope C6",
+      "page_mechanics": {
+        "media_size_code": 19,
+        "sheet_geometry_class": "envelope",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "width_mils": 4488
+    },
+    {
+      "anumber": "27",
+      "height_mils": 8661,
+      "idx": 18,
+      "name": "Envel.132x220mm",
+      "page_mechanics": {
+        "media_size_code": 21,
+        "sheet_geometry_class": "envelope",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "width_mils": 5197
+    },
+    {
+      "anumber": "28",
+      "height_mils": 6500,
+      "idx": 19,
+      "name": "4x6\" tear-off",
+      "page_mechanics": {
+        "media_size_code": 9,
+        "sheet_geometry_class": "photo_or_card",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "width_mils": 4500
+    },
+    {
+      "anumber": "29",
+      "height_mils": 6000,
+      "idx": 20,
+      "name": "4x6\"",
+      "page_mechanics": {
+        "media_size_code": 10,
+        "sheet_geometry_class": "photo_or_card",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "width_mils": 4000
+    },
+    {
+      "anumber": "30",
+      "height_mils": 5906,
+      "idx": 21,
+      "name": "10x15cm",
+      "page_mechanics": {
+        "media_size_code": 13,
+        "sheet_geometry_class": "photo_or_card",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "width_mils": 3937
+    },
+    {
+      "anumber": "31",
+      "height_mils": 11811,
+      "idx": 22,
+      "name": "20x30cm",
+      "page_mechanics": {
+        "media_size_code": 14,
+        "sheet_geometry_class": "photo_or_card",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "width_mils": 7874
+    },
+    {
+      "anumber": "32",
+      "height_mils": 5000,
+      "idx": 23,
+      "name": "L-Format",
+      "page_mechanics": {
+        "media_size_code": 15,
+        "sheet_geometry_class": "photo_or_card",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "width_mils": 3500
+    },
+    {
+      "anumber": "33",
+      "height_mils": 7000,
+      "idx": 24,
+      "name": "5x7\"",
+      "page_mechanics": {
+        "media_size_code": 28,
+        "sheet_geometry_class": "photo_or_card",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "width_mils": 5000
+    },
+    {
+      "anumber": "34,2",
+      "height_mils": 23386,
+      "idx": 25,
+      "name": "Panorama",
+      "page_mechanics": {
+        "media_size_code": 8,
+        "sheet_geometry_class": "standard_sheet",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "width_mils": 8268
+    },
+    {
+      "anumber": "35",
+      "height_mils": 11300,
+      "idx": 26,
+      "name": "US-Letter borderless",
+      "page_mechanics": {
+        "media_size_code": 1,
+        "sheet_geometry_class": "photo_or_card",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "width_mils": 8700
+    },
+    {
+      "anumber": "36",
+      "height_mils": 11993,
+      "idx": 27,
+      "name": "A4 borderless",
+      "page_mechanics": {
+        "media_size_code": 0,
+        "sheet_geometry_class": "photo_or_card",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "width_mils": 8468
+    },
+    {
+      "anumber": "37",
+      "height_mils": 16835,
+      "idx": 28,
+      "name": "A3 borderless",
+      "page_mechanics": {
+        "media_size_code": 62,
+        "sheet_geometry_class": "standard_sheet",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "width_mils": 11893
+    },
+    {
+      "anumber": "38",
+      "height_mils": 19300,
+      "idx": 29,
+      "name": "A3+ / US B+ borderless",
+      "page_mechanics": {
+        "media_size_code": 61,
+        "sheet_geometry_class": "standard_sheet",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "width_mils": 13200
+    },
+    {
+      "anumber": "39",
+      "height_mils": 8300,
+      "idx": 30,
+      "name": "Borderless 5x8\"",
+      "page_mechanics": {
+        "media_size_code": 11,
+        "sheet_geometry_class": "photo_or_card",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "width_mils": 5200
+    },
+    {
+      "anumber": "40",
+      "height_mils": 6300,
+      "idx": 31,
+      "name": "Borderless 4x6\"",
+      "page_mechanics": {
+        "media_size_code": 10,
+        "sheet_geometry_class": "photo_or_card",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "width_mils": 4200
+    },
+    {
+      "anumber": "41",
+      "height_mils": 6206,
+      "idx": 32,
+      "name": "Borderless 10x15cm",
+      "page_mechanics": {
+        "media_size_code": 13,
+        "sheet_geometry_class": "photo_or_card",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "width_mils": 4137
+    },
+    {
+      "anumber": "42",
+      "height_mils": 5300,
+      "idx": 33,
+      "name": "Borderless L-Format",
+      "page_mechanics": {
+        "media_size_code": 15,
+        "sheet_geometry_class": "photo_or_card",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "width_mils": 3700
+    },
+    {
+      "anumber": "43",
+      "height_mils": 7300,
+      "idx": 34,
+      "name": "Borderless 5x7\"",
+      "page_mechanics": {
+        "media_size_code": 28,
+        "sheet_geometry_class": "photo_or_card",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "width_mils": 5200
+    },
+    {
+      "anumber": "44",
+      "height_mils": 26386,
+      "idx": 35,
+      "name": "Panorama borderless",
+      "page_mechanics": {
+        "media_size_code": 8,
+        "sheet_geometry_class": "photo_or_card",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "width_mils": 8468
+    },
+    {
+      "anumber": "40",
+      "height_mils": 11693,
+      "idx": 36,
+      "name": "CD Printable",
+      "page_mechanics": {
+        "media_size_code": 0,
+        "sheet_geometry_class": "standard_sheet",
+        "special_media": {
+          "kind": "printable_disc",
+          "selector": 513
+        }
+      },
+      "width_mils": 8268
+    }
+  ],
+  "protocol": {
+    "cls": "escpr-rgb",
+    "family": "escpr",
+    "summary": "ESC/P-R: host sends RGB (dsnd RLE or RHV2 band), FIRMWARE does ink separation. Per-channel host control NOT available on this class. Commands: ESC q setq / ESC j setj|sets|endj / ESC p setn|sttp|endp / ESC d dsnd. Enter: ESC ( R 06 00 00 \"ESCPR\"; exit packet mode first: 00 00 00 1b 01 40 EJL 1284.4. RHV2 variant: same dsnd with band header {rows:1,x:2BE,y:2BE,w:2BE}+18B params + per-plane rows [lenBE32][bit-delta-Huffman w/ static code/leng tables in RHV2Comp.o]."
+  },
+  "schema": "rip-printer-v1"
+}

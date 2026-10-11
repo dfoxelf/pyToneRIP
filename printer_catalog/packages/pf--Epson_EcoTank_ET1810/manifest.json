@@ -1,0 +1,25 @@
+{
+  "backend_family": "epson_escp2_xp305",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson EcoTank ET-1810",
+  "model_id": "EcoTank_ET1810",
+  "package_id": "pf--Epson_EcoTank_ET1810",
+  "ppd_file": "vendor.ppd",
+  "ppd_sha256": "98027fd0d941373ccbd6328ac2e324ede88ba21fc4ab38b228d9f277ef262716",
+  "ppd_source": "vendor.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "XP305",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "760942d8961c4758824df985baac692cf2804e7532fbb30cc062a13a343677d3",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "f505216328c8d3b35a2d878df0927edad5ea0f31cb3b4ec04c1bf2a14da0b411",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "FAMILY_ALIAS: ReferenceDriver printers.lst [Epson_EcoTank_ET1810] Driver=Epson_EcoTank_ET2810; technical driver pf--Epson_EcoTank_ET2810; exact capabilities from Epson-ET-1810_Series-epson-escpr-en.ppd"
+  ]
+}

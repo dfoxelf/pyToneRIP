@@ -1,0 +1,23 @@
+{
+  "backend_family": "epson_escp2_gutenprint_model_82",
+  "backend_runtime_file": "backend-runtime.json",
+  "backend_runtime_sha256": "2dde0af57230533ff462ce254a83ec48921263a915b82d1da771c0a3d7903f6c",
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson Artisan 1430",
+  "model_id": "Artisan_1430",
+  "package_id": "gp--escp2-artisan1430",
+  "ppd_file": "vendor.ppd",
+  "ppd_sha256": "3f2f4924fd9b19ad169f94d3420862de7f9d387573401ca53cb10ec3bdf41b40",
+  "ppd_source": "vendor.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "gutenprint-model-82",
+  "runtime_source_file": null,
+  "runtime_source_sha256": null,
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "0ccdc6644e505978856cdf30aff6157180d8ec67f17274ee30c532a38e7ecc1f",
+  "version": 1,
+  "visible": true,
+  "warnings": []
+}

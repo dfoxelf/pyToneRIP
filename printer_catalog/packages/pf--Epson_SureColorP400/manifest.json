@@ -1,0 +1,26 @@
+{
+  "backend_family": "epson_escp2_gutenprint_model_91",
+  "backend_runtime_file": "backend-runtime.json",
+  "backend_runtime_sha256": "14435b7291982dd0b3473672907424d63d256bd6b5ab9e4aa8c0aa4dfdde6d08",
+  "backend_source_file": "backend-source.json",
+  "backend_source_sha256": "f0793577420087f45660db9fe692c4704022b6bdf7f9ffb1d42a786e487ab7b9",
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson SureColor P400",
+  "model_id": "SureColorP400",
+  "package_id": "pf--Epson_SureColorP400",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "7e95d7a0ba3f2685d2c708c977deabbd114a77782e4a02fdbc131932ebef3a24",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "gutenprint-model-91",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "355c14503ef19060a2f5bd50e52bc93ec6a6709e02d215a7e1f64373447e535b",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "3dd7bdc1dd36a209506f30d8b9894b60a8ccb959ccd522ece1e9ad8a7d172641",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "SOURCE_CORRECTION: protocol family resolved by an explicit compatible driver descriptor",
+    "SYNTHETIC_PPD: no exact Epson PPD in the local source corpus; ReferenceDriver technical driver id R1900; no manufacturer paper list inherited"
+  ]
+}

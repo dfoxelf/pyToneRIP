@@ -1,0 +1,25 @@
+{
+  "channels": [],
+  "device_features": [],
+  "driver": {
+    "gutenprint_model_id": "16"
+  },
+  "feeds": [],
+  "identity": {
+    "gutenprint_driver": "escp2-860",
+    "gutenprint_model_id": "16",
+    "manufacturer": "Epson",
+    "name": "Epson Stylus Color 860"
+  },
+  "media": [],
+  "media_sizes": [],
+  "paper_types": [],
+  "protocol": {
+    "cls": "escp2-esci",
+    "commandSet": null,
+    "family": "gutenprint-model-16",
+    "note": "codes from gutenprint XML formula (not live-verified)",
+    "raster_command": "ESC i <color|sub<<4> <comp=1> <bitwidth> <nwidth:2LE> <nlines:2LE> <TIFF PackBits>"
+  },
+  "schema": "rip-printer-v1"
+}

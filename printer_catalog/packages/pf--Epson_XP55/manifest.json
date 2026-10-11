@@ -1,0 +1,23 @@
+{
+  "backend_family": "epson_escp2_px700w",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson XP-55",
+  "model_id": "XP55",
+  "package_id": "pf--Epson_XP55",
+  "ppd_file": "vendor.ppd",
+  "ppd_sha256": "66db4d179ffb41b5c64a224d8bd3ab8446fc0b9da7ab74dfa84ea800922adc98",
+  "ppd_source": "vendor.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "PX700W",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "abb40afdb228d7db0a345d2658239231cfa1fe3447af56e2af3dc42c18f81a8f",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "126f9a675563f1390528a75bd9cc03a0d53a1a4d50e688719591438fb30bad25",
+  "version": 1,
+  "visible": true,
+  "warnings": []
+}

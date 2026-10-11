@@ -1,0 +1,23 @@
+{
+  "backend_family": "epson_escp2_gutenprint_model_8",
+  "backend_runtime_file": "backend-runtime.json",
+  "backend_runtime_sha256": "1da9a41cefc58b648d3e5f59c6942727aa9e10603580fd628c71c810662ff516",
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson Stylus Photo EX",
+  "model_id": "Stylus_Photo_EX",
+  "package_id": "gp--escp2-ex",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "2604885b15d633d29850fc927783161a2ebecbf59d6d06d8c04edec37ff9f173",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "gutenprint-model-8",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "90a826bff6ad6ea4b9670b28c13c02a29457200019ebeef968d04fb07273c418",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "8bef0c9f0caf670619689fd976b4b52990594829257ec14d8af3f1a35b9c788b",
+  "version": 1,
+  "visible": true,
+  "warnings": []
+}

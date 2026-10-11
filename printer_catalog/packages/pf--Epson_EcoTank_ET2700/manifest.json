@@ -1,0 +1,23 @@
+{
+  "backend_family": "epson_escp2_xp305",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson EcoTank ET-2700",
+  "model_id": "EcoTank_ET2700",
+  "package_id": "pf--Epson_EcoTank_ET2700",
+  "ppd_file": "vendor.ppd",
+  "ppd_sha256": "158b3d7471daba887bef1f05db305fea365fc976babb98571483bf911dd9ad0d",
+  "ppd_source": "vendor.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "XP305",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "898c62f074156e2662abf313da08726abe6621a242e6cbd0a65ac3fa2439401f",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "0855e899ef7f8eda4590ca7121bf1ad01113f7e203ccecd3c5e4ffc473d9c76f",
+  "version": 1,
+  "visible": true,
+  "warnings": []
+}

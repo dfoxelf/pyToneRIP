@@ -1,0 +1,25 @@
+{
+  "backend_family": "epson_escp2_gutenprint_model_117",
+  "backend_runtime_file": "backend-runtime.json",
+  "backend_runtime_sha256": "36b0c0bc071be59ce3816a5f1bb5a06e5682a820748e228440ecd308f36d4ca3",
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson Stylus Pro 9900",
+  "model_id": "Stylus_Pro_9900",
+  "package_id": "gp--escp2-9900",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "91e4329954942c032c14dea3b9c77c80846942662b35e70bd1a7822c57c5487a",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "gutenprint-model-117",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "90a826bff6ad6ea4b9670b28c13c02a29457200019ebeef968d04fb07273c418",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "dda992cd55eef5b4553a9f6b5aafbce01c4ec7df947c45f5fbccc0927e8b58cc",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "SOURCE_CORRECTION: media selectors and MI size byte use model-specific ReferenceDriver stream captures"
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "backend_family": "epson_escp2_gutenprint_model_23",
+  "backend_runtime_file": "backend-runtime.json",
+  "backend_runtime_sha256": "596ea39b0cf50c49c4a9494db2608a532b3797011268899407f1ee4765025184",
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson Stylus Photo 1270",
+  "model_id": "Stylus_Photo_1270",
+  "package_id": "gp--escp2-1270",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "64928c580ba576b6df18841cb44dee3a2819f4b8fd3da3955137a4b181ea820b",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "gutenprint-model-23",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "90a826bff6ad6ea4b9670b28c13c02a29457200019ebeef968d04fb07273c418",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "0f83f9bc62157fde6f84e1f0b1121db215b24d9231a77becf7c0973c3207aad7",
+  "version": 1,
+  "visible": true,
+  "warnings": []
+}

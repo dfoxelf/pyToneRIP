@@ -1,0 +1,25 @@
+{
+  "backend_family": "epson_escp2_xp305",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson XP-4200 Series",
+  "model_id": "XP4200series",
+  "package_id": "pf--Epson_XP4200series",
+  "ppd_file": "vendor.ppd",
+  "ppd_sha256": "1832428f0a38099f3c7b4522317e8cda3db1566dab35bf1765372cde6ab189ef",
+  "ppd_source": "vendor.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "XP305",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "2a2b9350b2b1668513b1f7dbd780cecfef22fe364b35f182d92e2692720e47d6",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "e0bd7e097d5ca6ad14bb18ec22c8c7077b6e049bba0d97ef6a2ce32e7eea3036",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "FAMILY_ALIAS: ReferenceDriver printers.lst [Epson_XP4200series] Driver=Epson_XP3100series; technical driver pf--Epson_XP3100series; exact capabilities from Epson-XP-4200_Series-epson-escpr-en.ppd"
+  ]
+}

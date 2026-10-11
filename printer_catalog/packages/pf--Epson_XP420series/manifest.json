@@ -1,0 +1,25 @@
+{
+  "backend_family": "epson_escp2_xp305",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson XP-420 Series",
+  "model_id": "XP420series",
+  "package_id": "pf--Epson_XP420series",
+  "ppd_file": "vendor.ppd",
+  "ppd_sha256": "0df7bc8880b31802e158b487824a393c63adf8ceaf47fa9d8a547c04f7fd503f",
+  "ppd_source": "vendor.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "XP305",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "43417b8387d3b353abe10d6151d6d885d30380a7928b2fcd92e223da3e54f4ff",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "cfcc5dadff88af68b9ad49dfe4bb245146ff57782ded094ef1f0e3258e82ad8a",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "FAMILY_ALIAS: ReferenceDriver printers.lst [Epson_XP420series] Driver=Epson_XP320series; technical driver pf--Epson_XP320series; exact capabilities from Epson-XP-420_Series-epson-escpr-en.ppd"
+  ]
+}

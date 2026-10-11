@@ -1,0 +1,23 @@
+{
+  "backend_family": "epson_escp2_gutenprint_model_82",
+  "backend_runtime_file": "backend-runtime.json",
+  "backend_runtime_sha256": "7bf93a8e62b6e93fb9bfbb2d73466a7b0acf1d32e64c855259ea6a045cb095bb",
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson Stylus Photo 1400",
+  "model_id": "Stylus_Photo_1400",
+  "package_id": "gp--escp2-1400",
+  "ppd_file": "vendor.ppd",
+  "ppd_sha256": "e75a2afa61ca87f1a918e5d3c62aa9c571dd1f8eea09260e3dceae9baebc6003",
+  "ppd_source": "vendor.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "gutenprint-model-82",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "90a826bff6ad6ea4b9670b28c13c02a29457200019ebeef968d04fb07273c418",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "406c4d40db08357952439ce2e66fd50b646719ead0bee695a4426826c7032919",
+  "version": 1,
+  "visible": true,
+  "warnings": []
+}

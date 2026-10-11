@@ -1,0 +1,843 @@
+{
+  "base_separation_dpi": 360,
+  "command_set": "1998",
+  "device_features": [
+    "FeedSequence"
+  ],
+  "feeds": [],
+  "inksets": [
+    {
+      "channels": [
+        {
+          "esc_i_code": "0x00",
+          "head_offset": 0,
+          "role": "black",
+          "slot": "Black",
+          "subchannel": 0
+        },
+        {
+          "esc_i_code": "0x02",
+          "head_offset": 0,
+          "role": "cyan",
+          "slot": "Cyan",
+          "subchannel": 0
+        },
+        {
+          "esc_i_code": "0x12",
+          "head_offset": 0,
+          "role": "lightcyan",
+          "slot": "LightCyan",
+          "subchannel": 1
+        },
+        {
+          "esc_i_code": "0x01",
+          "head_offset": 0,
+          "role": "magenta",
+          "slot": "Magenta",
+          "subchannel": 0
+        },
+        {
+          "esc_i_code": "0x11",
+          "head_offset": 0,
+          "role": "lightmagenta",
+          "slot": "LightMagenta",
+          "subchannel": 1
+        },
+        {
+          "esc_i_code": "0x04",
+          "head_offset": 0,
+          "role": "yellow",
+          "slot": "Yellow",
+          "subchannel": 0
+        }
+      ],
+      "configuration_id": "None",
+      "configuration_name": "EPSON Standard Inks",
+      "display_name": "Six Color Photo",
+      "name": "PhotoCMYK"
+    },
+    {
+      "channels": [
+        {
+          "esc_i_code": "0x02",
+          "head_offset": 0,
+          "role": "cyan",
+          "slot": "Cyan",
+          "subchannel": 0
+        },
+        {
+          "esc_i_code": "0x12",
+          "head_offset": 0,
+          "role": "lightcyan",
+          "slot": "LightCyan",
+          "subchannel": 1
+        },
+        {
+          "esc_i_code": "0x01",
+          "head_offset": 0,
+          "role": "magenta",
+          "slot": "Magenta",
+          "subchannel": 0
+        },
+        {
+          "esc_i_code": "0x11",
+          "head_offset": 0,
+          "role": "lightmagenta",
+          "slot": "LightMagenta",
+          "subchannel": 1
+        },
+        {
+          "esc_i_code": "0x04",
+          "head_offset": 0,
+          "role": "yellow",
+          "slot": "Yellow",
+          "subchannel": 0
+        }
+      ],
+      "configuration_id": "None",
+      "configuration_name": "EPSON Standard Inks",
+      "display_name": "Five Color Photo Composite",
+      "name": "PhotoCMY"
+    },
+    {
+      "channels": [
+        {
+          "esc_i_code": "0x00",
+          "head_offset": 0,
+          "role": "black",
+          "slot": "Black",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x02",
+          "head_offset": 0,
+          "role": "cyan",
+          "slot": "Cyan",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x01",
+          "head_offset": 0,
+          "role": "magenta",
+          "slot": "Magenta",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x04",
+          "head_offset": 0,
+          "role": "yellow",
+          "slot": "Yellow",
+          "subchannel": -1
+        }
+      ],
+      "configuration_id": "None",
+      "configuration_name": "EPSON Standard Inks",
+      "display_name": "Four Color Standard",
+      "name": "CMYK"
+    },
+    {
+      "channels": [
+        {
+          "esc_i_code": "0x02",
+          "head_offset": 0,
+          "role": "cyan",
+          "slot": "Cyan",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x01",
+          "head_offset": 0,
+          "role": "magenta",
+          "slot": "Magenta",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x04",
+          "head_offset": 0,
+          "role": "yellow",
+          "slot": "Yellow",
+          "subchannel": -1
+        }
+      ],
+      "configuration_id": "None",
+      "configuration_name": "EPSON Standard Inks",
+      "display_name": "Three Color Composite",
+      "name": "RGB"
+    },
+    {
+      "channels": [
+        {
+          "esc_i_code": "0x00",
+          "head_offset": 0,
+          "role": "black",
+          "slot": "Black",
+          "subchannel": -1
+        }
+      ],
+      "configuration_id": "None",
+      "configuration_name": "EPSON Standard Inks",
+      "display_name": "One Color Raw",
+      "name": "PhysicalBlack"
+    },
+    {
+      "channels": [
+        {
+          "esc_i_code": "0x02",
+          "head_offset": 0,
+          "role": "cyan",
+          "slot": "Cyan",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x01",
+          "head_offset": 0,
+          "role": "magenta",
+          "slot": "Magenta",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x04",
+          "head_offset": 0,
+          "role": "yellow",
+          "slot": "Yellow",
+          "subchannel": -1
+        }
+      ],
+      "configuration_id": "None",
+      "configuration_name": "EPSON Standard Inks",
+      "display_name": "Three Color Raw",
+      "name": "PhysicalCMY"
+    },
+    {
+      "channels": [
+        {
+          "esc_i_code": "0x00",
+          "head_offset": 0,
+          "role": "black",
+          "slot": "Black",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x02",
+          "head_offset": 0,
+          "role": "cyan",
+          "slot": "Cyan",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x01",
+          "head_offset": 0,
+          "role": "magenta",
+          "slot": "Magenta",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x04",
+          "head_offset": 0,
+          "role": "yellow",
+          "slot": "Yellow",
+          "subchannel": -1
+        }
+      ],
+      "configuration_id": "None",
+      "configuration_name": "EPSON Standard Inks",
+      "display_name": "Four Color Raw",
+      "name": "PhysicalCMYK"
+    },
+    {
+      "channels": [
+        {
+          "esc_i_code": "0x02",
+          "head_offset": 0,
+          "role": "cyan",
+          "slot": "Cyan",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x12",
+          "head_offset": 0,
+          "role": "lightcyan",
+          "slot": "LightCyan",
+          "subchannel": 1
+        },
+        {
+          "esc_i_code": "0x01",
+          "head_offset": 0,
+          "role": "magenta",
+          "slot": "Magenta",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x11",
+          "head_offset": 0,
+          "role": "lightmagenta",
+          "slot": "LightMagenta",
+          "subchannel": 1
+        },
+        {
+          "esc_i_code": "0x04",
+          "head_offset": 0,
+          "role": "yellow",
+          "slot": "Yellow",
+          "subchannel": 0
+        }
+      ],
+      "configuration_id": "None",
+      "configuration_name": "EPSON Standard Inks",
+      "display_name": "Five Color Raw",
+      "name": "PhysicalCcMmY"
+    },
+    {
+      "channels": [
+        {
+          "esc_i_code": "0x00",
+          "head_offset": 0,
+          "role": "black",
+          "slot": "Black",
+          "subchannel": 0
+        },
+        {
+          "esc_i_code": "0x02",
+          "head_offset": 0,
+          "role": "cyan",
+          "slot": "Cyan",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x12",
+          "head_offset": 0,
+          "role": "lightcyan",
+          "slot": "LightCyan",
+          "subchannel": 1
+        },
+        {
+          "esc_i_code": "0x01",
+          "head_offset": 0,
+          "role": "magenta",
+          "slot": "Magenta",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x11",
+          "head_offset": 0,
+          "role": "lightmagenta",
+          "slot": "LightMagenta",
+          "subchannel": 1
+        },
+        {
+          "esc_i_code": "0x04",
+          "head_offset": 0,
+          "role": "yellow",
+          "slot": "Yellow",
+          "subchannel": 0
+        }
+      ],
+      "configuration_id": "None",
+      "configuration_name": "EPSON Standard Inks",
+      "display_name": "Six Color Raw",
+      "name": "PhysicalCcMmYK"
+    },
+    {
+      "channels": [
+        {
+          "esc_i_code": "0x00",
+          "head_offset": 0,
+          "role": "black",
+          "slot": "Black",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x02",
+          "head_offset": 0,
+          "role": "gray3",
+          "slot": "Gray3",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x01",
+          "head_offset": 0,
+          "role": "gray2",
+          "slot": "Gray2",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x04",
+          "head_offset": 0,
+          "role": "gray1",
+          "slot": "Gray1",
+          "subchannel": -1
+        }
+      ],
+      "configuration_id": "quadtone",
+      "configuration_name": "Quadtone",
+      "display_name": "Quadtone",
+      "name": "Quadtone"
+    },
+    {
+      "channels": [
+        {
+          "esc_i_code": "0x00",
+          "head_offset": 0,
+          "role": "black",
+          "slot": "Black",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x01",
+          "head_offset": 0,
+          "role": "gray3",
+          "slot": "Gray3",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x04",
+          "head_offset": 0,
+          "role": "gray2",
+          "slot": "Gray2",
+          "subchannel": -1
+        },
+        {
+          "esc_i_code": "0x02",
+          "head_offset": 0,
+          "role": "gray1",
+          "slot": "Gray1",
+          "subchannel": -1
+        }
+      ],
+      "configuration_id": "MISQuadtone",
+      "configuration_name": "MIS Quadtone",
+      "display_name": "Quadtone",
+      "name": "Quadtone"
+    },
+    {
+      "channels": [
+        {
+          "esc_i_code": "0x00",
+          "head_offset": 0,
+          "role": "black",
+          "slot": "Black",
+          "subchannel": 0
+        },
+        {
+          "esc_i_code": "0x01",
+          "head_offset": 0,
+          "role": "gray5",
+          "slot": "Gray5",
+          "subchannel": 0
+        },
+        {
+          "esc_i_code": "0x04",
+          "head_offset": 0,
+          "role": "gray4",
+          "slot": "Gray4",
+          "subchannel": 0
+        },
+        {
+          "esc_i_code": "0x11",
+          "head_offset": 0,
+          "role": "gray3",
+          "slot": "Gray3",
+          "subchannel": 1
+        },
+        {
+          "esc_i_code": "0x02",
+          "head_offset": 0,
+          "role": "gray2",
+          "slot": "Gray2",
+          "subchannel": 0
+        },
+        {
+          "esc_i_code": "0x12",
+          "head_offset": 0,
+          "role": "gray1",
+          "slot": "Gray1",
+          "subchannel": 1
+        }
+      ],
+      "configuration_id": "MISHextone",
+      "configuration_name": "MIS Six Tone",
+      "display_name": "Hextone",
+      "name": "Hextone"
+    }
+  ],
+  "interchangeable_ink": false,
+  "media_sizes": [],
+  "model_id": "8",
+  "modes": [
+    {
+      "backend_status": "IMPORTED_INCOMPLETE",
+      "base_resolution_dpi": 720,
+      "bit_depth": 1,
+      "density": 2.6,
+      "display_name": "360 x 90 DPI Fast Economy",
+      "dot_size": 3,
+      "drop_sizes": [
+        1.0
+      ],
+      "horizontal_dpi": 360,
+      "horizontal_passes": 1,
+      "identity": "360x90dpi",
+      "nozzle_count": 32,
+      "nozzle_separation": 4,
+      "physical_horizontal_dpi": 360,
+      "physical_vertical_dpi": 90,
+      "printer_weave_mode": 0,
+      "source": "C:\\Dev\\EpsonRIP\\gutenprint-5.3.5\\src\\xml\\escp2\\model\\model_8.xml",
+      "vertical_dpi": 90,
+      "vertical_passes": 1
+    },
+    {
+      "backend_status": "IMPORTED_INCOMPLETE",
+      "base_resolution_dpi": 720,
+      "bit_depth": 1,
+      "density": 2.6,
+      "display_name": "180 DPI Economy",
+      "dot_size": 3,
+      "drop_sizes": [
+        1.0
+      ],
+      "horizontal_dpi": 180,
+      "horizontal_passes": 1,
+      "identity": "180dpi",
+      "nozzle_count": 32,
+      "nozzle_separation": 4,
+      "physical_horizontal_dpi": 180,
+      "physical_vertical_dpi": 180,
+      "printer_weave_mode": 0,
+      "source": "C:\\Dev\\EpsonRIP\\gutenprint-5.3.5\\src\\xml\\escp2\\model\\model_8.xml",
+      "vertical_dpi": 180,
+      "vertical_passes": 1
+    },
+    {
+      "backend_status": "IMPORTED_INCOMPLETE",
+      "base_resolution_dpi": 720,
+      "bit_depth": 1,
+      "density": 2.6,
+      "display_name": "360 x 180 DPI Draft",
+      "dot_size": 3,
+      "drop_sizes": [
+        1.0
+      ],
+      "horizontal_dpi": 360,
+      "horizontal_passes": 1,
+      "identity": "360x180dpi",
+      "nozzle_count": 32,
+      "nozzle_separation": 4,
+      "physical_horizontal_dpi": 360,
+      "physical_vertical_dpi": 180,
+      "printer_weave_mode": 0,
+      "source": "C:\\Dev\\EpsonRIP\\gutenprint-5.3.5\\src\\xml\\escp2\\model\\model_8.xml",
+      "vertical_dpi": 180,
+      "vertical_passes": 1
+    },
+    {
+      "backend_status": "IMPORTED_INCOMPLETE",
+      "base_resolution_dpi": 720,
+      "bit_depth": 1,
+      "density": 1.3,
+      "display_name": "360 DPI High Quality",
+      "dot_size": 3,
+      "drop_sizes": [
+        1.0
+      ],
+      "horizontal_dpi": 360,
+      "horizontal_passes": 1,
+      "identity": "360mw",
+      "nozzle_count": 32,
+      "nozzle_separation": 4,
+      "physical_horizontal_dpi": 360,
+      "physical_vertical_dpi": 360,
+      "printer_weave_mode": 1,
+      "source": "C:\\Dev\\EpsonRIP\\gutenprint-5.3.5\\src\\xml\\escp2\\model\\model_8.xml",
+      "vertical_dpi": 360,
+      "vertical_passes": 1
+    },
+    {
+      "backend_status": "IMPORTED_INCOMPLETE",
+      "base_resolution_dpi": 720,
+      "bit_depth": 1,
+      "density": 1.3,
+      "display_name": "360 DPI",
+      "dot_size": 3,
+      "drop_sizes": [
+        1.0
+      ],
+      "horizontal_dpi": 360,
+      "horizontal_passes": 1,
+      "identity": "360",
+      "nozzle_count": 32,
+      "nozzle_separation": 4,
+      "physical_horizontal_dpi": 360,
+      "physical_vertical_dpi": 360,
+      "printer_weave_mode": 0,
+      "source": "C:\\Dev\\EpsonRIP\\gutenprint-5.3.5\\src\\xml\\escp2\\model\\model_8.xml",
+      "vertical_dpi": 360,
+      "vertical_passes": 1
+    },
+    {
+      "backend_status": "IMPORTED_INCOMPLETE",
+      "base_resolution_dpi": 720,
+      "bit_depth": 1,
+      "density": 1.3,
+      "display_name": "720 x 360 DPI",
+      "dot_size": 2,
+      "drop_sizes": [
+        1.0
+      ],
+      "horizontal_dpi": 720,
+      "horizontal_passes": 1,
+      "identity": "720x360sw",
+      "nozzle_count": 32,
+      "nozzle_separation": 4,
+      "physical_horizontal_dpi": 720,
+      "physical_vertical_dpi": 360,
+      "printer_weave_mode": null,
+      "source": "C:\\Dev\\EpsonRIP\\gutenprint-5.3.5\\src\\xml\\escp2\\model\\model_8.xml",
+      "vertical_dpi": 360,
+      "vertical_passes": 1
+    },
+    {
+      "backend_status": "IMPORTED_INCOMPLETE",
+      "base_resolution_dpi": 720,
+      "bit_depth": 1,
+      "density": 0.775,
+      "display_name": "720 DPI",
+      "dot_size": 1,
+      "drop_sizes": [
+        1.0
+      ],
+      "horizontal_dpi": 720,
+      "horizontal_passes": 1,
+      "identity": "720sw",
+      "nozzle_count": 32,
+      "nozzle_separation": 4,
+      "physical_horizontal_dpi": 720,
+      "physical_vertical_dpi": 720,
+      "printer_weave_mode": null,
+      "source": "C:\\Dev\\EpsonRIP\\gutenprint-5.3.5\\src\\xml\\escp2\\model\\model_8.xml",
+      "vertical_dpi": 720,
+      "vertical_passes": 1
+    },
+    {
+      "backend_status": "IMPORTED_INCOMPLETE",
+      "base_resolution_dpi": 720,
+      "bit_depth": 1,
+      "density": 0.775,
+      "display_name": "720 DPI High Quality",
+      "dot_size": 1,
+      "drop_sizes": [
+        1.0
+      ],
+      "horizontal_dpi": 720,
+      "horizontal_passes": 1,
+      "identity": "720hq",
+      "nozzle_count": 32,
+      "nozzle_separation": 4,
+      "physical_horizontal_dpi": 720,
+      "physical_vertical_dpi": 720,
+      "printer_weave_mode": null,
+      "source": "C:\\Dev\\EpsonRIP\\gutenprint-5.3.5\\src\\xml\\escp2\\model\\model_8.xml",
+      "vertical_dpi": 720,
+      "vertical_passes": 2
+    },
+    {
+      "backend_status": "IMPORTED_INCOMPLETE",
+      "base_resolution_dpi": 360,
+      "bit_depth": 1,
+      "density": 0.55,
+      "display_name": "1440 x 720 DPI",
+      "dot_size": 4,
+      "drop_sizes": [
+        1.0
+      ],
+      "horizontal_dpi": 1440,
+      "horizontal_passes": 4,
+      "identity": "1440x720sw",
+      "nozzle_count": 32,
+      "nozzle_separation": 4,
+      "physical_horizontal_dpi": 1440,
+      "physical_vertical_dpi": 720,
+      "printer_weave_mode": null,
+      "source": "C:\\Dev\\EpsonRIP\\gutenprint-5.3.5\\src\\xml\\escp2\\model\\model_8.xml",
+      "vertical_dpi": 720,
+      "vertical_passes": 1
+    },
+    {
+      "backend_status": "IMPORTED_INCOMPLETE",
+      "base_resolution_dpi": 360,
+      "bit_depth": 1,
+      "density": 0.55,
+      "display_name": "1440 x 720 DPI Highest Quality",
+      "dot_size": 4,
+      "drop_sizes": [
+        1.0
+      ],
+      "horizontal_dpi": 1440,
+      "horizontal_passes": 4,
+      "identity": "1440x720hq2",
+      "nozzle_count": 32,
+      "nozzle_separation": 4,
+      "physical_horizontal_dpi": 1440,
+      "physical_vertical_dpi": 720,
+      "printer_weave_mode": null,
+      "source": "C:\\Dev\\EpsonRIP\\gutenprint-5.3.5\\src\\xml\\escp2\\model\\model_8.xml",
+      "vertical_dpi": 720,
+      "vertical_passes": 2
+    }
+  ],
+  "page_margins": [
+    {
+      "interleave": "soft",
+      "media": "sheet",
+      "points": [
+        9.0,
+        9.0,
+        0.0,
+        30.0
+      ]
+    },
+    {
+      "interleave": "printer",
+      "media": "sheet",
+      "points": [
+        9.0,
+        9.0,
+        0.0,
+        30.0
+      ]
+    },
+    {
+      "interleave": "soft",
+      "media": "roll",
+      "points": [
+        9.0,
+        9.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "interleave": "printer",
+      "media": "roll",
+      "points": [
+        9.0,
+        9.0,
+        0.0,
+        0.0
+      ]
+    }
+  ],
+  "paper_types": [
+    {
+      "class": "plain",
+      "name": "Plain",
+      "params": {},
+      "text": "Plain Paper"
+    },
+    {
+      "class": "plain",
+      "name": "PlainFast",
+      "params": {},
+      "text": "Plain Paper Fast Load"
+    },
+    {
+      "class": "plain",
+      "name": "Postcard",
+      "params": {},
+      "text": "Postcard"
+    },
+    {
+      "class": "photo",
+      "name": "GlossyFilm",
+      "params": {},
+      "text": "Glossy Film"
+    },
+    {
+      "class": "transparency",
+      "name": "Transparency",
+      "params": {},
+      "text": "Transparencies"
+    },
+    {
+      "class": "plain",
+      "name": "Envelope",
+      "params": {},
+      "text": "Envelopes"
+    },
+    {
+      "class": "transparency",
+      "name": "BackFilm",
+      "params": {},
+      "text": "Back Light Film"
+    },
+    {
+      "class": "good",
+      "name": "Matte",
+      "params": {},
+      "text": "Matte Paper"
+    },
+    {
+      "class": "good",
+      "name": "MatteHeavy",
+      "params": {},
+      "text": "Matte Paper Heavyweight"
+    },
+    {
+      "class": "good",
+      "name": "Inkjet",
+      "params": {},
+      "text": "Inkjet Paper"
+    },
+    {
+      "class": "good",
+      "name": "Coated",
+      "params": {},
+      "text": "Photo Quality Inkjet Paper"
+    },
+    {
+      "class": "photo",
+      "name": "Photo",
+      "params": {},
+      "text": "Photo Paper"
+    },
+    {
+      "class": "premium",
+      "name": "GlossyPhoto",
+      "params": {},
+      "text": "Premium Glossy Photo Paper"
+    },
+    {
+      "class": "premium",
+      "name": "Semigloss",
+      "params": {},
+      "text": "Premium Semigloss Photo Paper"
+    },
+    {
+      "class": "premium",
+      "name": "Luster",
+      "params": {},
+      "text": "Premium Luster Photo Paper"
+    },
+    {
+      "class": "premium",
+      "name": "GlossyPaper",
+      "params": {},
+      "text": "Photo Quality Glossy Paper"
+    },
+    {
+      "class": "premium",
+      "name": "ColorLife",
+      "params": {},
+      "text": "ColorLife Paper"
+    },
+    {
+      "class": "plain",
+      "name": "Other",
+      "params": {},
+      "text": "Other"
+    }
+  ],
+  "schema": "pytone-rip.gutenprint-runtime",
+  "unit_scale": 1440,
+  "version": 1
+}

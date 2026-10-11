@@ -1,0 +1,23 @@
+{
+  "backend_family": "epson_escp2_wf7610",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson EcoTank ET-5800",
+  "model_id": "EcoTank_ET5800",
+  "package_id": "pf--Epson_EcoTank_ET5800",
+  "ppd_file": "vendor.ppd",
+  "ppd_sha256": "200b94884143af834f591649fdf2ce3103fa7ed5da9cc8a4489572f4b64874b5",
+  "ppd_source": "vendor.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "WF7610",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "0d559749fd75f217039048356cd9f9a261c5f5b3dae3862533a41d1df64aaf2c",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "67ede48d5dff1923c9d8410e21971f05c4987d01eb782a02699c050decf6b0b5",
+  "version": 1,
+  "visible": true,
+  "warnings": []
+}

@@ -1,0 +1,23 @@
+{
+  "backend_family": "epson_escp2_gutenprint_model_90",
+  "backend_runtime_file": "backend-runtime.json",
+  "backend_runtime_sha256": "61eab01f382402f9110a588de9a63af8917cd9ae4a6ee7544436b7e3f67e8a89",
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson SureColor P8000",
+  "model_id": "SureColor_P8000",
+  "package_id": "gp--escp2-p8000",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "bb51a996b0a1445fb44beb8294fb92cc077df614cb158f6a28b19121f787b5a7",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "gutenprint-model-90",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "90a826bff6ad6ea4b9670b28c13c02a29457200019ebeef968d04fb07273c418",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "a159b204595b5cfa9cfdc6428bfe544f091c3f3c846ee8f07dab70015d0660e6",
+  "version": 1,
+  "visible": true,
+  "warnings": []
+}

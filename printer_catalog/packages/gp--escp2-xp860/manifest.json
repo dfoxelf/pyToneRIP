@@ -1,0 +1,23 @@
+{
+  "backend_family": "epson_escp2_gutenprint_model_134",
+  "backend_runtime_file": "backend-runtime.json",
+  "backend_runtime_sha256": "bab35901abcfb735a2f618b90b3485245a9261a06010c8bc5731da1c1b8c51f3",
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson Expression Photo XP-860",
+  "model_id": "Expression_Photo_XP_860",
+  "package_id": "gp--escp2-xp860",
+  "ppd_file": "vendor.ppd",
+  "ppd_sha256": "d69403eac244e5f1bdf7b296e8b5e217c3d31065058dc9391409c7a011938dae",
+  "ppd_source": "vendor.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "gutenprint-model-134",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "90a826bff6ad6ea4b9670b28c13c02a29457200019ebeef968d04fb07273c418",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "d3d33336830062a02d80a2cfe72e9484fa1fdf42d24f04bcaf4d5ac33fadc82b",
+  "version": 1,
+  "visible": true,
+  "warnings": []
+}

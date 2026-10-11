@@ -1,0 +1,25 @@
+{
+  "backend_family": "epson_escp2_gutenprint_model_91",
+  "backend_runtime_file": "backend-runtime.json",
+  "backend_runtime_sha256": "a3fa8111d2fff9f5cb6b0c1db3f49fc135742986defdead5f8406b936888751b",
+  "backend_source_file": "backend-source.json",
+  "backend_source_sha256": "829434f6d8dfc22d486bcd2cc3e2edbbb2d8e779aad82f673b024034471f8074",
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson XP-800 Series",
+  "model_id": "XP800series",
+  "package_id": "pf--Epson_XP800series",
+  "ppd_file": "vendor.ppd",
+  "ppd_sha256": "02f6aa9740d0e695bd275dc3560005e1776b43692d25a5b6773d82f6560a981c",
+  "ppd_source": "vendor.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "gutenprint-model-91",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "ab0be319cb375147322aaca0a5a301cdece36bad4c82b4c8bb4cc284edd1becb",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "bbc679c28e7e861f85d038e6068f2f563f6efa96f8dcaae52f63531b8eaa312e",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "SOURCE_CORRECTION: protocol family resolved by an explicit compatible driver descriptor"
+  ]
+}

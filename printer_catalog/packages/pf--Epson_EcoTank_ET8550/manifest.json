@@ -1,0 +1,23 @@
+{
+  "backend_family": "epson_escp2_et8550",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson EcoTank ET-8550",
+  "model_id": "EcoTank_ET8550",
+  "package_id": "pf--Epson_EcoTank_ET8550",
+  "ppd_file": "vendor.ppd",
+  "ppd_sha256": "121a40553d572ff4374abd77f1cce87357a32c9f1ba11537f9932f00f90e220c",
+  "ppd_source": "vendor.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "ET8550",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "530c8609e1f8a7168f06ce13d39a3a137e8ba87479e1838cd766d3c5ec20e2be",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "231fb610d4ccbde87ea105483a506d7c633953e8643d39073f7f74e442d69830",
+  "version": 1,
+  "visible": true,
+  "warnings": []
+}

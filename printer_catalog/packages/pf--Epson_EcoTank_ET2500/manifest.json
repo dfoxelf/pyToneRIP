@@ -1,0 +1,23 @@
+{
+  "backend_family": "epson_escp2_xp305",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson EcoTank ET-2500",
+  "model_id": "EcoTank_ET2500",
+  "package_id": "pf--Epson_EcoTank_ET2500",
+  "ppd_file": "vendor.ppd",
+  "ppd_sha256": "b4b3de642ac82c3981bf965e4877ff786b73b5f1e5d1e096cf6ff736dab4f8e8",
+  "ppd_source": "vendor.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "XP305",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "22b428520c1f704e01f3d8ece0d05443a73dd805280b4a4555aca72244c0ae96",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "d7f8adb4e91a6869d01feceb30782b7910ddaeb318319ab8a1f5f94facdf5706",
+  "version": 1,
+  "visible": true,
+  "warnings": []
+}

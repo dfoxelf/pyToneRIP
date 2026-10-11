@@ -1,0 +1,23 @@
+{
+  "backend_family": "epson_escp2_xp305",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson EcoTank ET-2710",
+  "model_id": "EcoTank_ET2710",
+  "package_id": "pf--Epson_EcoTank_ET2710",
+  "ppd_file": "vendor.ppd",
+  "ppd_sha256": "ee3f0224e5d271bb3dd374ab67dd2744aa512ee411156db3e43c5d58d4a0db99",
+  "ppd_source": "vendor.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "XP305",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "898c62f074156e2662abf313da08726abe6621a242e6cbd0a65ac3fa2439401f",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "3c04417c9ff2a00134226ba2a1581d541e014962a27e7205c59606546b6b5569",
+  "version": 1,
+  "visible": true,
+  "warnings": []
+}

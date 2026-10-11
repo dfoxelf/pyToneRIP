@@ -1,0 +1,1098 @@
+{
+  "channels": [
+    {
+      "esc_i_code": "0x00",
+      "head_offset": 0,
+      "inkset": "PhotoCMYK",
+      "role": "black",
+      "slot": "Black",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x02",
+      "head_offset": 0,
+      "inkset": "PhotoCMYK",
+      "role": "cyan",
+      "slot": "Cyan",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x12",
+      "head_offset": 2,
+      "inkset": "PhotoCMYK",
+      "role": "lightcyan",
+      "slot": "LightCyan",
+      "subchannel": 1
+    },
+    {
+      "esc_i_code": "0x01",
+      "head_offset": 2,
+      "inkset": "PhotoCMYK",
+      "role": "magenta",
+      "slot": "Magenta",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x11",
+      "head_offset": 0,
+      "inkset": "PhotoCMYK",
+      "role": "lightmagenta",
+      "slot": "LightMagenta",
+      "subchannel": 1
+    },
+    {
+      "esc_i_code": "0x04",
+      "head_offset": 2,
+      "inkset": "PhotoCMYK",
+      "role": "yellow",
+      "slot": "Yellow",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x02",
+      "head_offset": 0,
+      "inkset": "PhotoCMY",
+      "role": "cyan",
+      "slot": "Cyan",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x12",
+      "head_offset": 2,
+      "inkset": "PhotoCMY",
+      "role": "lightcyan",
+      "slot": "LightCyan",
+      "subchannel": 1
+    },
+    {
+      "esc_i_code": "0x01",
+      "head_offset": 2,
+      "inkset": "PhotoCMY",
+      "role": "magenta",
+      "slot": "Magenta",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x11",
+      "head_offset": 0,
+      "inkset": "PhotoCMY",
+      "role": "lightmagenta",
+      "slot": "LightMagenta",
+      "subchannel": 1
+    },
+    {
+      "esc_i_code": "0x04",
+      "head_offset": 2,
+      "inkset": "PhotoCMY",
+      "role": "yellow",
+      "slot": "Yellow",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x00",
+      "head_offset": 0,
+      "inkset": "CMYK",
+      "role": "black",
+      "slot": "Black",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x02",
+      "head_offset": 0,
+      "inkset": "CMYK",
+      "role": "cyan",
+      "slot": "Cyan",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x01",
+      "head_offset": 2,
+      "inkset": "CMYK",
+      "role": "magenta",
+      "slot": "Magenta",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x04",
+      "head_offset": 2,
+      "inkset": "CMYK",
+      "role": "yellow",
+      "slot": "Yellow",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x02",
+      "head_offset": 0,
+      "inkset": "RGB",
+      "role": "cyan",
+      "slot": "Cyan",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x01",
+      "head_offset": 2,
+      "inkset": "RGB",
+      "role": "magenta",
+      "slot": "Magenta",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x04",
+      "head_offset": 2,
+      "inkset": "RGB",
+      "role": "yellow",
+      "slot": "Yellow",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x00",
+      "head_offset": 0,
+      "inkset": "PhysicalBlack",
+      "role": "black",
+      "slot": "Black",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x02",
+      "head_offset": 0,
+      "inkset": "PhysicalCMY",
+      "role": "cyan",
+      "slot": "Cyan",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x01",
+      "head_offset": 2,
+      "inkset": "PhysicalCMY",
+      "role": "magenta",
+      "slot": "Magenta",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x04",
+      "head_offset": 2,
+      "inkset": "PhysicalCMY",
+      "role": "yellow",
+      "slot": "Yellow",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x00",
+      "head_offset": 0,
+      "inkset": "PhysicalCMYK",
+      "role": "black",
+      "slot": "Black",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x02",
+      "head_offset": 0,
+      "inkset": "PhysicalCMYK",
+      "role": "cyan",
+      "slot": "Cyan",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x01",
+      "head_offset": 2,
+      "inkset": "PhysicalCMYK",
+      "role": "magenta",
+      "slot": "Magenta",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x04",
+      "head_offset": 2,
+      "inkset": "PhysicalCMYK",
+      "role": "yellow",
+      "slot": "Yellow",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x02",
+      "head_offset": 0,
+      "inkset": "PhysicalCcMmY",
+      "role": "cyan",
+      "slot": "Cyan",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x12",
+      "head_offset": 2,
+      "inkset": "PhysicalCcMmY",
+      "role": "lightcyan",
+      "slot": "LightCyan",
+      "subchannel": 1
+    },
+    {
+      "esc_i_code": "0x01",
+      "head_offset": 2,
+      "inkset": "PhysicalCcMmY",
+      "role": "magenta",
+      "slot": "Magenta",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x11",
+      "head_offset": 0,
+      "inkset": "PhysicalCcMmY",
+      "role": "lightmagenta",
+      "slot": "LightMagenta",
+      "subchannel": 1
+    },
+    {
+      "esc_i_code": "0x04",
+      "head_offset": 2,
+      "inkset": "PhysicalCcMmY",
+      "role": "yellow",
+      "slot": "Yellow",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x00",
+      "head_offset": 0,
+      "inkset": "PhysicalCcMmYK",
+      "role": "black",
+      "slot": "Black",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x02",
+      "head_offset": 0,
+      "inkset": "PhysicalCcMmYK",
+      "role": "cyan",
+      "slot": "Cyan",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x12",
+      "head_offset": 2,
+      "inkset": "PhysicalCcMmYK",
+      "role": "lightcyan",
+      "slot": "LightCyan",
+      "subchannel": 1
+    },
+    {
+      "esc_i_code": "0x01",
+      "head_offset": 2,
+      "inkset": "PhysicalCcMmYK",
+      "role": "magenta",
+      "slot": "Magenta",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x11",
+      "head_offset": 0,
+      "inkset": "PhysicalCcMmYK",
+      "role": "lightmagenta",
+      "slot": "LightMagenta",
+      "subchannel": 1
+    },
+    {
+      "esc_i_code": "0x04",
+      "head_offset": 2,
+      "inkset": "PhysicalCcMmYK",
+      "role": "yellow",
+      "slot": "Yellow",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x00",
+      "head_offset": 0,
+      "inkset": "Quadtone",
+      "role": "black",
+      "slot": "Black",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x02",
+      "head_offset": 0,
+      "inkset": "Quadtone",
+      "role": "gray3",
+      "slot": "Gray3",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x01",
+      "head_offset": 0,
+      "inkset": "Quadtone",
+      "role": "gray2",
+      "slot": "Gray2",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x04",
+      "head_offset": 0,
+      "inkset": "Quadtone",
+      "role": "gray1",
+      "slot": "Gray1",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x00",
+      "head_offset": 0,
+      "inkset": "Quadtone",
+      "role": "black",
+      "slot": "Black",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x01",
+      "head_offset": 0,
+      "inkset": "Quadtone",
+      "role": "gray3",
+      "slot": "Gray3",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x04",
+      "head_offset": 0,
+      "inkset": "Quadtone",
+      "role": "gray2",
+      "slot": "Gray2",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x02",
+      "head_offset": 0,
+      "inkset": "Quadtone",
+      "role": "gray1",
+      "slot": "Gray1",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x00",
+      "head_offset": 0,
+      "inkset": "Hextone",
+      "role": "black",
+      "slot": "Black",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x01",
+      "head_offset": 0,
+      "inkset": "Hextone",
+      "role": "gray5",
+      "slot": "Gray5",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x04",
+      "head_offset": 0,
+      "inkset": "Hextone",
+      "role": "gray4",
+      "slot": "Gray4",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x11",
+      "head_offset": 0,
+      "inkset": "Hextone",
+      "role": "gray3",
+      "slot": "Gray3",
+      "subchannel": 1
+    },
+    {
+      "esc_i_code": "0x02",
+      "head_offset": 0,
+      "inkset": "Hextone",
+      "role": "gray2",
+      "slot": "Gray2",
+      "subchannel": 0
+    },
+    {
+      "esc_i_code": "0x12",
+      "head_offset": 0,
+      "inkset": "Hextone",
+      "role": "gray1",
+      "slot": "Gray1",
+      "subchannel": 1
+    }
+  ],
+  "device_features": [],
+  "driver": {
+    "gutenprint_model_id": "81"
+  },
+  "feeds": [
+    {
+      "name": "Standard",
+      "params": {},
+      "text": "Standard"
+    },
+    {
+      "name": "Manual",
+      "params": {},
+      "text": "Manual Feed"
+    },
+    {
+      "name": "CD",
+      "params": {},
+      "text": "Print to CD"
+    },
+    {
+      "name": "Roll",
+      "params": {},
+      "text": "Roll Feed"
+    }
+  ],
+  "identity": {
+    "gutenprint_driver": "escp2-r280",
+    "gutenprint_model_id": "81",
+    "manufacturer": "Epson",
+    "name": "Epson Stylus Photo R280"
+  },
+  "media": [],
+  "media_sizes": [
+    {
+      "name": "A4",
+      "paper_media_size_code": 0,
+      "type": "sheet"
+    },
+    {
+      "name": "Letter",
+      "paper_media_size_code": 1,
+      "type": "sheet"
+    },
+    {
+      "name": "Legal",
+      "paper_media_size_code": 2,
+      "type": "sheet"
+    },
+    {
+      "name": "A5",
+      "paper_media_size_code": 3,
+      "type": "sheet"
+    },
+    {
+      "name": "A6",
+      "paper_media_size_code": 4,
+      "type": "sheet"
+    },
+    {
+      "name": "B5",
+      "paper_media_size_code": 5,
+      "type": "sheet"
+    },
+    {
+      "name": "Executive",
+      "paper_media_size_code": 6,
+      "type": "sheet"
+    },
+    {
+      "name": "Statement",
+      "paper_media_size_code": 7,
+      "type": "sheet"
+    },
+    {
+      "name": "w324h495",
+      "paper_media_size_code": 9,
+      "type": "sheet"
+    },
+    {
+      "name": "w288h432",
+      "paper_media_size_code": 10,
+      "type": "sheet"
+    },
+    {
+      "name": "w360h576",
+      "paper_media_size_code": 11,
+      "type": "sheet"
+    },
+    {
+      "name": "c8x10",
+      "paper_media_size_code": 12,
+      "type": "sheet"
+    },
+    {
+      "name": "w283h425",
+      "paper_media_size_code": 13,
+      "type": "sheet"
+    },
+    {
+      "name": "w566h850",
+      "paper_media_size_code": 14,
+      "type": "sheet"
+    },
+    {
+      "name": "w252h360",
+      "paper_media_size_code": 15,
+      "type": "sheet"
+    },
+    {
+      "name": "COM10_l",
+      "paper_media_size_code": 18,
+      "type": "sheet"
+    },
+    {
+      "name": "C6_l",
+      "paper_media_size_code": 19,
+      "type": "sheet"
+    },
+    {
+      "name": "DL_l",
+      "paper_media_size_code": 20,
+      "type": "sheet"
+    },
+    {
+      "name": "w360h504",
+      "paper_media_size_code": 28,
+      "type": "sheet"
+    },
+    {
+      "name": "COM10",
+      "paper_media_size_code": 29,
+      "type": "sheet"
+    },
+    {
+      "name": "C6",
+      "paper_media_size_code": 30,
+      "type": "sheet"
+    },
+    {
+      "name": "DL",
+      "paper_media_size_code": 31,
+      "type": "sheet"
+    },
+    {
+      "name": "SuperB",
+      "paper_media_size_code": 61,
+      "type": "sheet"
+    },
+    {
+      "name": "A3",
+      "paper_media_size_code": 62,
+      "type": "sheet"
+    },
+    {
+      "name": "B4",
+      "paper_media_size_code": 63,
+      "type": "sheet"
+    },
+    {
+      "name": "Tabloid",
+      "paper_media_size_code": 64,
+      "type": "sheet"
+    },
+    {
+      "name": "w792h1008",
+      "paper_media_size_code": 65,
+      "type": "sheet"
+    },
+    {
+      "name": "B3",
+      "paper_media_size_code": 66,
+      "type": "sheet"
+    },
+    {
+      "name": "A2",
+      "paper_media_size_code": 67,
+      "type": "sheet"
+    },
+    {
+      "name": "EngineeringC",
+      "paper_media_size_code": 68,
+      "type": "sheet"
+    },
+    {
+      "name": null,
+      "paper_media_size_code": 99,
+      "type": "default"
+    }
+  ],
+  "paper_types": [
+    {
+      "class": "plain",
+      "name": "Plain",
+      "params": {
+        "PaperMedia": [
+          "0"
+        ],
+        "PrintMethod": [
+          "0x41",
+          "0x10",
+          "0x10",
+          "0x10",
+          "0x41",
+          "0x51",
+          "0x51",
+          "0x51",
+          "0x51",
+          "0x51",
+          "0x51",
+          "0x51"
+        ]
+      },
+      "text": "Plain Paper"
+    },
+    {
+      "class": "plain",
+      "name": "BrightWhite",
+      "params": {
+        "PaperMedia": [
+          "0"
+        ],
+        "PrintMethod": [
+          "0x41",
+          "0x10",
+          "0x10",
+          "0x10",
+          "0x41",
+          "0x51",
+          "0x51",
+          "0x51",
+          "0x51",
+          "0x51",
+          "0x51",
+          "0x51"
+        ]
+      },
+      "text": "Bright White Paper"
+    },
+    {
+      "class": "plain",
+      "name": "Postcard",
+      "params": {
+        "PaperMedia": [
+          "5"
+        ],
+        "PrintMethod": [
+          "0x41",
+          "0x10",
+          "0x10",
+          "0x10",
+          "0x41",
+          "0x51",
+          "0x51",
+          "0x51",
+          "0x51",
+          "0x51",
+          "0x51",
+          "0x51"
+        ]
+      },
+      "text": "Postcard"
+    },
+    {
+      "class": "photo",
+      "name": "GlossyFilm",
+      "params": {
+        "PaperMedia": [
+          "7"
+        ],
+        "PrintMethod": [
+          "0x41",
+          "0x10",
+          "0x10",
+          "0x10",
+          "0x41",
+          "0x51",
+          "0x51",
+          "0x51",
+          "0x51",
+          "0x51",
+          "0x51",
+          "0x51"
+        ]
+      },
+      "text": "Glossy Film"
+    },
+    {
+      "class": "transparency",
+      "name": "Transparency",
+      "params": {
+        "PaperMedia": [
+          "9"
+        ],
+        "PrintMethod": [
+          "0x41",
+          "0x10",
+          "0x10",
+          "0x10",
+          "0x41",
+          "0x51",
+          "0x51",
+          "0x51",
+          "0x51",
+          "0x51",
+          "0x51",
+          "0x51"
+        ]
+      },
+      "text": "Transparencies"
+    },
+    {
+      "class": "plain",
+      "name": "Envelope",
+      "params": {
+        "PaperMedia": [
+          "9"
+        ],
+        "PrintMethod": [
+          "0x41",
+          "0x10",
+          "0x10",
+          "0x10",
+          "0x40",
+          "0x50",
+          "0x50",
+          "0x50",
+          "0x50",
+          "0x50",
+          "0x50",
+          "0x50"
+        ]
+      },
+      "text": "Envelopes"
+    },
+    {
+      "class": "transparency",
+      "name": "BackFilm",
+      "params": {
+        "PaperMedia": [
+          "10"
+        ],
+        "PrintMethod": [
+          "0x41",
+          "0x10",
+          "0x10",
+          "0x10",
+          "0x41",
+          "0x51",
+          "0x51",
+          "0x51",
+          "0x51",
+          "0x51",
+          "0x51",
+          "0x51"
+        ]
+      },
+      "text": "Back Light Film"
+    },
+    {
+      "class": "good",
+      "name": "Matte",
+      "params": {
+        "PaperMedia": [
+          "5"
+        ],
+        "PrintMethod": [
+          "0x41",
+          "0x10",
+          "0x10",
+          "0x10",
+          "0x41",
+          "0x54",
+          "0x54",
+          "0x54",
+          "0x54",
+          "0x54",
+          "0x54",
+          "0x54"
+        ]
+      },
+      "text": "Matte Paper"
+    },
+    {
+      "class": "good",
+      "name": "MatteHeavy",
+      "params": {
+        "PaperMedia": [
+          "5"
+        ],
+        "PrintMethod": [
+          "0x54",
+          "0x10",
+          "0x10",
+          "0x10",
+          "0x41",
+          "0x54",
+          "0x54",
+          "0xb0",
+          "0xb0",
+          "0xb0",
+          "0xb0",
+          "0xb0"
+        ]
+      },
+      "text": "Matte Paper Heavyweight"
+    },
+    {
+      "class": "good",
+      "name": "PresentationMatte",
+      "params": {
+        "PaperMedia": [
+          "3"
+        ],
+        "PrintMethod": [
+          "0x54",
+          "0x10",
+          "0x10",
+          "0x10",
+          "0x41",
+          "0x54",
+          "0x54",
+          "0xb0",
+          "0xb0",
+          "0xb0",
+          "0xb0",
+          "0xb0"
+        ]
+      },
+      "text": "Premium Presentation Paper Matte"
+    },
+    {
+      "class": "good",
+      "name": "Inkjet",
+      "params": {
+        "PaperMedia": [
+          "1"
+        ],
+        "PrintMethod": [
+          "0x41",
+          "0x10",
+          "0x10",
+          "0x10",
+          "0x41",
+          "0x51",
+          "0x51",
+          "0x51",
+          "0x51",
+          "0x51",
+          "0x51",
+          "0x51"
+        ]
+      },
+      "text": "Inkjet Paper"
+    },
+    {
+      "class": "good",
+      "name": "Coated",
+      "params": {
+        "PaperMedia": [
+          "3"
+        ],
+        "PrintMethod": [
+          "0x54",
+          "0x10",
+          "0x10",
+          "0x10",
+          "0x41",
+          "0x54",
+          "0x54",
+          "0xb0",
+          "0xb0",
+          "0xb0",
+          "0xb0",
+          "0xb0"
+        ]
+      },
+      "text": "Photo Quality Inkjet Paper"
+    },
+    {
+      "class": "photo",
+      "name": "Photo",
+      "params": {
+        "PaperMedia": [
+          "6"
+        ],
+        "PrintMethod": [
+          "0x54",
+          "0x10",
+          "0x10",
+          "0x10",
+          "0x42",
+          "0x54",
+          "0x54",
+          "0xb0",
+          "0xb0",
+          "0xb0",
+          "0xb0",
+          "0xb0"
+        ]
+      },
+      "text": "Photo Paper"
+    },
+    {
+      "class": "premium",
+      "name": "GlossyPhoto",
+      "params": {
+        "PaperMedia": [
+          "11"
+        ],
+        "PrintMethod": [
+          "0x54",
+          "0x10",
+          "0x10",
+          "0x10",
+          "0x42",
+          "0x54",
+          "0x54",
+          "0xb0",
+          "0xb0",
+          "0xb0",
+          "0xb0",
+          "0xb0"
+        ]
+      },
+      "text": "Premium Glossy Photo Paper"
+    },
+    {
+      "class": "premium",
+      "name": "UltraGlossyPhoto",
+      "params": {
+        "PaperMedia": [
+          "38"
+        ],
+        "PrintMethod": [
+          "0x54",
+          "0x10",
+          "0x10",
+          "0x10",
+          "0x42",
+          "0x54",
+          "0x54",
+          "0xb0",
+          "0xb0",
+          "0xb0",
+          "0xb0",
+          "0xb0"
+        ]
+      },
+      "text": "Ultra Glossy Photo Paper"
+    },
+    {
+      "class": "premium",
+      "name": "Semigloss",
+      "params": {
+        "PaperMedia": [
+          "12"
+        ],
+        "PrintMethod": [
+          "0x54",
+          "0x10",
+          "0x10",
+          "0x10",
+          "0x42",
+          "0x54",
+          "0x54",
+          "0xb0",
+          "0xb0",
+          "0xb0",
+          "0xb0",
+          "0xb0"
+        ]
+      },
+      "text": "Premium Semigloss Photo Paper"
+    },
+    {
+      "class": "premium",
+      "name": "Luster",
+      "params": {
+        "PaperMedia": [
+          "13"
+        ],
+        "PrintMethod": [
+          "0x54",
+          "0x10",
+          "0x10",
+          "0x10",
+          "0x42",
+          "0x54",
+          "0x54",
+          "0xb0",
+          "0xb0",
+          "0xb0",
+          "0xb0",
+          "0xb0"
+        ]
+      },
+      "text": "Premium Luster Photo Paper"
+    },
+    {
+      "class": "premium",
+      "name": "UltraLuster",
+      "params": {
+        "PaperMedia": [
+          "38"
+        ],
+        "PrintMethod": [
+          "0x54",
+          "0x10",
+          "0x10",
+          "0x10",
+          "0x42",
+          "0x54",
+          "0x54",
+          "0xb0",
+          "0xb0",
+          "0xb0",
+          "0xb0",
+          "0xb0"
+        ]
+      },
+      "text": "Ultra Premium Photo Paper Luster"
+    },
+    {
+      "class": "premium",
+      "name": "GlossyPaper",
+      "params": {
+        "PaperMedia": [
+          "19"
+        ],
+        "PrintMethod": [
+          "0x54",
+          "0x10",
+          "0x10",
+          "0x10",
+          "0x42",
+          "0x54",
+          "0x54",
+          "0xb0",
+          "0xb0",
+          "0xb0",
+          "0xb0",
+          "0xb0"
+        ]
+      },
+      "text": "Photo Quality Glossy Paper"
+    },
+    {
+      "class": "premium",
+      "name": "ColorLife",
+      "params": {
+        "PaperMedia": [
+          "23"
+        ],
+        "PrintMethod": [
+          "0x54",
+          "0x10",
+          "0x10",
+          "0x10",
+          "0x42",
+          "0x54",
+          "0x54",
+          "0xb0",
+          "0xb0",
+          "0xb0",
+          "0xb0",
+          "0xb0"
+        ]
+      },
+      "text": "ColorLife Paper"
+    },
+    {
+      "class": "plain",
+      "name": "Other",
+      "params": {},
+      "text": "Other"
+    }
+  ],
+  "protocol": {
+    "cls": "escp2-esci",
+    "commandSet": "2000",
+    "family": "gutenprint-model-81",
+    "note": "codes from gutenprint XML formula (not live-verified)",
+    "raster_command": "ESC i <color|sub<<4> <comp=1> <bitwidth> <nwidth:2LE> <nlines:2LE> <TIFF PackBits>"
+  },
+  "schema": "rip-printer-v1"
+}

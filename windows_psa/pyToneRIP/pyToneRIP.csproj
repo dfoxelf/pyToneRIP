@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
+    <ProjectGuid>{52B297C4-A4D9-4A01-A44E-B274F10B6617}</ProjectGuid>
+    <OutputType>AppContainerExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>pyToneRIP</RootNamespace>
+    <AssemblyName>pyToneRIP</AssemblyName>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
+    <TargetPlatformVersion>10.0.26100.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.26100.0</TargetPlatformMinVersion>
+    <RuntimeIdentifier>win10-x64-aot</RuntimeIdentifier>
+    <RuntimeIdentifiers>win10-x64;win10-x64-aot</RuntimeIdentifiers>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <MinimumVisualStudioVersion>17.0</MinimumVisualStudioVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+    <AppxBundle>Never</AppxBundle>
+    <AppxBundlePlatforms>x64</AppxBundlePlatforms>
+    <AppxExcludeArmFrameworkSdkPackagesFromLayout>true</AppxExcludeArmFrameworkSdkPackagesFromLayout>
+    <AppxExcludeX86FrameworkSdkPackagesFromLayout>true</AppxExcludeX86FrameworkSdkPackagesFromLayout>
+    <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <IntermediateOutputPath>obj\x64\Debug\</IntermediateOutputPath>
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <IntermediateOutputPath>obj\x64\Release\</IntermediateOutputPath>
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugSymbols>false</DebugSymbols>
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <!-- Keep the tested managed UWP runtime. .NET Native needs a separate
+         reflection/serialization audit before it can be enabled. -->
+    <UseDotNetNativeToolchain>false</UseDotNetNativeToolchain>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="App.xaml.cs"><DependentUpon>App.xaml</DependentUpon></Compile>
+    <Compile Include="ExtendedSplash.xaml.cs"><DependentUpon>ExtendedSplash.xaml</DependentUpon></Compile>
+    <Compile Include="Models\CapabilityModels.cs" />
+    <Compile Include="Models\ConfigurationModels.cs" />
+    <Compile Include="Models\MaintenanceModels.cs" />
+    <Compile Include="Models\PrinterInstanceModels.cs" />
+    <Compile Include="Models\RipRuntimeContract.cs" />
+    <Compile Include="MainPage.xaml.cs"><DependentUpon>MainPage.xaml</DependentUpon></Compile>
+    <Compile Include="PropertiesPage.xaml.cs"><DependentUpon>PropertiesPage.xaml</DependentUpon></Compile>
+    <Compile Include="Services\CapabilityCatalog.cs" />
+    <Compile Include="Services\ConfigurationCodec.cs" />
+    <Compile Include="Services\CyclicBlendWeights.cs" />
+    <Compile Include="Services\DeferredLocalization.cs" />
+    <Compile Include="Services\ExternalCurveAccessStore.cs" />
+    <Compile Include="Services\JobProgressReader.cs" />
+    <Compile Include="Services\LocalizationService.cs" />
+    <Compile Include="Services\ManagerLogger.cs" />
+    <Compile Include="Services\QueueConfigurationStorage.cs" />
+    <Compile Include="Services\QueueIdentity.cs" />
+    <Compile Include="Services\SharedApplicationStorage.cs" />
+    <Compile Include="Services\PrintTicketSynchronization.cs" />
+    <Compile Include="Services\RipConfigurationProjection.cs" />
+    <Compile Include="Services\PrinterSystemDefaultsService.cs" />
+    <Compile Include="Services\PrinterConnectivityService.cs" />
+    <Compile Include="Services\PrinterSnmpService.cs" />
+    <Compile Include="Services\EpsonBdcStatusParser.cs" />
+    <Compile Include="Services\PrinterInstanceStore.cs" />
+    <Compile Include="Services\VirtualPrinterManagementService.cs" />
+    <Compile Include="Services\QueueHelperClient.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PRIResource Include="Strings\**\*.resw" />
+    <ApplicationDefinition Include="App.xaml"><Generator>MSBuild:Compile</Generator><SubType>Designer</SubType></ApplicationDefinition>
+    <Page Include="ExtendedSplash.xaml"><Generator>MSBuild:Compile</Generator><SubType>Designer</SubType></Page>
+    <Page Include="PropertiesPage.xaml"><Generator>MSBuild:Compile</Generator><SubType>Designer</SubType></Page>
+    <Page Include="MainPage.xaml"><Generator>MSBuild:Compile</Generator><SubType>Designer</SubType></Page>
+  </ItemGroup>
+  <ItemGroup>
+    <AppxManifest Include="Package.appxmanifest"><SubType>Designer</SubType></AppxManifest>
+    <Content Include="Assets\capabilities.generated.json" Condition="'$(GeneratedAssetsRoot)' == ''"><CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory></Content>
+    <Content Include="Assets\capabilities.common.json" Condition="'$(GeneratedAssetsRoot)' == ''"><CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory></Content>
+    <Content Include="Assets\capabilities.index.json" Condition="'$(GeneratedAssetsRoot)' == ''"><CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory></Content>
+    <Content Include="Assets\CapabilityModels\**\*" Condition="'$(GeneratedAssetsRoot)' == ''"><CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory></Content>
+    <Content Include="Assets\PdcModels\**\*" Condition="'$(GeneratedAssetsRoot)' == ''"><CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory></Content>
+    <Content Include="Assets\PdrModels\**\*" Condition="'$(GeneratedAssetsRoot)' == ''"><CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory></Content>
+    <Content Include="$(GeneratedAssetsRoot)\capabilities.generated.json" Condition="'$(GeneratedAssetsRoot)' != ''"><Link>Assets\capabilities.generated.json</Link><CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory></Content>
+    <Content Include="$(GeneratedAssetsRoot)\capabilities.common.json" Condition="'$(GeneratedAssetsRoot)' != ''"><Link>Assets\capabilities.common.json</Link><CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory></Content>
+    <Content Include="$(GeneratedAssetsRoot)\capabilities.index.json" Condition="'$(GeneratedAssetsRoot)' != ''"><Link>Assets\capabilities.index.json</Link><CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory></Content>
+    <Content Include="$(GeneratedAssetsRoot)\CapabilityModels\**\*" Condition="'$(GeneratedAssetsRoot)' != ''"><Link>Assets\CapabilityModels\%(RecursiveDir)%(Filename)%(Extension)</Link><CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory></Content>
+    <Content Include="$(GeneratedAssetsRoot)\PdcModels\**\*" Condition="'$(GeneratedAssetsRoot)' != ''"><Link>Assets\PdcModels\%(RecursiveDir)%(Filename)%(Extension)</Link><CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory></Content>
+    <Content Include="$(GeneratedAssetsRoot)\PdrModels\**\*" Condition="'$(GeneratedAssetsRoot)' != ''"><Link>Assets\PdrModels\%(RecursiveDir)%(Filename)%(Extension)</Link><CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory></Content>
+    <Content Include="$(GeneratedAssetsRoot)\catalog-signing.cer" Condition="'$(GeneratedAssetsRoot)' != '' and Exists('$(GeneratedAssetsRoot)\catalog-signing.cer')"><Link>Assets\catalog-signing.cer</Link><CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory></Content>
+    <Content Include="Assets\Square150x150Logo.png" />
+    <Content Include="Assets\SplashScreen.png" />
+    <Content Include="Assets\Square44x44Logo.png" />
+    <Content Include="Assets\StoreLogo.png" />
+    <Content Include="..\Collect-SupportReport.ps1"><Link>Collect-SupportReport.ps1</Link><CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory></Content>
+    <!-- QueueHelper is built into this invocation's OutDir by the ProjectReference.
+         Do not package the stale helper under the source project's bin folder. -->
+    <Content Include="$(OutDir)pyToneRIP.QueueHelper.exe">
+      <Link>pyToneRIP.QueueHelper.exe</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\runtime\dist\pyToneRIP.Runtime\**\*">
+      <Link>Runtime\%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.2.14" />
+    <SDKReference Include="WindowsDesktop, Version=10.0.26100.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\pyToneRIP.Tasks\pyToneRIP.Tasks.csproj">
+      <Project>{8F0552BE-2C66-4BDE-8A71-8E9C0F1E35D4}</Project>
+      <Name>pyToneRIP.Tasks</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\pyToneRIP.QueueHelper\pyToneRIP.QueueHelper.csproj">
+      <Project>{D6B9B874-5199-4FB5-88DD-75697644B42B}</Project>
+      <Name>pyToneRIP.QueueHelper</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <Private>false</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <PropertyGroup>
+    <PythonExecutable Condition="'$(PythonExecutable)' == ''">$(MSBuildThisFileDirectory)..\..\.venv\Scripts\python.exe</PythonExecutable>
+    <CapabilityExport>$(MSBuildThisFileDirectory)Assets\capabilities.generated.json</CapabilityExport>
+    <PdcAggregateExport>$(IntermediateOutputPath)all-models.pdc.xml</PdcAggregateExport>
+    <PdcModelExport>$(MSBuildThisFileDirectory)Assets\PdcModels</PdcModelExport>
+    <PackageManifestSource>$(MSBuildThisFileDirectory)Package.appxmanifest</PackageManifestSource>
+    <VersionedPackageManifest>$(IntermediateOutputPath)Package.versioned.appxmanifest</VersionedPackageManifest>
+  </PropertyGroup>
+  <Target Name="PrepareVersionedPackageManifest" BeforeTargets="_ValidatePresenceOfAppxManifestItems" Condition="'$(PackageBuildVersion)' != ''">
+    <MakeDir Directories="$(IntermediateOutputPath)" />
+    <Copy SourceFiles="$(PackageManifestSource)" DestinationFiles="$(VersionedPackageManifest)" />
+    <XmlPoke XmlInputPath="$(VersionedPackageManifest)" Query="/*[local-name()='Package']/*[local-name()='Identity']/@Version" Value="$(PackageBuildVersion)" />
+    <ItemGroup>
+      <AppxManifest Remove="@(AppxManifest)" />
+      <AppxManifest Include="$(VersionedPackageManifest)" />
+    </ItemGroup>
+  </Target>
+  <Target Name="ExportPythonCapabilities" BeforeTargets="PrepareForBuild" Condition="Exists('$(PythonExecutable)') and '$(GeneratedAssetsRoot)' == ''">
+    <Exec WorkingDirectory="$(MSBuildThisFileDirectory)..\.." Command="&quot;$(PythonExecutable)&quot; -m xp750_rip psa-export-capabilities --output &quot;$(CapabilityExport)&quot;" />
+    <Exec WorkingDirectory="$(MSBuildThisFileDirectory)..\.." Command="&quot;$(PythonExecutable)&quot; -m xp750_rip psa-export-pdc --output &quot;$(PdcAggregateExport)&quot; --model-output-dir &quot;$(PdcModelExport)&quot;" />
+  </Target>
+  <!-- The frozen Python distribution and generated printer catalog are package
+       payload, not MRT/XAML resources. Keeping those files in resources.pri
+       makes the first XAML InitializeComponent block for several seconds and
+       also makes dots in CPython extension names look like PRI qualifiers.
+
+       Preserve the complete items (and their package metadata), remove them
+       only while the AppX targets create the PRI input lists, then restore them
+       before the MSIX payload is assembled. -->
+  <Target Name="ExcludeTechnicalPayloadFromPri"
+          BeforeTargets="_GenerateProjectPriConfigurationFiles"
+          Condition="'$(AppxPackage)' == 'true'">
+    <ItemGroup>
+      <_TechnicalPackagePayload Include="@(PackagingOutputs)"
+          Condition="$([System.Text.RegularExpressions.Regex]::IsMatch('%(PackagingOutputs.TargetPath)', '^(Runtime[\\/]|Assets[\\/](CapabilityModels|PdcModels|PdrModels)[\\/]|Assets[\\/]capabilities\.(common|generated|index)\.json$|Assets[\\/]catalog-signing\.cer$)'))" />
+      <PackagingOutputs Remove="@(_TechnicalPackagePayload)" />
+    </ItemGroup>
+  </Target>
+  <Target Name="RestoreTechnicalPayloadAfterPriInputGeneration"
+          AfterTargets="_GenerateProjectPriConfigurationFiles"
+          Condition="'$(AppxPackage)' == 'true'">
+    <ItemGroup>
+      <PackagingOutputs Include="@(_TechnicalPackagePayload)" />
+    </ItemGroup>
+  </Target>
+  <PropertyGroup>
+    <WindowsXamlTargetsVersion Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets')">$(VisualStudioVersion)</WindowsXamlTargetsVersion>
+    <WindowsXamlTargetsVersion Condition="'$(WindowsXamlTargetsVersion)' == '' and Exists('$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v17.0\Microsoft.Windows.UI.Xaml.CSharp.targets')">17.0</WindowsXamlTargetsVersion>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(WindowsXamlTargetsVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
+</Project>

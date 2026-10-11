@@ -1,0 +1,23 @@
+{
+  "backend_family": "epson_escp2_gutenprint_model_127",
+  "backend_runtime_file": "backend-runtime.json",
+  "backend_runtime_sha256": "f550f3cb5a27e5e04f2e33c397c60750b6cd3374ce09cc4bf66dbe025178b5e8",
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson SureColor P9000 Commercial Edition",
+  "model_id": "SureColor_P9000_Commercial_Edition",
+  "package_id": "gp--escp2-p9000c",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "19fede22abcc685e5a5c9079f7dae416bdefb39a81dd865c1ac6e92e2fcaa140",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "gutenprint-model-127",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "90a826bff6ad6ea4b9670b28c13c02a29457200019ebeef968d04fb07273c418",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "fb37b4669ca936a23e8613a8a89f1725967513a0cf168cb0157d9a4d369b03cc",
+  "version": 1,
+  "visible": true,
+  "warnings": []
+}

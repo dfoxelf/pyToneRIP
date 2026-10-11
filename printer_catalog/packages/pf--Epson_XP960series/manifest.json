@@ -1,0 +1,25 @@
+{
+  "backend_family": "epson_escp2_px700w",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson XP-960 Series",
+  "model_id": "XP960series",
+  "package_id": "pf--Epson_XP960series",
+  "ppd_file": "vendor.ppd",
+  "ppd_sha256": "a5d29fd394ac3e542f3eb277bde8ea7c4fd72249fc9ae7c136bd2520b776efc2",
+  "ppd_source": "vendor.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "PX700W",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "454f16a560b53f1a76421982c91d6df4b348190862601ad1dc914b08a527bfaa",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "e72117d569f287ce2d9d54d6f6d365638c630e5f67abc857d93c4b4812447903",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "FAMILY_ALIAS: ReferenceDriver printers.lst [Epson_XP960series] Driver=Epson_XP950series; technical driver pf--Epson_XP950series; exact capabilities from Epson-XP-960_Series-epson-escpr-en.ppd"
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "backend_family": "epson_escp2_gutenprint_model_94",
+  "backend_runtime_file": "backend-runtime.json",
+  "backend_runtime_sha256": "7b3194caf1e49ede2212f46c1ca98ac0de849e4dfa1fb9a1617b0cd109f573cd",
+  "backend_source_file": "backend-source.json",
+  "backend_source_sha256": "8973bd021f34d59c271caf701905c0a31beb087ae7d3eef02b2a49c80f0c7dca",
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson XP-200 Series",
+  "model_id": "XP200series",
+  "package_id": "pf--Epson_XP200series",
+  "ppd_file": "vendor.ppd",
+  "ppd_sha256": "2d42d064bd76a266f886d8876c963af1ee5c4cfeaa9256eb10e951e33bfe3ab1",
+  "ppd_source": "vendor.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "gutenprint-model-94",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "40535541180558f60163be696d9064d7efd3bcd284eded7b3f805ca2317f7daf",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "a399fc69b31cb7bffe410c0002c3d15d10826a4523df28009533b92110d854d6",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "SOURCE_CORRECTION: protocol family resolved by an explicit compatible driver descriptor"
+  ]
+}

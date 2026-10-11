@@ -1,0 +1,25 @@
+{
+  "backend_family": "epson_escp2_sc_t5400",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson SureColor T5100",
+  "model_id": "SureColorT5100",
+  "package_id": "pf--Epson_SureColorT5100",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "c1df0c9c83568844f3e0d09d8d4daf86bc4e1a3dfcf9a69833e743fcdec7d986",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "SC-T5400",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "feed66c129c336c2eda8910e97fa9411c44c062ecb2558e79fdc416eea16b2f1",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "49b03d3b696333d4a8a95e6b43fb1691c2b4cca8e1bcb6a495cd433df664599f",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "FAMILY_ALIAS: ReferenceDriver driver id T3100; technical driver pf--Epson_SureColorT3100; synthetic PPD, exact Epson T5100 PPD not present"
+  ]
+}

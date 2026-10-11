@@ -1,0 +1,25 @@
+{
+  "backend_family": "epson_escp2_t7200",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson SureColor T5200",
+  "model_id": "SureColorT5200",
+  "package_id": "pf--Epson_SureColorT5200",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "2d40ae280c370d59be9063dd1c675e5cd77d8e6b0a6d94212dfa6b7907c3d639",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "T7200",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "9693186ad129683ae3a0e6da44c557e1c13db0bd40e1231d766189aa37ab2160",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "2b88db7ddf47db2bd1c28f56295b771170d8f472a3ffdfae058b444fb0e36e25",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "SYNTHETIC_PPD: no exact Epson PPD in the local source corpus; ReferenceDriver technical driver id T7200; no manufacturer paper list inherited"
+  ]
+}

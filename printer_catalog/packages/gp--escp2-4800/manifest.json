@@ -1,0 +1,23 @@
+{
+  "backend_family": "epson_escp2_gutenprint_model_106",
+  "backend_runtime_file": "backend-runtime.json",
+  "backend_runtime_sha256": "f65825a4f405f336b97dbbd70b2890061b97833ac06d0b9251a688821c9d676e",
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson Stylus Pro 4800",
+  "model_id": "Stylus_Pro_4800",
+  "package_id": "gp--escp2-4800",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "f6bd6bf0007d55c19d1e3ddc002acbf9f4d619579f7d09192b6f7a0c68cef16d",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "gutenprint-model-106",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "90a826bff6ad6ea4b9670b28c13c02a29457200019ebeef968d04fb07273c418",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "c941d775cc0fad68241dffdc26d53dc35eb930e6037728345c15883065de0cb6",
+  "version": 1,
+  "visible": true,
+  "warnings": []
+}

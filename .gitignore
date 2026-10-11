@@ -1,0 +1,66 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+bin/
+obj/
+AppPackages/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Local research and temporary captures
+/.tmp/
+/New*Research/
+/.dotnet-home/
+/benchmark-results/
+/*.etl
+/codex-*.cmd
+/photos*.txt
+/pyToneRIP-preferences-diag.txt
+/.pytest_*/
+/pytest-*/
+/pytest_*/
+/tests/pytest_*/
+
+# IDE and local test scratch directories
+.idea/
+.pytest-*/
+tmp/
+output/
+checkpoints/
+
+# Generated native-extension outputs
+*.pyd
+*.pdb
+*.winmdobj
+src/xp750_rip/_cython_kernels.c
+
+# uv project-local cache (do not use the user profile cache)
+.uv-cache/
+
+# Project-local PyInstaller cache/configuration
+.pyinstaller/
+
+# Local signing keys and generated Windows packages
+/windows_psa/signing-local/
+/windows_psa/artifacts/
+/windows_psa/runtime/build/
+/windows_psa/runtime/dist/
+/windows_psa/installer/.build/
+/printer_catalog/import-drafts/
+
+# Local diagnostics and helper files
+*.log
+VirtualPrinterManagerProbe-diag*.txt
+codex2.cmd
+/uv
+
+# Separately cloned Microsoft documentation; not part of this repository
+reference/microsoft-windows-driver-docs/
+
+# Files uploaded to GitHub Releases, not source code
+/release-assets/

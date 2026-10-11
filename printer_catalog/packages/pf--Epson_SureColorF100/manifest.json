@@ -1,0 +1,25 @@
+{
+  "backend_family": "epson_escp2_wf7610",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson SureColor F100",
+  "model_id": "SureColorF100",
+  "package_id": "pf--Epson_SureColorF100",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "9d982514de2601da56f21d8609b89bfc485f8895d2bc8602b602d3bd1fa8449b",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "WF7610",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "7218778e03a479884103a76abf4aa0691b6b605a7d322b5e04a95275774388e9",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "ce7e9644eb793186c2308aded63b29ba1d55a06106c1019bcd67e4c2264d94d4",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "SYNTHETIC_PPD: no exact Epson PPD in the local source corpus; ReferenceDriver technical driver id ET3700; no manufacturer paper list inherited"
+  ]
+}

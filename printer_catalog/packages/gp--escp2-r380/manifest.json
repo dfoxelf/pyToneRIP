@@ -1,0 +1,23 @@
+{
+  "backend_family": "epson_escp2_gutenprint_model_81",
+  "backend_runtime_file": "backend-runtime.json",
+  "backend_runtime_sha256": "acdfcec48603736611b399a0f4334e4c9feb828e33d0d152be040f18833698c2",
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson Stylus Photo R380",
+  "model_id": "Stylus_Photo_R380",
+  "package_id": "gp--escp2-r380",
+  "ppd_file": "vendor.ppd",
+  "ppd_sha256": "8748981b2bb4eaa3736503928d1bf9170f7808520790b591b93766984c202303",
+  "ppd_source": "vendor.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "gutenprint-model-81",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "90a826bff6ad6ea4b9670b28c13c02a29457200019ebeef968d04fb07273c418",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "7a21a7aa1e1489b6319aa51ccc9f224953ea8523997e01cbfbe8ac87633557e3",
+  "version": 1,
+  "visible": true,
+  "warnings": []
+}

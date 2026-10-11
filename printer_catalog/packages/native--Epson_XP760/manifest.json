@@ -1,0 +1,26 @@
+{
+  "backend_family": "epson_escp2_px700w",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson Expression Photo XP-760",
+  "model_id": "XP760",
+  "package_id": "native--Epson_XP760",
+  "ppd_file": "vendor.ppd",
+  "ppd_sha256": "cba26d1e81fbcbdd2e2e4b6f7da055cecc82c69838d8e7246b6254b65e0f3961",
+  "ppd_source": "vendor.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "PX700W",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "454f16a560b53f1a76421982c91d6df4b348190862601ad1dc914b08a527bfaa",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "07805bf8139927e655c4986f80874ac25071bcb45f54f471aba9f981e8b30037",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "FAMILY_ALIAS: ReferenceDriver printers.lst [Epson_XP960series] Driver=Epson_XP950series; technical driver pf--Epson_XP950series; exact capabilities from Epson-XP-960_Series-epson-escpr-en.ppd",
+    "FAMILY_ALIAS: Validated PX700W family mechanics; native model override in xp750_capabilities; technical driver pf--Epson_XP960series; exact capabilities from Epson-XP-760_Series-epson-escpr-en.ppd"
+  ]
+}

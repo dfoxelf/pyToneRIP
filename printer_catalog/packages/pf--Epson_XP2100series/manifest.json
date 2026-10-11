@@ -1,0 +1,23 @@
+{
+  "backend_family": "epson_escp2_xp305",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson XP-2100 Series",
+  "model_id": "XP2100series",
+  "package_id": "pf--Epson_XP2100series",
+  "ppd_file": "vendor.ppd",
+  "ppd_sha256": "6a4f8624631733c4c6bd42907fe0bb2ca70e6f5f2f5b3a406318928af56714c3",
+  "ppd_source": "vendor.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "XP305",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "3d511038416a2aef4931715b467f46bcfd15460154ddf1f1391922497e913a3d",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "22391002f2a4811629931a905ca40d509399294a646e46fb88576305e0a24733",
+  "version": 1,
+  "visible": true,
+  "warnings": []
+}

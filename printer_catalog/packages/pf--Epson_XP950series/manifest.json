@@ -1,0 +1,23 @@
+{
+  "backend_family": "epson_escp2_px700w",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson XP-950 Series",
+  "model_id": "XP950series",
+  "package_id": "pf--Epson_XP950series",
+  "ppd_file": "vendor.ppd",
+  "ppd_sha256": "c3dd407f42f7f7be2387ac200ccefadf449628cedfde37f0e9f8c98bf143e0df",
+  "ppd_source": "vendor.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "PX700W",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "454f16a560b53f1a76421982c91d6df4b348190862601ad1dc914b08a527bfaa",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "20e733ecdabbe22d0e804ee723d5397836cbb18eec923e7024d118079cc21636",
+  "version": 1,
+  "visible": true,
+  "warnings": []
+}

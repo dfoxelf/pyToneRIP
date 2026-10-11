@@ -1,0 +1,1402 @@
+{
+  "modes": [
+    {
+      "app_raster_dpi": {
+        "horizontal": 720,
+        "vertical": 720
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_scope": "all_non_default_media"
+      },
+      "display_name": "Medium",
+      "drop_levels_percent": [
+        0,
+        20,
+        50,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 118
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 1,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 18
+      },
+      "explicit_weave_sequence": [],
+      "nominal_output_dpi": {
+        "horizontal": 720,
+        "vertical": 720
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 720,
+        "vertical": 720
+      },
+      "quality_rank": 3,
+      "raster_bit_depth": 2,
+      "variant_index": 0
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 720,
+        "vertical": 720
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_scope": "all_non_default_media"
+      },
+      "display_name": "High",
+      "drop_levels_percent": [
+        0,
+        20,
+        50,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 118
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 2,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 18
+      },
+      "explicit_weave_sequence": [],
+      "nominal_output_dpi": {
+        "horizontal": 1440,
+        "vertical": 720
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 1440,
+        "vertical": 720
+      },
+      "quality_rank": 5,
+      "raster_bit_depth": 2,
+      "variant_index": 1
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 720,
+        "vertical": 720
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_scope": "all_non_default_media"
+      },
+      "display_name": "Super",
+      "drop_levels_percent": [
+        0,
+        40,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 128
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 2,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 18
+      },
+      "explicit_weave_sequence": [],
+      "nominal_output_dpi": {
+        "horizontal": 2880,
+        "vertical": 1440
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 1440,
+        "vertical": 1440
+      },
+      "quality_rank": 6,
+      "raster_bit_depth": 2,
+      "variant_index": 2
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 1440,
+        "vertical": 1440
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_scope": "all_non_default_media"
+      },
+      "display_name": "Photo",
+      "drop_levels_percent": [
+        0,
+        50,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 160
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 4,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 20
+      },
+      "explicit_weave_sequence": [],
+      "nominal_output_dpi": {
+        "horizontal": 5760,
+        "vertical": 1440
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 2880,
+        "vertical": 1440
+      },
+      "quality_rank": 7,
+      "raster_bit_depth": 2,
+      "variant_index": 3
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 360,
+        "vertical": 360
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_index": 0,
+        "media_scope": "one_media"
+      },
+      "display_name": "Draft",
+      "drop_levels_percent": [
+        0,
+        20,
+        50,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 33
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 1,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 18
+      },
+      "explicit_weave_sequence": [],
+      "nominal_output_dpi": {
+        "horizontal": 360,
+        "vertical": 360
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 360,
+        "vertical": 360
+      },
+      "quality_rank": 1,
+      "raster_bit_depth": 2,
+      "variant_index": 0
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 720,
+        "vertical": 720
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_index": 0,
+        "media_scope": "one_media"
+      },
+      "display_name": "Medium",
+      "drop_levels_percent": [
+        0,
+        20,
+        50,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 80
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 1,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 18
+      },
+      "explicit_weave_sequence": [],
+      "nominal_output_dpi": {
+        "horizontal": 720,
+        "vertical": 720
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 720,
+        "vertical": 720
+      },
+      "quality_rank": 3,
+      "raster_bit_depth": 2,
+      "variant_index": 1
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 720,
+        "vertical": 720
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_index": 0,
+        "media_scope": "one_media"
+      },
+      "display_name": "High",
+      "drop_levels_percent": [
+        0,
+        20,
+        50,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 118
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 2,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 18
+      },
+      "explicit_weave_sequence": [],
+      "nominal_output_dpi": {
+        "horizontal": 1440,
+        "vertical": 720
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 1440,
+        "vertical": 720
+      },
+      "quality_rank": 5,
+      "raster_bit_depth": 2,
+      "variant_index": 2
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 720,
+        "vertical": 720
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_index": 0,
+        "media_scope": "one_media"
+      },
+      "display_name": "Super",
+      "drop_levels_percent": [
+        0,
+        40,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 128
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 2,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 18
+      },
+      "explicit_weave_sequence": [],
+      "nominal_output_dpi": {
+        "horizontal": 2880,
+        "vertical": 1440
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 1440,
+        "vertical": 1440
+      },
+      "quality_rank": 6,
+      "raster_bit_depth": 2,
+      "variant_index": 3
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 1440,
+        "vertical": 1440
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_index": 0,
+        "media_scope": "one_media"
+      },
+      "display_name": "Photo",
+      "drop_levels_percent": [
+        0,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 180
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 4,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 18
+      },
+      "explicit_weave_sequence": [],
+      "nominal_output_dpi": {
+        "horizontal": 5760,
+        "vertical": 1440
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 2880,
+        "vertical": 1440
+      },
+      "quality_rank": 7,
+      "raster_bit_depth": 2,
+      "variant_index": 4
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 720,
+        "vertical": 720
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_index": 1,
+        "media_scope": "one_media"
+      },
+      "display_name": "Medium",
+      "drop_levels_percent": [
+        0,
+        20,
+        50,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 118
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 1,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 18
+      },
+      "explicit_weave_sequence": [],
+      "nominal_output_dpi": {
+        "horizontal": 720,
+        "vertical": 720
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 720,
+        "vertical": 720
+      },
+      "quality_rank": 3,
+      "raster_bit_depth": 2,
+      "variant_index": 0
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 720,
+        "vertical": 720
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_index": 1,
+        "media_scope": "one_media"
+      },
+      "display_name": "High",
+      "drop_levels_percent": [
+        0,
+        20,
+        50,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 118
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 2,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 18
+      },
+      "explicit_weave_sequence": [],
+      "nominal_output_dpi": {
+        "horizontal": 1440,
+        "vertical": 720
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 1440,
+        "vertical": 720
+      },
+      "quality_rank": 5,
+      "raster_bit_depth": 2,
+      "variant_index": 1
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 720,
+        "vertical": 720
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_index": 1,
+        "media_scope": "one_media"
+      },
+      "display_name": "Super",
+      "drop_levels_percent": [
+        0,
+        40,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 128
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 2,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 18
+      },
+      "explicit_weave_sequence": [],
+      "nominal_output_dpi": {
+        "horizontal": 2880,
+        "vertical": 1440
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 1440,
+        "vertical": 1440
+      },
+      "quality_rank": 6,
+      "raster_bit_depth": 2,
+      "variant_index": 2
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 1440,
+        "vertical": 1440
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_index": 1,
+        "media_scope": "one_media"
+      },
+      "display_name": "Photo",
+      "drop_levels_percent": [
+        0,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 180
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 4,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 18
+      },
+      "explicit_weave_sequence": [],
+      "nominal_output_dpi": {
+        "horizontal": 5760,
+        "vertical": 1440
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 2880,
+        "vertical": 1440
+      },
+      "quality_rank": 7,
+      "raster_bit_depth": 2,
+      "variant_index": 3
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 720,
+        "vertical": 720
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_index": 2,
+        "media_scope": "one_media"
+      },
+      "display_name": "Medium",
+      "drop_levels_percent": [
+        0,
+        20,
+        50,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 118
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 1,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 18
+      },
+      "explicit_weave_sequence": [],
+      "nominal_output_dpi": {
+        "horizontal": 720,
+        "vertical": 720
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 720,
+        "vertical": 720
+      },
+      "quality_rank": 3,
+      "raster_bit_depth": 2,
+      "variant_index": 0
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 720,
+        "vertical": 720
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_index": 2,
+        "media_scope": "one_media"
+      },
+      "display_name": "High",
+      "drop_levels_percent": [
+        0,
+        20,
+        50,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 118
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 2,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 18
+      },
+      "explicit_weave_sequence": [],
+      "nominal_output_dpi": {
+        "horizontal": 1440,
+        "vertical": 720
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 1440,
+        "vertical": 720
+      },
+      "quality_rank": 5,
+      "raster_bit_depth": 2,
+      "variant_index": 1
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 720,
+        "vertical": 720
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_index": 2,
+        "media_scope": "one_media"
+      },
+      "display_name": "Super",
+      "drop_levels_percent": [
+        0,
+        40,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 128
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 2,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 18
+      },
+      "explicit_weave_sequence": [],
+      "nominal_output_dpi": {
+        "horizontal": 2880,
+        "vertical": 1440
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 1440,
+        "vertical": 1440
+      },
+      "quality_rank": 6,
+      "raster_bit_depth": 2,
+      "variant_index": 2
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 1440,
+        "vertical": 1440
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_index": 2,
+        "media_scope": "one_media"
+      },
+      "display_name": "Photo",
+      "drop_levels_percent": [
+        0,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 180
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 4,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 18
+      },
+      "explicit_weave_sequence": [],
+      "nominal_output_dpi": {
+        "horizontal": 5760,
+        "vertical": 1440
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 2880,
+        "vertical": 1440
+      },
+      "quality_rank": 7,
+      "raster_bit_depth": 2,
+      "variant_index": 3
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 720,
+        "vertical": 720
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_index": 8,
+        "media_scope": "one_media"
+      },
+      "display_name": "Medium",
+      "drop_levels_percent": [
+        0,
+        20,
+        50,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 118
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 1,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 18
+      },
+      "explicit_weave_sequence": [],
+      "nominal_output_dpi": {
+        "horizontal": 720,
+        "vertical": 720
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 720,
+        "vertical": 720
+      },
+      "quality_rank": 3,
+      "raster_bit_depth": 2,
+      "variant_index": 0
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 720,
+        "vertical": 720
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_index": 8,
+        "media_scope": "one_media"
+      },
+      "display_name": "High",
+      "drop_levels_percent": [
+        0,
+        20,
+        50,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 118
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 2,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 18
+      },
+      "explicit_weave_sequence": [],
+      "nominal_output_dpi": {
+        "horizontal": 1440,
+        "vertical": 720
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 1440,
+        "vertical": 720
+      },
+      "quality_rank": 5,
+      "raster_bit_depth": 2,
+      "variant_index": 1
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 720,
+        "vertical": 720
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_index": 8,
+        "media_scope": "one_media"
+      },
+      "display_name": "Super",
+      "drop_levels_percent": [
+        0,
+        40,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 128
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 2,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 18
+      },
+      "explicit_weave_sequence": [],
+      "nominal_output_dpi": {
+        "horizontal": 2880,
+        "vertical": 1440
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 1440,
+        "vertical": 1440
+      },
+      "quality_rank": 6,
+      "raster_bit_depth": 2,
+      "variant_index": 2
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 1440,
+        "vertical": 1440
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_index": 8,
+        "media_scope": "one_media"
+      },
+      "display_name": "Photo",
+      "drop_levels_percent": [
+        0,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 180
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 4,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 18
+      },
+      "explicit_weave_sequence": [],
+      "nominal_output_dpi": {
+        "horizontal": 5760,
+        "vertical": 1440
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 2880,
+        "vertical": 1440
+      },
+      "quality_rank": 7,
+      "raster_bit_depth": 2,
+      "variant_index": 3
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 720,
+        "vertical": 720
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_index": 9,
+        "media_scope": "one_media"
+      },
+      "display_name": "Medium",
+      "drop_levels_percent": [
+        0,
+        20,
+        50,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 118
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 1,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 18
+      },
+      "explicit_weave_sequence": [],
+      "nominal_output_dpi": {
+        "horizontal": 720,
+        "vertical": 720
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 720,
+        "vertical": 720
+      },
+      "quality_rank": 3,
+      "raster_bit_depth": 2,
+      "variant_index": 0
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 720,
+        "vertical": 720
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_index": 9,
+        "media_scope": "one_media"
+      },
+      "display_name": "High",
+      "drop_levels_percent": [
+        0,
+        20,
+        50,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 118
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 2,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 18
+      },
+      "explicit_weave_sequence": [],
+      "nominal_output_dpi": {
+        "horizontal": 1440,
+        "vertical": 720
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 1440,
+        "vertical": 720
+      },
+      "quality_rank": 5,
+      "raster_bit_depth": 2,
+      "variant_index": 1
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 720,
+        "vertical": 720
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_index": 9,
+        "media_scope": "one_media"
+      },
+      "display_name": "Super",
+      "drop_levels_percent": [
+        0,
+        40,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 128
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 2,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 18
+      },
+      "explicit_weave_sequence": [],
+      "nominal_output_dpi": {
+        "horizontal": 2880,
+        "vertical": 1440
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 1440,
+        "vertical": 1440
+      },
+      "quality_rank": 6,
+      "raster_bit_depth": 2,
+      "variant_index": 2
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 1440,
+        "vertical": 1440
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_index": 9,
+        "media_scope": "one_media"
+      },
+      "display_name": "Photo",
+      "drop_levels_percent": [
+        0,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 180
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 4,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 18
+      },
+      "explicit_weave_sequence": [],
+      "nominal_output_dpi": {
+        "horizontal": 5760,
+        "vertical": 1440
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 2880,
+        "vertical": 1440
+      },
+      "quality_rank": 7,
+      "raster_bit_depth": 2,
+      "variant_index": 3
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 720,
+        "vertical": 720
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_index": 10,
+        "media_scope": "one_media"
+      },
+      "display_name": "Medium",
+      "drop_levels_percent": [
+        0,
+        20,
+        50,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 118
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 1,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 18
+      },
+      "explicit_weave_sequence": [],
+      "nominal_output_dpi": {
+        "horizontal": 720,
+        "vertical": 720
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 720,
+        "vertical": 720
+      },
+      "quality_rank": 3,
+      "raster_bit_depth": 2,
+      "variant_index": 0
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 720,
+        "vertical": 720
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_index": 10,
+        "media_scope": "one_media"
+      },
+      "display_name": "High",
+      "drop_levels_percent": [
+        0,
+        20,
+        50,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 118
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 2,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 18
+      },
+      "explicit_weave_sequence": [],
+      "nominal_output_dpi": {
+        "horizontal": 1440,
+        "vertical": 720
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 1440,
+        "vertical": 720
+      },
+      "quality_rank": 5,
+      "raster_bit_depth": 2,
+      "variant_index": 1
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 720,
+        "vertical": 720
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_index": 10,
+        "media_scope": "one_media"
+      },
+      "display_name": "Super",
+      "drop_levels_percent": [
+        0,
+        40,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 128
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 2,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 18
+      },
+      "explicit_weave_sequence": [],
+      "nominal_output_dpi": {
+        "horizontal": 2880,
+        "vertical": 1440
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 1440,
+        "vertical": 1440
+      },
+      "quality_rank": 6,
+      "raster_bit_depth": 2,
+      "variant_index": 2
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 1440,
+        "vertical": 1440
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_index": 10,
+        "media_scope": "one_media"
+      },
+      "display_name": "Photo",
+      "drop_levels_percent": [
+        0,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 180
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 4,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 18
+      },
+      "explicit_weave_sequence": [],
+      "nominal_output_dpi": {
+        "horizontal": 5760,
+        "vertical": 1440
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 2880,
+        "vertical": 1440
+      },
+      "quality_rank": 7,
+      "raster_bit_depth": 2,
+      "variant_index": 3
+    }
+  ],
+  "schema": "pytone-rip.mode-runtime-v2"
+}

@@ -1,0 +1,23 @@
+{
+  "backend_family": "epson_escp2_l8050",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson EcoTank ET-2840",
+  "model_id": "EcoTank_ET2840",
+  "package_id": "pf--Epson_EcoTank_ET2840",
+  "ppd_file": "vendor.ppd",
+  "ppd_sha256": "88982377a6dae2a98b10c6195175395fdabcfa7121e02c172b2fb26b9ee9ddef",
+  "ppd_source": "vendor.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "L8050",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "ce33327a30acf74a137fe62173834c0624b5ae5e7f829720150109854239cb51",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "791c1ca723304937e4e921f3ed1e7665aa521ad2d9f8ff5c9dbf233f261add0a",
+  "version": 1,
+  "visible": true,
+  "warnings": []
+}

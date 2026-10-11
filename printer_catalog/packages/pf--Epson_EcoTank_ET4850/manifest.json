@@ -1,0 +1,25 @@
+{
+  "backend_family": "epson_escp2_wf7610",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson EcoTank ET-4850",
+  "model_id": "EcoTank_ET4850",
+  "package_id": "pf--Epson_EcoTank_ET4850",
+  "ppd_file": "vendor.ppd",
+  "ppd_sha256": "78e547432585cbfc3a7a2e7b50d2ffeec3b5723c99573a37f61a29c7b033cfbc",
+  "ppd_source": "vendor.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "WF7610",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "3eab4f8826657531df74a995bd18da360c66cf2f745f207839a778afda8ab03b",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "d5774ac36ddbd594d36d8e265d6cde238b45b63b7f8b8e997723c1ff85949877",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "FAMILY_ALIAS: ReferenceDriver printers.lst [Epson_EcoTank_ET4850] Driver=Epson_EcoTank_ET3700; technical driver pf--Epson_EcoTank_ET3700; exact capabilities from Epson-ET-4850_Series-epson-escpr2-en.ppd"
+  ]
+}

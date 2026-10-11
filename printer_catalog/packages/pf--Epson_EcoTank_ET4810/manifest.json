@@ -1,0 +1,25 @@
+{
+  "backend_family": "epson_escp2_l8050",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson EcoTank ET-4810",
+  "model_id": "EcoTank_ET4810",
+  "package_id": "pf--Epson_EcoTank_ET4810",
+  "ppd_file": "vendor.ppd",
+  "ppd_sha256": "9fe1ee07e37142c634d29b5a3de55df4e964f0bc1c9db7132499956fe5a86b41",
+  "ppd_source": "vendor.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "L8050",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "ce33327a30acf74a137fe62173834c0624b5ae5e7f829720150109854239cb51",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "ccdb57b70e362e1a74641d610c9a9c0cbfb1739a4465e6c8a65ff8ae98076616",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "FAMILY_ALIAS: ReferenceDriver driver id ET14100 and exact Epson PPD; technical driver pf--Epson_EcoTank_ET2840; exact capabilities from vendor.ppd"
+  ]
+}

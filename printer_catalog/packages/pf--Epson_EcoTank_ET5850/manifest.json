@@ -1,0 +1,23 @@
+{
+  "backend_family": "epson_escp2_wf7610",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson EcoTank ET-5850",
+  "model_id": "EcoTank_ET5850",
+  "package_id": "pf--Epson_EcoTank_ET5850",
+  "ppd_file": "vendor.ppd",
+  "ppd_sha256": "9eea05d1f4514076b0afc934230786926bb41f4bf0cd61afd63a3fb0a4123348",
+  "ppd_source": "vendor.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "WF7610",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "8b49ca27375e38255f51ea99db073d33358675ead85c7fc1e3b5cf3f04c42028",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "13609884fc21ed0767da5f0a4384e530a6847e69f3569dc12f80fc11fb7634b7",
+  "version": 1,
+  "visible": true,
+  "warnings": []
+}

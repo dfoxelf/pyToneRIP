@@ -1,0 +1,25 @@
+{
+  "backend_family": "epson_escp2_xp305",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson EcoTank ET-2820",
+  "model_id": "EcoTank_ET2820",
+  "package_id": "pf--Epson_EcoTank_ET2820",
+  "ppd_file": "vendor.ppd",
+  "ppd_sha256": "79fd7b7d8f24a709464c6def4af56dbe2f67192a5792fe0e40e4d66499197581",
+  "ppd_source": "vendor.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "XP305",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "760942d8961c4758824df985baac692cf2804e7532fbb30cc062a13a343677d3",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "d90ac8333ea76ee4dce261565314fc876d17ffd2ea0bd9f235f23a4f00c285e6",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "FAMILY_ALIAS: ReferenceDriver printers.lst [Epson_EcoTank_ET2820] Driver=Epson_EcoTank_ET2810; technical driver pf--Epson_EcoTank_ET2810; exact capabilities from Epson-ET-2820_Series-epson-escpr-en.ppd"
+  ]
+}

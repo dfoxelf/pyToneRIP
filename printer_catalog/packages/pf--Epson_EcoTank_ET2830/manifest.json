@@ -1,0 +1,25 @@
+{
+  "backend_family": "epson_escp2_l8050",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson EcoTank ET-2830",
+  "model_id": "EcoTank_ET2830",
+  "package_id": "pf--Epson_EcoTank_ET2830",
+  "ppd_file": "vendor.ppd",
+  "ppd_sha256": "85d5e23088f3644412d99491dac13ba47b12a919aafa4f1ef1bcbe51e962325b",
+  "ppd_source": "vendor.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "L8050",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "ce33327a30acf74a137fe62173834c0624b5ae5e7f829720150109854239cb51",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "139c7e67d51e8f71a52e79d60d300c02651d79f5429cf17e6f6539c2f910c878",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "FAMILY_ALIAS: ReferenceDriver driver id ET14100 and exact Epson PPD; technical driver pf--Epson_EcoTank_ET2840; exact capabilities from vendor.ppd"
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "backend_family": "epson_escp2_xp305",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson EcoTank ET-2720",
+  "model_id": "EcoTank_ET2720",
+  "package_id": "pf--Epson_EcoTank_ET2720",
+  "ppd_file": "vendor.ppd",
+  "ppd_sha256": "69034f6b5003064ecbf241ab3afe5d39f99d85befd230b9885e36ce455b37fd6",
+  "ppd_source": "vendor.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "XP305",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "898c62f074156e2662abf313da08726abe6621a242e6cbd0a65ac3fa2439401f",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "ff2686ce6a54d842195a79b04f1f7e2fe7e21c6d488f809aca286fa22b56ffc6",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "FAMILY_ALIAS: ReferenceDriver printers.lst [Epson_EcoTank_ET2720] Driver=Epson_EcoTank_ET2710; technical driver pf--Epson_EcoTank_ET2710; exact capabilities from Epson-ET-2720_Series-epson-escpr-en.ppd"
+  ]
+}

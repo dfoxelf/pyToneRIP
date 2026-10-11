@@ -1,0 +1,25 @@
+{
+  "backend_family": "epson_escp2_gutenprint_model_24",
+  "backend_runtime_file": "backend-runtime.json",
+  "backend_runtime_sha256": "e0b5bb0676f347ec6791e96d757db3999699219b199e3890ea3539bc0021ee35",
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson Stylus Color 3000",
+  "model_id": "Stylus_Color_3000",
+  "package_id": "gp--escp2-3000",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "8a0b8ab4b62477cadd3dbe3e8bce00631b336cc896684b5aff39da9224ebb465",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "gutenprint-model-24",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "90a826bff6ad6ea4b9670b28c13c02a29457200019ebeef968d04fb07273c418",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "d9be1f816cc42209606b447c00880159c7fb029a5f835340b733d7a948203372",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "NO_EXACT_EPSON_PPD: ignored unrelated HP Color LaserJet 3000 PPD; using synthetic Epson Stylus Color 3000 PPD"
+  ]
+}

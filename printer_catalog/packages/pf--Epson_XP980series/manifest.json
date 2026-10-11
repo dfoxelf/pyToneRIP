@@ -1,0 +1,25 @@
+{
+  "backend_family": "epson_escp2_px700w",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson XP-980 Series",
+  "model_id": "XP980series",
+  "package_id": "pf--Epson_XP980series",
+  "ppd_file": "vendor.ppd",
+  "ppd_sha256": "5344bc4830b28f73e16ca9f138e5aa69539d9726bcca4cab965457bd15495ed1",
+  "ppd_source": "vendor.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "PX700W",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "454f16a560b53f1a76421982c91d6df4b348190862601ad1dc914b08a527bfaa",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "5a42a87a2475fb2dc1b9656447bb4883214349deb949e236449d17753a5eb71f",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "FAMILY_ALIAS: user-confirmed XP-960 compatible PX700W family; technical driver pf--Epson_XP950series; exact capabilities from Epson-XP-980_Series-epson-escpr2-en.ppd"
+  ]
+}

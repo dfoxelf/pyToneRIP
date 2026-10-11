@@ -1,0 +1,23 @@
+{
+  "backend_family": "epson_escp2_gutenprint_model_47",
+  "backend_runtime_file": "backend-runtime.json",
+  "backend_runtime_sha256": "eca3cffcbb067a143b768fb573cb831bbf4de363d4d110e6a70fae86b72586d4",
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson Stylus Photo 2200",
+  "model_id": "Stylus_Photo_2200",
+  "package_id": "gp--escp2-2200",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "ad0611beef14db84fdc126c89dbda59ca95f92702fbc187744825fd9ea6ba871",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "gutenprint-model-47",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "90a826bff6ad6ea4b9670b28c13c02a29457200019ebeef968d04fb07273c418",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "63aa4e590411e40adca68b4c40905ae35f1762f2e44e27d5ebfb0e43a78ee389",
+  "version": 1,
+  "visible": true,
+  "warnings": []
+}

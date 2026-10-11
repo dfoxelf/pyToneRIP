@@ -1,0 +1,25 @@
+{
+  "backend_family": "epson_escp2_wf7610",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson EcoTank ET-14000",
+  "model_id": "EcoTank_ET14000",
+  "package_id": "pf--Epson_EcoTank_ET14000",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "63bb5eb9710ada80a530f4b6ae60e75bb901436410cc9f8eb969b14f6823fa5b",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "WF7610",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "1b062e70eaf1b106ae9016663a3ac313ad07230969964db892f1bec2c856c000",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "8db937cdcd58580a429da780c4e9e3c5c0e14a121e0de631e15cd77fbc59eeb1",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "SYNTHETIC_PPD: no exact Epson PPD in the local source corpus; ReferenceDriver technical driver id B1100; no manufacturer paper list inherited"
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "backend_family": "epson_escp2_gutenprint_model_137",
+  "backend_runtime_file": "backend-runtime.json",
+  "backend_runtime_sha256": "3471b52f9356a980024c6555ec7a5069446e538eb26698b97c070243677e9bc1",
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson SC-P5000 Series",
+  "model_id": "SC_P5000_Series",
+  "package_id": "gp--escp2-p5000-s",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "5eb4a86c7160ce5d8496fade573d318d6b4f5e14f2e8f77492e86f241601b964",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "gutenprint-model-137",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "90a826bff6ad6ea4b9670b28c13c02a29457200019ebeef968d04fb07273c418",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "f9f5d697e4b917eacfdbbceded202bfeee14f7296dd6e291f6f29c1c7d53520f",
+  "version": 1,
+  "visible": true,
+  "warnings": []
+}

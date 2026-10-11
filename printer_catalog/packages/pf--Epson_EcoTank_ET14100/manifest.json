@@ -1,0 +1,23 @@
+{
+  "backend_family": "epson_escp2_l8050",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson EcoTank ET-14100",
+  "model_id": "EcoTank_ET14100",
+  "package_id": "pf--Epson_EcoTank_ET14100",
+  "ppd_file": "vendor.ppd",
+  "ppd_sha256": "f26115c92887065f780f7a4eb7d249f8474d09b37d76da94ccf1072891b31dc3",
+  "ppd_source": "vendor.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "L8050",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "7f28a01f6873d41aa53592521c8d6386050c7a183725229cf6b9a8d84821d1a5",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "7d95a5554c0b114edc3b53d4cd839c7f1bc9101764b6f42737d0b6329dbc67a0",
+  "version": 1,
+  "visible": true,
+  "warnings": []
+}
