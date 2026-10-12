@@ -60,25 +60,6 @@ class Transport(Protocol):
     def send(self, data: bytes) -> TransmissionReceipt: ...
 
 
-class StreamingTransport(Protocol):
-    def send_from_producer(
-        self, producer: Callable[[Callable[[bytes], None]], None], *,
-        cancel_check: Callable[[], None] | None = None,
-        progress: Callable[[int], None] | None = None,
-    ) -> TransmissionReceipt: ...
-
-    def send_file(
-        self, path: Path, *, chunk_size: int = 1024 * 1024,
-        progress: Callable[[int, int], None] | None = None,
-        cancel_check: Callable[[], None] | None = None,
-    ) -> TransmissionReceipt: ...
-
-    def send_chunks(
-        self, chunks: Iterable[bytes], *, cancel_check: Callable[[], None] | None = None,
-        progress: Callable[[int], None] | None = None,
-    ) -> TransmissionReceipt: ...
-
-
 @dataclass(frozen=True, slots=True)
 class RawTcpTransport:
     host: str

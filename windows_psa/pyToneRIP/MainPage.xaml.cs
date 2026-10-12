@@ -642,8 +642,10 @@ namespace pyToneRIP
             IReadOnlyCollection<string> transmissionHosts,
             IReadOnlyCollection<PrinterJobActivity> activities)
         {
-            var useUsb = string.Equals(item.ConnectionKind, "usb", StringComparison.OrdinalIgnoreCase);
-            var host = useUsb ? null : item.Host?.Trim();
+            if (!string.Equals(item.ConnectionKind, "network",
+                StringComparison.OrdinalIgnoreCase))
+                return null;
+            var host = item.Host?.Trim();
             if (!string.IsNullOrWhiteSpace(host)
                 && transmissionHosts.Contains(host))
                 return PrinterNetworkState.Printing.ToString();
@@ -651,7 +653,7 @@ namespace pyToneRIP
             var best = 0;
             foreach (var activity in activities)
             {
-                var matches = !useUsb && !string.IsNullOrWhiteSpace(activity.Host)
+                var matches = !string.IsNullOrWhiteSpace(activity.Host)
                     ? string.Equals(host, activity.Host,
                         StringComparison.OrdinalIgnoreCase)
                         && item.Port == activity.Port
@@ -705,24 +707,6 @@ namespace pyToneRIP
                             ?? result.ToString();
                 });
                 await Task.WhenAll(checks);
-                var usbInstances = registry.Instances.Where(item => item.ConnectionKind == "usb").ToList();
-                if (usbInstances.Count > 0)
-                {
-                    try
-                    {
-                        var devices = await QueueHelperClient.DiscoverUsbPrintersAsync();
-                        foreach (var item in usbInstances)
-                        {
-                            var device = devices.FirstOrDefault(value => value.DeviceInstanceId == item.UsbDeviceId);
-                            item.NetworkStatus = GetBusyState(item, activeTransmissionHosts, activeJobActivities)
-                                ?? (device == null ? "Offline" : "Online");
-                        }
-                    }
-                    catch (Exception error)
-                    {
-                        ManagerLogger.WriteException("Refreshing USB printer state", error);
-                    }
-                }
             }
             finally
             {
@@ -847,67 +831,6 @@ namespace pyToneRIP
                 TextWrapping = TextWrapping.Wrap,
             };
             var content = new StackPanel { Width = 430, Spacing = 10 };
-            var networkChoice = new RadioButton
-            {
-                Content = LocalizationService.Get("Auto.9B6A601A9FC7.Content"),
-                GroupName = "AddPrinterConnection", IsChecked = true,
-            };
-            var usbChoice = new RadioButton { Content = "USB", GroupName = "AddPrinterConnection" };
-            var usbDevices = new ComboBox
-            {
-                Header = LocalizationService.Get("Usb.Device"), IsEnabled = false,
-                HorizontalAlignment = HorizontalAlignment.Stretch,
-            };
-            var usbStatus = new TextBlock { TextWrapping = TextWrapping.Wrap };
-            var refreshUsb = new Button { Content = LocalizationService.Get("Usb.Refresh") };
-            var connectionChosen = false;
-            var refreshingUsb = false;
-            networkChoice.Click += (_, __) => connectionChosen = true;
-            usbChoice.Click += (_, __) => connectionChosen = true;
-            networkChoice.Checked += (_, __) => usbDevices.IsEnabled = false;
-            void SelectUsbModel()
-            {
-                var detected = usbDevices.SelectedItem as UsbPrinterDescriptor;
-                if (usbChoice.IsChecked != true || detected == null) return;
-                var matches = available.Where(model => UsbPrinterModelMatcher.Matches(
-                    model.Id, model.DisplayName, detected)).ToList();
-                if (matches.Count == 1) modelBox.SelectedItem = matches[0];
-                usbStatus.Text = detected.ToString();
-            }
-            usbChoice.Checked += (_, __) => { usbDevices.IsEnabled = true; SelectUsbModel(); };
-            usbDevices.SelectionChanged += (_, __) => SelectUsbModel();
-            async Task RefreshUsbAsync()
-            {
-                if (refreshingUsb) return;
-                refreshingUsb = true;
-                refreshUsb.IsEnabled = false;
-                usbStatus.Text = LocalizationService.Get("Usb.Searching");
-                try
-                {
-                    var previous = (usbDevices.SelectedItem as UsbPrinterDescriptor)?.DeviceInstanceId;
-                    var detected = await QueueHelperClient.DiscoverUsbPrintersAsync();
-                    usbDevices.ItemsSource = detected;
-                    var selection = previous != null
-                        ? detected.FirstOrDefault(device => device.DeviceInstanceId == previous)
-                        : detected.FirstOrDefault(device => available.Any(model => UsbPrinterModelMatcher.Matches(
-                            model.Id, model.DisplayName, device)));
-                    if (!connectionChosen && selection != null) usbChoice.IsChecked = true;
-                    usbDevices.SelectedItem = selection;
-                    if (detected.Count == 0) usbStatus.Text = LocalizationService.Get("Usb.None");
-                }
-                catch (Exception error)
-                {
-                    ManagerLogger.WriteException("Discovering connected USB printers", error);
-                    usbStatus.Text = LocalizationService.Format("Usb.DiscoveryFailed", error.Message);
-                }
-                finally { refreshUsb.IsEnabled = true; refreshingUsb = false; }
-            }
-            refreshUsb.Click += async (_, __) => await RefreshUsbAsync();
-            content.Children.Add(networkChoice);
-            content.Children.Add(usbChoice);
-            content.Children.Add(usbDevices);
-            content.Children.Add(refreshUsb);
-            content.Children.Add(usbStatus);
             content.Children.Add(modelBox);
             content.Children.Add(nameBox);
             content.Children.Add(details);
@@ -920,16 +843,6 @@ namespace pyToneRIP
             };
             dialog.PrimaryButtonClick += (_, clickArgs) =>
             {
-                connectionChosen = true;
-                var detected = usbDevices.SelectedItem as UsbPrinterDescriptor;
-                var selectedModel = modelBox.SelectedItem as PrinterCapability;
-                if (usbChoice.IsChecked == true && (detected == null || selectedModel == null
-                    || !UsbPrinterModelMatcher.Matches(selectedModel.Id, selectedModel.DisplayName, detected)))
-                {
-                    usbStatus.Text = LocalizationService.Get("Usb.SelectMatchingDevice");
-                    clickArgs.Cancel = true;
-                    return;
-                }
                 var requestedName = nameBox.Text?.Trim();
                 if (string.IsNullOrWhiteSpace(requestedName)
                     || registry.Instances.Any(item => string.Equals(
@@ -943,12 +856,8 @@ namespace pyToneRIP
                     clickArgs.Cancel = true;
                 }
             };
-            var addDialogOperation = dialog.ShowAsync();
-            _ = RefreshUsbAsync();
-            if (await addDialogOperation != ContentDialogResult.Primary)
+            if (await dialog.ShowAsync() != ContentDialogResult.Primary)
                 return;
-            var selectedUsb = usbChoice.IsChecked == true
-                ? usbDevices.SelectedItem as UsbPrinterDescriptor : null;
             var selected = modelBox.SelectedItem as PrinterCapability;
             var queueName = nameBox.Text?.Trim();
             if (selected == null || string.IsNullOrWhiteSpace(queueName))
@@ -1004,10 +913,7 @@ namespace pyToneRIP
                     ModelName = selected.DisplayName,
                     ModelCapability = (await CapabilityCatalog.LoadForModelAsync(selected.Id))
                         .Printers.Single(),
-                    ConnectionKind = selectedUsb == null ? "network" : "usb",
-                    UsbDeviceId = selectedUsb?.DeviceInstanceId,
-                    UsbPort = selectedUsb?.PortName,
-                    PhysicalQueueName = selectedUsb?.QueueNames.Count == 1 ? selectedUsb.QueueNames[0] : null,
+                    ConnectionKind = "network",
                     Port = PrinterInstanceStore.RawTcpPort,
                     Configured = false,
                     IsSystemDefault = queue?.IsDefault == true,
@@ -1054,10 +960,7 @@ namespace pyToneRIP
             }
             await dialogOperation;
             if (installedPrinter != null)
-                Frame.Navigate(typeof(PropertiesPage), new PrinterSettingsNavigation
-                {
-                    Printer = installedPrinter, OpenConnection = true,
-                });
+                Frame.Navigate(typeof(PropertiesPage), installedPrinter);
         }
 
         private async Task<WindowsQueueDescriptor> WaitForWindowsQueueAsync(

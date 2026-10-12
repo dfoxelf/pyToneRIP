@@ -54,7 +54,6 @@
     <Compile Include="Models\ConfigurationModels.cs" />
     <Compile Include="Models\MaintenanceModels.cs" />
     <Compile Include="Models\PrinterInstanceModels.cs" />
-    <Compile Include="Models\UsbPrinterModels.cs" />
     <Compile Include="Models\RipRuntimeContract.cs" />
     <Compile Include="MainPage.xaml.cs"><DependentUpon>MainPage.xaml</DependentUpon></Compile>
     <Compile Include="PropertiesPage.xaml.cs"><DependentUpon>PropertiesPage.xaml</DependentUpon></Compile>

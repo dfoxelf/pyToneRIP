@@ -90,6 +90,7 @@
   <data name="Auto.F975A3E83794.Content"><value>Řádky RAW na kanál</value></data>
   <data name="Auto.FB2F8CA80720.Text"><value>Směr</value></data>
   <data name="Auto.FB46581869A8.Text"><value>Převzorkování</value></data>
+  <data name="Auto.FD1182491F0C.Text"><value>Zjištění a přenos zařízení USB jsou plánovány na pozdější fázi.</value></data>
   <data name="Choice.CalibrationRaw"><value>⚗ Kalibrace RAW</value></data>
   <data name="Choice.Checking"><value>Kontrola</value></data>
   <data name="Choice.Configured"><value>Nakonfigurováno</value></data>
@@ -251,13 +252,4 @@
   <data name="MainPage.SendLogs.Content"><value>Vytvořit diagnostickou zprávu</value></data>
   <data name="Code.SupportReportPrompt"><value>ZIP na ploše obsahuje technické údaje o chybách pyToneRIP a Windows za posledních 24 hodin. Obsah dokumentů, osobní cesty a IP adresy nejsou zahrnuty. Aplikace archiv neodesílá.</value></data>
   <data name="Code.SupportReportCreated"><value>ZIP archiv byl vytvořen na ploše: {0}</value></data>
-  <data name="Usb.Device"><value>Připojená tiskárna USB</value></data>
-  <data name="Usb.Refresh"><value>Obnovit seznam tiskáren USB</value></data>
-  <data name="Usb.Searching"><value>Vyhledávání tiskáren USB…</value></data>
-  <data name="Usb.None"><value>Nebyla nalezena žádná připojená tiskárna USB. Připojte tiskárnu a obnovte seznam.</value></data>
-  <data name="Usb.PhysicalQueue"><value>Fyzická tisková fronta USB systému Windows</value></data>
-  <data name="Usb.QueueMissing"><value>Je vyžadována fyzická tisková fronta USB systému Windows. Nastavte ji ve Windows nebo zvolte síťový tisk.</value></data>
-  <data name="Usb.DiscoveryFailed"><value>Vyhledání zařízení USB se nezdařilo: {0}</value></data>
-  <data name="Usb.SelectMatchingDevice"><value>Vyberte připojenou tiskárnu USB odpovídající vybranému modelu.</value></data>
-  <data name="Usb.DestinationChanged"><value>Cíl USB není dostupný nebo se změnil. Znovu připojte tiskárnu a obnovte seznam.</value></data>
 </root>

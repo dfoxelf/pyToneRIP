@@ -90,6 +90,7 @@
   <data name="Auto.F975A3E83794.Content"><value>Sraitheanna RAW in aghaidh an chainéil</value></data>
   <data name="Auto.FB2F8CA80720.Text"><value>Treo</value></data>
   <data name="Auto.FB46581869A8.Text"><value>Athshampláil</value></data>
+  <data name="Auto.FD1182491F0C.Text"><value>Tá fionnachtain agus aistriú gléas USB beartaithe do chéim níos déanaí.</value></data>
   <data name="Choice.CalibrationRaw"><value>⚗ Calabrú RAW</value></data>
   <data name="Choice.Checking"><value>Ag seiceáil</value></data>
   <data name="Choice.Configured"><value>Cumraithe</value></data>
@@ -251,13 +252,4 @@
   <data name="MainPage.SendLogs.Content"><value>Cruthaigh tuairisc dhiagnóiseach</value></data>
   <data name="Code.SupportReportPrompt"><value>Tá sonraí teicniúla faoi earráidí pyToneRIP agus Windows le 24 uair anuas sa ZIP ar an deasc. Ní chuirtear ábhar doiciméad, cosáin phearsanta ná seoltaí IP san áireamh. Ní sheolann an aip an chartlann.</value></data>
   <data name="Code.SupportReportCreated"><value>Cruthaíodh ZIP ar an deasc: {0}</value></data>
-  <data name="Usb.Device"><value>Printéir USB ceangailte</value></data>
-  <data name="Usb.Refresh"><value>Athnuaigh printéirí USB</value></data>
-  <data name="Usb.Searching"><value>Printéirí USB á lorg…</value></data>
-  <data name="Usb.None"><value>Níor aimsíodh printéir USB ceangailte. Ceangail an printéir agus athnuaigh an liosta.</value></data>
-  <data name="Usb.PhysicalQueue"><value>Scuaine priontála USB fhisiciúil Windows</value></data>
-  <data name="Usb.QueueMissing"><value>Tá scuaine priontála USB fhisiciúil Windows ag teastáil. Socraigh í in Windows nó roghnaigh priontáil líonra.</value></data>
-  <data name="Usb.DiscoveryFailed"><value>Theip ar aimsiú USB: {0}</value></data>
-  <data name="Usb.SelectMatchingDevice"><value>Roghnaigh printéir USB ceangailte a mheaitseálann leis an tsamhail roghnaithe.</value></data>
-  <data name="Usb.DestinationChanged"><value>Níl ceann scríbe USB ar fáil nó tá sé athraithe. Athcheangail an printéir agus athnuaigh an liosta.</value></data>
 </root>

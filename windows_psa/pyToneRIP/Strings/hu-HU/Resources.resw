@@ -90,6 +90,7 @@
   <data name="Auto.F975A3E83794.Content"><value>Csatornánkénti RAW sorok</value></data>
   <data name="Auto.FB2F8CA80720.Text"><value>Irány</value></data>
   <data name="Auto.FB46581869A8.Text"><value>Újramintavételezés</value></data>
+  <data name="Auto.FD1182491F0C.Text"><value>Az USB-eszköz felderítését és átvitelét egy későbbi fázisban tervezik.</value></data>
   <data name="Choice.CalibrationRaw"><value>⚗ RAW kalibrálása</value></data>
   <data name="Choice.Checking"><value>Ellenőrzés</value></data>
   <data name="Choice.Configured"><value>Beállítva</value></data>
@@ -251,13 +252,4 @@
   <data name="MainPage.SendLogs.Content"><value>Diagnosztikai jelentés készítése</value></data>
   <data name="Code.SupportReportPrompt"><value>Az asztalon lévő ZIP az elmúlt 24 óra pyToneRIP- és Windows-hibáinak technikai adatait tartalmazza. A dokumentumok tartalma, a személyes elérési utak és az IP-címek nem kerülnek bele. Az alkalmazás nem küldi el az archívumot.</value></data>
   <data name="Code.SupportReportCreated"><value>A ZIP-fájl elkészült az asztalon: {0}</value></data>
-  <data name="Usb.Device"><value>Csatlakoztatott USB-nyomtató</value></data>
-  <data name="Usb.Refresh"><value>USB-nyomtatók frissítése</value></data>
-  <data name="Usb.Searching"><value>USB-nyomtatók keresése…</value></data>
-  <data name="Usb.None"><value>Nem található csatlakoztatott USB-nyomtató. Csatlakoztassa, majd frissítse a listát.</value></data>
-  <data name="Usb.PhysicalQueue"><value>Fizikai Windows USB-nyomtatási várólista</value></data>
-  <data name="Usb.QueueMissing"><value>Fizikai Windows USB-nyomtatási sor szükséges. Állítsa be a Windowsban, vagy válasszon hálózati nyomtatást.</value></data>
-  <data name="Usb.DiscoveryFailed"><value>Az USB-felderítés nem sikerült: {0}</value></data>
-  <data name="Usb.SelectMatchingDevice"><value>Válasszon a kijelölt modellnek megfelelő csatlakoztatott USB-nyomtatót.</value></data>
-  <data name="Usb.DestinationChanged"><value>Az USB-cél nem érhető el vagy megváltozott. Csatlakoztassa újra a nyomtatót, majd frissítse a listát.</value></data>
 </root>

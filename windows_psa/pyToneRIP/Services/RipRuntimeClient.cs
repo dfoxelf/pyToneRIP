@@ -163,10 +163,10 @@ namespace pyToneRIP.Tasks.Services
             }
             if (kind == "usb")
             {
-                var deviceId = connection.GetNamedString("usb_device_id", "").Trim();
-                if (string.IsNullOrWhiteSpace(deviceId))
-                    throw new InvalidDataException("pyToneRIP USB device identity is missing.");
-                return "usb|" + deviceId.ToUpperInvariant();
+                var usbPort = connection.GetNamedString("usb_port", "").Trim();
+                if (string.IsNullOrWhiteSpace(usbPort))
+                    throw new InvalidDataException("pyToneRIP USB port is missing.");
+                return "usb|" + usbPort.ToUpperInvariant();
             }
             throw new InvalidDataException("pyToneRIP connection kind is invalid.");
         }

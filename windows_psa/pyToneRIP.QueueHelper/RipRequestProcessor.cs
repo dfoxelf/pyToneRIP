@@ -498,25 +498,18 @@ namespace pyToneRIP.QueueHelper
                     // Let the RIP observe its marker, stop the socket writer,
                     // and attempt ESC/P2 reset before forcing termination.
                     if (process.WaitForExit(15000))
-                    {
-                        UsbRawJobCleanup.TryCancel(Path.GetDirectoryName(cancellationPath));
                         return true;
-                    }
                     try { process.Kill(); } catch { }
                     process.WaitForExit(5000);
-                    UsbRawJobCleanup.TryCancel(Path.GetDirectoryName(cancellationPath));
                     throw new OperationCanceledException("Windows print job was canceled.");
                 }
                 if (DateTime.UtcNow >= deadline)
                 {
                     try { process.Kill(); } catch { }
                     process.WaitForExit(5000);
-                    UsbRawJobCleanup.TryCancel(Path.GetDirectoryName(cancellationPath));
                     throw new TimeoutException("Packaged Python RIP exceeded the 30 minute limit.");
                 }
             }
-            if (process.ExitCode != 0 || File.Exists(cancellationPath))
-                UsbRawJobCleanup.TryCancel(Path.GetDirectoryName(cancellationPath));
             return File.Exists(cancellationPath);
         }
 
@@ -657,10 +650,10 @@ namespace pyToneRIP.QueueHelper
             }
             if (kind == "usb")
             {
-                var deviceId = (connection.UsbDeviceId ?? "").Trim();
-                if (string.IsNullOrWhiteSpace(deviceId))
-                    throw new InvalidDataException("RIP USB device identity is missing.");
-                return "usb|" + deviceId.ToUpperInvariant();
+                var usbPort = (connection.UsbPort ?? "").Trim();
+                if (string.IsNullOrWhiteSpace(usbPort))
+                    throw new InvalidDataException("RIP USB port is missing.");
+                return "usb|" + usbPort.ToUpperInvariant();
             }
             throw new InvalidDataException("RIP connection kind is invalid.");
         }
@@ -785,8 +778,6 @@ namespace pyToneRIP.QueueHelper
         [DataMember(Name = "host")] public string Host { get; set; }
         [DataMember(Name = "port")] public int Port { get; set; }
         [DataMember(Name = "usb_port")] public string UsbPort { get; set; }
-        [DataMember(Name = "usb_device_id")] public string UsbDeviceId { get; set; }
-        [DataMember(Name = "printer_queue")] public string PhysicalQueueName { get; set; }
     }
 
     [DataContract]

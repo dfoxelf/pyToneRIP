@@ -90,6 +90,7 @@
   <data name="Auto.F975A3E83794.Content"><value>Vrstice RAW na kanal</value></data>
   <data name="Auto.FB2F8CA80720.Text"><value>Smer</value></data>
   <data name="Auto.FB46581869A8.Text"><value>Ponovno vzorčenje</value></data>
+  <data name="Auto.FD1182491F0C.Text"><value>Odkrivanje in prenos naprav USB sta načrtovana za kasnejšo fazo.</value></data>
   <data name="Choice.CalibrationRaw"><value>⚗ Umerjanje RAW</value></data>
   <data name="Choice.Checking"><value>Preverjanje</value></data>
   <data name="Choice.Configured"><value>Konfigurirano</value></data>
@@ -251,13 +252,4 @@
   <data name="MainPage.SendLogs.Content"><value>Ustvari diagnostično poročilo</value></data>
   <data name="Code.SupportReportPrompt"><value>ZIP na namizju vsebuje tehnične podatke o napakah pyToneRIP in Windows v zadnjih 24 urah. Vsebina dokumentov, osebne poti in naslovi IP niso vključeni. Aplikacija arhiva ne pošilja.</value></data>
   <data name="Code.SupportReportCreated"><value>Datoteka ZIP je ustvarjena na namizju: {0}</value></data>
-  <data name="Usb.Device"><value>Priključen tiskalnik USB</value></data>
-  <data name="Usb.Refresh"><value>Osveži tiskalnike USB</value></data>
-  <data name="Usb.Searching"><value>Iskanje tiskalnikov USB…</value></data>
-  <data name="Usb.None"><value>Priključen tiskalnik USB ni bil najden. Priključite tiskalnik in osvežite seznam.</value></data>
-  <data name="Usb.PhysicalQueue"><value>Fizična čakalna vrsta USB sistema Windows</value></data>
-  <data name="Usb.QueueMissing"><value>Potrebna je fizična čakalna vrsta USB sistema Windows. Nastavite jo v sistemu Windows ali izberite omrežno tiskanje.</value></data>
-  <data name="Usb.DiscoveryFailed"><value>Odkrivanje USB ni uspelo: {0}</value></data>
-  <data name="Usb.SelectMatchingDevice"><value>Izberite priključen tiskalnik USB, ki ustreza izbranemu modelu.</value></data>
-  <data name="Usb.DestinationChanged"><value>Cilj USB ni na voljo ali se je spremenil. Znova priključite tiskalnik in osvežite seznam.</value></data>
 </root>

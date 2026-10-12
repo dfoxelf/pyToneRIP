@@ -90,6 +90,7 @@
   <data name="Auto.F975A3E83794.Content"><value>Wiersze RAW na kanał</value></data>
   <data name="Auto.FB2F8CA80720.Text"><value>Kierunek</value></data>
   <data name="Auto.FB46581869A8.Text"><value>Ponowne próbkowanie</value></data>
+  <data name="Auto.FD1182491F0C.Text"><value>Wykrywanie i przesyłanie urządzeń USB zaplanowano na późniejszą fazę.</value></data>
   <data name="Choice.CalibrationRaw"><value>⚗ Kalibracja RAW</value></data>
   <data name="Choice.Checking"><value>Kontrola</value></data>
   <data name="Choice.Configured"><value>Skonfigurowane</value></data>
@@ -251,13 +252,4 @@
   <data name="MainPage.SendLogs.Content"><value>Utwórz raport diagnostyczny</value></data>
   <data name="Code.SupportReportPrompt"><value>ZIP na pulpicie zawiera techniczne informacje o błędach pyToneRIP i Windows z ostatnich 24 godzin. Zawartość dokumentów, prywatne ścieżki i adresy IP są pomijane. Aplikacja nie wysyła archiwum.</value></data>
   <data name="Code.SupportReportCreated"><value>Plik ZIP utworzono na pulpicie: {0}</value></data>
-  <data name="Usb.Device"><value>Podłączona drukarka USB</value></data>
-  <data name="Usb.Refresh"><value>Odśwież drukarki USB</value></data>
-  <data name="Usb.Searching"><value>Wyszukiwanie drukarek USB…</value></data>
-  <data name="Usb.None"><value>Nie znaleziono podłączonej drukarki USB. Podłącz drukarkę i odśwież listę.</value></data>
-  <data name="Usb.PhysicalQueue"><value>Fizyczna kolejka USB systemu Windows</value></data>
-  <data name="Usb.QueueMissing"><value>Wymagana jest fizyczna kolejka drukowania USB systemu Windows. Skonfiguruj ją w systemie Windows lub wybierz drukowanie przez sieć.</value></data>
-  <data name="Usb.DiscoveryFailed"><value>Wykrywanie USB nie powiodło się: {0}</value></data>
-  <data name="Usb.SelectMatchingDevice"><value>Wybierz podłączoną drukarkę USB zgodną z wybranym modelem.</value></data>
-  <data name="Usb.DestinationChanged"><value>Miejsce docelowe USB jest niedostępne lub uległo zmianie. Podłącz drukarkę ponownie i odśwież listę.</value></data>
 </root>

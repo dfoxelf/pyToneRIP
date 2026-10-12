@@ -90,6 +90,7 @@
   <data name="Auto.F975A3E83794.Content"><value>Kanavakohtaiset RAW-rivit</value></data>
   <data name="Auto.FB2F8CA80720.Text"><value>Suunta</value></data>
   <data name="Auto.FB46581869A8.Text"><value>Uudelleennäytteenotto</value></data>
+  <data name="Auto.FD1182491F0C.Text"><value>USB-laitteiden etsintä ja siirto on suunniteltu myöhempään vaiheeseen.</value></data>
   <data name="Choice.CalibrationRaw"><value>⚗ RAW-kalibrointi</value></data>
   <data name="Choice.Checking"><value>Tarkistetaan</value></data>
   <data name="Choice.Configured"><value>Määritetty</value></data>
@@ -251,13 +252,4 @@
   <data name="MainPage.SendLogs.Content"><value>Luo diagnostiikkaraportti</value></data>
   <data name="Code.SupportReportPrompt"><value>Työpöydän ZIP-tiedosto sisältää pyToneRIPin ja Windowsin tekniset virhetiedot viimeisten 24 tunnin ajalta. Asiakirjojen sisältö, henkilökohtaiset polut ja IP-osoitteet jätetään pois. Sovellus ei lähetä arkistoa.</value></data>
   <data name="Code.SupportReportCreated"><value>ZIP-tiedosto luotiin työpöydälle: {0}</value></data>
-  <data name="Usb.Device"><value>Liitetty USB-tulostin</value></data>
-  <data name="Usb.Refresh"><value>Päivitä USB-tulostimet</value></data>
-  <data name="Usb.Searching"><value>Etsitään USB-tulostimia…</value></data>
-  <data name="Usb.None"><value>Liitettyä USB-tulostinta ei löytynyt. Liitä tulostin ja päivitä luettelo.</value></data>
-  <data name="Usb.PhysicalQueue"><value>Windowsin fyysinen USB-tulostusjono</value></data>
-  <data name="Usb.QueueMissing"><value>Windowsin fyysinen USB-tulostusjono tarvitaan. Määritä se Windowsissa tai valitse verkkotulostus.</value></data>
-  <data name="Usb.DiscoveryFailed"><value>USB-laitteiden haku epäonnistui: {0}</value></data>
-  <data name="Usb.SelectMatchingDevice"><value>Valitse liitetty USB-tulostin, joka vastaa valittua mallia.</value></data>
-  <data name="Usb.DestinationChanged"><value>USB-kohde ei ole käytettävissä tai se on muuttunut. Liitä tulostin uudelleen ja päivitä luettelo.</value></data>
 </root>

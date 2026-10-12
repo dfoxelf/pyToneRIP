@@ -90,6 +90,7 @@
   <data name="Auto.F975A3E83794.Content"><value>RAW eilutės kiekvienam kanalui</value></data>
   <data name="Auto.FB2F8CA80720.Text"><value>Kryptis</value></data>
   <data name="Auto.FB46581869A8.Text"><value>Pakartotinis mėginių ėmimas</value></data>
+  <data name="Auto.FD1182491F0C.Text"><value>USB įrenginio aptikimas ir perkėlimas planuojamas vėlesniame etape.</value></data>
   <data name="Choice.CalibrationRaw"><value>⚗ RAW kalibravimas</value></data>
   <data name="Choice.Checking"><value>Tikrinama</value></data>
   <data name="Choice.Configured"><value>Sukonfigūruota</value></data>
@@ -251,13 +252,4 @@
   <data name="MainPage.SendLogs.Content"><value>Sukurti diagnostikos ataskaitą</value></data>
   <data name="Code.SupportReportPrompt"><value>Darbalaukyje esančiame ZIP pateikiami pyToneRIP ir Windows techniniai klaidų duomenys per paskutines 24 valandas. Dokumentų turinys, asmeniniai keliai ir IP adresai neįtraukiami. Programa archyvo nesiunčia.</value></data>
   <data name="Code.SupportReportCreated"><value>ZIP failas sukurtas darbalaukyje: {0}</value></data>
-  <data name="Usb.Device"><value>Prijungtas USB spausdintuvas</value></data>
-  <data name="Usb.Refresh"><value>Atnaujinti USB spausdintuvus</value></data>
-  <data name="Usb.Searching"><value>Ieškoma USB spausdintuvų…</value></data>
-  <data name="Usb.None"><value>Prijungtas USB spausdintuvas nerastas. Prijunkite spausdintuvą ir atnaujinkite sąrašą.</value></data>
-  <data name="Usb.PhysicalQueue"><value>Fizinė „Windows“ USB spausdinimo eilė</value></data>
-  <data name="Usb.QueueMissing"><value>Reikalinga fizinė „Windows“ USB spausdinimo eilė. Nustatykite ją sistemoje „Windows“ arba pasirinkite spausdinimą tinkle.</value></data>
-  <data name="Usb.DiscoveryFailed"><value>USB aptikimas nepavyko: {0}</value></data>
-  <data name="Usb.SelectMatchingDevice"><value>Pasirinkite prijungtą USB spausdintuvą, atitinkantį pasirinktą modelį.</value></data>
-  <data name="Usb.DestinationChanged"><value>USB paskirties vieta nepasiekiama arba pasikeitė. Iš naujo prijunkite spausdintuvą ir atnaujinkite sąrašą.</value></data>
 </root>

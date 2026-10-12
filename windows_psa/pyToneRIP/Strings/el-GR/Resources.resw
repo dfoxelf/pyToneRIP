@@ -90,6 +90,7 @@
   <data name="Auto.F975A3E83794.Content"><value>Σειρές RAW ανά κανάλι</value></data>
   <data name="Auto.FB2F8CA80720.Text"><value>Κατεύθυνση</value></data>
   <data name="Auto.FB46581869A8.Text"><value>Επαναδειγματοληψία</value></data>
+  <data name="Auto.FD1182491F0C.Text"><value>Ο εντοπισμός και η μεταφορά συσκευής USB προγραμματίζονται για μεταγενέστερη φάση.</value></data>
   <data name="Choice.CalibrationRaw"><value>⚗ Βαθμονόμηση RAW</value></data>
   <data name="Choice.Checking"><value>Ελεγχος</value></data>
   <data name="Choice.Configured"><value>Διαμόρφωση</value></data>
@@ -251,13 +252,4 @@
   <data name="MainPage.SendLogs.Content"><value>Δημιουργία διαγνωστικής αναφοράς</value></data>
   <data name="Code.SupportReportPrompt"><value>Το ZIP στην επιφάνεια εργασίας περιέχει τεχνικά στοιχεία σφαλμάτων του pyToneRIP και των Windows από τις τελευταίες 24 ώρες. Εξαιρούνται το περιεχόμενο εγγράφων, οι προσωπικές διαδρομές και οι διευθύνσεις IP. Η εφαρμογή δεν αποστέλλει το αρχείο.</value></data>
   <data name="Code.SupportReportCreated"><value>Το αρχείο ZIP δημιουργήθηκε στην επιφάνεια εργασίας: {0}</value></data>
-  <data name="Usb.Device"><value>Συνδεδεμένος εκτυπωτής USB</value></data>
-  <data name="Usb.Refresh"><value>Ανανέωση εκτυπωτών USB</value></data>
-  <data name="Usb.Searching"><value>Αναζήτηση εκτυπωτών USB…</value></data>
-  <data name="Usb.None"><value>Δεν βρέθηκε συνδεδεμένος εκτυπωτής USB. Συνδέστε τον εκτυπωτή και ανανεώστε τη λίστα.</value></data>
-  <data name="Usb.PhysicalQueue"><value>Φυσική ουρά εκτύπωσης USB των Windows</value></data>
-  <data name="Usb.QueueMissing"><value>Απαιτείται φυσική ουρά εκτύπωσης USB των Windows. Ρυθμίστε την στα Windows ή επιλέξτε εκτύπωση μέσω δικτύου.</value></data>
-  <data name="Usb.DiscoveryFailed"><value>Αποτυχία εντοπισμού USB: {0}</value></data>
-  <data name="Usb.SelectMatchingDevice"><value>Επιλέξτε έναν συνδεδεμένο εκτυπωτή USB που αντιστοιχεί στο επιλεγμένο μοντέλο.</value></data>
-  <data name="Usb.DestinationChanged"><value>Ο προορισμός USB δεν είναι διαθέσιμος ή έχει αλλάξει. Συνδέστε ξανά τον εκτυπωτή και ανανεώστε τη λίστα.</value></data>
 </root>

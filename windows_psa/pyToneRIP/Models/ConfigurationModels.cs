@@ -93,9 +93,6 @@ namespace pyToneRIP.Models
         [DataMember(Name = "host", Order = 2, EmitDefaultValue = false)] public string Host { get; set; }
         [DataMember(Name = "port", Order = 3)] public int Port { get; set; } = 9100;
         [DataMember(Name = "usb_port", Order = 4, EmitDefaultValue = false)] public string UsbPort { get; set; }
-        [DataMember(Name = "usb_device_id", Order = 5, EmitDefaultValue = false)] public string UsbDeviceId { get; set; }
-        [DataMember(Name = "printer_queue", Order = 6, EmitDefaultValue = false)] public string PhysicalQueueName { get; set; }
-        [DataMember(Name = "usb_transport_mode", Order = 7, EmitDefaultValue = false)] public string UsbTransportMode { get; set; } = "usbprint";
     }
 
     [DataContract]

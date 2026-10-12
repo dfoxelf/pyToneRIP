@@ -11,7 +11,6 @@ using System.Text;
 using System.Threading;
 using System.Xml;
 using Microsoft.Win32;
-using pyToneRIP.Models;
 
 namespace pyToneRIP.QueueHelper
 {
@@ -92,11 +91,6 @@ namespace pyToneRIP.QueueHelper
                 {
                     response = QueueHelperResponse.Pass(PrinterApi.ListPrinters());
                 }
-                else if (string.Equals(request.Operation, "discover-usb", StringComparison.OrdinalIgnoreCase))
-                {
-                    response = QueueHelperResponse.Pass(new List<QueueDescriptor>());
-                    response.UsbPrinters = UsbPrinterDiscovery.Discover();
-                }
                 else if (string.Equals(request.Operation, "repair-stale", StringComparison.OrdinalIgnoreCase))
                 {
                     response = QueueHelperResponse.Pass(PrinterApi.RepairStaleDuplicates());
@@ -155,11 +149,6 @@ namespace pyToneRIP.QueueHelper
                         request.PageWidthMm, request.PageHeightMm,
                         request.Orientation, request.ResolutionX, request.ResolutionY, request.Borderless);
                     response = QueueHelperResponse.Pass(new List<QueueDescriptor>());
-                }
-                else if (string.Equals(request.Operation, "read-user-defaults", StringComparison.OrdinalIgnoreCase))
-                {
-                    response = QueueHelperResponse.Pass(new List<QueueDescriptor>());
-                    response.LegacyDefaults = PrinterApi.ReadUserDefaults(request.CurrentName);
                 }
                 else if (string.Equals(request.Operation, "notify-user-defaults", StringComparison.OrdinalIgnoreCase))
                 {
@@ -499,12 +488,7 @@ namespace pyToneRIP.QueueHelper
         private const int DevModeFormNameOffset = 102;
         private const int DevModeFormNameCharacters = 32;
 
-        public static List<QueueDescriptor> ListPrinters() =>
-            ReadPrinters(PrinterEnumLocal | PrinterEnumConnections);
-
-        public static List<QueueDescriptor> ListLocalPrinters() => ReadPrinters(PrinterEnumLocal);
-
-        private static List<QueueDescriptor> ReadPrinters(uint flags)
+        public static List<QueueDescriptor> ListPrinters()
         {
             // Default printer is a per-user Windows setting. Read it on every
             // live enumeration instead of persisting a second, stale copy in
@@ -513,7 +497,7 @@ namespace pyToneRIP.QueueHelper
             uint needed = 0;
             uint returned = 0;
             EnumPrintersW(
-                flags,
+                PrinterEnumLocal | PrinterEnumConnections,
                 null,
                 2,
                 IntPtr.Zero,
@@ -534,7 +518,7 @@ namespace pyToneRIP.QueueHelper
             try
             {
                 if (!EnumPrintersW(
-                    flags,
+                    PrinterEnumLocal | PrinterEnumConnections,
                     null,
                     2,
                     buffer,
@@ -962,96 +946,6 @@ namespace pyToneRIP.QueueHelper
             finally { ClosePrinter(handle); }
         }
 
-        public static LegacyPrinterDefaults ReadUserDefaults(string queueName)
-        {
-            if (string.IsNullOrWhiteSpace(queueName))
-                throw new InvalidDataException("The Windows queue name is empty.");
-            var queue = ListPrinters().FirstOrDefault(item => string.Equals(
-                item.Name, queueName, StringComparison.OrdinalIgnoreCase));
-            if (queue == null || !queue.PortName.StartsWith(
-                "pyToneRIP.Manager_", StringComparison.OrdinalIgnoreCase))
-                throw new InvalidOperationException("A Manager-owned virtual queue is required.");
-
-            var defaults = new PrinterDefaults { DesiredAccess = PrinterAccessUse };
-            IntPtr handle;
-            if (!OpenPrinterW(queue.Name, out handle, ref defaults))
-                throw new Win32Exception(Marshal.GetLastWin32Error(), "Could not read per-user printer defaults.");
-            try
-            {
-                var data = ReadStoredDevMode(handle, 9);
-                if (data == null)
-                {
-                    var size = DocumentPropertiesW(IntPtr.Zero, handle, queue.Name,
-                        IntPtr.Zero, IntPtr.Zero, 0);
-                    if (size <= 0) throw new InvalidDataException("Windows returned an invalid DEVMODE size.");
-                    var mode = Marshal.AllocHGlobal(size);
-                    try
-                    {
-                        if (DocumentPropertiesW(IntPtr.Zero, handle, queue.Name, mode,
-                            IntPtr.Zero, DmOutBuffer) < 0)
-                            throw new Win32Exception(Marshal.GetLastWin32Error(), "Could not read the application DEVMODE.");
-                        data = CopyDevMode(mode, size);
-                    }
-                    finally { Marshal.FreeHGlobal(mode); }
-                }
-
-                using (var converter = new System.Printing.Interop.PrintTicketConverter(queue.Name, 1))
-                {
-                    var ticket = converter.ConvertDevModeToPrintTicket(data);
-                    var page = ticket.PageMediaSize;
-                    var widthMm = page?.Width * 25.4 / 96.0;
-                    var heightMm = page?.Height * 25.4 / 96.0;
-                    if (!widthMm.HasValue || !heightMm.HasValue)
-                        throw new InvalidDataException("Per-user DEVMODE contains no readable page dimensions.");
-                    return new LegacyPrinterDefaults
-                    {
-                        PageWidthMm = widthMm.Value,
-                        PageHeightMm = heightMm.Value,
-                        Borderless = ticket.PageBorderless.HasValue
-                            ? ticket.PageBorderless.Value == System.Printing.PageBorderless.Borderless
-                            : (bool?)null,
-                        Orientation = ticket.PageOrientation == System.Printing.PageOrientation.Landscape
-                            ? "landscape" : "portrait",
-                        ResolutionX = ticket.PageResolution?.X,
-                        ResolutionY = ticket.PageResolution?.Y,
-                    };
-                }
-            }
-            finally { ClosePrinter(handle); }
-        }
-
-        private static byte[] ReadStoredDevMode(IntPtr handle, uint level)
-        {
-            uint needed = 0;
-            GetPrinterW(handle, level, IntPtr.Zero, 0, ref needed);
-            var error = Marshal.GetLastWin32Error();
-            if (needed == 0 && error != ErrorInsufficientBuffer)
-                throw new Win32Exception(error, "Could not determine the stored DEVMODE size.");
-            if (needed < IntPtr.Size) return null;
-            var buffer = Marshal.AllocHGlobal((int)needed);
-            try
-            {
-                if (!GetPrinterW(handle, level, buffer, needed, ref needed))
-                    throw new Win32Exception(Marshal.GetLastWin32Error(), "Could not read the stored DEVMODE.");
-                var mode = Marshal.ReadIntPtr(buffer);
-                if (mode == IntPtr.Zero) return null;
-                return CopyDevMode(mode, checked((int)needed));
-            }
-            finally { Marshal.FreeHGlobal(buffer); }
-        }
-
-        private static byte[] CopyDevMode(IntPtr mode, int availableBytes)
-        {
-            var publicSize = (ushort)Marshal.ReadInt16(mode, DevModeSizeOffset);
-            var privateSize = (ushort)Marshal.ReadInt16(mode, DevModeDriverExtraOffset);
-            var totalSize = publicSize + privateSize;
-            if (publicSize < DevModeFormNameOffset || totalSize > availableBytes)
-                throw new InvalidDataException("Windows returned an invalid DEVMODE buffer.");
-            var data = new byte[totalSize];
-            Marshal.Copy(mode, data, 0, totalSize);
-            return data;
-        }
-
         private static void EnsureDevModeSelection(
             IntPtr mode, short paperId, string pageId, string orientation,
             int resolutionX, int resolutionY, string source, string queueName,
@@ -1434,11 +1328,6 @@ namespace pyToneRIP.QueueHelper
             Name = Marshal.PtrToStringUni(info.PrinterName) ?? "",
             PortName = Marshal.PtrToStringUni(info.PortName) ?? "",
             DriverName = Marshal.PtrToStringUni(info.DriverName) ?? "",
-            PrintProcessor = Marshal.PtrToStringUni(info.PrintProcessor) ?? "",
-            DataType = Marshal.PtrToStringUni(info.DataType) ?? "",
-            RawUsbReady = string.Equals(Marshal.PtrToStringUni(info.PrintProcessor), "winprint", StringComparison.OrdinalIgnoreCase)
-                && string.Equals(Marshal.PtrToStringUni(info.DataType), "RAW", StringComparison.OrdinalIgnoreCase)
-                && string.IsNullOrEmpty(Marshal.PtrToStringUni(info.SeparatorFile)) && (info.Attributes & 2) == 0,
             Status = info.Status,
             Jobs = info.Jobs,
         };
@@ -1563,8 +1452,6 @@ namespace pyToneRIP.QueueHelper
         [DataMember(Name = "error_message", Order = 3, EmitDefaultValue = false)] public string ErrorMessage { get; set; }
         [DataMember(Name = "queues", Order = 4)] public List<QueueDescriptor> Queues { get; set; }
         [DataMember(Name = "report_path", Order = 5, EmitDefaultValue = false)] public string ReportPath { get; set; }
-        [DataMember(Name = "usb_printers", Order = 6, EmitDefaultValue = false)] public List<UsbPrinterDescriptor> UsbPrinters { get; set; }
-        [DataMember(Name = "legacy_defaults", Order = 7, EmitDefaultValue = false)] public LegacyPrinterDefaults LegacyDefaults { get; set; }
 
         public static QueueHelperResponse Pass(List<QueueDescriptor> queues) => new QueueHelperResponse
         {
@@ -1582,17 +1469,6 @@ namespace pyToneRIP.QueueHelper
     }
 
     [DataContract]
-    internal sealed class LegacyPrinterDefaults
-    {
-        [DataMember(Name = "page_width_mm", Order = 1)] public double PageWidthMm { get; set; }
-        [DataMember(Name = "page_height_mm", Order = 2)] public double PageHeightMm { get; set; }
-        [DataMember(Name = "borderless", Order = 3, EmitDefaultValue = false)] public bool? Borderless { get; set; }
-        [DataMember(Name = "orientation", Order = 4)] public string Orientation { get; set; }
-        [DataMember(Name = "resolution_x", Order = 5, EmitDefaultValue = false)] public int? ResolutionX { get; set; }
-        [DataMember(Name = "resolution_y", Order = 6, EmitDefaultValue = false)] public int? ResolutionY { get; set; }
-    }
-
-    [DataContract]
     internal sealed class QueueDescriptor
     {
         [DataMember(Name = "name", Order = 1)] public string Name { get; set; }
@@ -1602,9 +1478,6 @@ namespace pyToneRIP.QueueHelper
         [DataMember(Name = "jobs", Order = 5)] public uint Jobs { get; set; }
         [DataMember(Name = "is_default", Order = 6)] public bool IsDefault { get; set; }
         public bool IsPendingDeletion => (Status & PrinterApi.PendingDeletionStatus) != 0;
-        public string PrintProcessor { get; set; }
-        public string DataType { get; set; }
-        public bool RawUsbReady { get; set; }
         public bool IsPyToneRipSlot => PortName != null && PortName.StartsWith(
             "pyToneRIP.PSA_", StringComparison.OrdinalIgnoreCase);
     }

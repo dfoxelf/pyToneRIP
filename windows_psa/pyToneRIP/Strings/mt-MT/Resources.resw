@@ -90,6 +90,7 @@
   <data name="Auto.F975A3E83794.Content"><value>Ringieli RAW għal kull kanal</value></data>
   <data name="Auto.FB2F8CA80720.Text"><value>Direzzjoni</value></data>
   <data name="Auto.FB46581869A8.Text"><value>Teħid mill-ġdid tal-kampjun</value></data>
+  <data name="Auto.FD1182491F0C.Text"><value>L-iskoperta u t-trasferiment tal-apparat USB huma ppjanati għal fażi aktar tard.</value></data>
   <data name="Choice.CalibrationRaw"><value>⚗ Kalibrazzjoni RAW</value></data>
   <data name="Choice.Checking"><value>Iċċekkjar</value></data>
   <data name="Choice.Configured"><value>Konfigurat</value></data>
@@ -251,13 +252,4 @@
   <data name="MainPage.SendLogs.Content"><value>Oħloq rapport dijanjostiku</value></data>
   <data name="Code.SupportReportPrompt"><value>Il-ZIP fuq id-desktop fih dettalji tekniċi tal-iżbalji ta’ pyToneRIP u Windows mill-aħħar 24 siegħa. Il-kontenut tad-dokumenti, il-mogħdijiet personali u l-indirizzi IP mhumiex inklużi. L-app ma tibgħatx l-arkivju.</value></data>
   <data name="Code.SupportReportCreated"><value>Inħoloq ZIP fuq id-desktop: {0}</value></data>
-  <data name="Usb.Device"><value>Printer USB imqabbad</value></data>
-  <data name="Usb.Refresh"><value>Aġġorna l-printers USB</value></data>
-  <data name="Usb.Searching"><value>Qed jitfittxu printers USB…</value></data>
-  <data name="Usb.None"><value>Ma nstab l-ebda printer USB imqabbad. Qabbad il-printer u aġġorna l-lista.</value></data>
-  <data name="Usb.PhysicalQueue"><value>Kju tal-istampar USB fiżiku tal-Windows</value></data>
-  <data name="Usb.QueueMissing"><value>Huwa meħtieġ kju tal-istampar USB fiżiku tal-Windows. Ikkonfigurah fil-Windows jew agħżel l-istampar fuq in-netwerk.</value></data>
-  <data name="Usb.DiscoveryFailed"><value>It-tfittxija USB falliet: {0}</value></data>
-  <data name="Usb.SelectMatchingDevice"><value>Agħżel printer USB imqabbad li jaqbel mal-mudell magħżul.</value></data>
-  <data name="Usb.DestinationChanged"><value>Id-destinazzjoni USB mhix disponibbli jew inbidlet. Erġa’ qabbad il-printer u aġġorna l-lista.</value></data>
 </root>

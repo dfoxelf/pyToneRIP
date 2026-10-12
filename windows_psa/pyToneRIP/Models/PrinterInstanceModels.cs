@@ -32,12 +32,9 @@ namespace pyToneRIP.Models
         [DataMember(Name = "system_queue_id", Order = 10, EmitDefaultValue = false)] public string SystemQueueId { get; set; }
         [DataMember(Name = "calibration_mode", Order = 11)] public bool CalibrationMode { get; set; }
         [DataMember(Name = "model_capability", Order = 12, EmitDefaultValue = false)] public PrinterCapability ModelCapability { get; set; }
-        [DataMember(Name = "usb_device_id", Order = 13, EmitDefaultValue = false)] public string UsbDeviceId { get; set; }
-        [DataMember(Name = "usb_port", Order = 14, EmitDefaultValue = false)] public string UsbPort { get; set; }
-        [DataMember(Name = "printer_queue", Order = 15, EmitDefaultValue = false)] public string PhysicalQueueName { get; set; }
 
         public string ConnectionSummary => ConnectionKind == "usb"
-            ? "USB" + (string.IsNullOrWhiteSpace(UsbPort) ? "" : " — " + UsbPort)
+            ? LocalizationService.Get("Choice.UsbPlanned")
             : (string.IsNullOrWhiteSpace(Host)
                 ? LocalizationService.Get("Choice.NetworkNotConfigured")
                 : Host + ":" + Port);
@@ -120,9 +117,4 @@ namespace pyToneRIP.Models
         public event PropertyChangedEventHandler PropertyChanged;
     }
 
-    public sealed class PrinterSettingsNavigation
-    {
-        public PrinterInstanceRecord Printer { get; set; }
-        public bool OpenConnection { get; set; }
-    }
 }

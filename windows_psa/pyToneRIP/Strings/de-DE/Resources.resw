@@ -90,6 +90,7 @@
   <data name="Auto.F975A3E83794.Content"><value>RAW-Zeilen pro Kanal</value></data>
   <data name="Auto.FB2F8CA80720.Text"><value>Richtung</value></data>
   <data name="Auto.FB46581869A8.Text"><value>Resampling</value></data>
+  <data name="Auto.FD1182491F0C.Text"><value>Die Erkennung und Übertragung von USB-Geräten ist für eine spätere Phase geplant.</value></data>
   <data name="Choice.CalibrationRaw"><value>⚗ RAW-Kalibrierung</value></data>
   <data name="Choice.Checking"><value>Wird geprüft</value></data>
   <data name="Choice.Configured"><value>Konfiguriert</value></data>
@@ -251,13 +252,4 @@
   <data name="MainPage.SendLogs.Content"><value>Diagnosebericht erstellen</value></data>
   <data name="Code.SupportReportPrompt"><value>Die ZIP-Datei auf dem Desktop enthält technische Fehlerdetails von pyToneRIP und Windows aus den letzten 24 Stunden. Dokumentinhalte, persönliche Pfade und IP-Adressen werden nicht aufgenommen. Die App versendet das Archiv nicht.</value></data>
   <data name="Code.SupportReportCreated"><value>ZIP-Datei auf dem Desktop erstellt: {0}</value></data>
-  <data name="Usb.Device"><value>Angeschlossener USB-Drucker</value></data>
-  <data name="Usb.Refresh"><value>USB-Drucker aktualisieren</value></data>
-  <data name="Usb.Searching"><value>USB-Drucker werden gesucht…</value></data>
-  <data name="Usb.None"><value>Kein angeschlossener USB-Drucker gefunden. Schließen Sie den Drucker an und aktualisieren Sie die Liste.</value></data>
-  <data name="Usb.PhysicalQueue"><value>Physische Windows-USB-Druckerwarteschlange</value></data>
-  <data name="Usb.QueueMissing"><value>Eine physische Windows-USB-Druckerwarteschlange ist erforderlich. Richten Sie sie in Windows ein oder wählen Sie Netzwerkdruck.</value></data>
-  <data name="Usb.DiscoveryFailed"><value>USB-Suche fehlgeschlagen: {0}</value></data>
-  <data name="Usb.SelectMatchingDevice"><value>Wählen Sie einen angeschlossenen USB-Drucker aus, der zum ausgewählten Modell passt.</value></data>
-  <data name="Usb.DestinationChanged"><value>Das USB-Ziel ist nicht verfügbar oder wurde geändert. Schließen Sie den Drucker erneut an und aktualisieren Sie die Liste.</value></data>
 </root>
