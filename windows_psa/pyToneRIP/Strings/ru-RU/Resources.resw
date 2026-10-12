@@ -90,7 +90,6 @@
   <data name="Auto.F975A3E83794.Content"><value>Поканальные строки RAW</value></data>
   <data name="Auto.FB2F8CA80720.Text"><value>Направление</value></data>
   <data name="Auto.FB46581869A8.Text"><value>Передискретизация</value></data>
-  <data name="Auto.FD1182491F0C.Text"><value>Обнаружение и передача USB-устройств запланированы на более поздний этап.</value></data>
   <data name="Choice.CalibrationRaw"><value>⚗ Калибровка RAW</value></data>
   <data name="Choice.Checking"><value>Проверка</value></data>
   <data name="Choice.Configured"><value>Настроен</value></data>
@@ -252,4 +251,13 @@
   <data name="MainPage.SendLogs.Content"><value>Создать диагностический отчёт</value></data>
   <data name="Code.SupportReportPrompt"><value>ZIP на рабочем столе содержит технические сведения об ошибках pyToneRIP и Windows за последние 24 часа. Содержимое документов, личные пути и IP-адреса не включаются. Программа архив не отправляет.</value></data>
   <data name="Code.SupportReportCreated"><value>ZIP-архив создан на рабочем столе: {0}</value></data>
+  <data name="Usb.Device"><value>Подключённый USB-принтер</value></data>
+  <data name="Usb.Refresh"><value>Обновить список USB-принтеров</value></data>
+  <data name="Usb.Searching"><value>Поиск USB-принтеров…</value></data>
+  <data name="Usb.None"><value>Подключённый USB-принтер не найден. Подключите принтер и обновите список.</value></data>
+  <data name="Usb.PhysicalQueue"><value>Физическая очередь печати Windows USB</value></data>
+  <data name="Usb.QueueMissing"><value>Требуется физическая очередь печати Windows USB. Настройте её в Windows или выберите сетевую печать.</value></data>
+  <data name="Usb.DiscoveryFailed"><value>Не удалось обнаружить USB-принтер: {0}</value></data>
+  <data name="Usb.SelectMatchingDevice"><value>Выберите подключённый USB-принтер, соответствующий выбранной модели.</value></data>
+  <data name="Usb.DestinationChanged"><value>USB-назначение недоступно или изменилось. Переподключите принтер и обновите список.</value></data>
 </root>

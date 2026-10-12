@@ -90,7 +90,6 @@
   <data name="Auto.F975A3E83794.Content"><value>Katra kanāla RAW rindas</value></data>
   <data name="Auto.FB2F8CA80720.Text"><value>Virziens</value></data>
   <data name="Auto.FB46581869A8.Text"><value>Atkārtota paraugu ņemšana</value></data>
-  <data name="Auto.FD1182491F0C.Text"><value>USB ierīces atklāšana un pārsūtīšana ir plānota vēlākā posmā.</value></data>
   <data name="Choice.CalibrationRaw"><value>⚗ RAW kalibrēšana</value></data>
   <data name="Choice.Checking"><value>Pārbauda</value></data>
   <data name="Choice.Configured"><value>Konfigurēts</value></data>
@@ -252,4 +251,13 @@
   <data name="MainPage.SendLogs.Content"><value>Izveidot diagnostikas pārskatu</value></data>
   <data name="Code.SupportReportPrompt"><value>ZIP darbvirsmā satur pyToneRIP un Windows tehnisko kļūdu informāciju par pēdējām 24 stundām. Dokumentu saturs, personīgie ceļi un IP adreses netiek iekļauti. Lietotne arhīvu nesūta.</value></data>
   <data name="Code.SupportReportCreated"><value>ZIP fails izveidots darbvirsmā: {0}</value></data>
+  <data name="Usb.Device"><value>Pievienots USB printeris</value></data>
+  <data name="Usb.Refresh"><value>Atjaunināt USB printerus</value></data>
+  <data name="Usb.Searching"><value>Tiek meklēti USB printeri…</value></data>
+  <data name="Usb.None"><value>Nav atrasts pievienots USB printeris. Pievienojiet printeri un atjauniniet sarakstu.</value></data>
+  <data name="Usb.PhysicalQueue"><value>Windows fiziskā USB drukas rinda</value></data>
+  <data name="Usb.QueueMissing"><value>Nepieciešama Windows fiziskā USB drukas rinda. Iestatiet to sistēmā Windows vai izvēlieties drukāšanu tīklā.</value></data>
+  <data name="Usb.DiscoveryFailed"><value>USB noteikšana neizdevās: {0}</value></data>
+  <data name="Usb.SelectMatchingDevice"><value>Izvēlieties pievienotu USB printeri, kas atbilst atlasītajam modelim.</value></data>
+  <data name="Usb.DestinationChanged"><value>USB galamērķis nav pieejams vai ir mainījies. Pievienojiet printeri vēlreiz un atjauniniet sarakstu.</value></data>
 </root>

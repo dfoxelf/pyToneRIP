@@ -90,7 +90,6 @@
   <data name="Auto.F975A3E83794.Content"><value>RAW redovi po kanalu</value></data>
   <data name="Auto.FB2F8CA80720.Text"><value>Smjer</value></data>
   <data name="Auto.FB46581869A8.Text"><value>Ponovno uzorkovanje</value></data>
-  <data name="Auto.FD1182491F0C.Text"><value>Otkrivanje i prijenos USB uređaja planirani su za kasniju fazu.</value></data>
   <data name="Choice.CalibrationRaw"><value>⚗ Kalibracija RAW</value></data>
   <data name="Choice.Checking"><value>Provjeravanje</value></data>
   <data name="Choice.Configured"><value>Konfigurirano</value></data>
@@ -252,4 +251,13 @@
   <data name="MainPage.SendLogs.Content"><value>Izradi dijagnostičko izvješće</value></data>
   <data name="Code.SupportReportPrompt"><value>ZIP na radnoj površini sadrži tehničke podatke o pogreškama pyToneRIP-a i Windowsa u posljednja 24 sata. Sadržaj dokumenata, osobne putanje i IP adrese nisu uključeni. Aplikacija ne šalje arhivu.</value></data>
   <data name="Code.SupportReportCreated"><value>ZIP je stvoren na radnoj površini: {0}</value></data>
+  <data name="Usb.Device"><value>Povezani USB pisač</value></data>
+  <data name="Usb.Refresh"><value>Osvježi USB pisače</value></data>
+  <data name="Usb.Searching"><value>Traženje USB pisača…</value></data>
+  <data name="Usb.None"><value>Nije pronađen povezani USB pisač. Povežite pisač i osvježite popis.</value></data>
+  <data name="Usb.PhysicalQueue"><value>Fizički USB red čekanja sustava Windows</value></data>
+  <data name="Usb.QueueMissing"><value>Potreban je fizički USB red čekanja sustava Windows. Postavite ga u sustavu Windows ili odaberite mrežni ispis.</value></data>
+  <data name="Usb.DiscoveryFailed"><value>Otkrivanje USB uređaja nije uspjelo: {0}</value></data>
+  <data name="Usb.SelectMatchingDevice"><value>Odaberite povezani USB pisač koji odgovara odabranom modelu.</value></data>
+  <data name="Usb.DestinationChanged"><value>USB odredište nije dostupno ili se promijenilo. Ponovno povežite pisač i osvježite popis.</value></data>
 </root>

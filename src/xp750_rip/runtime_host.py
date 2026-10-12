@@ -18,7 +18,9 @@ from typing import Any, Callable
 
 from xp750_rip.performance import PerformanceTrace
 from xp750_rip.product_cli import render_psa_job
-from xp750_rip.transport import RawTcpTransport, TransportTransmissionError
+from xp750_rip.transport import RawTcpTransport, StreamingTransport, TransportTransmissionError
+from xp750_rip.windows_printer_transport import WindowsPrinterTransport
+from xp750_rip.windows_usb_transport import WindowsUsbInterfaceTransport
 
 REQUEST_SCHEMA = "pytone-rip.runtime-request"
 PROGRESS_SCHEMA = "pytone-rip.job-progress"
@@ -271,14 +273,53 @@ def _write_transport_result(
     }
     if error is not None:
         result["error"] = error
+    if destination.startswith("windows_queue://"):
+        result["delivery_state"] = "SPOOLED" if status == "SENT" else status
     _atomic_json(path, result)
     return result
+
+
+def _output_transport(configuration, connection_state=None, job_dir: Path | None = None) -> StreamingTransport:
+    connection = configuration.get("connection")
+    if not isinstance(connection, dict) or connection.get("kind") != "usb":
+        return _network_transport(configuration, connection_state)
+
+    mode = connection.get("usb_transport_mode")
+    if mode == "windows_queue" or (mode is None and connection.get("printer_queue")):
+        def job_state(job_id: int, document_name: str, state: str) -> None:
+            if job_dir is not None:
+                _atomic_json(job_dir / "physical-print-job.json", {
+                    "schema": "pytone-rip.physical-print-job", "version": 1,
+                    "queue_name": connection["printer_queue"], "job_id": job_id,
+                    "document_name": document_name, "state": state,
+                    "device_id": connection["usb_device_id"], "port_name": connection["usb_port"],
+                })
+
+        for key in ("printer_queue", "usb_port", "usb_device_id"):
+            if not isinstance(connection.get(key), str) or not connection[key].strip():
+                raise ValueError("USB physical-queue fallback is missing " + key)
+        return WindowsPrinterTransport(
+            connection["printer_queue"], connection["usb_port"], connection["usb_device_id"],
+            connection_state=connection_state, job_state=job_state,
+        )
+    if mode not in (None, "usbprint"):
+        raise ValueError("Unsupported USB transport mode: " + str(mode))
+    device_id = connection.get("usb_device_id")
+    if not isinstance(device_id, str) or not device_id.strip():
+        raise ValueError("USB destination is missing usb_device_id")
+    return WindowsUsbInterfaceTransport(device_id, connection_state=connection_state)
+
+
+def _transport_destination(transport: StreamingTransport) -> str:
+    if isinstance(transport, RawTcpTransport):
+        return f"raw_tcp://{transport.host}:{transport.port}"
+    return transport.destination
 
 
 def run_request(request_path: Path) -> dict[str, object]:
     request, record, job_dir = _load_request(request_path)
     progress = JobProgress(job_dir / "progress.json", str(request["job_id"]))
-    transport: RawTcpTransport | None = None
+    transport: StreamingTransport | None = None
     activity_lock = Lock()
     heartbeat_stop: Event | None = None
 
@@ -291,8 +332,10 @@ def run_request(request_path: Path) -> dict[str, object]:
                 "schema": "pytone-rip.transport-activity",
                 "version": 1,
                 "job_id": str(request["job_id"]),
-                "host": transport.host,
-                "port": transport.port,
+                "kind": "network" if isinstance(transport, RawTcpTransport) else "usb",
+                "host": transport.host if isinstance(transport, RawTcpTransport) else None,
+                "port": transport.port if isinstance(transport, RawTcpTransport) else None,
+                "printer_queue": getattr(transport, "queue_name", None),
                 "active": active,
                 "updated_utc": datetime.now(UTC).isoformat(),
             },
@@ -345,8 +388,8 @@ def run_request(request_path: Path) -> dict[str, object]:
         try:
             progress.write(40, "TIFF_NORMALIZE", "Preparing Windows raster for RIP")
             if delivery_mode == "online":
-                transport = _network_transport(
-                    configuration, record_transport_connection
+                transport = _output_transport(
+                    configuration, record_transport_connection, job_dir
                 )
                 started = perf_counter()
                 last_reported = 0
@@ -358,7 +401,7 @@ def run_request(request_path: Path) -> dict[str, object]:
                     progress.write(
                         min(95, progress.percent + 1),
                         "RIP_STREAMING",
-                        f"Rendered and sent {last_sent} / {total} PRN bytes",
+                        f"Rendered and {'sent' if isinstance(transport, RawTcpTransport) else 'spooled'} {last_sent} / {total} PRN bytes",
                     )
 
                 def report_live(bytes_sent: int) -> None:
@@ -418,7 +461,7 @@ def run_request(request_path: Path) -> dict[str, object]:
                     duration_seconds=perf_counter() - started,
                 )
                 progress.write(
-                    100, "SENT", f"Rendered and sent {sent} / {sent} PRN bytes",
+                    100, "SENT", f"Rendered and {'sent' if isinstance(transport, RawTcpTransport) else 'spooled'} {sent} / {sent} PRN bytes",
                     status="SENT", terminal=True,
                 )
                 status = "PASS"
@@ -443,7 +486,7 @@ def run_request(request_path: Path) -> dict[str, object]:
         output_prn = (job_dir / "output.prn").resolve(strict=True)
         if not _is_within(output_prn, job_dir):
             raise ValueError("rendered PRN is outside the job directory")
-        transport = _network_transport(configuration, record_transport_connection)
+        transport = _output_transport(configuration, record_transport_connection, job_dir)
         _raise_if_cancelled(job_dir)
         copies = payload.get("copies_requested", 1)
         if isinstance(copies, bool) or not isinstance(copies, int) or not 1 <= copies <= 99:
@@ -453,7 +496,7 @@ def run_request(request_path: Path) -> dict[str, object]:
         progress.write(
             90,
             "TRANSPORT_CONNECT",
-            f"Connecting to {transport.host}:{transport.port}",
+            f"Connecting to {transport.host + ':' + str(transport.port) if isinstance(transport, RawTcpTransport) else _transport_destination(transport)}",
         )
 
         def report_send(bytes_sent: int, byte_count: int) -> None:

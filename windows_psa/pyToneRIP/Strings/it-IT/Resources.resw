@@ -90,7 +90,6 @@
   <data name="Auto.F975A3E83794.Content"><value>Righe RAW per canale</value></data>
   <data name="Auto.FB2F8CA80720.Text"><value>Direzione</value></data>
   <data name="Auto.FB46581869A8.Text"><value>Ricampionamento</value></data>
-  <data name="Auto.FD1182491F0C.Text"><value>Il rilevamento e il trasferimento del dispositivo USB sono pianificati per una fase successiva.</value></data>
   <data name="Choice.CalibrationRaw"><value>⚗ Calibrazione RAW</value></data>
   <data name="Choice.Checking"><value>Controllo</value></data>
   <data name="Choice.Configured"><value>Configurato</value></data>
@@ -252,4 +251,13 @@
   <data name="MainPage.SendLogs.Content"><value>Crea rapporto diagnostico</value></data>
   <data name="Code.SupportReportPrompt"><value>Lo ZIP sul desktop contiene dettagli tecnici degli errori di pyToneRIP e Windows delle ultime 24 ore. Sono esclusi il contenuto dei documenti, i percorsi personali e gli indirizzi IP. L’app non invia l’archivio.</value></data>
   <data name="Code.SupportReportCreated"><value>ZIP creato sul desktop: {0}</value></data>
+  <data name="Usb.Device"><value>Stampante USB collegata</value></data>
+  <data name="Usb.Refresh"><value>Aggiorna stampanti USB</value></data>
+  <data name="Usb.Searching"><value>Ricerca delle stampanti USB…</value></data>
+  <data name="Usb.None"><value>Nessuna stampante USB collegata trovata. Collegare la stampante e aggiornare.</value></data>
+  <data name="Usb.PhysicalQueue"><value>Coda USB fisica di Windows</value></data>
+  <data name="Usb.QueueMissing"><value>È necessaria una coda di stampa USB fisica di Windows. Configurarla in Windows o scegliere la stampa di rete.</value></data>
+  <data name="Usb.DiscoveryFailed"><value>Rilevamento USB non riuscito: {0}</value></data>
+  <data name="Usb.SelectMatchingDevice"><value>Selezionare una stampante USB collegata corrispondente al modello scelto.</value></data>
+  <data name="Usb.DestinationChanged"><value>La destinazione USB non è disponibile o è cambiata. Ricollegare la stampante e aggiornare l’elenco.</value></data>
 </root>

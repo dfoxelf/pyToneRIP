@@ -52,7 +52,7 @@ from xp750_rip.qtr.runtime_controls import (
 )
 from xp750_rip.raster import PhysicalPathId
 from xp750_rip.routing import ChannelRouter
-from xp750_rip.transport import DEFAULT_RAW_TCP_TIMEOUT_SECONDS, RawTcpTransport
+from xp750_rip.transport import DEFAULT_RAW_TCP_TIMEOUT_SECONDS, RawTcpTransport, StreamingTransport
 
 
 def _add_printer_selector(parser: argparse.ArgumentParser) -> None:
@@ -457,7 +457,7 @@ def render_psa_job(
     manifest: Path | None = None,
     result_path: Path | None = None,
     performance_trace: PerformanceTrace | None = None,
-    live_transport: RawTcpTransport | None = None,
+    live_transport: StreamingTransport | None = None,
     cancel_check: Callable[[], None] | None = None,
     send_progress: Callable[[int], None] | None = None,
     send_total_bytes: Callable[[int], None] | None = None,
@@ -551,7 +551,7 @@ def render_psa_job(
         if manifest is not None:
             value = live_summary.manifest
             value["printer_access_performed_during_render"] = True
-            value["network_access_performed_during_render"] = True
+            value["network_access_performed_during_render"] = isinstance(live_transport, RawTcpTransport)
             value["transmission"] = {
                 "status": "SENT",
                 "bytes_sent": receipt.bytes_sent,

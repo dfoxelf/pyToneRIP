@@ -90,7 +90,6 @@
   <data name="Auto.F975A3E83794.Content"><value>Rânduri RAW pe canal</value></data>
   <data name="Auto.FB2F8CA80720.Text"><value>Direcţie</value></data>
   <data name="Auto.FB46581869A8.Text"><value>Reeșantionarea</value></data>
-  <data name="Auto.FD1182491F0C.Text"><value>Descoperirea și transferul dispozitivelor USB sunt planificate pentru o fază ulterioară.</value></data>
   <data name="Choice.CalibrationRaw"><value>⚗ Calibrare RAW</value></data>
   <data name="Choice.Checking"><value>Control</value></data>
   <data name="Choice.Configured"><value>Configurat</value></data>
@@ -252,4 +251,13 @@
   <data name="MainPage.SendLogs.Content"><value>Creează raport de diagnostic</value></data>
   <data name="Code.SupportReportPrompt"><value>ZIP-ul de pe desktop conține detalii tehnice despre erorile pyToneRIP și Windows din ultimele 24 de ore. Conținutul documentelor, căile personale și adresele IP sunt excluse. Aplicația nu trimite arhiva.</value></data>
   <data name="Code.SupportReportCreated"><value>Fișier ZIP creat pe desktop: {0}</value></data>
+  <data name="Usb.Device"><value>Imprimantă USB conectată</value></data>
+  <data name="Usb.Refresh"><value>Actualizați imprimantele USB</value></data>
+  <data name="Usb.Searching"><value>Se caută imprimante USB…</value></data>
+  <data name="Usb.None"><value>Nu a fost găsită nicio imprimantă USB conectată. Conectați imprimanta și actualizați lista.</value></data>
+  <data name="Usb.PhysicalQueue"><value>Coadă fizică de imprimare USB Windows</value></data>
+  <data name="Usb.QueueMissing"><value>Este necesară o coadă fizică de imprimare USB Windows. Configurați-o în Windows sau alegeți imprimarea în rețea.</value></data>
+  <data name="Usb.DiscoveryFailed"><value>Detectarea USB a eșuat: {0}</value></data>
+  <data name="Usb.SelectMatchingDevice"><value>Selectați o imprimantă USB conectată care corespunde modelului ales.</value></data>
+  <data name="Usb.DestinationChanged"><value>Destinația USB nu este disponibilă sau s-a schimbat. Reconectați imprimanta și actualizați lista.</value></data>
 </root>

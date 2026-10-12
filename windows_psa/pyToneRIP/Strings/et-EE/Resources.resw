@@ -90,7 +90,6 @@
   <data name="Auto.F975A3E83794.Content"><value>Kanali RAW read</value></data>
   <data name="Auto.FB2F8CA80720.Text"><value>Suund</value></data>
   <data name="Auto.FB46581869A8.Text"><value>Resampling</value></data>
-  <data name="Auto.FD1182491F0C.Text"><value>USB-seadmete leidmine ja edastamine on kavandatud hilisemaks etapiks.</value></data>
   <data name="Choice.CalibrationRaw"><value>⚗ RAW kalibreerimine</value></data>
   <data name="Choice.Checking"><value>Kontrollimine</value></data>
   <data name="Choice.Configured"><value>Seadistatud</value></data>
@@ -252,4 +251,13 @@
   <data name="MainPage.SendLogs.Content"><value>Loo diagnostikaaruanne</value></data>
   <data name="Code.SupportReportPrompt"><value>Töölaual olev ZIP sisaldab pyToneRIPi ja Windowsi tehnilisi veaandmeid viimase 24 tunni kohta. Dokumentide sisu, isiklikke teid ja IP-aadresse ei lisata. Rakendus ei saada arhiivi.</value></data>
   <data name="Code.SupportReportCreated"><value>ZIP-fail loodi töölauale: {0}</value></data>
+  <data name="Usb.Device"><value>Ühendatud USB-printer</value></data>
+  <data name="Usb.Refresh"><value>Värskenda USB-printereid</value></data>
+  <data name="Usb.Searching"><value>USB-printerite otsimine…</value></data>
+  <data name="Usb.None"><value>Ühendatud USB-printerit ei leitud. Ühendage printer ja värskendage loendit.</value></data>
+  <data name="Usb.PhysicalQueue"><value>Windowsi füüsiline USB-prindijärjekord</value></data>
+  <data name="Usb.QueueMissing"><value>Vajalik on Windowsi füüsiline USB-prindijärjekord. Seadistage see Windowsis või valige võrguprintimine.</value></data>
+  <data name="Usb.DiscoveryFailed"><value>USB tuvastamine nurjus: {0}</value></data>
+  <data name="Usb.SelectMatchingDevice"><value>Valige ühendatud USB-printer, mis vastab valitud mudelile.</value></data>
+  <data name="Usb.DestinationChanged"><value>USB-sihtkoht pole saadaval või on muutunud. Ühendage printer uuesti ja värskendage loendit.</value></data>
 </root>

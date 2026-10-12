@@ -90,7 +90,6 @@
   <data name="Auto.F975A3E83794.Content"><value>Filas RAW por canal</value></data>
   <data name="Auto.FB2F8CA80720.Text"><value>Dirección</value></data>
   <data name="Auto.FB46581869A8.Text"><value>Remuestreo</value></data>
-  <data name="Auto.FD1182491F0C.Text"><value>El descubrimiento y la transferencia de dispositivos USB están previstos para una fase posterior.</value></data>
   <data name="Choice.CalibrationRaw"><value>⚗ Calibración RAW</value></data>
   <data name="Choice.Checking"><value>De cheques</value></data>
   <data name="Choice.Configured"><value>Configurado</value></data>
@@ -252,4 +251,13 @@
   <data name="MainPage.SendLogs.Content"><value>Crear informe de diagnóstico</value></data>
   <data name="Code.SupportReportPrompt"><value>El ZIP del escritorio contiene detalles técnicos de los errores de pyToneRIP y Windows de las últimas 24 horas. Se excluyen el contenido de los documentos, las rutas personales y las direcciones IP. La aplicación no envía el archivo.</value></data>
   <data name="Code.SupportReportCreated"><value>ZIP creado en el escritorio: {0}</value></data>
+  <data name="Usb.Device"><value>Impresora USB conectada</value></data>
+  <data name="Usb.Refresh"><value>Actualizar impresoras USB</value></data>
+  <data name="Usb.Searching"><value>Buscando impresoras USB…</value></data>
+  <data name="Usb.None"><value>No se encontró ninguna impresora USB conectada. Conéctela y actualice la lista.</value></data>
+  <data name="Usb.PhysicalQueue"><value>Cola física de impresión USB de Windows</value></data>
+  <data name="Usb.QueueMissing"><value>Se necesita una cola física de impresión USB de Windows. Configúrela en Windows o elija la impresión en red.</value></data>
+  <data name="Usb.DiscoveryFailed"><value>Error al detectar USB: {0}</value></data>
+  <data name="Usb.SelectMatchingDevice"><value>Seleccione una impresora USB conectada que corresponda al modelo seleccionado.</value></data>
+  <data name="Usb.DestinationChanged"><value>El destino USB no está disponible o ha cambiado. Vuelva a conectar la impresora y actualice la lista.</value></data>
 </root>

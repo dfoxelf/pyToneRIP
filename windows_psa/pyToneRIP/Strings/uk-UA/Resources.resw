@@ -90,7 +90,6 @@
   <data name="Auto.F975A3E83794.Content"><value>Рядки RAW на канал</value></data>
   <data name="Auto.FB2F8CA80720.Text"><value>Напрямок</value></data>
   <data name="Auto.FB46581869A8.Text"><value>Повторна вибірка</value></data>
-  <data name="Auto.FD1182491F0C.Text"><value>Виявлення та передача USB-пристроїв планується на наступний етап.</value></data>
   <data name="Choice.CalibrationRaw"><value>⚗ Калібрування RAW</value></data>
   <data name="Choice.Checking"><value>Перевірка</value></data>
   <data name="Choice.Configured"><value>Налаштовано</value></data>
@@ -252,4 +251,13 @@
   <data name="MainPage.SendLogs.Content"><value>Створити діагностичний звіт</value></data>
   <data name="Code.SupportReportPrompt"><value>ZIP на робочому столі містить технічні відомості про помилки pyToneRIP і Windows за останні 24 години. Вміст документів, особисті шляхи та IP-адреси не включаються. Програма архів не надсилає.</value></data>
   <data name="Code.SupportReportCreated"><value>ZIP-архів створено на робочому столі: {0}</value></data>
+  <data name="Usb.Device"><value>Підключений USB-принтер</value></data>
+  <data name="Usb.Refresh"><value>Оновити список USB-принтерів</value></data>
+  <data name="Usb.Searching"><value>Пошук USB-принтерів…</value></data>
+  <data name="Usb.None"><value>Підключений USB-принтер не знайдено. Підключіть принтер і оновіть список.</value></data>
+  <data name="Usb.PhysicalQueue"><value>Фізична черга друку Windows USB</value></data>
+  <data name="Usb.QueueMissing"><value>Потрібна фізична черга друку Windows USB. Налаштуйте її у Windows або виберіть мережевий друк.</value></data>
+  <data name="Usb.DiscoveryFailed"><value>Не вдалося виявити USB-принтер: {0}</value></data>
+  <data name="Usb.SelectMatchingDevice"><value>Виберіть підключений USB-принтер, що відповідає вибраній моделі.</value></data>
+  <data name="Usb.DestinationChanged"><value>USB-призначення недоступне або змінилося. Повторно підключіть принтер і оновіть список.</value></data>
 </root>

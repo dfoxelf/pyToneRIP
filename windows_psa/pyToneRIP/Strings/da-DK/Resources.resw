@@ -90,7 +90,6 @@
   <data name="Auto.F975A3E83794.Content"><value>RAW-rækker pr. kanal</value></data>
   <data name="Auto.FB2F8CA80720.Text"><value>Retning</value></data>
   <data name="Auto.FB46581869A8.Text"><value>Gensampling</value></data>
-  <data name="Auto.FD1182491F0C.Text"><value>Opdagelse og overførsel af USB-enheder er planlagt til en senere fase.</value></data>
   <data name="Choice.CalibrationRaw"><value>⚗ Kalibrering RAW</value></data>
   <data name="Choice.Checking"><value>Tjekker</value></data>
   <data name="Choice.Configured"><value>Konfigureret</value></data>
@@ -252,4 +251,13 @@
   <data name="MainPage.SendLogs.Content"><value>Opret diagnoserapport</value></data>
   <data name="Code.SupportReportPrompt"><value>ZIP-filen på skrivebordet indeholder tekniske fejloplysninger fra pyToneRIP og Windows fra de seneste 24 timer. Dokumentindhold, personlige stier og IP-adresser medtages ikke. Appen sender ikke arkivet.</value></data>
   <data name="Code.SupportReportCreated"><value>ZIP-filen blev oprettet på skrivebordet: {0}</value></data>
+  <data name="Usb.Device"><value>Tilsluttet USB-printer</value></data>
+  <data name="Usb.Refresh"><value>Opdater USB-printere</value></data>
+  <data name="Usb.Searching"><value>Søger efter USB-printere…</value></data>
+  <data name="Usb.None"><value>Ingen tilsluttet USB-printer blev fundet. Tilslut printeren, og opdater listen.</value></data>
+  <data name="Usb.PhysicalQueue"><value>Fysisk USB-printerkø i Windows</value></data>
+  <data name="Usb.QueueMissing"><value>En fysisk USB-printerkø i Windows er påkrævet. Konfigurer den i Windows, eller vælg netværksudskrivning.</value></data>
+  <data name="Usb.DiscoveryFailed"><value>USB-søgning mislykkedes: {0}</value></data>
+  <data name="Usb.SelectMatchingDevice"><value>Vælg en tilsluttet USB-printer, der svarer til den valgte model.</value></data>
+  <data name="Usb.DestinationChanged"><value>USB-destinationen er utilgængelig eller ændret. Tilslut printeren igen, og opdater listen.</value></data>
 </root>
