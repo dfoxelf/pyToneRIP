@@ -1,5 +1,11 @@
 # pyToneRIP
 
+[![Release](https://img.shields.io/github/v/release/dfoxelf/pyToneRIP?include_prereleases&style=flat-square)](https://github.com/dfoxelf/pyToneRIP/releases)
+[![Release downloads](https://img.shields.io/github/downloads/dfoxelf/pyToneRIP/total?style=flat-square&label=release%20downloads)](https://github.com/dfoxelf/pyToneRIP/releases)
+[![License](https://img.shields.io/github/license/dfoxelf/pyToneRIP?style=flat-square)](https://github.com/dfoxelf/pyToneRIP/blob/main/LICENSE)
+[![Platform](https://img.shields.io/badge/platform-Windows%2011%20x64-0078D4?style=flat-square)](#install)
+[![Download Beta](https://img.shields.io/badge/Download-203%20Beta-2ea44f?style=flat-square)](https://github.com/dfoxelf/pyToneRIP/releases/download/v1.0.0.203-beta/pyToneRIP-Setup-1.0.0.203-Beta.exe)
+
 Copyright © 2026 Alexander Eichhorn.
 
 pyToneRIP is a monochrome Epson RIP for Windows 11. It contains the Python/Cython raster engine, a printer catalog, a Windows Print Support App, and an Inno Setup bootstrap installer.
