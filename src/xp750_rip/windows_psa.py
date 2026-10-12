@@ -981,7 +981,7 @@ def configuration_to_argument_tokens(configuration: Mapping[str, object]) -> lis
         _exact_keys(
             connection,
             required={"kind", "port"},
-            optional={"host", "usb_port"},
+            optional={"host", "usb_port", "usb_device_id", "printer_queue", "usb_transport_mode"},
             context="connection",
         )
         connection_kind = _string(connection["kind"], "connection.kind")
@@ -993,6 +993,13 @@ def configuration_to_argument_tokens(configuration: Mapping[str, object]) -> lis
         elif connection_kind == "usb":
             if connection.get("usb_port") is not None:
                 _string(connection["usb_port"], "connection.usb_port")
+            for key in ("usb_device_id", "printer_queue"):
+                if connection.get(key) is not None:
+                    _string(connection[key], "connection." + key)
+            if connection.get("usb_transport_mode") is not None:
+                mode = _string(connection["usb_transport_mode"], "connection.usb_transport_mode")
+                if mode not in {"usbprint", "windows_queue"}:
+                    raise ValueError("connection.usb_transport_mode must be usbprint or windows_queue")
         else:
             raise ValueError("connection.kind must be network or usb")
 

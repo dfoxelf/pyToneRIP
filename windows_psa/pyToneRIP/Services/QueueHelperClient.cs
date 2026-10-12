@@ -6,6 +6,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Threading.Tasks;
 using pyToneRIP.Models;
+using pyToneRIP.Shared;
 using Windows.ApplicationModel;
 using Windows.Storage;
 
@@ -18,6 +19,13 @@ namespace pyToneRIP.Services
 
         public static Task<IReadOnlyList<WindowsQueueDescriptor>> ListAsync() =>
             ExecuteAsync(new QueueHelperRequest { Operation = "list" });
+
+        public static async Task<IReadOnlyList<UsbPrinterDescriptor>> DiscoverUsbPrintersAsync()
+        {
+            var response = await ExecuteRawAsync(
+                new QueueHelperRequest { Operation = "discover-usb" }, maxAttempts: 300);
+            return response.UsbPrinters ?? new List<UsbPrinterDescriptor>();
+        }
 
         public static async Task<string> CollectSupportReportAsync(string managerLog)
         {
@@ -198,6 +206,18 @@ namespace pyToneRIP.Services
                 Borderless = borderless,
             });
 
+        public static async Task<LegacyPrinterDefaults> ReadLegacyUserDefaultsAsync(
+            string queueName)
+        {
+            var response = await ExecuteRawAsync(new QueueHelperRequest
+            {
+                Operation = "read-user-defaults",
+                CurrentName = queueName,
+            }, maxAttempts: 150);
+            return response.LegacyDefaults
+                ?? throw new InvalidDataException("Queue helper returned no per-user DEVMODE selection.");
+        }
+
         public static async Task NotifyUserDefaultsChangedAsync(string queueName) =>
             await ExecuteAsync(new QueueHelperRequest
             {
@@ -315,6 +335,8 @@ namespace pyToneRIP.Services
         [DataMember(Name = "error_message", Order = 3, EmitDefaultValue = false)] public string ErrorMessage { get; set; }
         [DataMember(Name = "queues", Order = 4)] public List<WindowsQueueDescriptor> Queues { get; set; }
         [DataMember(Name = "report_path", Order = 5, EmitDefaultValue = false)] public string ReportPath { get; set; }
+        [DataMember(Name = "usb_printers", Order = 6, EmitDefaultValue = false)] public List<UsbPrinterDescriptor> UsbPrinters { get; set; }
+        [DataMember(Name = "legacy_defaults", Order = 7, EmitDefaultValue = false)] public LegacyPrinterDefaults LegacyDefaults { get; set; }
     }
 
     [DataContract]

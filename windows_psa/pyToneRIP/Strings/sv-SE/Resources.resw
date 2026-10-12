@@ -90,7 +90,6 @@
   <data name="Auto.F975A3E83794.Content"><value>RAW-rader per kanal</value></data>
   <data name="Auto.FB2F8CA80720.Text"><value>Riktning</value></data>
   <data name="Auto.FB46581869A8.Text"><value>Omsampling</value></data>
-  <data name="Auto.FD1182491F0C.Text"><value>Upptäckt och överföring av USB-enheter planeras för en senare fas.</value></data>
   <data name="Choice.CalibrationRaw"><value>⚗ Kalibrering RAW</value></data>
   <data name="Choice.Checking"><value>Kontroll</value></data>
   <data name="Choice.Configured"><value>Konfigurerad</value></data>
@@ -252,4 +251,13 @@
   <data name="MainPage.SendLogs.Content"><value>Skapa diagnostikrapport</value></data>
   <data name="Code.SupportReportPrompt"><value>ZIP-filen på skrivbordet innehåller tekniska feluppgifter från pyToneRIP och Windows från de senaste 24 timmarna. Dokumentinnehåll, personliga sökvägar och IP-adresser tas inte med. Appen skickar inte arkivet.</value></data>
   <data name="Code.SupportReportCreated"><value>ZIP-filen skapades på skrivbordet: {0}</value></data>
+  <data name="Usb.Device"><value>Ansluten USB-skrivare</value></data>
+  <data name="Usb.Refresh"><value>Uppdatera USB-skrivare</value></data>
+  <data name="Usb.Searching"><value>Söker efter USB-skrivare…</value></data>
+  <data name="Usb.None"><value>Ingen ansluten USB-skrivare hittades. Anslut skrivaren och uppdatera.</value></data>
+  <data name="Usb.PhysicalQueue"><value>Fysisk USB-utskriftskö i Windows</value></data>
+  <data name="Usb.QueueMissing"><value>En fysisk USB-utskriftskö i Windows krävs. Konfigurera den i Windows eller välj nätverksutskrift.</value></data>
+  <data name="Usb.DiscoveryFailed"><value>USB-sökningen misslyckades: {0}</value></data>
+  <data name="Usb.SelectMatchingDevice"><value>Välj en ansluten USB-skrivare som motsvarar den valda modellen.</value></data>
+  <data name="Usb.DestinationChanged"><value>USB-destinationen är inte tillgänglig eller har ändrats. Anslut skrivaren igen och uppdatera listan.</value></data>
 </root>

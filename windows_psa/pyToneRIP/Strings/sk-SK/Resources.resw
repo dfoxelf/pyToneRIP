@@ -90,7 +90,6 @@
   <data name="Auto.F975A3E83794.Content"><value>Riadky RAW na kanál</value></data>
   <data name="Auto.FB2F8CA80720.Text"><value>Smer</value></data>
   <data name="Auto.FB46581869A8.Text"><value>Prevzorkovanie</value></data>
-  <data name="Auto.FD1182491F0C.Text"><value>Zistenie a prenos zariadenia USB sú naplánované na neskoršiu fázu.</value></data>
   <data name="Choice.CalibrationRaw"><value>⚗ Kalibrácia RAW</value></data>
   <data name="Choice.Checking"><value>Kontrola</value></data>
   <data name="Choice.Configured"><value>Nakonfigurované</value></data>
@@ -252,4 +251,13 @@
   <data name="MainPage.SendLogs.Content"><value>Vytvoriť diagnostickú správu</value></data>
   <data name="Code.SupportReportPrompt"><value>ZIP na pracovnej ploche obsahuje technické údaje o chybách pyToneRIP a Windows za posledných 24 hodín. Obsah dokumentov, osobné cesty a IP adresy nie sú zahrnuté. Aplikácia archív neodosiela.</value></data>
   <data name="Code.SupportReportCreated"><value>ZIP súbor bol vytvorený na pracovnej ploche: {0}</value></data>
+  <data name="Usb.Device"><value>Pripojená tlačiareň USB</value></data>
+  <data name="Usb.Refresh"><value>Obnoviť tlačiarne USB</value></data>
+  <data name="Usb.Searching"><value>Vyhľadávanie tlačiarní USB…</value></data>
+  <data name="Usb.None"><value>Nenašla sa žiadna pripojená tlačiareň USB. Pripojte tlačiareň a obnovte zoznam.</value></data>
+  <data name="Usb.PhysicalQueue"><value>Fyzický tlačový front USB systému Windows</value></data>
+  <data name="Usb.QueueMissing"><value>Vyžaduje sa fyzický tlačový front USB systému Windows. Nastavte ho vo Windowse alebo vyberte sieťovú tlač.</value></data>
+  <data name="Usb.DiscoveryFailed"><value>Vyhľadávanie zariadenia USB zlyhalo: {0}</value></data>
+  <data name="Usb.SelectMatchingDevice"><value>Vyberte pripojenú tlačiareň USB zodpovedajúcu vybranému modelu.</value></data>
+  <data name="Usb.DestinationChanged"><value>Cieľ USB nie je dostupný alebo sa zmenil. Znova pripojte tlačiareň a obnovte zoznam.</value></data>
 </root>

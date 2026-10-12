@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using Windows.ApplicationModel;
 using Windows.Devices.Printers;
 using Windows.Graphics.Printing.PrintTicket;
 using Windows.Storage;
@@ -26,8 +25,6 @@ namespace pyToneRIP.Services
         }
 
         public static async Task ApplyUserDefaultsAsync(
-            string modelId,
-            string printerUri,
             string queueName,
             string pageId,
             double pageWidthMm,
@@ -39,22 +36,6 @@ namespace pyToneRIP.Services
             string inputSourceId,
             bool? borderless = null)
         {
-            // Dynamic VirtualPrinterManager queues are owned by Manager/Core.
-            // Therefore the Manager is also the authoritative PSA context and
-            // must commit the final PrintTicket itself; no model application is
-            // launched and no cross-package AppService is involved.
-            if (string.Equals(Package.Current.Id.Name, "pyToneRIP.Manager",
-                StringComparison.OrdinalIgnoreCase))
-            {
-                // Update native defaults before fetching the ticket so that its
-                // class-driver DEVMODE snapshot reflects the selected page and DPI.
-                await QueueHelperClient.SetUserDefaultsAsync(
-                    queueName, pageId, pageWidthMm, pageHeightMm,
-                    orientation, resolutionX, resolutionY, borderless);
-                await LogAsync("Win32 DEVMODE synchronized before Manager-owned PrintTicket: queue="
-                    + queueName + "; model=" + modelId + "; page=" + pageId);
-            }
-
             var printer = Resolve(queueName);
             if (!printer.CanModifyUserDefaultPrintTicket)
                 throw new InvalidOperationException(
@@ -90,22 +71,61 @@ namespace pyToneRIP.Services
                 orientation, resolutionX, resolutionY, mediaId, inputSourceId, borderless))
                 throw new InvalidOperationException(
                     "Windows did not persist the requested orientation, raster resolution, paper type or input source.");
-            // Notify the Windows print system after changing queue preferences.
-            // Keep this on the caller's UI apartment.
-            printer.RefreshPrintDeviceCapabilities();
-            if (string.Equals(Package.Current.Id.Name, "pyToneRIP.Manager",
-                StringComparison.OrdinalIgnoreCase))
+            var legacySyncSucceeded = true;
+            try
             {
+                await QueueHelperClient.SetUserDefaultsAsync(
+                    queueName, pageId, pageWidthMm, pageHeightMm,
+                    orientation, resolutionX, resolutionY, borderless);
                 await QueueHelperClient.VerifyUserDefaultsAsync(
                     queueName, pageId, pageWidthMm, pageHeightMm,
                     orientation, resolutionX, resolutionY, borderless);
                 await QueueHelperClient.NotifyUserDefaultsChangedAsync(queueName);
             }
+            catch (Exception error)
+            {
+                legacySyncSucceeded = false;
+                await LogAsync("Legacy DEVMODE synchronization failed after modern PrintTicket commit: "
+                    + queueName + "; " + error.GetBaseException().Message);
+            }
+            // Notify the Windows print system after changing queue preferences.
+            // Keep this on the caller's UI apartment.
+            printer.RefreshPrintDeviceCapabilities();
             await LogAsync(
                 "User defaults applied: queue=" + queueName
                 + "; page=" + pageId + "; orientation=" + orientation
                 + "; raster=" + resolutionX + "x" + resolutionY
-                + "; readback=" + storedSelection.PageOptionName);
+                + "; readback=" + storedSelection.PageOptionName
+                + "; legacyDevModeSynchronized=" + legacySyncSucceeded);
+        }
+
+        public static Task SetLegacyUserDefaultsAsync(
+            string queueName,
+            string pageId,
+            double pageWidthMm,
+            double pageHeightMm,
+            string orientation,
+            int resolutionX,
+            int resolutionY,
+            bool? borderless = null) =>
+            QueueHelperClient.SetUserDefaultsAsync(
+                queueName, pageId, pageWidthMm, pageHeightMm,
+                orientation, resolutionX, resolutionY, borderless);
+
+        public static async Task VerifyAndNotifyLegacyUserDefaultsAsync(
+            string queueName,
+            string pageId,
+            double pageWidthMm,
+            double pageHeightMm,
+            string orientation,
+            int resolutionX,
+            int resolutionY,
+            bool? borderless = null)
+        {
+            await QueueHelperClient.VerifyUserDefaultsAsync(
+                queueName, pageId, pageWidthMm, pageHeightMm,
+                orientation, resolutionX, resolutionY, borderless);
+            await QueueHelperClient.NotifyUserDefaultsChangedAsync(queueName);
         }
 
         private static IppPrintDevice Resolve(string queueName)

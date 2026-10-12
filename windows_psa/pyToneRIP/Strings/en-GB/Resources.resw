@@ -90,7 +90,6 @@
   <data name="Auto.F975A3E83794.Content"><value>Per-channel RAW rows</value></data>
   <data name="Auto.FB2F8CA80720.Text"><value>Direction</value></data>
   <data name="Auto.FB46581869A8.Text"><value>Resampling</value></data>
-  <data name="Auto.FD1182491F0C.Text"><value>USB device discovery and transfer are planned for a later phase.</value></data>
   <data name="Choice.CalibrationRaw"><value>⚗ Calibration RAW</value></data>
   <data name="Choice.Checking"><value>Checking</value></data>
   <data name="Choice.Configured"><value>Configured</value></data>
@@ -252,4 +251,13 @@
   <data name="MainPage.SendLogs.Content"><value>Create diagnostic report</value></data>
   <data name="Code.SupportReportPrompt"><value>The desktop ZIP contains technical error details from pyToneRIP and Windows for the last 24 hours. Document contents, personal paths and IP addresses are excluded. The app does not send the archive.</value></data>
   <data name="Code.SupportReportCreated"><value>ZIP created on your desktop: {0}</value></data>
+  <data name="Usb.Device"><value>Connected USB printer</value></data>
+  <data name="Usb.Refresh"><value>Refresh USB printers</value></data>
+  <data name="Usb.Searching"><value>Searching for USB printers…</value></data>
+  <data name="Usb.None"><value>No connected USB printer found. Connect the printer and refresh.</value></data>
+  <data name="Usb.PhysicalQueue"><value>Physical Windows USB print queue</value></data>
+  <data name="Usb.QueueMissing"><value>A physical Windows USB print queue is required. Set it up in Windows or choose network printing.</value></data>
+  <data name="Usb.DiscoveryFailed"><value>USB discovery failed: {0}</value></data>
+  <data name="Usb.SelectMatchingDevice"><value>Select a connected USB printer matching the selected model.</value></data>
+  <data name="Usb.DestinationChanged"><value>The USB destination is unavailable or changed. Reconnect the printer and refresh.</value></data>
 </root>

@@ -90,7 +90,6 @@
   <data name="Auto.F975A3E83794.Content"><value>Lignes RAW par canal</value></data>
   <data name="Auto.FB2F8CA80720.Text"><value>Direction</value></data>
   <data name="Auto.FB46581869A8.Text"><value>Rééchantillonnage</value></data>
-  <data name="Auto.FD1182491F0C.Text"><value>La découverte et le transfert des périphériques USB sont prévus pour une phase ultérieure.</value></data>
   <data name="Choice.CalibrationRaw"><value>⚗ Calibrage RAW</value></data>
   <data name="Choice.Checking"><value>Vérification</value></data>
   <data name="Choice.Configured"><value>Configuré</value></data>
@@ -252,4 +251,13 @@
   <data name="MainPage.SendLogs.Content"><value>Créer un rapport de diagnostic</value></data>
   <data name="Code.SupportReportPrompt"><value>Le ZIP sur le bureau contient les détails techniques des erreurs de pyToneRIP et Windows des dernières 24 heures. Le contenu des documents, les chemins personnels et les adresses IP sont exclus. L’application n’envoie pas l’archive.</value></data>
   <data name="Code.SupportReportCreated"><value>ZIP créé sur le bureau : {0}</value></data>
+  <data name="Usb.Device"><value>Imprimante USB connectée</value></data>
+  <data name="Usb.Refresh"><value>Actualiser les imprimantes USB</value></data>
+  <data name="Usb.Searching"><value>Recherche d’imprimantes USB…</value></data>
+  <data name="Usb.None"><value>Aucune imprimante USB connectée trouvée. Connectez l’imprimante et actualisez la liste.</value></data>
+  <data name="Usb.PhysicalQueue"><value>File USB physique de Windows</value></data>
+  <data name="Usb.QueueMissing"><value>Une file d’impression USB physique de Windows est nécessaire. Configurez-la dans Windows ou choisissez l’impression réseau.</value></data>
+  <data name="Usb.DiscoveryFailed"><value>Échec de la détection USB : {0}</value></data>
+  <data name="Usb.SelectMatchingDevice"><value>Sélectionnez une imprimante USB connectée correspondant au modèle choisi.</value></data>
+  <data name="Usb.DestinationChanged"><value>La destination USB est indisponible ou a changé. Reconnectez l’imprimante et actualisez la liste.</value></data>
 </root>

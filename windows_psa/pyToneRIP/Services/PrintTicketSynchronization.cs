@@ -1,11 +1,23 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using Windows.Data.Json;
 using Windows.Graphics.Printing.PrintTicket;
 
 namespace pyToneRIP.Shared
 {
+    [DataContract]
+    internal sealed class LegacyPrinterDefaults
+    {
+        [DataMember(Name = "page_width_mm", Order = 1)] public double PageWidthMm { get; set; }
+        [DataMember(Name = "page_height_mm", Order = 2)] public double PageHeightMm { get; set; }
+        [DataMember(Name = "borderless", Order = 3, EmitDefaultValue = false)] public bool? Borderless { get; set; }
+        [DataMember(Name = "orientation", Order = 4)] public string Orientation { get; set; }
+        [DataMember(Name = "resolution_x", Order = 5, EmitDefaultValue = false)] public int? ResolutionX { get; set; }
+        [DataMember(Name = "resolution_y", Order = 6, EmitDefaultValue = false)] public int? ResolutionY { get; set; }
+    }
+
     internal sealed class StandardPrintTicketSelection
     {
         public string PageOptionName { get; set; }
@@ -232,6 +244,75 @@ namespace pyToneRIP.Shared
                 layout.SetNamedValue("orientation", JsonValue.CreateStringValue(value));
             }
 
+            return configuration.Stringify();
+        }
+
+        public static string OverlayLegacyUserDefaults(
+            string configurationJson,
+            string capabilitiesJson,
+            LegacyPrinterDefaults defaults)
+        {
+            if (defaults == null) throw new ArgumentNullException(nameof(defaults));
+            var configuration = RipConfigurationProjection.FromQueueJson(configurationJson);
+            var printer = configuration.GetNamedObject("printer");
+            var layout = configuration.GetNamedObject("layout");
+            var catalog = JsonObject.Parse(capabilitiesJson);
+            var printerId = printer.GetNamedString("model");
+            var model = catalog.GetNamedArray("printers")
+                .Select(item => item.GetObject())
+                .FirstOrDefault(item => item.GetNamedString("id") == printerId);
+            if (model == null) return configuration.Stringify();
+
+            var pages = model.GetNamedArray("pages")
+                .Select(item => item.GetObject())
+                .Where(item => item.GetNamedBoolean("enabled"))
+                .Where(item => Math.Abs(item.GetNamedNumber("width_mm") - defaults.PageWidthMm)
+                    <= PageDimensionToleranceMm
+                    && Math.Abs(item.GetNamedNumber("height_mm") - defaults.PageHeightMm)
+                    <= PageDimensionToleranceMm)
+                .ToList();
+            if (defaults.Borderless.HasValue)
+                pages = pages.Where(item => item.GetNamedBoolean("borderless")
+                    == defaults.Borderless.Value).ToList();
+
+            var currentPageId = printer.GetNamedString("page", "");
+            var selectedPage = pages.FirstOrDefault(item => string.Equals(
+                    item.GetNamedString("id"), currentPageId, StringComparison.OrdinalIgnoreCase))
+                ?? pages.FirstOrDefault(item => !item.GetNamedBoolean("borderless"))
+                ?? pages.FirstOrDefault();
+            if (selectedPage != null)
+            {
+                printer.SetNamedValue("page", JsonValue.CreateStringValue(
+                    selectedPage.GetNamedString("id")));
+                if (selectedPage.ContainsKey("allowed_media"))
+                {
+                    var allowedMedia = selectedPage.GetNamedArray("allowed_media")
+                        .Select(item => item.GetString()).ToList();
+                    var currentMedia = printer.GetNamedString("media", "");
+                    if (allowedMedia.Count > 0 && !allowedMedia.Any(item => string.Equals(
+                        item, currentMedia, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        var media = model.GetNamedArray("media")
+                            .Select(item => item.GetObject())
+                            .FirstOrDefault(item => allowedMedia.Any(allowed => string.Equals(
+                                allowed, item.GetNamedString("id"), StringComparison.OrdinalIgnoreCase)));
+                        if (media != null)
+                            printer.SetNamedValue("media", JsonValue.CreateStringValue(
+                                media.GetNamedString("id")));
+                    }
+                }
+            }
+            if (!string.IsNullOrWhiteSpace(defaults.Orientation))
+                layout.SetNamedValue("orientation", JsonValue.CreateStringValue(
+                    defaults.Orientation));
+            if (defaults.ResolutionX.HasValue && defaults.ResolutionX.Value > 0
+                && defaults.ResolutionY.HasValue && defaults.ResolutionY.Value > 0)
+            {
+                printer.SetNamedValue("raster_resolution_x",
+                    JsonValue.CreateNumberValue(defaults.ResolutionX.Value));
+                printer.SetNamedValue("raster_resolution_y",
+                    JsonValue.CreateNumberValue(defaults.ResolutionY.Value));
+            }
             return configuration.Stringify();
         }
 

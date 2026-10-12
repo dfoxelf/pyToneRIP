@@ -40,6 +40,7 @@ namespace pyToneRIP
         private bool loaded;
         private bool connectionReady;
         private bool connectionRefreshRunning;
+        private bool usbRefreshRunning;
         private bool localizationStarted;
         private IReadOnlyList<DeferredLocalization.Entry> deferredStrings;
 
@@ -76,6 +77,11 @@ namespace pyToneRIP
                 InkTitleText.Text = LocalizationService.Get("Code.InkLevels");
                 InkReadoutText.Text = LocalizationService.Get("Code.InkUnavailable");
                 ConnectionStatusText.Text = LocalizationService.Get("Choice.Unknown");
+                UsbDeviceBox.Header = LocalizationService.Get("Usb.Device");
+#if USB_PHYSICAL_QUEUE_FALLBACK
+                UsbPortBox.Header = LocalizationService.Get("Usb.PhysicalQueue");
+#endif
+                RefreshUsbButton.Content = LocalizationService.Get("Usb.Refresh");
                 PortBox.Width = 80;
                 PortBox.MinWidth = 0;
                 PortBox.HorizontalAlignment = HorizontalAlignment.Left;
@@ -123,11 +129,14 @@ namespace pyToneRIP
         protected override void OnNavigatedTo(NavigationEventArgs args)
         {
             base.OnNavigatedTo(args);
-            instance = args.Parameter as PrinterInstanceRecord;
+            var navigation = args.Parameter as PrinterSettingsNavigation;
+            instance = navigation?.Printer ?? args.Parameter as PrinterInstanceRecord;
             if (instance != null)
             {
                 printerUri = instance.PrinterUri;
                 printerName = instance.QueueName;
+                if (navigation?.OpenConnection == true || !instance.Configured)
+                    PreferencesPivot.SelectedItem = ConnectionPivot;
             }
         }
 
@@ -196,13 +205,6 @@ namespace pyToneRIP
                 GammaSlider.Maximum = capabilities.Adjustments.Gamma.Maximum;
                 InkLimitSlider.Minimum = capabilities.Adjustments.InkLimit.Minimum;
                 InkLimitSlider.Maximum = capabilities.Adjustments.InkLimit.Maximum;
-                // Never fetch IppPrintDevice.UserDefaultPrintTicket while the
-                // page is opening. That WinRT call can wait on a virtual queue
-                // for several seconds and blocks the UI apartment. The print
-                // support activation already supplies SessionPrintTicket; the
-                // Manager page uses the queue's stored configuration and the
-                // capability defaults. The ticket is read synchronously only
-                // when Apply commits a new Windows default.
                 WorkflowPrintTicket ticketForUi = session?.SessionPrintTicket;
                 var rasterChoices = PrintTicketSynchronization.ResolutionChoices(ticketForUi);
                 RasterResolutionBox.ItemsSource = rasterChoices;
@@ -230,12 +232,16 @@ namespace pyToneRIP
                 SelectString(PlacementBox, originalConfiguration?.Layout?.Placement);
                 SelectString(ResamplingBox, originalConfiguration?.Layout?.Resampling);
                 LoadConfigurationValues(originalConfiguration);
+                var connection = originalConfiguration?.Connection;
+                var useUsb = (connection?.Kind ?? instance.ConnectionKind) == "usb";
+                NetworkRadio.IsChecked = !useUsb;
+                UsbRadio.IsChecked = useUsb;
+                HostBox.Text = connection?.Host ?? instance.Host ?? "";
+                if (useUsb) await RefreshUsbDevicesAsync();
                 UpdateRipLayoutControls();
-                // Preferences shows the same saved queue profile as Manager.
-                // Opening the page does not replace those controls with the
-                // caller's job ticket or modify that ticket. Apply commits the
-                // displayed selections to the active session explicitly.
                 ApplyStoredRasterResolution(originalConfiguration?.Printer);
+                if (ticketForUi != null)
+                    await LoadSessionPrintTicketSelectionAsync(ticketForUi);
                 ApplyButton.IsEnabled = true;
                 ValidationSummary.Text = session == null
                     ? LocalizationService.Get("Code.ConfigurationIsStoredForThisPrinterSlotWindowsQueueRenameIsManagedInWind")
@@ -249,6 +255,68 @@ namespace pyToneRIP
                 App.WriteStartupException("PropertiesPage.LoadAsync failed", error);
                 ValidationSummary.Text = LocalizationService.Format("Code.CapabilityLoadFailed", error.Message);
             }
+        }
+
+        private async System.Threading.Tasks.Task LoadSessionPrintTicketSelectionAsync(
+            WorkflowPrintTicket ticket)
+        {
+            var configuration = originalConfiguration ?? new PyToneRipConfiguration
+            {
+                Printer = new PrinterSelection
+                {
+                    Model = Required<PrinterCapability>(PrinterBox, "registered printer").Id,
+                    Page = RequiredOption(PageBox, "page").Id,
+                    Media = RequiredOption(MediaBox, "media").Id,
+                    InputSource = RequiredOption(InputSourceBox, "input source").Id,
+                    RasterResolutionX = Required<RasterResolutionChoice>(
+                        RasterResolutionBox, "Windows raster resolution").X,
+                    RasterResolutionY = Required<RasterResolutionChoice>(
+                        RasterResolutionBox, "Windows raster resolution").Y,
+                },
+                Layout = new LayoutSelection
+                {
+                    Orientation = RequiredString(OrientationBox, "orientation"),
+                },
+            };
+            var capabilitiesJson = await CapabilityCatalog.ReadGeneratedCapabilitiesJsonAsync();
+            var projected = PrintTicketSynchronization.OverlayConfiguration(
+                ticket, ConfigurationCodec.Serialize(configuration), capabilitiesJson);
+            if (session.LaunchKind == SettingsLaunchKind.UserDefaultPrintTicket)
+            {
+                try
+                {
+                    var legacyDefaults = await QueueHelperClient.ReadLegacyUserDefaultsAsync(
+                        printerName);
+                    projected = PrintTicketSynchronization.OverlayLegacyUserDefaults(
+                        projected, capabilitiesJson, legacyDefaults);
+                    App.WriteStartupStage(
+                        "Legacy per-user DEVMODE loaded: page="
+                        + legacyDefaults.PageWidthMm.ToString("0.###", CultureInfo.InvariantCulture)
+                        + "x" + legacyDefaults.PageHeightMm.ToString("0.###", CultureInfo.InvariantCulture)
+                        + "mm; borderless=" + (legacyDefaults.Borderless?.ToString() ?? "unknown"));
+                }
+                catch (Exception error)
+                {
+                    App.WriteStartupException(
+                        "Could not read legacy per-user DEVMODE; using the session PrintTicket",
+                        error);
+                }
+            }
+            originalConfiguration = ConfigurationCodec.Deserialize(projected);
+            originalConfiguration.Schema = "pytone-rip.configuration";
+            originalConfiguration.Version = 1;
+
+            SelectOption(MediaBox, originalConfiguration.Printer.Media);
+            SelectOption(PageBox, originalConfiguration.Printer.Page);
+            SelectOption(InputSourceBox, originalConfiguration.Printer.InputSource);
+            SelectString(OrientationBox, originalConfiguration.Layout.Orientation);
+            ApplyStoredRasterResolution(originalConfiguration.Printer);
+            App.WriteStartupStage(
+                "Print settings ticket loaded: launch=" + session.LaunchKind
+                + "; page=" + originalConfiguration.Printer.Page
+                + "; media=" + originalConfiguration.Printer.Media
+                + "; resolution=" + originalConfiguration.Printer.RasterResolutionX
+                + "x" + originalConfiguration.Printer.RasterResolutionY);
         }
 
         private void LoadConfigurationValues(PyToneRipConfiguration value)
@@ -1291,7 +1359,82 @@ namespace pyToneRIP
                 if (ReadStatusButton != null)
                     ReadStatusButton.IsEnabled = enabled;
                 NetworkPanel.Opacity = enabled ? 1 : 0.45;
+                if (UsbPanel != null) UsbPanel.Visibility = enabled ? Visibility.Collapsed : Visibility.Visible;
+                if (!enabled && connectionReady) _ = RefreshUsbDevicesAsync();
             }
+        }
+
+        private async void RefreshUsb(object sender, RoutedEventArgs args) => await RefreshUsbDevicesAsync();
+
+        private async System.Threading.Tasks.Task RefreshUsbDevicesAsync()
+        {
+            if (usbRefreshRunning || UsbDeviceBox == null) return;
+            usbRefreshRunning = true;
+            RefreshUsbButton.IsEnabled = false;
+            UsbStatusText.Text = LocalizationService.Get("Usb.Searching");
+            var previous = (UsbDeviceBox.SelectedItem as UsbPrinterDescriptor)?.DeviceInstanceId
+                ?? originalConfiguration?.Connection?.UsbDeviceId ?? instance?.UsbDeviceId;
+#if USB_PHYSICAL_QUEUE_FALLBACK
+            var previousQueue = UsbPortBox.SelectedItem as string
+                ?? originalConfiguration?.Connection?.PhysicalQueueName ?? instance?.PhysicalQueueName;
+#endif
+            try
+            {
+                var model = PrinterBox.SelectedItem as PrinterCapability;
+                var devices = (await QueueHelperClient.DiscoverUsbPrintersAsync())
+                    .Where(device => UsbPrinterModelMatcher.Matches(model?.Id, model?.DisplayName, device)).ToList();
+                UsbDeviceBox.ItemsSource = devices;
+                UsbDeviceBox.SelectedItem = !string.IsNullOrWhiteSpace(previous)
+                    ? devices.FirstOrDefault(device => device.DeviceInstanceId == previous)
+                    : devices.Count == 1 ? devices[0] : null;
+#if USB_PHYSICAL_QUEUE_FALLBACK
+                if (previousQueue != null && UsbPortBox.Items.Contains(previousQueue))
+                    UsbPortBox.SelectedItem = previousQueue;
+#endif
+                if (devices.Count == 0) UsbStatusText.Text = LocalizationService.Get("Usb.None");
+                else if (UsbDeviceBox.SelectedItem == null) UsbStatusText.Text = LocalizationService.Get("Usb.SelectMatchingDevice");
+            }
+            catch (Exception error)
+            {
+                UsbDeviceBox.ItemsSource = new List<UsbPrinterDescriptor>();
+#if USB_PHYSICAL_QUEUE_FALLBACK
+                UsbPortBox.ItemsSource = new List<string>();
+#endif
+                UsbStatusText.Text = LocalizationService.Format("Usb.DiscoveryFailed", error.Message);
+                ManagerLogger.WriteException("Discovering USB printer destinations", error);
+            }
+            finally { RefreshUsbButton.IsEnabled = true; usbRefreshRunning = false; }
+        }
+
+        private void UsbDeviceChanged(object sender, SelectionChangedEventArgs args)
+        {
+#if USB_PHYSICAL_QUEUE_FALLBACK
+            if (UsbPortBox == null) return;
+            var device = UsbDeviceBox.SelectedItem as UsbPrinterDescriptor;
+            var queues = device?.QueueNames ?? new List<string>();
+            UsbPortBox.ItemsSource = queues;
+            UsbPortBox.IsEnabled = queues.Count > 0;
+            UsbPortBox.SelectedItem = queues.Count == 1 ? queues[0] : null;
+#endif
+            var selected = UsbDeviceBox.SelectedItem as UsbPrinterDescriptor;
+            UsbStatusText.Text = selected == null ? LocalizationService.Get("Usb.SelectMatchingDevice") : selected.ToString();
+        }
+
+        private async System.Threading.Tasks.Task ValidateUsbDestinationAsync(ConnectionSelection connection)
+        {
+            var devices = await QueueHelperClient.DiscoverUsbPrintersAsync();
+            var device = devices.FirstOrDefault(item => item.DeviceInstanceId == connection.UsbDeviceId);
+#if USB_PHYSICAL_QUEUE_FALLBACK
+            if (connection.UsbTransportMode == "windows_queue"
+                && (device == null || !device.QueueNames.Contains(connection.PhysicalQueueName)))
+                throw new InvalidOperationException(LocalizationService.Get("Usb.DestinationChanged"));
+#else
+            if (connection.UsbTransportMode == "windows_queue")
+                throw new InvalidOperationException(LocalizationService.Get("Usb.DestinationChanged"));
+#endif
+            if (device == null)
+                throw new InvalidOperationException(LocalizationService.Get("Usb.DestinationChanged"));
+            connection.UsbPort = device.PortName;
         }
 
         private void PreferencesPivotSizeChanged(object sender, SizeChangedEventArgs args)
@@ -1374,6 +1517,11 @@ namespace pyToneRIP
 
         private async System.Threading.Tasks.Task RefreshConnectionAsync()
         {
+            if (UsbRadio.IsChecked == true)
+            {
+                await RefreshUsbDevicesAsync();
+                return;
+            }
             if (connectionRefreshRunning || NetworkRadio.IsChecked != true) return;
             var host = HostBox.Text?.Trim();
             if (!IsValidIpv4(host))
@@ -1691,8 +1839,11 @@ namespace pyToneRIP
         {
             try
             {
+                var defaultTicketSession = session != null
+                    && session.LaunchKind == SettingsLaunchKind.UserDefaultPrintTicket;
                 var configuration = BuildConfiguration();
-                await EnsureNetworkHostAvailableAsync(configuration.Connection.Host);
+                if (configuration.Connection.Kind == "usb") await ValidateUsbDestinationAsync(configuration.Connection);
+                else await EnsureNetworkHostAvailableAsync(configuration.Connection.Host);
                 var json = ConfigurationCodec.Serialize(configuration);
                 VerifyCalibrationPersistence(configuration, json, "serialization");
                 var page = RequiredOption(PageBox, "page");
@@ -1716,11 +1867,31 @@ namespace pyToneRIP
                     if (!validation.Validated)
                         throw new InvalidOperationException("PrintTicket validation failed: " + validation.ExtendedError);
                     session.UpdatePrintTicket(session.SessionPrintTicket);
+                    if (defaultTicketSession)
+                    {
+                        try
+                        {
+                            await PrinterSystemDefaultsService.SetLegacyUserDefaultsAsync(
+                                printerName, page.Id, page.WidthMm.Value, page.HeightMm.Value,
+                                configuration.Layout.Orientation,
+                                rasterResolution.X, rasterResolution.Y, page.Borderless);
+                            await PrinterSystemDefaultsService.VerifyAndNotifyLegacyUserDefaultsAsync(
+                                printerName, page.Id, page.WidthMm.Value, page.HeightMm.Value,
+                                configuration.Layout.Orientation,
+                                rasterResolution.X, rasterResolution.Y, page.Borderless);
+                        }
+                        catch (Exception legacyError)
+                        {
+                            App.WriteStartupException(
+                                "PSA user defaults were updated, but legacy DEVMODE synchronization failed",
+                                legacyError);
+                        }
+                    }
                 }
                 else
                 {
                     await PrinterSystemDefaultsService.ApplyUserDefaultsAsync(
-                        configuration.Printer.Model, printerUri, printerName,
+                        printerName,
                         page.Id, page.WidthMm.Value, page.HeightMm.Value,
                         configuration.Layout.Orientation,
                         rasterResolution.X, rasterResolution.Y,
@@ -1745,14 +1916,17 @@ namespace pyToneRIP
             var registry = await PrinterInstanceStore.ReadAsync();
             var stored = FindStoredInstance(registry);
             if (stored == null) return;
-            PrinterInstanceStore.EnsureNetworkHostAvailable(
-                registry, configuration.Connection.Host, stored);
+            if (configuration.Connection.Kind != "usb")
+                PrinterInstanceStore.EnsureNetworkHostAvailable(registry, configuration.Connection.Host, stored);
             var selected = PrinterBox.SelectedItem as PrinterCapability;
             stored.ModelId = configuration.Printer.Model;
             stored.ModelName = selected?.DisplayName ?? stored.ModelName;
             stored.ConnectionKind = configuration.Connection.Kind;
             stored.Host = configuration.Connection.Host;
             stored.Port = PrinterInstanceStore.RawTcpPort;
+            stored.UsbDeviceId = configuration.Connection.UsbDeviceId;
+            stored.UsbPort = configuration.Connection.UsbPort;
+            stored.PhysicalQueueName = configuration.Connection.PhysicalQueueName;
             stored.Configured = true;
             stored.CalibrationMode = configuration.Calibration?.Enabled == true;
             await PrinterInstanceStore.WriteAsync(registry);
@@ -1841,10 +2015,21 @@ namespace pyToneRIP
                     throw new InvalidOperationException("Select a PhysicalPath for logical ink " + ink + ".");
                 mapping[ink] = path;
             }
-            if (NetworkRadio.IsChecked != true)
-                throw new InvalidOperationException("USB transport is not implemented yet.");
+            var useUsb = UsbRadio.IsChecked == true;
+            var usbDevice = UsbDeviceBox.SelectedItem as UsbPrinterDescriptor;
+#if USB_PHYSICAL_QUEUE_FALLBACK
+            var usbQueue = UsbPortBox.SelectedItem as string;
+            var usbTransportMode = !string.IsNullOrWhiteSpace(usbQueue) ? "windows_queue" : "usbprint";
+            if (useUsb && usbTransportMode == "windows_queue"
+                && (usbDevice == null || !usbDevice.QueueNames.Contains(usbQueue)))
+                throw new InvalidOperationException(LocalizationService.Get("Usb.QueueMissing"));
+#else
+            const string usbTransportMode = "usbprint";
+#endif
+            if (useUsb && usbDevice == null)
+                throw new InvalidOperationException(LocalizationService.Get("Usb.SelectMatchingDevice"));
             string host;
-            if (!PrinterInstanceStore.TryNormalizeIpv4(HostBox.Text, out host))
+            if (!PrinterInstanceStore.TryNormalizeIpv4(HostBox.Text, out host) && !useUsb)
                 throw new InvalidOperationException("Network host must be a valid IPv4 address.");
             var sizing = RequiredString(SizingBox, "sizing");
             var placement = RequiredString(PlacementBox, "placement");
@@ -1864,7 +2049,18 @@ namespace pyToneRIP
                 Adjustments = new AdjustmentSelection { Gamma = (int)GammaSlider.Value, InkLimit = (int)InkLimitSlider.Value, Dither = dither.Id },
                 Channels = new ChannelSelection { LogicalInks = inks, Routing = mapping },
                 Layout = new LayoutSelection { Sizing = sizing, WidthMm = OptionalNumber(WidthBox.Text), HeightMm = OptionalNumber(HeightBox.Text), ScalePercent = string.Equals(sizing, "fit", StringComparison.OrdinalIgnoreCase) ? null : OptionalNumber(ScaleBox.Text), Orientation = RequiredString(OrientationBox, "orientation"), Placement = placement, XMm = isOffset ? OptionalNumber(XBox.Text) : null, YMm = isOffset ? OptionalNumber(YBox.Text) : null, Resampling = RequiredString(ResamplingBox, "resampling"), ApplyRipLayout = ApplyRipLayoutBox.IsChecked == true },
-                Connection = new ConnectionSelection { Kind = "network", Host = host, Port = PrinterInstanceStore.RawTcpPort },
+                Connection = new ConnectionSelection
+                {
+                    Kind = useUsb ? "usb" : "network", Host = host, Port = PrinterInstanceStore.RawTcpPort,
+                    UsbDeviceId = usbDevice?.DeviceInstanceId ?? originalConfiguration?.Connection?.UsbDeviceId ?? instance?.UsbDeviceId,
+                    UsbPort = usbDevice?.PortName ?? originalConfiguration?.Connection?.UsbPort ?? instance?.UsbPort,
+#if USB_PHYSICAL_QUEUE_FALLBACK
+                    PhysicalQueueName = usbQueue ?? originalConfiguration?.Connection?.PhysicalQueueName ?? instance?.PhysicalQueueName,
+#else
+                    PhysicalQueueName = originalConfiguration?.Connection?.PhysicalQueueName ?? instance?.PhysicalQueueName,
+#endif
+                    UsbTransportMode = useUsb ? usbTransportMode : null,
+                },
                 DeliveryMode = originalConfiguration?.DeliveryMode == "strict_offline"
                     ? "strict_offline" : "online",
                 Calibration = new CalibrationSelection { Enabled = calibrationEnabled, Mode = SelectedCalibrationMode(), InkLimit = (int)CalibrationInkLimitSlider.Value },

@@ -43,6 +43,9 @@
     <Compile Include="Program.cs" />
     <Compile Include="PrintQueueCancellationMonitor.cs" />
     <Compile Include="RipRequestProcessor.cs" />
+    <Compile Include="UsbPrinterDiscovery.cs" />
+    <Compile Include="UsbRawJobCleanup.cs" />
+    <Compile Include="..\pyToneRIP\Models\UsbPrinterModels.cs"><Link>Models\UsbPrinterModels.cs</Link></Compile>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

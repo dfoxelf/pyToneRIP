@@ -170,6 +170,13 @@ namespace pyToneRIP.Services
             return await ReadCatalogAsync("capabilities.index.json");
         }
 
+        public static async Task<string> ReadGeneratedCapabilitiesJsonAsync()
+        {
+            var file = await StorageFile.GetFileFromApplicationUriAsync(
+                new Uri("ms-appx:///Assets/capabilities.generated.json"));
+            return await FileIO.ReadTextAsync(file);
+        }
+
         private static async Task<CapabilityExport> ReadCatalogAsync(string filename)
         {
             var file = await StorageFile.GetFileFromApplicationUriAsync(

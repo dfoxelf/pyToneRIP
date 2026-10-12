@@ -90,7 +90,6 @@
   <data name="Auto.F975A3E83794.Content"><value>RAW-rijen per kanaal</value></data>
   <data name="Auto.FB2F8CA80720.Text"><value>Richting</value></data>
   <data name="Auto.FB46581869A8.Text"><value>Opnieuw bemonsteren</value></data>
-  <data name="Auto.FD1182491F0C.Text"><value>Het ontdekken en overbrengen van USB-apparaten staat gepland voor een latere fase.</value></data>
   <data name="Choice.CalibrationRaw"><value>⚗ Kalibratie RAW</value></data>
   <data name="Choice.Checking"><value>Controleren</value></data>
   <data name="Choice.Configured"><value>Geconfigureerd</value></data>
@@ -252,4 +251,13 @@
   <data name="MainPage.SendLogs.Content"><value>Diagnoserapport maken</value></data>
   <data name="Code.SupportReportPrompt"><value>Het ZIP-bestand op het bureaublad bevat technische foutgegevens van pyToneRIP en Windows van de afgelopen 24 uur. Documentinhoud, persoonlijke paden en IP-adressen worden niet opgenomen. De app verzendt het archief niet.</value></data>
   <data name="Code.SupportReportCreated"><value>ZIP-bestand gemaakt op het bureaublad: {0}</value></data>
+  <data name="Usb.Device"><value>Aangesloten USB-printer</value></data>
+  <data name="Usb.Refresh"><value>USB-printers vernieuwen</value></data>
+  <data name="Usb.Searching"><value>USB-printers zoeken…</value></data>
+  <data name="Usb.None"><value>Geen aangesloten USB-printer gevonden. Sluit de printer aan en vernieuw.</value></data>
+  <data name="Usb.PhysicalQueue"><value>Fysieke Windows-USB-afdrukwachtrij</value></data>
+  <data name="Usb.QueueMissing"><value>Een fysieke Windows-USB-afdrukwachtrij is vereist. Stel deze in Windows in of kies afdrukken via het netwerk.</value></data>
+  <data name="Usb.DiscoveryFailed"><value>USB-detectie mislukt: {0}</value></data>
+  <data name="Usb.SelectMatchingDevice"><value>Selecteer een aangesloten USB-printer die overeenkomt met het gekozen model.</value></data>
+  <data name="Usb.DestinationChanged"><value>De USB-bestemming is niet beschikbaar of is gewijzigd. Sluit de printer opnieuw aan en vernieuw.</value></data>
 </root>

@@ -90,7 +90,6 @@
   <data name="Auto.F975A3E83794.Content"><value>RAW редове за всеки канал</value></data>
   <data name="Auto.FB2F8CA80720.Text"><value>Посока</value></data>
   <data name="Auto.FB46581869A8.Text"><value>Повторно вземане на проби</value></data>
-  <data name="Auto.FD1182491F0C.Text"><value>Откриването и прехвърлянето на USB устройство са планирани за по-късна фаза.</value></data>
   <data name="Choice.CalibrationRaw"><value>⚗ Калибриране RAW</value></data>
   <data name="Choice.Checking"><value>Проверка</value></data>
   <data name="Choice.Configured"><value>Конфигуриран</value></data>
@@ -252,4 +251,13 @@
   <data name="MainPage.SendLogs.Content"><value>Създаване на диагностичен отчет</value></data>
   <data name="Code.SupportReportPrompt"><value>ZIP архивът на работния плот съдържа технически данни за грешките на pyToneRIP и Windows през последните 24 часа. Съдържанието на документите, личните пътища и IP адресите не се включват. Приложението не изпраща архива.</value></data>
   <data name="Code.SupportReportCreated"><value>ZIP архивът е създаден на работния плот: {0}</value></data>
+  <data name="Usb.Device"><value>Свързан USB принтер</value></data>
+  <data name="Usb.Refresh"><value>Обновяване на USB принтерите</value></data>
+  <data name="Usb.Searching"><value>Търсене на USB принтери…</value></data>
+  <data name="Usb.None"><value>Не е открит свързан USB принтер. Свържете принтера и обновете списъка.</value></data>
+  <data name="Usb.PhysicalQueue"><value>Физическа USB опашка на Windows</value></data>
+  <data name="Usb.QueueMissing"><value>Необходима е физическа USB опашка на Windows. Настройте я в Windows или изберете мрежов печат.</value></data>
+  <data name="Usb.DiscoveryFailed"><value>Неуспешно откриване на USB: {0}</value></data>
+  <data name="Usb.SelectMatchingDevice"><value>Изберете свързан USB принтер, съответстващ на избрания модел.</value></data>
+  <data name="Usb.DestinationChanged"><value>USB местоназначението не е налично или е променено. Свържете отново принтера и обновете списъка.</value></data>
 </root>
