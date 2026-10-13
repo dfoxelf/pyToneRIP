@@ -4,7 +4,7 @@
 [![Release downloads](https://img.shields.io/github/downloads/dfoxelf/pyToneRIP/total?style=flat-square&label=release%20downloads)](https://github.com/dfoxelf/pyToneRIP/releases)
 [![License: GPL-3.0-only](https://img.shields.io/badge/license-GPL--3.0--only-blue?style=flat-square)](https://github.com/dfoxelf/pyToneRIP/blob/main/LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Windows%2011%20x64-0078D4?style=flat-square)](#install)
-[![Download Beta](https://img.shields.io/badge/Download-207%20Beta-2ea44f?style=flat-square)](windows_psa/artifacts/pyToneRIP-Setup-1.0.0.207-Beta.exe)
+[![Download latest Beta](https://img.shields.io/badge/Download-latest%20Beta-2ea44f?style=flat-square)](https://github.com/dfoxelf/pyToneRIP/releases/download/v1.0.0.207-beta/pyToneRIP-Setup-1.0.0.207-Beta.exe)
 
 Copyright © 2026 Alexander Eichhorn.
 
