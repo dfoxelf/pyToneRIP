@@ -180,6 +180,7 @@
   <data name="Code.RasterEnginePreparationWasNotCompleted"><value>Die Vorbereitung der Raster-Engine wurde nicht abgeschlossen</value></data>
   <data name="Code.Remove"><value>Entfernen</value></data>
   <data name="Code.RemovePrinter"><value>Drucker entfernen?</value></data>
+  <data name="Code.RemovePrinterAfterJobsAreCancelled"><value>Der Drucker hat einen aktiven oder wartenden Druckauftrag. Brechen Sie den Auftrag ab und warten Sie, bis er beendet ist, bevor Sie den Drucker entfernen.</value></data>
   <data name="Code.Removing"><value>{0} wird entfernt...</value></data>
   <data name="Code.RenamePrinter"><value>Drucker umbenennen</value></data>
   <data name="Code.RuntimePreparationWillBeRetriedOnTheNextStart"><value>Die Laufzeitvorbereitung wird beim nächsten Start erneut versucht: {0}</value></data>

@@ -180,6 +180,7 @@
   <data name="Code.RasterEnginePreparationWasNotCompleted"><value>Priprema Raster motora nije dovršena</value></data>
   <data name="Code.Remove"><value>Ukloniti</value></data>
   <data name="Code.RemovePrinter"><value>Ukloniti pisač?</value></data>
+  <data name="Code.RemovePrinterAfterJobsAreCancelled"><value>Pisač ima aktivan ili čekajući zadatak ispisa. Otkažite zadatak i pričekajte da završi prije uklanjanja pisača.</value></data>
   <data name="Code.Removing"><value>Uklanjanje {0}...</value></data>
   <data name="Code.RenamePrinter"><value>Preimenuj pisač</value></data>
   <data name="Code.RuntimePreparationWillBeRetriedOnTheNextStart"><value>Priprema vremena izvođenja pokušat će se ponovno pri sljedećem pokretanju: {0}</value></data>

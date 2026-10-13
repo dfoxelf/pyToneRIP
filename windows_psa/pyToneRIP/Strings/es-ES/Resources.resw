@@ -180,6 +180,7 @@
   <data name="Code.RasterEnginePreparationWasNotCompleted"><value>La preparación del motor ráster no se completó</value></data>
   <data name="Code.Remove"><value>Eliminar</value></data>
   <data name="Code.RemovePrinter"><value>¿Quitar impresora?</value></data>
+  <data name="Code.RemovePrinterAfterJobsAreCancelled"><value>La impresora tiene un trabajo de impresión activo o en cola. Cancele el trabajo y espere a que finalice antes de quitar la impresora.</value></data>
   <data name="Code.Removing"><value>Eliminando {0}....</value></data>
   <data name="Code.RenamePrinter"><value>Cambiar nombre de impresora</value></data>
   <data name="Code.RuntimePreparationWillBeRetriedOnTheNextStart"><value>La preparación del tiempo de ejecución se volverá a intentar en el próximo inicio: {0}</value></data>

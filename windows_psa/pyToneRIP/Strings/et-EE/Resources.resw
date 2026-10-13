@@ -180,6 +180,7 @@
   <data name="Code.RasterEnginePreparationWasNotCompleted"><value>Rastermootori ettevalmistus jäi lõpetamata</value></data>
   <data name="Code.Remove"><value>Eemalda</value></data>
   <data name="Code.RemovePrinter"><value>Kas eemaldada printer?</value></data>
+  <data name="Code.RemovePrinterAfterJobsAreCancelled"><value>Printeril on aktiivne või ootel printimistöö. Tühistage töö ja oodake selle lõppemist enne printeri eemaldamist.</value></data>
   <data name="Code.Removing"><value>{0} eemaldamine...</value></data>
   <data name="Code.RenamePrinter"><value>Nimetage printer ümber</value></data>
   <data name="Code.RuntimePreparationWillBeRetriedOnTheNextStart"><value>Käitusaja ettevalmistust proovitakse uuesti järgmisel käivitamisel: {0}</value></data>

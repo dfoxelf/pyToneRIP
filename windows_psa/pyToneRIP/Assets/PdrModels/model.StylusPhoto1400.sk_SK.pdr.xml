@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_L"><value>3.5x5 in / 89 x 127 mm</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_TL"><value>3.5x5 in / 89 x 127 mm (Bez okrajov)</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_4X6FULL"><value>10 x 15 cm (4 x 6 in)</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_T4X6FULL"><value>10 x 15 cm (4 x 6 in) (Bez okrajov)</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_2L"><value>5 x 7 in / 127 x 178 mm</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_T2L"><value>5 x 7 in / 127 x 178 mm (Bez okrajov)</value></data>
+  <data name="schemas.microsoft.com/windows/2003/08/printing/printschemakeywords/JapanHagakiPostcard"><value>Pohľadnica 100 x 148 mm</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_TPostcard"><value>Pohľadnica 100 x 148 mm (Bez okrajov)</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_8x10"><value>20 x 25 cm (8 x 10 in)</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_T8x10"><value>20 x 25 cm (8 x 10 in) (Bez okrajov)</value></data>
+  <data name="schemas.microsoft.com/windows/2003/08/printing/printschemakeywords/ISOA4"><value>A4 210 x 297 mm</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_TA4"><value>A4 210 x 297 mm (Bez okrajov)</value></data>
+  <data name="schemas.microsoft.com/windows/2003/08/printing/printschemakeywords/NorthAmericaLetter"><value>Letter 8 1/2 x 11 in</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_TLetter"><value>Letter 8 1/2 x 11 in (Bez okrajov)</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_USB"><value>US B 11 x 17 in</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_TUSB"><value>US B 11 x 17 in (Bez okrajov)</value></data>
+  <data name="schemas.microsoft.com/windows/2003/08/printing/printschemakeywords/ISOA3"><value>A3 297 x 420 mm</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_TA3"><value>A3 297 x 420 mm (Bez okrajov)</value></data>
+  <data name="schemas.microsoft.com/windows/2003/08/printing/printschemakeywords/ISOA5"><value>A5</value></data>
+  <data name="schemas.microsoft.com/windows/2003/08/printing/printschemakeywords/ISOA6"><value>A6</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Media_PMPHOTO_NORMAL"><value>Premium Glossy Photo Paper</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Media_PLAIN_NORMAL"><value>Plain Paper</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Media_Matte_Paper"><value>Matte Paper</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Media_Glossy_Film"><value>Glossy Film</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Media_Envelopes"><value>Envelopes</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Media_Back_Light_Film"><value>Back Light Film</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Media_Photo_Quality_Inkjet_Paper"><value>Photo Quality Inkjet Paper</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Media_Inkjet_Paper"><value>Inkjet Paper</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Media_Photo_Paper"><value>Photo Paper</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Media_Ultra_Glossy_Photo_Paper"><value>Ultra Glossy Photo Paper</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Media_Premium_Semigloss_Photo_Paper"><value>Premium Semigloss Photo Paper</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Media_Premium_Luster_Photo_Paper"><value>Premium Luster Photo Paper</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Media_Photo_Quality_Glossy_Paper"><value>Photo Quality Glossy Paper</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Media_ColorLife_Paper"><value>ColorLife Paper</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Input_Standard"><value>Standard</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Input_Manual"><value>Manual Feed</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Input_Roll"><value>Roll Feed</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Dpi300x300"><value>300 x 300 DPI</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Dpi600x600"><value>600 x 600 DPI</value></data>
+</root>

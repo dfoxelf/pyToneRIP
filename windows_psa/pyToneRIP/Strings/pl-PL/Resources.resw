@@ -180,6 +180,7 @@
   <data name="Code.RasterEnginePreparationWasNotCompleted"><value>Przygotowanie silnika rastrowego nie zostało ukończone</value></data>
   <data name="Code.Remove"><value>Usunąć</value></data>
   <data name="Code.RemovePrinter"><value>Usunąć drukarkę?</value></data>
+  <data name="Code.RemovePrinterAfterJobsAreCancelled"><value>Drukarka ma aktywne lub oczekujące zadanie drukowania. Anuluj zadanie i poczekaj na jego zakończenie przed usunięciem drukarki.</value></data>
   <data name="Code.Removing"><value>Usuwanie {0}...</value></data>
   <data name="Code.RenamePrinter"><value>Zmień nazwę drukarki</value></data>
   <data name="Code.RuntimePreparationWillBeRetriedOnTheNextStart"><value>Przygotowanie środowiska wykonawczego zostanie ponowione przy następnym uruchomieniu: {0}</value></data>

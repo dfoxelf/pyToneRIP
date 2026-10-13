@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="schemas.microsoft.com/windows/2003/08/printing/printschemakeywords/ISOA4"><value>A4</value></data>
+  <data name="schemas.microsoft.com/windows/2003/08/printing/printschemakeywords/NorthAmericaLetter"><value>US Letter</value></data>
+  <data name="schemas.microsoft.com/windows/2003/08/printing/printschemakeywords/NorthAmericaLegal"><value>US Legal</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_EXE"><value>EXE</value></data>
+  <data name="schemas.microsoft.com/windows/2003/08/printing/printschemakeywords/NorthAmericaNumber10Envelope"><value>Obálka #10</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_8x10"><value>8 x 10 in</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_2L"><value>5 x 7 in</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_4X6FULL"><value>4 x 6 in</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_L"><value>3.5 x 5 in</value></data>
+  <data name="schemas.microsoft.com/windows/2003/08/printing/printschemakeywords/ISOA6"><value>A6</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_HLT"><value>Half Letter</value></data>
+  <data name="schemas.microsoft.com/windows/2003/08/printing/printschemakeywords/ISOA5"><value>A5</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Media_PLAIN_NORMAL"><value>Plain Paper / Bright White Paper</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Media_PLATINA_NORMAL"><value>Ultra Premium Photo Paper Glossy</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Media_PMPHOTO_NORMAL"><value>Premium Photo Paper Glossy</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Media_LCPP_NORMAL"><value>Photo Paper Glossy</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Media_PSGLOS_NORMAL"><value>Premium Photo Paper Semi-Gloss</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Media_SFINE_NORMAL"><value>Presentation Paper Matte</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Media_PMMATT_NORMAL"><value>Premium Presentation Paper Matte</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Input_Cassette_1"><value>Cassette 1</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Input_Rear_Feed"><value>Rear Feed</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Dpi300x300"><value>300 x 300 DPI</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Dpi600x600"><value>600 x 600 DPI</value></data>
+</root>

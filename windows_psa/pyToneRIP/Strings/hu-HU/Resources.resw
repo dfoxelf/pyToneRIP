@@ -180,6 +180,7 @@
   <data name="Code.RasterEnginePreparationWasNotCompleted"><value>A rasztermotor előkészítése nem fejeződött be</value></data>
   <data name="Code.Remove"><value>Távolítsa el</value></data>
   <data name="Code.RemovePrinter"><value>Eltávolítja a nyomtatót?</value></data>
+  <data name="Code.RemovePrinterAfterJobsAreCancelled"><value>A nyomtatón aktív vagy várakozó nyomtatási feladat van. A nyomtató eltávolítása előtt szakítsa meg a feladatot, és várja meg annak befejeződését.</value></data>
   <data name="Code.Removing"><value>{0} eltávolítása...</value></data>
   <data name="Code.RenamePrinter"><value>Nyomtató átnevezése</value></data>
   <data name="Code.RuntimePreparationWillBeRetriedOnTheNextStart"><value>A futásidejű előkészítést a következő indításkor újra megpróbáljuk: {0}</value></data>

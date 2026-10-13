@@ -180,6 +180,7 @@
   <data name="Code.RasterEnginePreparationWasNotCompleted"><value>Il-preparazzjoni tal-magna tar-raster ma tlestietx</value></data>
   <data name="Code.Remove"><value>Neħħi</value></data>
   <data name="Code.RemovePrinter"><value>Neħħi l-istampatur?</value></data>
+  <data name="Code.RemovePrinterAfterJobsAreCancelled"><value>L-istampatur għandu xogħol tal-istampar attiv jew qed jistenna. Ikkanċella x-xogħol u stenna sakemm jintemm qabel tneħħi l-istampatur.</value></data>
   <data name="Code.Removing"><value>Tneħħi {0}...</value></data>
   <data name="Code.RenamePrinter"><value>Semmi mill-ġdid l-istampatur</value></data>
   <data name="Code.RuntimePreparationWillBeRetriedOnTheNextStart"><value>Il-preparazzjoni ta&#x27; runtime se terġa&#x27; tiġi ppruvata fil-bidu li jmiss: {0}</value></data>

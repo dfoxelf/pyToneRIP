@@ -46,9 +46,13 @@ namespace pyToneRIP.Models
             : CalibrationMode
                 ? LocalizationService.Get("Choice.CalibrationRaw")
                 : LocalizationService.Get("Choice.Configured");
-        public Brush ConfigurationStatusBrush => new SolidColorBrush(CalibrationMode ? Color.FromArgb(255, 127, 255, 255) : Colors.Transparent);
-        public Brush ConfigurationStatusTextBrush => new SolidColorBrush(CalibrationMode ? Color.FromArgb(255, 127, 0, 255) : Colors.Black);
-        private static bool IsDarkTheme => Application.Current?.RequestedTheme == ApplicationTheme.Dark;
+        public Brush ConfigurationStatusBrush => new SolidColorBrush(
+            CalibrationMode ? Color.FromArgb(255, 127, 255, 255) : Colors.Transparent);
+        public Brush ConfigurationStatusTextBrush => CalibrationMode
+            ? SystemThemeBrush("SystemThemeAccentBrush")
+            : SystemThemeBrush("PrimaryTextBrush");
+        private static Brush SystemThemeBrush(string key) =>
+            (Brush)Application.Current.Resources[key];
         public GridLength ConfigurationColumnWidth { get; set; } = GridLength.Auto;
         public GridLength NetworkColumnWidth { get; set; } = new GridLength(105);
         // This value is deliberately not serialized. Windows is the source of
@@ -67,10 +71,9 @@ namespace pyToneRIP.Models
             }
         }
         public string DefaultPrinterMark => IsSystemDefault ? "\u2713" : string.Empty;
-        public Brush DefaultPrinterBrush => new SolidColorBrush(
-            IsSystemDefault
-                ? (IsDarkTheme ? Color.FromArgb(255, 126, 231, 135) : Colors.ForestGreen)
-                : Colors.Transparent);
+        public Brush DefaultPrinterBrush => IsSystemDefault
+            ? SystemThemeBrush("SystemThemeAccentBrush")
+            : new SolidColorBrush(Colors.Transparent);
         public string NetworkStatus
         {
             get => LocalizationService.Get("Choice." + NormalizeNetworkStatus(networkStatus));
@@ -90,14 +93,17 @@ namespace pyToneRIP.Models
             {
                 switch (NormalizeNetworkStatus(networkStatus))
                 {
-                    case "Online": return new SolidColorBrush(IsDarkTheme ? Color.FromArgb(255, 126, 231, 135) : Colors.ForestGreen);
-                    case "Preparing": return new SolidColorBrush(IsDarkTheme ? Color.FromArgb(255, 255, 209, 102) : Colors.DarkGoldenrod);
-                    case "Queued": return new SolidColorBrush(IsDarkTheme ? Color.FromArgb(255, 121, 192, 255) : Colors.SteelBlue);
-                    case "Processing": return new SolidColorBrush(IsDarkTheme ? Color.FromArgb(255, 255, 166, 87) : Colors.DarkOrange);
-                    case "Printing": return new SolidColorBrush(IsDarkTheme ? Color.FromArgb(255, 121, 192, 255) : Colors.DarkBlue);
-                    case "Offline": return new SolidColorBrush(IsDarkTheme ? Color.FromArgb(255, 255, 123, 114) : Colors.Firebrick);
-                    case "Checking": return new SolidColorBrush(IsDarkTheme ? Color.FromArgb(255, 255, 166, 87) : Colors.DarkOrange);
-                    default: return new SolidColorBrush(IsDarkTheme ? Color.FromArgb(255, 201, 209, 217) : Colors.Gray);
+                    case "Online":
+                    case "Preparing":
+                    case "Queued":
+                    case "Processing":
+                    case "Printing":
+                    case "Checking":
+                        return SystemThemeBrush("SystemThemeAccentBrush");
+                    case "Offline":
+                        return SystemThemeBrush("SystemThemeErrorBrush");
+                    default:
+                        return SystemThemeBrush("SystemThemeSecondaryBrush");
                 }
             }
         }

@@ -14,6 +14,8 @@
           <Color x:Key="LogSuccessColor">#FF147A4A</Color>
           <Color x:Key="LogWarningColor">#FF9A6500</Color>
           <Color x:Key="LogErrorColor">#FFB42318</Color>
+          <Color x:Key="RequiredFieldBorderColor">#FFC42B1C</Color>
+          <Color x:Key="RequiredFieldBackgroundColor">#FFFFE7E5</Color>
           <Color x:Key="ExampleBackgroundColor">#FFF5F7FA</Color>
         </ResourceDictionary>
         <ResourceDictionary x:Key="Dark">
@@ -28,6 +30,8 @@
           <Color x:Key="LogSuccessColor">#FF6CCB8A</Color>
           <Color x:Key="LogWarningColor">#FFFFD479</Color>
           <Color x:Key="LogErrorColor">#FFFF8A80</Color>
+          <Color x:Key="RequiredFieldBorderColor">#FFFF8A80</Color>
+          <Color x:Key="RequiredFieldBackgroundColor">#FF5B2020</Color>
           <Color x:Key="ExampleBackgroundColor">#FF333333</Color>
         </ResourceDictionary>
         <ResourceDictionary x:Key="HighContrast">
@@ -42,6 +46,8 @@
           <Color x:Key="LogSuccessColor">#FFFFFFFF</Color>
           <Color x:Key="LogWarningColor">#FFFFFF00</Color>
           <Color x:Key="LogErrorColor">#FFFF0000</Color>
+          <Color x:Key="RequiredFieldBorderColor">#FFFF0000</Color>
+          <Color x:Key="RequiredFieldBackgroundColor">#FF000000</Color>
           <Color x:Key="ExampleBackgroundColor">#FF000000</Color>
         </ResourceDictionary>
       </ResourceDictionary.ThemeDictionaries>
@@ -51,11 +57,17 @@
       <SolidColorBrush x:Key="TableHeaderBrush" Color="{ThemeResource TableHeaderColor}" />
       <SolidColorBrush x:Key="StatusBarBrush" Color="{ThemeResource StatusBarColor}" />
       <SolidColorBrush x:Key="SectionBorderBrush" Color="{ThemeResource SectionBorderColor}" />
+      <SolidColorBrush x:Key="PrimaryTextBrush" Color="{ThemeResource SystemBaseHighColor}" />
+      <SolidColorBrush x:Key="SystemThemeSecondaryBrush" Color="{ThemeResource SystemBaseMediumColor}" />
       <SolidColorBrush x:Key="SecondaryTextBrush" Color="{ThemeResource SecondaryTextColor}" />
+      <SolidColorBrush x:Key="SystemThemeAccentBrush" Color="{ThemeResource SystemAccentColor}" />
+      <SolidColorBrush x:Key="SystemThemeErrorBrush" Color="{ThemeResource SystemErrorTextColor}" />
       <SolidColorBrush x:Key="AccentBrush" Color="{ThemeResource AccentColor}" />
       <SolidColorBrush x:Key="LogSuccessBrush" Color="{ThemeResource LogSuccessColor}" />
       <SolidColorBrush x:Key="LogWarningBrush" Color="{ThemeResource LogWarningColor}" />
       <SolidColorBrush x:Key="LogErrorBrush" Color="{ThemeResource LogErrorColor}" />
+      <SolidColorBrush x:Key="RequiredFieldBorderBrush" Color="{ThemeResource RequiredFieldBorderColor}" />
+      <SolidColorBrush x:Key="RequiredFieldBackgroundBrush" Color="{ThemeResource RequiredFieldBackgroundColor}" />
       <SolidColorBrush x:Key="ExampleBackgroundBrush" Color="{ThemeResource ExampleBackgroundColor}" />
       <Style x:Key="PageTitleStyle" TargetType="TextBlock">
         <Setter Property="FontSize" Value="28" />

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="schemas.microsoft.com/windows/2003/08/printing/printschemakeywords/ISOA4"><value>A4</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_4X6FULL"><value>10 x 15 cm (4 x 6 pol)</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_T4X6FULL"><value>10 x 15 cm (4 x 6 pol) (Sem margens)</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_2L"><value>13 x 18 cm (5 x 7 pol)</value></data>
+  <data name="schemas.microsoft.com/windows/2003/08/printing/printschemakeywords/ISOA6"><value>A6</value></data>
+  <data name="schemas.microsoft.com/windows/2003/08/printing/printschemakeywords/ISOA5"><value>A5</value></data>
+  <data name="schemas.microsoft.com/windows/2003/08/printing/printschemakeywords/JISB5"><value>JIS B5</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_B6"><value>JIS B6</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_L"><value>9 x 13 cm (3,5 x 5 pol)</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_TL"><value>9 x 13 cm (3,5 x 5 pol) (Sem margens)</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_INDEX5"><value>5 x 8 pol (127 x 203 mm)</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_8x10"><value>20 x 25 cm (8 x 10 pol)</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_4X7"><value>16:9 de largura (4 x 7,11 pol)</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_T4X7"><value>16:9 de largura (4 x 7,11 pol) (Sem margens)</value></data>
+  <data name="schemas.microsoft.com/windows/2003/08/printing/printschemakeywords/JapanHagakiPostcard"><value>100 x 148 mm</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_TPostcard"><value>100 x 148 mm (Sem margens)</value></data>
+  <data name="schemas.microsoft.com/windows/2003/08/printing/printschemakeywords/NorthAmericaNumber10Envelope"><value>Envelope #10</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_EnvDL"><value>Envelope DL</value></data>
+  <data name="schemas.microsoft.com/windows/2003/08/printing/printschemakeywords/ISOC6Envelope"><value>Envelope C6</value></data>
+  <data name="schemas.microsoft.com/windows/2003/08/printing/printschemakeywords/NorthAmericaLetter"><value>Carta EUA</value></data>
+  <data name="schemas.microsoft.com/windows/2003/08/printing/printschemakeywords/NorthAmericaLegal"><value>Legal EUA</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_16K"><value>16K 195 x 270 mm</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Media_PLAIN_NORMAL"><value>Papel Normal-Normal</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Media_SFINE_NORMAL"><value>Epson Photo Quality Ink Jet-Normal</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Media_PMMATT_NORMAL"><value>Epson Matte-Normal</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Media_PLATINA_NORMAL"><value>Epson Ultra Glossy-Normal</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Media_PMPHOTO_NORMAL"><value>Epson Premium Glossy-Alto</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Media_PSGLOS_NORMAL"><value>Epson Premium Semigloss-Alto</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Media_LCPP_NORMAL"><value>Papel Fotográfico Brilhante-Alto</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Input_Standard"><value>Standard feed</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Dpi300x300"><value>300 x 300 DPI</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Dpi600x600"><value>600 x 600 DPI</value></data>
+</root>

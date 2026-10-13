@@ -180,6 +180,7 @@
   <data name="Code.RasterEnginePreparationWasNotCompleted"><value>A preparação do mecanismo raster não foi concluída</value></data>
   <data name="Code.Remove"><value>Remover</value></data>
   <data name="Code.RemovePrinter"><value>Remover impressora?</value></data>
+  <data name="Code.RemovePrinterAfterJobsAreCancelled"><value>A impressora tem um trabalho de impressão ativo ou pendente. Cancele o trabalho e aguarde a respetiva conclusão antes de remover a impressora.</value></data>
   <data name="Code.Removing"><value>Removendo {0}...</value></data>
   <data name="Code.RenamePrinter"><value>Renomear impressora</value></data>
   <data name="Code.RuntimePreparationWillBeRetriedOnTheNextStart"><value>A preparação do tempo de execução será tentada novamente na próxima inicialização: {0}</value></data>

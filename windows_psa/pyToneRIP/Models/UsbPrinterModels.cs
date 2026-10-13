@@ -18,6 +18,13 @@ namespace pyToneRIP.Models
             ? DisplayName : DisplayName + " — " + PortName;
     }
 
+    [DataContract]
+    public sealed class UsbInkLevel
+    {
+        [DataMember(Name = "name", Order = 1)] public string Name { get; set; }
+        [DataMember(Name = "percent", Order = 2)] public int Percent { get; set; }
+    }
+
     public static class UsbPrinterModelMatcher
     {
         public static bool Matches(string modelId, string displayName, UsbPrinterDescriptor device)

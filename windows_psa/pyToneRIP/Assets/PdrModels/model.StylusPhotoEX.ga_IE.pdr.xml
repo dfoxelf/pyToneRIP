@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="schemas.microsoft.com/windows/2003/08/printing/printschemakeywords/ISOA4"><value>A4</value></data>
+  <data name="schemas.microsoft.com/windows/2003/08/printing/printschemakeywords/NorthAmericaLetter"><value>Letter</value></data>
+  <data name="schemas.microsoft.com/windows/2003/08/printing/printschemakeywords/NorthAmericaLegal"><value>Legal</value></data>
+  <data name="schemas.microsoft.com/windows/2003/08/printing/printschemakeywords/ISOA5"><value>A5</value></data>
+  <data name="schemas.microsoft.com/windows/2003/08/printing/printschemakeywords/ISOA6"><value>A6</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_B5"><value>B5</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Media_Matte_Paper"><value>Matte Paper</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Input_Standard"><value>Standard feed</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Dpi300x300"><value>300 x 300 DPI</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Dpi600x600"><value>600 x 600 DPI</value></data>
+</root>

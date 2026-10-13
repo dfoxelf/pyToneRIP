@@ -180,6 +180,7 @@
   <data name="Code.RasterEnginePreparationWasNotCompleted"><value>Подготовка растрового движка не завершена</value></data>
   <data name="Code.Remove"><value>Удалить</value></data>
   <data name="Code.RemovePrinter"><value>Удалить принтер?</value></data>
+  <data name="Code.RemovePrinterAfterJobsAreCancelled"><value>У принтера есть активное или ожидающее задание печати. Отмените задание и дождитесь его завершения перед удалением принтера.</value></data>
   <data name="Code.Removing"><value>Удаление {0}...</value></data>
   <data name="Code.RenamePrinter"><value>Переименование принтера</value></data>
   <data name="Code.RuntimePreparationWillBeRetriedOnTheNextStart"><value>Подготовка среды выполнения будет повторена при следующем запуске: {0}</value></data>

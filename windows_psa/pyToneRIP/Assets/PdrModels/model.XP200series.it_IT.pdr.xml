@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_4X6FULL"><value>10 x 15 cm (4 x 6 pol.)</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_T4X6FULL"><value>10 x 15 cm (4 x 6 pol.) (Senza margini)</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_2L"><value>13 x 18 cm (5 x 7 pol.)</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_T2L"><value>13 x 18 cm (5 x 7 pol.) (Senza margini)</value></data>
+  <data name="schemas.microsoft.com/windows/2003/08/printing/printschemakeywords/NorthAmericaLetter"><value>Letter 216 x 279 mm</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_TLetter"><value>Letter 216 x 279 mm (Senza margini)</value></data>
+  <data name="schemas.microsoft.com/windows/2003/08/printing/printschemakeywords/ISOA4"><value>A4 297 x 210 mm</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_TA4"><value>A4 297 x 210 mm (Senza margini)</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_8x10"><value>20 x 25 cm (8 x 10 pol.)</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_T8x10"><value>20 x 25 cm (8 x 10 pol.) (Senza margini)</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_L"><value>9 x 13 cm (3.5 x 5 pol.)</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_TL"><value>9 x 13 cm (3.5 x 5 pol.) (Senza margini)</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_4X7"><value>16x9 wide size (102 x 181 mm)</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_T4X7"><value>16x9 wide size (102 x 181 mm) (Senza margini)</value></data>
+  <data name="schemas.microsoft.com/windows/2003/08/printing/printschemakeywords/NorthAmericaNumber10Envelope"><value>Busta #10 105 x 241 mm</value></data>
+  <data name="schemas.microsoft.com/windows/2003/08/printing/printschemakeywords/NorthAmericaLegal"><value>Legal 216 x 356 mm</value></data>
+  <data name="schemas.microsoft.com/windows/2003/08/printing/printschemakeywords/ISOA6"><value>A6 105 x 148 mm</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_HLT"><value>Half Letter 5½ x 8½ pol.</value></data>
+  <data name="schemas.microsoft.com/windows/2003/08/printing/printschemakeywords/ISOA5"><value>A5</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Media_PMPHOTO_NORMAL"><value>Carta Fotografica Lucida Premium - Standard</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Media_GLOSSYCAST_NORMAL"><value>Epson Photo - Standard</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Media_PSGLOS_NORMAL"><value>Carta Fotografica Semilucida Premium - Standard</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Media_PMMATT_NORMAL"><value>Carta matte alto spessore - Standard</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Media_PLAIN_NORMAL"><value>carte comuni - Standard</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Media_ENV_NORMAL"><value>Busta - Standard</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Input_Standard"><value>Standard feed</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Dpi300x300"><value>300 x 300 DPI</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Dpi600x600"><value>600 x 600 DPI</value></data>
+</root>

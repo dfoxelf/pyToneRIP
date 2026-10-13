@@ -18,7 +18,9 @@ AppVersion={#PackageVersion}
 AppPublisher=pyToneRIP Open Source Project
 DefaultDirName={autopf}\pyToneRIP Setup
 DisableDirPage=yes
-DisableProgramGroupPage=yes
+DefaultGroupName=pyToneRIP
+DisableProgramGroupPage=no
+AllowNoIcons=yes
 PrivilegesRequired=lowest
 ArchitecturesAllowed=x64os
 ArchitecturesInstallIn64BitMode=x64os
@@ -93,6 +95,7 @@ de_DE.UninstallReportFailed=Das Protokollarchiv konnte nicht erstellt werden. Da
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
+Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
 Source: "{#ModuleSetDir}\catalog.json"; DestDir: "{app}\Payload"; Flags: ignoreversion
@@ -113,7 +116,10 @@ Source: "{#InstallerLicense}"; DestDir: "{app}"; DestName: "LICENSE.txt"; Flags:
 ; Keep MSIX's own Start registration. This optional desktop shortcut launches
 ; the packaged application by AUMID, never its versioned WindowsApps path.
 [Icons]
+Name: "{group}\pyToneRIP"; Filename: "{win}\explorer.exe"; Parameters: "shell:AppsFolder\pyToneRIP.Manager_qg4mjaqw0qctt!App"; IconFilename: "{app}\pyToneRIP.ico"
+Name: "{group}\{cm:UninstallProgram,pyToneRIP}"; Filename: "{uninstallexe}"; IconFilename: "{app}\pyToneRIP.ico"
 Name: "{autodesktop}\pyToneRIP"; Filename: "{win}\explorer.exe"; Parameters: "shell:AppsFolder\pyToneRIP.Manager_qg4mjaqw0qctt!App"; IconFilename: "{app}\pyToneRIP.ico"; Tasks: desktopicon
+Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\pyToneRIP"; Filename: "{win}\explorer.exe"; Parameters: "shell:AppsFolder\pyToneRIP.Manager_qg4mjaqw0qctt!App"; IconFilename: "{app}\pyToneRIP.ico"; Tasks: quicklaunchicon
 
 ; The checkbox appears on the final page after the MSIX install has succeeded.
 [Run]

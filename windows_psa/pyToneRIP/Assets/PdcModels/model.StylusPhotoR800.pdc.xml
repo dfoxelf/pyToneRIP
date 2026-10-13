@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<psf2:PrintDeviceCapabilities
+  xmlns:psf2="http://schemas.microsoft.com/windows/2013/12/printing/printschemaframework2"
+  xmlns:psf="http://schemas.microsoft.com/windows/2003/08/printing/printschemaframework"
+  xmlns:psk="http://schemas.microsoft.com/windows/2003/08/printing/printschemakeywords"
+  xmlns:psk12="http://schemas.microsoft.com/windows/2013/12/printing/printschemakeywordsv12"
+  xmlns:ptr="https://pytone-rip.local/printticket/2026/phase12"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <psk:JobCopiesAllDocuments psf2:psftype="ParameterDef" psf2:deviceProcessed="true">
+    <psf:DataType psf2:psftype="Property" xsi:type="xsd:QName">xsd:integer</psf:DataType>
+    <psf:DefaultValue psf2:psftype="Property" xsi:type="xsd:integer">1</psf:DefaultValue>
+    <psf:MaxValue psf2:psftype="Property" xsi:type="xsd:integer">99</psf:MaxValue>
+    <psf:MinValue psf2:psftype="Property" xsi:type="xsd:integer">1</psf:MinValue>
+    <psf:Multiple psf2:psftype="Property" xsi:type="xsd:integer">1</psf:Multiple>
+    <psf:Mandatory psf2:psftype="Property" xsi:type="xsd:QName">psk:Unconditional</psf:Mandatory>
+    <psf:UnitType psf2:psftype="Property" xsi:type="xsd:string">copies</psf:UnitType>
+  </psk:JobCopiesAllDocuments>
+  <psk:PageMediaSize psf2:psftype="Feature">
+    <psk:ISOA4 psf2:psftype="Option" psf2:default="true">
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,210000,297000</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">297000</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">210000</psk:MediaSizeWidth>
+    </psk:ISOA4>
+    <ptr:Page_2L psf2:psftype="Option">
+      <psk:DisplayName psf2:psftype="Property" xsi:type="xsd:string">5 x 7 in / 127 x 178 mm</psk:DisplayName>
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,127000,177941</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">177941</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">127000</psk:MediaSizeWidth>
+    </ptr:Page_2L>
+    <ptr:Page_4X6FULL psf2:psftype="Option">
+      <psk:DisplayName psf2:psftype="Property" xsi:type="xsd:string">10 x 15 cm (4 x 6 in)</psk:DisplayName>
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,101600,152400</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">152400</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">101600</psk:MediaSizeWidth>
+    </ptr:Page_4X6FULL>
+    <ptr:Page_4X7 psf2:psftype="Option">
+      <psk:DisplayName psf2:psftype="Property" xsi:type="xsd:string">16x9 wide size (102 x 181 mm)</psk:DisplayName>
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,101600,180622</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">180622</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">101600</psk:MediaSizeWidth>
+    </ptr:Page_4X7>
+    <psk:ISOA5 psf2:psftype="Option">
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,148000,210000</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">210000</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">148000</psk:MediaSizeWidth>
+    </psk:ISOA5>
+    <psk:ISOA6 psf2:psftype="Option">
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,105000,148000</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">148000</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">105000</psk:MediaSizeWidth>
+    </psk:ISOA6>
+    <ptr:Page_T2L psf2:psftype="Option">
+      <psk:DisplayName psf2:psftype="Property" xsi:type="xsd:string">5 x 7 in / 127 x 178 mm (Borderless)</psk:DisplayName>
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,127000,177941</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">177941</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">127000</psk:MediaSizeWidth>
+    </ptr:Page_T2L>
+    <ptr:Page_T4X6FULL psf2:psftype="Option">
+      <psk:DisplayName psf2:psftype="Property" xsi:type="xsd:string">10 x 15 cm (4 x 6 in) (Borderless)</psk:DisplayName>
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,101600,152400</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">152400</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">101600</psk:MediaSizeWidth>
+    </ptr:Page_T4X6FULL>
+    <ptr:Page_T4X7 psf2:psftype="Option">
+      <psk:DisplayName psf2:psftype="Property" xsi:type="xsd:string">16x9 wide size (102 x 181 mm) (Borderless)</psk:DisplayName>
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,101600,180622</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">180622</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">101600</psk:MediaSizeWidth>
+    </ptr:Page_T4X7>
+    <ptr:Page_TA4 psf2:psftype="Option">
+      <psk:DisplayName psf2:psftype="Property" xsi:type="xsd:string">A4 210 x 297 mm (Borderless)</psk:DisplayName>
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,209973,296968</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">296968</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">209973</psk:MediaSizeWidth>
+    </ptr:Page_TA4>
+  </psk:PageMediaSize>
+  <psk:PageBorderless psf2:psftype="Feature">
+    <psk:None psf2:psftype="Option" psf2:default="true" />
+    <psk:Borderless psf2:psftype="Option" />
+  </psk:PageBorderless>
+  <psk:PageMediaType psf2:psftype="Feature">
+    <ptr:Media_PLAIN_NORMAL psf2:psftype="Option" psf2:default="true" />
+  </psk:PageMediaType>
+  <psk:JobInputBin psf2:psftype="Feature">
+    <ptr:Input_Standard psf2:psftype="Option" psf2:default="true" />
+    <ptr:Input_Velvet psf2:psftype="Option" />
+    <ptr:Input_Matte psf2:psftype="Option" />
+    <ptr:Input_Roll psf2:psftype="Option" />
+    <ptr:Input_CD psf2:psftype="Option" />
+  </psk:JobInputBin>
+  <psk:PageOrientation psf2:psftype="Feature">
+    <psk:Portrait psf2:psftype="Option" psf2:default="true" />
+    <psk:Landscape psf2:psftype="Option" />
+  </psk:PageOrientation>
+  <psk:PageResolution psf2:psftype="Feature">
+    <ptr:Dpi300x300 psf2:psftype="Option">
+      <psk:ResolutionX psf2:psftype="ScoredProperty" xsi:type="xsd:integer">300</psk:ResolutionX>
+      <psk:ResolutionY psf2:psftype="ScoredProperty" xsi:type="xsd:integer">300</psk:ResolutionY>
+    </ptr:Dpi300x300>
+    <ptr:Dpi600x600 psf2:psftype="Option" psf2:default="true">
+      <psk:ResolutionX psf2:psftype="ScoredProperty" xsi:type="xsd:integer">600</psk:ResolutionX>
+      <psk:ResolutionY psf2:psftype="ScoredProperty" xsi:type="xsd:integer">600</psk:ResolutionY>
+    </ptr:Dpi600x600>
+  </psk:PageResolution>
+  <psk:PageOutputColor psf2:psftype="Feature">
+    <psk:Color psf2:psftype="Option" psf2:default="true">
+      <psk:DeviceBitsPerPixel psf2:psftype="ScoredProperty" xsi:type="xsd:integer">24</psk:DeviceBitsPerPixel>
+      <psk:DriverBitsPerPixel psf2:psftype="ScoredProperty" xsi:type="xsd:integer">24</psk:DriverBitsPerPixel>
+    </psk:Color>
+  </psk:PageOutputColor>
+</psf2:PrintDeviceCapabilities>

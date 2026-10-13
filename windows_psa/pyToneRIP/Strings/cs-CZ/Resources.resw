@@ -180,6 +180,7 @@
   <data name="Code.RasterEnginePreparationWasNotCompleted"><value>Příprava rastrového motoru nebyla dokončena</value></data>
   <data name="Code.Remove"><value>Odstranit</value></data>
   <data name="Code.RemovePrinter"><value>Odebrat tiskárnu?</value></data>
+  <data name="Code.RemovePrinterAfterJobsAreCancelled"><value>Tiskárna má aktivní nebo čekající tiskovou úlohu. Před odebráním tiskárny úlohu zrušte a počkejte na její dokončení.</value></data>
   <data name="Code.Removing"><value>Odebírání {0}...</value></data>
   <data name="Code.RenamePrinter"><value>Přejmenovat tiskárnu</value></data>
   <data name="Code.RuntimePreparationWillBeRetriedOnTheNextStart"><value>Příprava běhového prostředí bude zopakována při příštím spuštění: {0}</value></data>

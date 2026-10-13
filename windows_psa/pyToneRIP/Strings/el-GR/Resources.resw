@@ -180,6 +180,7 @@
   <data name="Code.RasterEnginePreparationWasNotCompleted"><value>Η προετοιμασία του κινητήρα ράστερ δεν ολοκληρώθηκε</value></data>
   <data name="Code.Remove"><value>Αφαιρώ</value></data>
   <data name="Code.RemovePrinter"><value>Κατάργηση εκτυπωτή;</value></data>
+  <data name="Code.RemovePrinterAfterJobsAreCancelled"><value>Ο εκτυπωτής έχει ενεργή ή εκκρεμή εργασία εκτύπωσης. Ακυρώστε την εργασία και περιμένετε να ολοκληρωθεί πριν καταργήσετε τον εκτυπωτή.</value></data>
   <data name="Code.Removing"><value>Κατάργηση {0}...</value></data>
   <data name="Code.RenamePrinter"><value>Μετονομασία εκτυπωτή</value></data>
   <data name="Code.RuntimePreparationWillBeRetriedOnTheNextStart"><value>Η προετοιμασία χρόνου εκτέλεσης θα δοκιμαστεί ξανά στην επόμενη έναρξη: {0}</value></data>

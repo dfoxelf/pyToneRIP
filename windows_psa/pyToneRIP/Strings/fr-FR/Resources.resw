@@ -180,6 +180,7 @@
   <data name="Code.RasterEnginePreparationWasNotCompleted"><value>La préparation du moteur raster n&#x27;est pas terminée</value></data>
   <data name="Code.Remove"><value>Retirer</value></data>
   <data name="Code.RemovePrinter"><value>Supprimer l&#x27;imprimante ?</value></data>
+  <data name="Code.RemovePrinterAfterJobsAreCancelled"><value>L’imprimante a un travail d’impression actif ou en attente. Annulez le travail et attendez sa fin avant de supprimer l’imprimante.</value></data>
   <data name="Code.Removing"><value>Suppression de {0}...</value></data>
   <data name="Code.RenamePrinter"><value>Renommer l&#x27;imprimante</value></data>
   <data name="Code.RuntimePreparationWillBeRetriedOnTheNextStart"><value>La préparation de l&#x27;environnement d&#x27;exécution sera réessayée au prochain démarrage : {0}</value></data>

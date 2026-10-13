@@ -97,6 +97,11 @@ namespace pyToneRIP.QueueHelper
                     response = QueueHelperResponse.Pass(new List<QueueDescriptor>());
                     response.UsbPrinters = UsbPrinterDiscovery.Discover();
                 }
+                else if (string.Equals(request.Operation, "read-usb-ink", StringComparison.OrdinalIgnoreCase))
+                {
+                    response = QueueHelperResponse.Pass(new List<QueueDescriptor>());
+                    response.UsbInkLevels = UsbPrinterStatusReader.ReadInk(request.UsbDeviceId);
+                }
                 else if (string.Equals(request.Operation, "repair-stale", StringComparison.OrdinalIgnoreCase))
                 {
                     response = QueueHelperResponse.Pass(PrinterApi.RepairStaleDuplicates());
@@ -1553,6 +1558,7 @@ namespace pyToneRIP.QueueHelper
         [DataMember(Name = "module_package_version", Order = 14)] public string ModulePackageVersion { get; set; }
         [DataMember(Name = "maintenance_json", Order = 15)] public string MaintenanceJson { get; set; }
         [DataMember(Name = "manager_log", Order = 16)] public string ManagerLog { get; set; }
+        [DataMember(Name = "usb_device_id", Order = 17)] public string UsbDeviceId { get; set; }
     }
 
     [DataContract]
@@ -1565,6 +1571,7 @@ namespace pyToneRIP.QueueHelper
         [DataMember(Name = "report_path", Order = 5, EmitDefaultValue = false)] public string ReportPath { get; set; }
         [DataMember(Name = "usb_printers", Order = 6, EmitDefaultValue = false)] public List<UsbPrinterDescriptor> UsbPrinters { get; set; }
         [DataMember(Name = "legacy_defaults", Order = 7, EmitDefaultValue = false)] public LegacyPrinterDefaults LegacyDefaults { get; set; }
+        [DataMember(Name = "usb_ink_levels", Order = 8, EmitDefaultValue = false)] public List<UsbInkLevel> UsbInkLevels { get; set; }
 
         public static QueueHelperResponse Pass(List<QueueDescriptor> queues) => new QueueHelperResponse
         {

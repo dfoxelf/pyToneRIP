@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_w612h792"><value>US-Letter</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_w612h1008"><value>US-Legal</value></data>
+  <data name="schemas.microsoft.com/windows/2003/08/printing/printschemakeywords/ISOA4"><value>A4</value></data>
+  <data name="schemas.microsoft.com/windows/2003/08/printing/printschemakeywords/ISOA5"><value>A5</value></data>
+  <data name="schemas.microsoft.com/windows/2003/08/printing/printschemakeywords/JISB5"><value>B5</value></data>
+  <data name="schemas.microsoft.com/windows/2003/08/printing/printschemakeywords/ISOA6"><value>A6</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_w360h576"><value>5x8"</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_w297h684"><value>Ovojnica #10</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_w312h624"><value>Ovojnica DL</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_w323h459"><value>Ovojnica C6</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_w288h432"><value>4x6"</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_w283h425"><value>10x15cm</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_w567h850"><value>20x30cm</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_w252h360"><value>9x13cm</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_w360h504"><value>5x7"</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_w576h720"><value>8x10"</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_w612h936"><value>8.5x13"</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_w288h512"><value>"4x7" 16</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_w626h814"><value>US-Letter Brez robov</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_w610h863"><value>A4 Brez robov</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_w302h454"><value>Brez robov 4x6"</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_w298h447"><value>Brez robov 10x15cm</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_w266h382"><value>Brez robov 9x13cm</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_w374h526"><value>Brez robov 5x7"</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_w590h742"><value>Brez robov 8x10"</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_w302h534"><value>"Brez robov 4x7" 16</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Media_Dye_Sub_Rigid"><value>Dye Sub Rigid</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Input_Standard"><value>Standard feed</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Dpi300x300"><value>300 x 300 DPI</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Dpi600x600"><value>600 x 600 DPI</value></data>
+</root>

@@ -180,6 +180,7 @@
   <data name="Code.RasterEnginePreparationWasNotCompleted"><value>Níor críochnaíodh ullmhúchán inneall Raster</value></data>
   <data name="Code.Remove"><value>Bain</value></data>
   <data name="Code.RemovePrinter"><value>An bhfuil fonn ort an printéir a bhaint?</value></data>
+  <data name="Code.RemovePrinterAfterJobsAreCancelled"><value>Tá post priontála gníomhach nó ar feitheamh ag an printéir. Cealaigh an post agus fan go gcríochnóidh sé sula mbainfidh tú an printéir.</value></data>
   <data name="Code.Removing"><value>{0} á bhaint…</value></data>
   <data name="Code.RenamePrinter"><value>Athainmnigh an printéir</value></data>
   <data name="Code.RuntimePreparationWillBeRetriedOnTheNextStart"><value>Bainfear an t-ullmhúchán don am rite arís ar an gcéad thús eile: {0}</value></data>

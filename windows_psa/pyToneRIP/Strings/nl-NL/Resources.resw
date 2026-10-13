@@ -180,6 +180,7 @@
   <data name="Code.RasterEnginePreparationWasNotCompleted"><value>De voorbereiding van de rastermotor is niet voltooid</value></data>
   <data name="Code.Remove"><value>Verwijderen</value></data>
   <data name="Code.RemovePrinter"><value>Printer verwijderen?</value></data>
+  <data name="Code.RemovePrinterAfterJobsAreCancelled"><value>De printer heeft een actieve of wachtende afdruktaak. Annuleer de taak en wacht tot deze is voltooid voordat u de printer verwijdert.</value></data>
   <data name="Code.Removing"><value>{0} verwijderen...</value></data>
   <data name="Code.RenamePrinter"><value>Naam van printer wijzigen</value></data>
   <data name="Code.RuntimePreparationWillBeRetriedOnTheNextStart"><value>Runtime-voorbereiding wordt opnieuw geprobeerd bij de volgende start: {0}</value></data>

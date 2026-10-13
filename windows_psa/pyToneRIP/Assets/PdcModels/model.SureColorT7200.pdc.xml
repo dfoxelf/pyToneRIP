@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<psf2:PrintDeviceCapabilities
+  xmlns:psf2="http://schemas.microsoft.com/windows/2013/12/printing/printschemaframework2"
+  xmlns:psf="http://schemas.microsoft.com/windows/2003/08/printing/printschemaframework"
+  xmlns:psk="http://schemas.microsoft.com/windows/2003/08/printing/printschemakeywords"
+  xmlns:psk12="http://schemas.microsoft.com/windows/2013/12/printing/printschemakeywordsv12"
+  xmlns:ptr="https://pytone-rip.local/printticket/2026/phase12"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <psk:JobCopiesAllDocuments psf2:psftype="ParameterDef" psf2:deviceProcessed="true">
+    <psf:DataType psf2:psftype="Property" xsi:type="xsd:QName">xsd:integer</psf:DataType>
+    <psf:DefaultValue psf2:psftype="Property" xsi:type="xsd:integer">1</psf:DefaultValue>
+    <psf:MaxValue psf2:psftype="Property" xsi:type="xsd:integer">99</psf:MaxValue>
+    <psf:MinValue psf2:psftype="Property" xsi:type="xsd:integer">1</psf:MinValue>
+    <psf:Multiple psf2:psftype="Property" xsi:type="xsd:integer">1</psf:Multiple>
+    <psf:Mandatory psf2:psftype="Property" xsi:type="xsd:QName">psk:Unconditional</psf:Mandatory>
+    <psf:UnitType psf2:psftype="Property" xsi:type="xsd:string">copies</psf:UnitType>
+  </psk:JobCopiesAllDocuments>
+  <psk:PageMediaSize psf2:psftype="Feature">
+    <psk:ISOA4 psf2:psftype="Option" psf2:default="true">
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,210000,297000</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">297000</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">210000</psk:MediaSizeWidth>
+    </psk:ISOA4>
+    <psk:ISOA3 psf2:psftype="Option">
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,297000,420000</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">420000</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">297000</psk:MediaSizeWidth>
+    </psk:ISOA3>
+    <ptr:Page_w1039h1457 psf2:psftype="Option">
+      <psk:DisplayName psf2:psftype="Property" xsi:type="xsd:string">B3</psk:DisplayName>
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,366536,513644</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">513644</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">366536</psk:MediaSizeWidth>
+    </ptr:Page_w1039h1457>
+    <ptr:Page_w1134h1701 psf2:psftype="Option">
+      <psk:DisplayName psf2:psftype="Property" xsi:type="xsd:string">40x60cm</psk:DisplayName>
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,399697,599722</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">599722</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">399697</psk:MediaSizeWidth>
+    </ptr:Page_w1134h1701>
+    <ptr:Page_w1148h1722 psf2:psftype="Option">
+      <psk:DisplayName psf2:psftype="Property" xsi:type="xsd:string">40x60cm borderless</psk:DisplayName>
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,404989,607483</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">607483</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">404989</psk:MediaSizeWidth>
+    </ptr:Page_w1148h1722>
+    <ptr:Page_w1152h1440 psf2:psftype="Option">
+      <psk:DisplayName psf2:psftype="Property" xsi:type="xsd:string">16x20"</psk:DisplayName>
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,406400,508000</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">508000</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">406400</psk:MediaSizeWidth>
+    </ptr:Page_w1152h1440>
+    <ptr:Page_w1166h1462 psf2:psftype="Option">
+      <psk:DisplayName psf2:psftype="Property" xsi:type="xsd:string">16x20" borderless</psk:DisplayName>
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,411339,515408</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">515408</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">411339</psk:MediaSizeWidth>
+    </ptr:Page_w1166h1462>
+    <ptr:Page_w1191h1684 psf2:psftype="Option">
+      <psk:DisplayName psf2:psftype="Property" xsi:type="xsd:string">A2</psk:DisplayName>
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,419806,593725</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">593725</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">419806</psk:MediaSizeWidth>
+    </ptr:Page_w1191h1684>
+    <ptr:Page_w1224h1584 psf2:psftype="Option">
+      <psk:DisplayName psf2:psftype="Property" xsi:type="xsd:string">US C</psk:DisplayName>
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,431800,558800</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">558800</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">431800</psk:MediaSizeWidth>
+    </ptr:Page_w1224h1584>
+    <ptr:Page_w1238h1606 psf2:psftype="Option">
+      <psk:DisplayName psf2:psftype="Property" xsi:type="xsd:string">US C borderless</psk:DisplayName>
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,436739,566208</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">566208</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">436739</psk:MediaSizeWidth>
+    </ptr:Page_w1238h1606>
+    <ptr:Page_w1460h2064 psf2:psftype="Option">
+      <psk:DisplayName psf2:psftype="Property" xsi:type="xsd:string">B2</psk:DisplayName>
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,514703,727781</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">727781</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">514703</psk:MediaSizeWidth>
+    </ptr:Page_w1460h2064>
+    <ptr:Page_w1474h2085 psf2:psftype="Option">
+      <psk:DisplayName psf2:psftype="Property" xsi:type="xsd:string">B2 borderless</psk:DisplayName>
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,519994,735542</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">735542</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">519994</psk:MediaSizeWidth>
+    </ptr:Page_w1474h2085>
+    <ptr:Page_w1584h2448 psf2:psftype="Option">
+      <psk:DisplayName psf2:psftype="Property" xsi:type="xsd:string">US D</psk:DisplayName>
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,558800,863600</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">863600</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">558800</psk:MediaSizeWidth>
+    </ptr:Page_w1584h2448>
+    <ptr:Page_w1684h2384 psf2:psftype="Option">
+      <psk:DisplayName psf2:psftype="Property" xsi:type="xsd:string">A1</psk:DisplayName>
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,593725,840669</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">840669</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">593725</psk:MediaSizeWidth>
+    </ptr:Page_w1684h2384>
+    <ptr:Page_w1698h2406 psf2:psftype="Option">
+      <psk:DisplayName psf2:psftype="Property" xsi:type="xsd:string">A1 borderless</psk:DisplayName>
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,599017,848431</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">848431</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">599017</psk:MediaSizeWidth>
+    </ptr:Page_w1698h2406>
+    <ptr:Page_w1728h2592 psf2:psftype="Option">
+      <psk:DisplayName psf2:psftype="Property" xsi:type="xsd:string">Super A1</psk:DisplayName>
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,609600,914400</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">914400</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">609600</psk:MediaSizeWidth>
+    </ptr:Page_w1728h2592>
+    <ptr:Page_w1742h2614 psf2:psftype="Option">
+      <psk:DisplayName psf2:psftype="Property" xsi:type="xsd:string">Super A1 borderless</psk:DisplayName>
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,614539,921808</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">921808</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">614539</psk:MediaSizeWidth>
+    </ptr:Page_w1742h2614>
+    <ptr:Page_w2064h2920 psf2:psftype="Option">
+      <psk:DisplayName psf2:psftype="Property" xsi:type="xsd:string">B1</psk:DisplayName>
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,727781,1029758</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">1029758</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">727781</psk:MediaSizeWidth>
+    </ptr:Page_w2064h2920>
+    <ptr:Page_w2384h3370 psf2:psftype="Option">
+      <psk:DisplayName psf2:psftype="Property" xsi:type="xsd:string">A0</psk:DisplayName>
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,840669,1188861</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">1188861</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">840669</psk:MediaSizeWidth>
+    </ptr:Page_w2384h3370>
+    <ptr:Page_w2448h3168 psf2:psftype="Option">
+      <psk:DisplayName psf2:psftype="Property" xsi:type="xsd:string">US E</psk:DisplayName>
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,863600,1117600</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">1117600</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">863600</psk:MediaSizeWidth>
+    </ptr:Page_w2448h3168>
+    <ptr:Page_w2591h3662 psf2:psftype="Option">
+      <psk:DisplayName psf2:psftype="Property" xsi:type="xsd:string">Super A0</psk:DisplayName>
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,913694,1291872</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">1291872</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">913694</psk:MediaSizeWidth>
+    </ptr:Page_w2591h3662>
+    <ptr:Page_w2920h4127 psf2:psftype="Option">
+      <psk:DisplayName psf2:psftype="Property" xsi:type="xsd:string">B0</psk:DisplayName>
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,1029758,1455914</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">1455914</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">1029758</psk:MediaSizeWidth>
+    </ptr:Page_w2920h4127>
+    <ptr:Page_w3168h2592 psf2:psftype="Option">
+      <psk:DisplayName psf2:psftype="Property" xsi:type="xsd:string">44x36"</psk:DisplayName>
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,1117600,914400</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">914400</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">1117600</psk:MediaSizeWidth>
+    </ptr:Page_w3168h2592>
+    <ptr:Page_w3169h4479 psf2:psftype="Option">
+      <psk:DisplayName psf2:psftype="Property" xsi:type="xsd:string">Super B0</psk:DisplayName>
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,1117953,1579739</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">1579739</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">1117953</psk:MediaSizeWidth>
+    </ptr:Page_w3169h4479>
+    <ptr:Page_w576h720 psf2:psftype="Option">
+      <psk:DisplayName psf2:psftype="Property" xsi:type="xsd:string">8x10"</psk:DisplayName>
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,203200,254000</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">254000</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">203200</psk:MediaSizeWidth>
+    </ptr:Page_w576h720>
+    <ptr:Page_w612h1008 psf2:psftype="Option">
+      <psk:DisplayName psf2:psftype="Property" xsi:type="xsd:string">US-Legal</psk:DisplayName>
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,215900,355600</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">355600</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">215900</psk:MediaSizeWidth>
+    </ptr:Page_w612h1008>
+    <ptr:Page_w612h792 psf2:psftype="Option">
+      <psk:DisplayName psf2:psftype="Property" xsi:type="xsd:string">US-Letter</psk:DisplayName>
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,215900,279400</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">279400</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">215900</psk:MediaSizeWidth>
+    </ptr:Page_w612h792>
+    <ptr:Page_w728h1032 psf2:psftype="Option">
+      <psk:DisplayName psf2:psftype="Property" xsi:type="xsd:string">B4</psk:DisplayName>
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,256822,363714</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">363714</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">256822</psk:MediaSizeWidth>
+    </ptr:Page_w728h1032>
+    <ptr:Page_w792h1008 psf2:psftype="Option">
+      <psk:DisplayName psf2:psftype="Property" xsi:type="xsd:string">11x14"</psk:DisplayName>
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,279400,355600</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">355600</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">279400</psk:MediaSizeWidth>
+    </ptr:Page_w792h1008>
+    <ptr:Page_w792h1224 psf2:psftype="Option">
+      <psk:DisplayName psf2:psftype="Property" xsi:type="xsd:string">US B</psk:DisplayName>
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,279400,431800</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">431800</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">279400</psk:MediaSizeWidth>
+    </ptr:Page_w792h1224>
+    <ptr:Page_w850h1134 psf2:psftype="Option">
+      <psk:DisplayName psf2:psftype="Property" xsi:type="xsd:string">30x40cm</psk:DisplayName>
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,299861,399697</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">399697</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">299861</psk:MediaSizeWidth>
+    </ptr:Page_w850h1134>
+    <ptr:Page_w865h1155 psf2:psftype="Option">
+      <psk:DisplayName psf2:psftype="Property" xsi:type="xsd:string">30x40cm borderless</psk:DisplayName>
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,304800,407458</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">407458</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">304800</psk:MediaSizeWidth>
+    </ptr:Page_w865h1155>
+    <ptr:Page_w936h1368 psf2:psftype="Option">
+      <psk:DisplayName psf2:psftype="Property" xsi:type="xsd:string">A3+ / US B+</psk:DisplayName>
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,330200,482600</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">482600</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">330200</psk:MediaSizeWidth>
+    </ptr:Page_w936h1368>
+    <ptr:Page_w950h1390 psf2:psftype="Option">
+      <psk:DisplayName psf2:psftype="Property" xsi:type="xsd:string">A3+ / US B+ borderless</psk:DisplayName>
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,335139,490008</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">490008</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">335139</psk:MediaSizeWidth>
+    </ptr:Page_w950h1390>
+  </psk:PageMediaSize>
+  <psk:PageBorderless psf2:psftype="Feature">
+    <psk:None psf2:psftype="Option" psf2:default="true" />
+    <psk:Borderless psf2:psftype="Option" />
+  </psk:PageBorderless>
+  <psk:PageMediaType psf2:psftype="Feature">
+    <ptr:Media_Plain_paper psf2:psftype="Option" psf2:default="true" />
+    <ptr:Media_Single_Weight_Matte psf2:psftype="Option" />
+    <ptr:Media_Double_Weight_Matte psf2:psftype="Option" />
+    <ptr:Media_Enhanced_Matte psf2:psftype="Option" />
+    <ptr:Media_Archival_Matte psf2:psftype="Option" />
+    <ptr:Media_Photo_Quality_Inkjet psf2:psftype="Option" />
+    <ptr:Media_Coated_Generic psf2:psftype="Option" />
+    <ptr:Media_Premium_Glossy_170 psf2:psftype="Option" />
+    <ptr:Media_Premium_Semigloss_170 psf2:psftype="Option" />
+    <ptr:Media_Premium_Glossy psf2:psftype="Option" />
+    <ptr:Media_Premium_Semigloss psf2:psftype="Option" />
+    <ptr:Media_Premium_Luster psf2:psftype="Option" />
+    <ptr:Media_Photo_Paper_Glossy psf2:psftype="Option" />
+    <ptr:Media_Photo_Paper_Generic psf2:psftype="Option" />
+    <ptr:Media_Transparent_Paper psf2:psftype="Option" />
+    <ptr:Media_Transparent_Paper_Light psf2:psftype="Option" />
+    <ptr:Media_Matte_Film psf2:psftype="Option" />
+    <ptr:Media_Enhanced_Adhesive_Synthetic psf2:psftype="Option" />
+    <ptr:Media_Enhanced_Low_Adhesive_Synthetic psf2:psftype="Option" />
+    <ptr:Media_Heavy_Weight_Polyester_Banner psf2:psftype="Option" />
+  </psk:PageMediaType>
+  <psk:JobInputBin psf2:psftype="Feature">
+    <ptr:Input_Rear_Feed psf2:psftype="Option" psf2:default="true" />
+    <ptr:Input_Front_Board psf2:psftype="Option" />
+    <ptr:Input_Roll_Paper_no_cut psf2:psftype="Option" />
+    <ptr:Input_Roll_Paper_cut psf2:psftype="Option" />
+    <ptr:Input_Roll_1_no_cut psf2:psftype="Option" />
+    <ptr:Input_Roll_1_cut psf2:psftype="Option" />
+    <ptr:Input_Roll_2_no_cut psf2:psftype="Option" />
+    <ptr:Input_Roll_2_cut psf2:psftype="Option" />
+  </psk:JobInputBin>
+  <psk:PageOrientation psf2:psftype="Feature">
+    <psk:Portrait psf2:psftype="Option" psf2:default="true" />
+    <psk:Landscape psf2:psftype="Option" />
+  </psk:PageOrientation>
+  <psk:PageResolution psf2:psftype="Feature">
+    <ptr:Dpi300x300 psf2:psftype="Option">
+      <psk:ResolutionX psf2:psftype="ScoredProperty" xsi:type="xsd:integer">300</psk:ResolutionX>
+      <psk:ResolutionY psf2:psftype="ScoredProperty" xsi:type="xsd:integer">300</psk:ResolutionY>
+    </ptr:Dpi300x300>
+    <ptr:Dpi600x600 psf2:psftype="Option" psf2:default="true">
+      <psk:ResolutionX psf2:psftype="ScoredProperty" xsi:type="xsd:integer">600</psk:ResolutionX>
+      <psk:ResolutionY psf2:psftype="ScoredProperty" xsi:type="xsd:integer">600</psk:ResolutionY>
+    </ptr:Dpi600x600>
+  </psk:PageResolution>
+  <psk:PageOutputColor psf2:psftype="Feature">
+    <psk:Color psf2:psftype="Option" psf2:default="true">
+      <psk:DeviceBitsPerPixel psf2:psftype="ScoredProperty" xsi:type="xsd:integer">24</psk:DeviceBitsPerPixel>
+      <psk:DriverBitsPerPixel psf2:psftype="ScoredProperty" xsi:type="xsd:integer">24</psk:DriverBitsPerPixel>
+    </psk:Color>
+  </psk:PageOutputColor>
+</psf2:PrintDeviceCapabilities>

@@ -180,6 +180,7 @@
   <data name="Code.RasterEnginePreparationWasNotCompleted"><value>Rastermotorforberedelse blev ikke afsluttet</value></data>
   <data name="Code.Remove"><value>Fjerne</value></data>
   <data name="Code.RemovePrinter"><value>Vil du fjerne printeren?</value></data>
+  <data name="Code.RemovePrinterAfterJobsAreCancelled"><value>Printeren har et aktivt eller ventende udskriftsjob. Annuller jobbet, og vent på, at det afsluttes, før du fjerner printeren.</value></data>
   <data name="Code.Removing"><value>Fjerner {0}...</value></data>
   <data name="Code.RenamePrinter"><value>Omdøb printeren</value></data>
   <data name="Code.RuntimePreparationWillBeRetriedOnTheNextStart"><value>Kørselsforberedelse vil blive prøvet igen ved næste start: {0}</value></data>

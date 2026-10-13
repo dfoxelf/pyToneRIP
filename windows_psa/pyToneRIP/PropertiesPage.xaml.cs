@@ -135,7 +135,7 @@ namespace pyToneRIP
             {
                 printerUri = instance.PrinterUri;
                 printerName = instance.QueueName;
-                if (navigation?.OpenConnection == true || !instance.Configured)
+                if (navigation?.OpenConnection == true)
                     PreferencesPivot.SelectedItem = ConnectionPivot;
             }
         }
@@ -1154,6 +1154,7 @@ namespace pyToneRIP
         {
             UpdateCurvePathToolTip(sender as TextBox);
             if (!updatingCurves && blendSliders != null) UpdateCurveActivity();
+            UpdateRequiredFieldStates();
         }
 
         private static void UpdateCurvePathToolTip(TextBox box)
@@ -1214,6 +1215,43 @@ namespace pyToneRIP
                     blendValues[group][index].Opacity = index < active ? 1 : 0.35;
                 }
             }
+            UpdateRequiredFieldStates();
+        }
+
+        private void UpdateRequiredFieldStates()
+        {
+            var calibrationEnabled = CalibrationEnabledBox?.IsChecked == true;
+            SetRequiredFieldState(
+                Curve1Box,
+                !calibrationEnabled && string.IsNullOrWhiteSpace(Curve1Box?.Text));
+
+            var useUsb = UsbRadio?.IsChecked == true;
+            if (useUsb)
+            {
+                SetRequiredFieldState(HostBox, false);
+                SetRequiredFieldState(UsbDeviceBox, UsbDeviceBox?.SelectedItem == null);
+                return;
+            }
+
+            SetRequiredFieldState(UsbDeviceBox, false);
+            SetRequiredFieldState(
+                HostBox,
+                !PrinterInstanceStore.TryNormalizeIpv4(HostBox?.Text, out _));
+        }
+
+        private static void SetRequiredFieldState(Control control, bool isMissing)
+        {
+            if (control == null) return;
+            if (isMissing)
+            {
+                control.Background = (Brush)Application.Current.Resources["RequiredFieldBackgroundBrush"];
+                control.BorderBrush = (Brush)Application.Current.Resources["RequiredFieldBorderBrush"];
+                control.BorderThickness = new Thickness(2);
+                return;
+            }
+            control.ClearValue(Control.BackgroundProperty);
+            control.ClearValue(Control.BorderBrushProperty);
+            control.ClearValue(Control.BorderThicknessProperty);
         }
 
         private int[] GetBlendGroup(int group) => blendSliders[group]
@@ -1357,11 +1395,12 @@ namespace pyToneRIP
                 PortBox.IsEnabled = enabled;
                 TestConnectionButton.IsEnabled = enabled;
                 if (ReadStatusButton != null)
-                    ReadStatusButton.IsEnabled = enabled;
+                    ReadStatusButton.IsEnabled = enabled || UsbRadio.IsChecked == true;
                 NetworkPanel.Opacity = enabled ? 1 : 0.45;
                 if (UsbPanel != null) UsbPanel.Visibility = enabled ? Visibility.Collapsed : Visibility.Visible;
                 if (!enabled && connectionReady) _ = RefreshUsbDevicesAsync();
             }
+            UpdateRequiredFieldStates();
         }
 
         private async void RefreshUsb(object sender, RoutedEventArgs args) => await RefreshUsbDevicesAsync();
@@ -1418,6 +1457,7 @@ namespace pyToneRIP
 #endif
             var selected = UsbDeviceBox.SelectedItem as UsbPrinterDescriptor;
             UsbStatusText.Text = selected == null ? LocalizationService.Get("Usb.SelectMatchingDevice") : selected.ToString();
+            UpdateRequiredFieldStates();
         }
 
         private async System.Threading.Tasks.Task ValidateUsbDestinationAsync(ConnectionSelection connection)
@@ -1489,19 +1529,19 @@ namespace pyToneRIP
             TestConnectionButton.Content = state == PrinterNetworkState.Unknown
                 ? LocalizationService.Get("Code.Test")
                 : LocalizationService.Get("Choice." + state);
+            TestConnectionButton.ClearValue(Button.BackgroundProperty);
             switch (state)
             {
                 case PrinterNetworkState.Online:
-                    TestConnectionButton.Background = new SolidColorBrush(Color.FromArgb(255, 198, 239, 206));
-                    TestConnectionButton.Foreground = new SolidColorBrush(Color.FromArgb(255, 0, 97, 0));
+                    TestConnectionButton.ClearValue(Button.ForegroundProperty);
                     break;
                 case PrinterNetworkState.Offline:
-                    TestConnectionButton.Background = new SolidColorBrush(Color.FromArgb(255, 255, 199, 206));
-                    TestConnectionButton.Foreground = new SolidColorBrush(Color.FromArgb(255, 156, 0, 6));
+                    TestConnectionButton.Foreground = (Brush)Application.Current.Resources[
+                        "SystemThemeErrorBrush"];
                     break;
                 case PrinterNetworkState.Checking:
-                    TestConnectionButton.Background = new SolidColorBrush(Color.FromArgb(255, 255, 235, 156));
-                    TestConnectionButton.Foreground = new SolidColorBrush(Colors.Black);
+                    TestConnectionButton.Foreground = (Brush)Application.Current.Resources[
+                        "SystemThemeAccentBrush"];
                     break;
                 default:
                     TestConnectionButton.ClearValue(Button.BackgroundProperty);
@@ -1519,7 +1559,7 @@ namespace pyToneRIP
         {
             if (UsbRadio.IsChecked == true)
             {
-                await RefreshUsbDevicesAsync();
+                await RefreshUsbStatusAsync();
                 return;
             }
             if (connectionRefreshRunning || NetworkRadio.IsChecked != true) return;
@@ -1564,35 +1604,74 @@ namespace pyToneRIP
             finally
             {
                 connectionRefreshRunning = false;
-                ReadStatusButton.IsEnabled = NetworkRadio.IsChecked == true;
+                ReadStatusButton.IsEnabled = NetworkRadio.IsChecked == true || UsbRadio.IsChecked == true;
+            }
+        }
+
+        private async System.Threading.Tasks.Task RefreshUsbStatusAsync()
+        {
+            if (connectionRefreshRunning) return;
+            var device = UsbDeviceBox.SelectedItem as UsbPrinterDescriptor;
+            if (device == null || string.IsNullOrWhiteSpace(device.DeviceInstanceId))
+            {
+                SetConnectionTestResult(PrinterNetworkState.Unknown);
+                RenderInkLevels(new List<PrinterInkLevel>());
+                ValidationSummary.Text = LocalizationService.Get("Usb.SelectMatchingDevice");
+                return;
+            }
+            connectionRefreshRunning = true;
+            ReadStatusButton.IsEnabled = false;
+            SetConnectionTestResult(PrinterNetworkState.Checking);
+            try
+            {
+                var activities = await JobProgressReader.ReadActiveJobActivitiesAsync();
+                if (activities.Any(activity => activity.State != "Queued" && string.Equals(
+                    activity.QueueName, printerName, StringComparison.OrdinalIgnoreCase)))
+                {
+                    SetConnectionTestResult(PrinterNetworkState.Printing);
+                    return;
+                }
+                RenderInkLevels(new List<PrinterInkLevel>());
+                var usbInks = await QueueHelperClient.ReadUsbInkAsync(device.DeviceInstanceId);
+                var inks = usbInks.Select(ink => new PrinterInkLevel
+                {
+                    Name = ink.Name,
+                    Percent = ink.Percent,
+                }).ToList();
+                SetConnectionTestResult(PrinterNetworkState.Online);
+                RenderInkLevels(inks);
+            }
+            catch (Exception error)
+            {
+                ManagerLogger.WriteException("Reading USB printer status and ink", error);
+                SetConnectionTestResult(PrinterNetworkState.Unknown);
+                RenderInkLevels(new List<PrinterInkLevel>());
+            }
+            finally
+            {
+                connectionRefreshRunning = false;
+                ReadStatusButton.IsEnabled = NetworkRadio.IsChecked == true || UsbRadio.IsChecked == true;
             }
         }
 
         private void SetConnectionTestResult(PrinterNetworkState state)
         {
             ConnectionStatusText.Text = LocalizationService.Get("Choice." + state);
-            var darkTheme = Application.Current.RequestedTheme == ApplicationTheme.Dark;
             switch (state)
             {
                 case PrinterNetworkState.Online:
-                    ConnectionStatusText.Foreground = new SolidColorBrush(darkTheme
-                        ? Color.FromArgb(255, 126, 231, 135) : Colors.ForestGreen);
-                    break;
                 case PrinterNetworkState.Printing:
-                    ConnectionStatusText.Foreground = new SolidColorBrush(darkTheme
-                        ? Color.FromArgb(255, 121, 192, 255) : Colors.DarkBlue);
+                case PrinterNetworkState.Checking:
+                    ConnectionStatusText.Foreground = (Brush)Application.Current.Resources[
+                        "SystemThemeAccentBrush"];
                     break;
                 case PrinterNetworkState.Offline:
-                    ConnectionStatusText.Foreground = new SolidColorBrush(darkTheme
-                        ? Color.FromArgb(255, 255, 123, 114) : Colors.Firebrick);
-                    break;
-                case PrinterNetworkState.Checking:
-                    ConnectionStatusText.Foreground = new SolidColorBrush(darkTheme
-                        ? Color.FromArgb(255, 255, 166, 87) : Colors.DarkOrange);
+                    ConnectionStatusText.Foreground = (Brush)Application.Current.Resources[
+                        "SystemThemeErrorBrush"];
                     break;
                 default:
-                    ConnectionStatusText.Foreground = new SolidColorBrush(darkTheme
-                        ? Color.FromArgb(255, 201, 209, 217) : Colors.Gray);
+                    ConnectionStatusText.Foreground = (Brush)Application.Current.Resources[
+                        "SystemThemeSecondaryBrush"];
                     break;
             }
         }
@@ -1778,6 +1857,12 @@ namespace pyToneRIP
             args.Cancel = args.NewText.Any(character =>
                 !char.IsDigit(character) && character != '.');
 
+        private void NetworkHostChanged(object sender, TextChangedEventArgs args)
+        {
+            UpdateRequiredFieldStates();
+            SetPortTestResult(PrinterNetworkState.Unknown);
+        }
+
         private void SizingChanged(object sender, SelectionChangedEventArgs args)
         {
             if (ScaleBox == null) return;
@@ -1820,6 +1905,7 @@ namespace pyToneRIP
             if (CalibrationPanel != null) CalibrationPanel.Visibility = enabled ? Visibility.Visible : Visibility.Collapsed;
             if (LayoutSection != null) LayoutSection.Visibility = enabled ? Visibility.Collapsed : Visibility.Visible;
             if (ToneCurvesSection != null) ToneCurvesSection.Visibility = enabled ? Visibility.Collapsed : Visibility.Visible;
+            UpdateRequiredFieldStates();
             // RAW bypasses profile curves and blending. Gamma, normal ink
             // limit and dither remain active with their saved values.
         }

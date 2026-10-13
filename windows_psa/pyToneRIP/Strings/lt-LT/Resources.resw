@@ -180,6 +180,7 @@
   <data name="Code.RasterEnginePreparationWasNotCompleted"><value>Rastrinio variklio paruošimas nebuvo baigtas</value></data>
   <data name="Code.Remove"><value>Pašalinti</value></data>
   <data name="Code.RemovePrinter"><value>Pašalinti spausdintuvą?</value></data>
+  <data name="Code.RemovePrinterAfterJobsAreCancelled"><value>Spausdintuvas turi aktyvią arba laukiančią spausdinimo užduotį. Atšaukite užduotį ir palaukite, kol ji bus baigta, prieš pašalindami spausdintuvą.</value></data>
   <data name="Code.Removing"><value>Pašalinama {0}...</value></data>
   <data name="Code.RenamePrinter"><value>Pervardykite spausdintuvą</value></data>
   <data name="Code.RuntimePreparationWillBeRetriedOnTheNextStart"><value>Pasiruošimas vykdymo laikui bus bandomas iš naujo kitą pradžią: {0}</value></data>

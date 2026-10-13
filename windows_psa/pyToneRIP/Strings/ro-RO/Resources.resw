@@ -180,6 +180,7 @@
   <data name="Code.RasterEnginePreparationWasNotCompleted"><value>Pregătirea motorului raster nu a fost finalizată</value></data>
   <data name="Code.Remove"><value>Elimina</value></data>
   <data name="Code.RemovePrinter"><value>Eliminați imprimanta?</value></data>
+  <data name="Code.RemovePrinterAfterJobsAreCancelled"><value>Imprimanta are o activitate de imprimare activă sau în așteptare. Anulați activitatea și așteptați finalizarea ei înainte de a elimina imprimanta.</value></data>
   <data name="Code.Removing"><value>Se elimină {0}...</value></data>
   <data name="Code.RenamePrinter"><value>Redenumiți imprimanta</value></data>
   <data name="Code.RuntimePreparationWillBeRetriedOnTheNextStart"><value>Pregătirea timpului de execuție va fi reîncercată la următoarea pornire: {0}</value></data>

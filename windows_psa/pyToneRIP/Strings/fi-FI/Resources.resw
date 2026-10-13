@@ -180,6 +180,7 @@
   <data name="Code.RasterEnginePreparationWasNotCompleted"><value>Rasterimoottorin valmistelua ei saatu päätökseen</value></data>
   <data name="Code.Remove"><value>Poistaa</value></data>
   <data name="Code.RemovePrinter"><value>Poistetaanko tulostin?</value></data>
+  <data name="Code.RemovePrinterAfterJobsAreCancelled"><value>Tulostimella on aktiivinen tai odottava tulostustyö. Peruuta työ ja odota sen valmistumista ennen tulostimen poistamista.</value></data>
   <data name="Code.Removing"><value>Poistetaan {0}...</value></data>
   <data name="Code.RenamePrinter"><value>Nimeä tulostin uudelleen</value></data>
   <data name="Code.RuntimePreparationWillBeRetriedOnTheNextStart"><value>Suorituksenaikainen valmistautuminen yritetään uudelleen seuraavan käynnistyksen yhteydessä: {0}</value></data>

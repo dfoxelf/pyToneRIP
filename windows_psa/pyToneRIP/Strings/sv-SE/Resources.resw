@@ -180,6 +180,7 @@
   <data name="Code.RasterEnginePreparationWasNotCompleted"><value>Rastermotorförberedelserna slutfördes inte</value></data>
   <data name="Code.Remove"><value>Ta bort</value></data>
   <data name="Code.RemovePrinter"><value>Ta bort skrivaren?</value></data>
+  <data name="Code.RemovePrinterAfterJobsAreCancelled"><value>Skrivaren har ett aktivt eller väntande utskriftsjobb. Avbryt jobbet och vänta tills det är klart innan du tar bort skrivaren.</value></data>
   <data name="Code.Removing"><value>Tar bort {0}...</value></data>
   <data name="Code.RenamePrinter"><value>Byt namn på skrivaren</value></data>
   <data name="Code.RuntimePreparationWillBeRetriedOnTheNextStart"><value>Körningsförberedelser kommer att göras om vid nästa start: {0}</value></data>

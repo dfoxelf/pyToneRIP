@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_4X6FULL"><value>10 x 15 cm (4 x 6 pulg)</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_T4X6FULL"><value>10 x 15 cm (4 x 6 pulg) (Sin márgenes)</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_2L"><value>13 x 18 cm (5 x 7 pulg)</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_T2L"><value>13 x 18 cm (5 x 7 pulg) (Sin márgenes)</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_8x10"><value>20 x 25 cm (8 x 10 pulg)</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_4X7"><value>16x9 wide size (102 x 181 mm)</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_T4X7"><value>16x9 wide size (102 x 181 mm) (Sin márgenes)</value></data>
+  <data name="schemas.microsoft.com/windows/2003/08/printing/printschemakeywords/NorthAmericaLetter"><value>Carta 8½ x 11 pulg</value></data>
+  <data name="schemas.microsoft.com/windows/2003/08/printing/printschemakeywords/ISOA4"><value>A4 297 x 210 mm</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_TA4"><value>A4 297 x 210 mm (Sin márgenes)</value></data>
+  <data name="schemas.microsoft.com/windows/2003/08/printing/printschemakeywords/NorthAmericaLegal"><value>Legal 8½ x 14 pulg</value></data>
+  <data name="schemas.microsoft.com/windows/2003/08/printing/printschemakeywords/ISOA6"><value>A6 105 x 148 mm</value></data>
+  <data name="schemas.microsoft.com/windows/2003/08/printing/printschemakeywords/ISOA5"><value>A5 148 x 210 mm</value></data>
+  <data name="schemas.microsoft.com/windows/2003/08/printing/printschemakeywords/JapanHagakiPostcard"><value>100 x 148 mm</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_TPostcard"><value>100 x 148 mm (Sin márgenes)</value></data>
+  <data name="schemas.microsoft.com/windows/2003/08/printing/printschemakeywords/ISOC6Envelope"><value>Sobre C6  114 x 162 mm</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_EnvDL"><value>Sobre DL  110 x 220 mm</value></data>
+  <data name="schemas.microsoft.com/windows/2003/08/printing/printschemakeywords/NorthAmericaNumber10Envelope"><value>Sobre #10 4 1/8 x 9½ pulg</value></data>
+  <data name="schemas.microsoft.com/windows/2003/08/printing/printschemakeywords/JISB5"><value>B5 182 x 257 mm</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_INDEX5"><value>13 x 20 cm (5 x 8 pulg)</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_L"><value>9 x 13 cm (3.5 x 5 pulg)</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Page_TL"><value>9 x 13 cm (3.5 x 5 pulg) (Sin márgenes)</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Media_PLATINA_NORMAL"><value>Ultra Glossy Photo Paper - Estándar</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Media_PMPHOTO_NORMAL"><value>Premium Glossy Photo Paper - Estándar</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Media_GLOSSYPHOTO_NORMAL"><value>Glossy Photo Paper - Estándar</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Media_PSGLOS_NORMAL"><value>Papel fotográfico semibrillo - Estándar</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Media_PMMATT_NORMAL"><value>Matte Paper-Alto Gramaje - Estándar</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Media_PLAIN_NORMAL"><value>Papel Normal - Estándar</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Media_IRON_NORMAL"><value>Iron-On Cool Peel Transfer Paper - Estándar</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Media_ENV_NORMAL"><value>Sobre - Estándar</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Input_LowerFront"><value>Main Tray</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Input_UpperFront"><value>Photo Tray</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Input_RearFeed"><value>Rear Feed</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Dpi300x300"><value>300 x 300 DPI</value></data>
+  <data name="https://pytone-rip.local/printticket/2026/phase12/Dpi600x600"><value>600 x 600 DPI</value></data>
+</root>

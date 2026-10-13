@@ -27,6 +27,18 @@ namespace pyToneRIP.Services
             return response.UsbPrinters ?? new List<UsbPrinterDescriptor>();
         }
 
+        public static async Task<IReadOnlyList<UsbInkLevel>> ReadUsbInkAsync(string deviceInstanceId)
+        {
+            if (string.IsNullOrWhiteSpace(deviceInstanceId))
+                throw new ArgumentException("A USB printer device is required.", nameof(deviceInstanceId));
+            var response = await ExecuteRawAsync(new QueueHelperRequest
+            {
+                Operation = "read-usb-ink",
+                UsbDeviceId = deviceInstanceId,
+            }, maxAttempts: 300);
+            return response.UsbInkLevels ?? new List<UsbInkLevel>();
+        }
+
         public static async Task<string> CollectSupportReportAsync(string managerLog)
         {
             const int maxManagerLogCharacters = 1_000_000;
@@ -325,6 +337,7 @@ namespace pyToneRIP.Services
         [DataMember(Name = "module_package_version", Order = 14, EmitDefaultValue = false)] public string ModulePackageVersion { get; set; }
         [DataMember(Name = "maintenance_json", Order = 15, EmitDefaultValue = false)] public string MaintenanceJson { get; set; }
         [DataMember(Name = "manager_log", Order = 16, EmitDefaultValue = false)] public string ManagerLog { get; set; }
+        [DataMember(Name = "usb_device_id", Order = 17, EmitDefaultValue = false)] public string UsbDeviceId { get; set; }
     }
 
     [DataContract]
@@ -337,6 +350,7 @@ namespace pyToneRIP.Services
         [DataMember(Name = "report_path", Order = 5, EmitDefaultValue = false)] public string ReportPath { get; set; }
         [DataMember(Name = "usb_printers", Order = 6, EmitDefaultValue = false)] public List<UsbPrinterDescriptor> UsbPrinters { get; set; }
         [DataMember(Name = "legacy_defaults", Order = 7, EmitDefaultValue = false)] public LegacyPrinterDefaults LegacyDefaults { get; set; }
+        [DataMember(Name = "usb_ink_levels", Order = 8, EmitDefaultValue = false)] public List<UsbInkLevel> UsbInkLevels { get; set; }
     }
 
     [DataContract]

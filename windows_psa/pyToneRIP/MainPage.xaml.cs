@@ -1056,7 +1056,12 @@ namespace pyToneRIP
             if (installedPrinter != null)
                 Frame.Navigate(typeof(PropertiesPage), new PrinterSettingsNavigation
                 {
-                    Printer = installedPrinter, OpenConnection = true,
+                    Printer = installedPrinter,
+                    OpenConnection = !string.Equals(
+                        installedPrinter.ConnectionKind,
+                        "usb",
+                        StringComparison.OrdinalIgnoreCase)
+                        || string.IsNullOrWhiteSpace(installedPrinter.UsbDeviceId),
                 });
         }
 
@@ -1180,6 +1185,8 @@ namespace pyToneRIP
 
         private async Task RemoveDynamicPrinterAsync(PrinterInstanceRecord selected)
         {
+            if (!await CanRemovePrinterAsync(selected))
+                return;
             var dialog = new ContentDialog
             {
                 Title = LocalizationService.Get("Code.RemovePrinter"),
@@ -1189,6 +1196,8 @@ namespace pyToneRIP
                 CloseButtonText = LocalizationService.Get("Code.Cancel"),
             };
             if (await dialog.ShowAsync() != ContentDialogResult.Primary)
+                return;
+            if (!await CanRemovePrinterAsync(selected))
                 return;
             StatusText.Text = LocalizationService.Format("Code.Removing", selected.QueueName);
             try
@@ -1210,6 +1219,49 @@ namespace pyToneRIP
                 StatusText.Text = LocalizationService.Get("Code.PrinterWasNotRemoved");
                 await MessageAsync(LocalizationService.Get("Code.PrinterWasNotRemovedTitle"), error.Message);
             }
+        }
+
+        private async Task<bool> CanRemovePrinterAsync(PrinterInstanceRecord printer)
+        {
+            try
+            {
+                if (!await HasActivePrintJobAsync(printer))
+                    return true;
+            }
+            catch (Exception error)
+            {
+                App.WriteStartupException(
+                    "Could not inspect active jobs before virtual printer removal", error);
+                StatusText.Text = LocalizationService.Get("Code.PrinterWasNotRemoved");
+                await MessageAsync(
+                    LocalizationService.Get("Code.PrinterWasNotRemovedTitle"), error.Message);
+                return false;
+            }
+            await ShowActiveJobRemovalBlockedAsync(printer);
+            return false;
+        }
+
+        private static async Task<bool> HasActivePrintJobAsync(PrinterInstanceRecord printer)
+        {
+            var activities = await JobProgressReader.ReadActiveJobActivitiesAsync();
+            if (activities.Any(activity => string.Equals(
+                    activity.QueueName,
+                    printer.QueueName,
+                    StringComparison.OrdinalIgnoreCase)))
+            {
+                return true;
+            }
+            return await QueueHelperClient.HasCurrentJobAsync(printer.QueueName);
+        }
+
+        private async Task ShowActiveJobRemovalBlockedAsync(PrinterInstanceRecord printer)
+        {
+            StatusText.Text = LocalizationService.Get("Code.RemovePrinterAfterJobsAreCancelled");
+            ManagerLogger.Write("Removal blocked because the printer has an active job: "
+                + printer.QueueName + ".");
+            await MessageAsync(
+                LocalizationService.Get("Code.RemovePrinter"),
+                LocalizationService.Get("Code.RemovePrinterAfterJobsAreCancelled"));
         }
 
         private async void Refresh(object sender, RoutedEventArgs args)
@@ -1432,7 +1484,7 @@ namespace pyToneRIP
             content.Children.Add(new HyperlinkButton
             {
                 Content = LocalizationService.Get("Code.SourceGithubComDfoxelf"),
-                NavigateUri = new Uri("https://github.com/dfoxelf/"),
+                NavigateUri = new Uri("https://github.com/dfoxelf/pyToneRIP/"),
                 HorizontalAlignment = HorizontalAlignment.Left,
                 Padding = new Thickness(0),
             });

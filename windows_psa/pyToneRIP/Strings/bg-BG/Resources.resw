@@ -180,6 +180,7 @@
   <data name="Code.RasterEnginePreparationWasNotCompleted"><value>Подготовката на растерния двигател не е завършена</value></data>
   <data name="Code.Remove"><value>Премахнете</value></data>
   <data name="Code.RemovePrinter"><value>Премахване на принтера?</value></data>
+  <data name="Code.RemovePrinterAfterJobsAreCancelled"><value>Принтерът има активно или чакащо задание за печат. Отменете заданието и изчакайте да приключи, преди да премахнете принтера.</value></data>
   <data name="Code.Removing"><value>Премахване на {0}...</value></data>
   <data name="Code.RenamePrinter"><value>Преименувайте принтера</value></data>
   <data name="Code.RuntimePreparationWillBeRetriedOnTheNextStart"><value>Подготовката по време на изпълнение ще бъде изпробвана повторно при следващото стартиране: {0}</value></data>

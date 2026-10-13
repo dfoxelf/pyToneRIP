@@ -180,6 +180,7 @@
   <data name="Code.RasterEnginePreparationWasNotCompleted"><value>Rastra dzinēja sagatavošana netika pabeigta</value></data>
   <data name="Code.Remove"><value>Noņemt</value></data>
   <data name="Code.RemovePrinter"><value>Vai noņemt printeri?</value></data>
+  <data name="Code.RemovePrinterAfterJobsAreCancelled"><value>Printerim ir aktīvs vai gaidošs drukas darbs. Atceliet darbu un gaidiet tā pabeigšanu, pirms noņemat printeri.</value></data>
   <data name="Code.Removing"><value>Notiek {0} noņemšana...</value></data>
   <data name="Code.RenamePrinter"><value>Pārdēvējiet printeri</value></data>
   <data name="Code.RuntimePreparationWillBeRetriedOnTheNextStart"><value>Sagatavošanās izpildlaikam tiks atkārtoti mēģināts nākamajā startā: {0}</value></data>

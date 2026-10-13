@@ -180,6 +180,7 @@
   <data name="Code.RasterEnginePreparationWasNotCompleted"><value>Príprava rastrového motora nebola dokončená</value></data>
   <data name="Code.Remove"><value>Odstrániť</value></data>
   <data name="Code.RemovePrinter"><value>Chcete odstrániť tlačiareň?</value></data>
+  <data name="Code.RemovePrinterAfterJobsAreCancelled"><value>Tlačiareň má aktívnu alebo čakajúcu tlačovú úlohu. Pred odstránením tlačiarne úlohu zrušte a počkajte na jej dokončenie.</value></data>
   <data name="Code.Removing"><value>Odstraňuje sa {0}...</value></data>
   <data name="Code.RenamePrinter"><value>Premenovať tlačiareň</value></data>
   <data name="Code.RuntimePreparationWillBeRetriedOnTheNextStart"><value>Príprava runtime sa zopakuje pri ďalšom spustení: {0}</value></data>

@@ -180,6 +180,7 @@
   <data name="Code.RasterEnginePreparationWasNotCompleted"><value>Priprava rastrskega motorja ni bila dokončana</value></data>
   <data name="Code.Remove"><value>Odstrani</value></data>
   <data name="Code.RemovePrinter"><value>Odstraniti tiskalnik?</value></data>
+  <data name="Code.RemovePrinterAfterJobsAreCancelled"><value>Tiskalnik ima aktivno ali čakajoče tiskalno opravilo. Pred odstranitvijo tiskalnika opravilo prekličite in počakajte, da se konča.</value></data>
   <data name="Code.Removing"><value>Odstranjevanje {0} ...</value></data>
   <data name="Code.RenamePrinter"><value>Preimenuj tiskalnik</value></data>
   <data name="Code.RuntimePreparationWillBeRetriedOnTheNextStart"><value>Priprava izvajalnega časa se bo znova poskusila ob naslednjem zagonu: {0}</value></data>

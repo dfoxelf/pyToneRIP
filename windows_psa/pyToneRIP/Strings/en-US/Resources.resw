@@ -180,6 +180,7 @@
   <data name="Code.RasterEnginePreparationWasNotCompleted"><value>Raster engine preparation was not completed</value></data>
   <data name="Code.Remove"><value>Remove</value></data>
   <data name="Code.RemovePrinter"><value>Remove printer?</value></data>
+  <data name="Code.RemovePrinterAfterJobsAreCancelled"><value>The printer has an active or queued print job. Cancel the job and wait for it to finish before removing the printer.</value></data>
   <data name="Code.Removing"><value>Removing {0}...</value></data>
   <data name="Code.RenamePrinter"><value>Rename printer</value></data>
   <data name="Code.RuntimePreparationWillBeRetriedOnTheNextStart"><value>Runtime preparation will be retried on the next start: {0}</value></data>
