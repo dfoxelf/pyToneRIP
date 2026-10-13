@@ -1,0 +1,23 @@
+{
+  "backend_family": "epson_escp2_gutenprint_model_80",
+  "backend_runtime_file": "backend-runtime.json",
+  "backend_runtime_sha256": "eb040f2fcfaa9100153c6ad32ca96fce3ebb44952b60c03f66c1d1447567e31e",
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson Expression ET-2600 EcoTank",
+  "model_id": "Expression_ET_2600_EcoTank",
+  "package_id": "gp--escp2-et2600",
+  "ppd_file": "vendor.ppd",
+  "ppd_sha256": "60dc305f67ff3ab70acf3c40a9ae3feb4d77192539a7d48fdc885e005e282a80",
+  "ppd_source": "vendor.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "gutenprint-model-80",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "90a826bff6ad6ea4b9670b28c13c02a29457200019ebeef968d04fb07273c418",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "e6353b27bbbe9b907c355e30a02243a4be6b7c9419d7e6268049b80ce875c37b",
+  "version": 1,
+  "visible": true,
+  "warnings": []
+}

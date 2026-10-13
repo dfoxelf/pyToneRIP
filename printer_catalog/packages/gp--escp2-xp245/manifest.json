@@ -1,0 +1,23 @@
+{
+  "backend_family": "epson_escp2_gutenprint_model_121",
+  "backend_runtime_file": "backend-runtime.json",
+  "backend_runtime_sha256": "751426fee859d695eb694ca29f22b1eb0c53f38e43e54e1df85a0a2556284ad6",
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson Expression Home XP-245",
+  "model_id": "Expression_Home_XP_245",
+  "package_id": "gp--escp2-xp245",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "ca30422ebf9e2402dd7dffa1969e2f6862b87ec2762cdcb4d35a7bb6a17d914c",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "gutenprint-model-121",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "90a826bff6ad6ea4b9670b28c13c02a29457200019ebeef968d04fb07273c418",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "d8d0b5121f01cc056b1014ce77034aa45bd07b979f9e81ae27e40034a06dee9f",
+  "version": 1,
+  "visible": true,
+  "warnings": []
+}

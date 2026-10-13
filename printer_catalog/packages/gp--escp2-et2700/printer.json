@@ -1,0 +1,391 @@
+{
+  "channels": [
+    {
+      "esc_i_code": "0x00",
+      "head_offset": 0,
+      "inkset": "CMYK",
+      "role": "black",
+      "slot": "Black",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x02",
+      "head_offset": 0,
+      "inkset": "CMYK",
+      "role": "cyan",
+      "slot": "Cyan",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x01",
+      "head_offset": 120,
+      "inkset": "CMYK",
+      "role": "magenta",
+      "slot": "Magenta",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x04",
+      "head_offset": 240,
+      "inkset": "CMYK",
+      "role": "yellow",
+      "slot": "Yellow",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x02",
+      "head_offset": 0,
+      "inkset": "RGB",
+      "role": "cyan",
+      "slot": "Cyan",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x01",
+      "head_offset": 120,
+      "inkset": "RGB",
+      "role": "magenta",
+      "slot": "Magenta",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x04",
+      "head_offset": 240,
+      "inkset": "RGB",
+      "role": "yellow",
+      "slot": "Yellow",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x00",
+      "head_offset": 0,
+      "inkset": "PhysicalBlack",
+      "role": "black",
+      "slot": "Black",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x02",
+      "head_offset": 0,
+      "inkset": "PhysicalCMY",
+      "role": "cyan",
+      "slot": "Cyan",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x01",
+      "head_offset": 120,
+      "inkset": "PhysicalCMY",
+      "role": "magenta",
+      "slot": "Magenta",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x04",
+      "head_offset": 240,
+      "inkset": "PhysicalCMY",
+      "role": "yellow",
+      "slot": "Yellow",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x00",
+      "head_offset": 0,
+      "inkset": "PhysicalCMYK",
+      "role": "black",
+      "slot": "Black",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x02",
+      "head_offset": 0,
+      "inkset": "PhysicalCMYK",
+      "role": "cyan",
+      "slot": "Cyan",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x01",
+      "head_offset": 120,
+      "inkset": "PhysicalCMYK",
+      "role": "magenta",
+      "slot": "Magenta",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x04",
+      "head_offset": 240,
+      "inkset": "PhysicalCMYK",
+      "role": "yellow",
+      "slot": "Yellow",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x00",
+      "head_offset": 0,
+      "inkset": "Quadtone",
+      "role": "black",
+      "slot": "Black",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x02",
+      "head_offset": 0,
+      "inkset": "Quadtone",
+      "role": "gray3",
+      "slot": "Gray3",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x01",
+      "head_offset": 120,
+      "inkset": "Quadtone",
+      "role": "gray2",
+      "slot": "Gray2",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x04",
+      "head_offset": 240,
+      "inkset": "Quadtone",
+      "role": "gray1",
+      "slot": "Gray1",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x00",
+      "head_offset": 0,
+      "inkset": "Quadtone",
+      "role": "black",
+      "slot": "Black",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x01",
+      "head_offset": 120,
+      "inkset": "Quadtone",
+      "role": "gray3",
+      "slot": "Gray3",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x04",
+      "head_offset": 240,
+      "inkset": "Quadtone",
+      "role": "gray2",
+      "slot": "Gray2",
+      "subchannel": -1
+    },
+    {
+      "esc_i_code": "0x02",
+      "head_offset": 0,
+      "inkset": "Quadtone",
+      "role": "gray1",
+      "slot": "Gray1",
+      "subchannel": -1
+    }
+  ],
+  "device_features": [],
+  "driver": {
+    "gutenprint_model_id": "80"
+  },
+  "feeds": [],
+  "identity": {
+    "gutenprint_driver": "escp2-et2700",
+    "gutenprint_model_id": "80",
+    "manufacturer": "Epson",
+    "name": "Epson Expression ET-2700 EcoTank"
+  },
+  "media": [],
+  "media_sizes": [],
+  "paper_types": [
+    {
+      "class": "plain",
+      "name": "Plain",
+      "params": {
+        "FeedSequence": [
+          "1"
+        ]
+      },
+      "text": "Plain Paper"
+    },
+    {
+      "class": "plain",
+      "name": "PlainFast",
+      "params": {
+        "FeedSequence": [
+          "5"
+        ]
+      },
+      "text": "Plain Paper Fast Load"
+    },
+    {
+      "class": "plain",
+      "name": "Postcard",
+      "params": {
+        "FeedSequence": [
+          "2"
+        ]
+      },
+      "text": "Postcard"
+    },
+    {
+      "class": "photo",
+      "name": "GlossyFilm",
+      "params": {
+        "FeedSequence": [
+          "3"
+        ]
+      },
+      "text": "Glossy Film"
+    },
+    {
+      "class": "transparency",
+      "name": "Transparency",
+      "params": {
+        "FeedSequence": [
+          "3"
+        ]
+      },
+      "text": "Transparencies"
+    },
+    {
+      "class": "plain",
+      "name": "Envelope",
+      "params": {
+        "FeedSequence": [
+          "4"
+        ]
+      },
+      "text": "Envelopes"
+    },
+    {
+      "class": "transparency",
+      "name": "BackFilm",
+      "params": {
+        "FeedSequence": [
+          "6"
+        ]
+      },
+      "text": "Back Light Film"
+    },
+    {
+      "class": "good",
+      "name": "Matte",
+      "params": {
+        "FeedSequence": [
+          "7"
+        ]
+      },
+      "text": "Matte Paper"
+    },
+    {
+      "class": "good",
+      "name": "MatteHeavy",
+      "params": {
+        "FeedSequence": [
+          "7"
+        ]
+      },
+      "text": "Matte Paper Heavyweight"
+    },
+    {
+      "class": "good",
+      "name": "Inkjet",
+      "params": {
+        "FeedSequence": [
+          "7"
+        ]
+      },
+      "text": "Inkjet Paper"
+    },
+    {
+      "class": "good",
+      "name": "Coated",
+      "params": {
+        "FeedSequence": [
+          "7"
+        ]
+      },
+      "text": "Photo Quality Inkjet Paper"
+    },
+    {
+      "class": "photo",
+      "name": "Photo",
+      "params": {
+        "FeedSequence": [
+          "8"
+        ]
+      },
+      "text": "Photo Paper"
+    },
+    {
+      "class": "premium",
+      "name": "GlossyPhoto",
+      "params": {
+        "FeedSequence": [
+          "8"
+        ]
+      },
+      "text": "Premium Glossy Photo Paper"
+    },
+    {
+      "class": "premium",
+      "name": "Semigloss",
+      "params": {
+        "FeedSequence": [
+          "8"
+        ]
+      },
+      "text": "Premium Semigloss Photo Paper"
+    },
+    {
+      "class": "premium",
+      "name": "Luster",
+      "params": {
+        "FeedSequence": [
+          "8"
+        ]
+      },
+      "text": "Premium Luster Photo Paper"
+    },
+    {
+      "class": "photo",
+      "name": "GlossyPaper",
+      "params": {
+        "FeedSequence": [
+          "6"
+        ]
+      },
+      "text": "Photo Quality Glossy Paper"
+    },
+    {
+      "class": "premium",
+      "name": "ColorLife",
+      "params": {
+        "FeedSequence": [
+          "8"
+        ]
+      },
+      "text": "ColorLife Paper"
+    },
+    {
+      "class": "plain",
+      "name": "Other",
+      "params": {
+        "FeedSequence": [
+          "0"
+        ]
+      },
+      "text": "Other"
+    }
+  ],
+  "protocol": {
+    "cls": "escp2-esci",
+    "commandSet": "2000",
+    "family": "gutenprint-model-80",
+    "note": "codes from gutenprint XML formula (not live-verified)",
+    "raster_command": "ESC i <color|sub<<4> <comp=1> <bitwidth> <nwidth:2LE> <nlines:2LE> <TIFF PackBits>"
+  },
+  "schema": "rip-printer-v1"
+}

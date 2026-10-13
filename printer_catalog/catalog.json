@@ -1,5 +1,5 @@
 {
-  "count": 177,
+  "count": 184,
   "packages": [
     {
       "backend_status": "IMPLEMENTED",
@@ -220,6 +220,48 @@
     },
     {
       "backend_status": "IMPLEMENTED",
+      "display_name": "Epson Expression ET-2550 EcoTank",
+      "model_id": "Expression_ET_2550_EcoTank",
+      "package_id": "gp--escp2-et2550",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson Expression ET-2600 EcoTank",
+      "model_id": "Expression_ET_2600_EcoTank",
+      "package_id": "gp--escp2-et2600",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson Expression ET-2650 EcoTank",
+      "model_id": "Expression_ET_2650_EcoTank",
+      "package_id": "gp--escp2-et2650",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson Expression ET-2700 EcoTank",
+      "model_id": "Expression_ET_2700_EcoTank",
+      "package_id": "gp--escp2-et2700",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson Expression ET-2750 EcoTank",
+      "model_id": "Expression_ET_2750_EcoTank",
+      "package_id": "gp--escp2-et2750",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson Expression ET-2750 EcoTank Business Edition",
+      "model_id": "Expression_ET_2750_EcoTank_Business_Edition",
+      "package_id": "gp--escp2-et2750be",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
       "display_name": "Epson Stylus Photo EX",
       "model_id": "Stylus_Photo_EX",
       "package_id": "gp--escp2-ex",
@@ -391,6 +433,13 @@
       "display_name": "Epson Expression Home XP-240",
       "model_id": "Expression_Home_XP_240",
       "package_id": "gp--escp2-xp240",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson Expression Home XP-245",
+      "model_id": "Expression_Home_XP_245",
+      "package_id": "gp--escp2-xp245",
       "visible": true
     },
     {

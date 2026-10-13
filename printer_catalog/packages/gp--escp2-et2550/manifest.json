@@ -1,0 +1,23 @@
+{
+  "backend_family": "epson_escp2_gutenprint_model_80",
+  "backend_runtime_file": "backend-runtime.json",
+  "backend_runtime_sha256": "eb040f2fcfaa9100153c6ad32ca96fce3ebb44952b60c03f66c1d1447567e31e",
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson Expression ET-2550 EcoTank",
+  "model_id": "Expression_ET_2550_EcoTank",
+  "package_id": "gp--escp2-et2550",
+  "ppd_file": "vendor.ppd",
+  "ppd_sha256": "941e9e5768d3af38efb9490a0eabe7f36c1d16cbed4339284b492962a0b02074",
+  "ppd_source": "vendor.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "gutenprint-model-80",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "90a826bff6ad6ea4b9670b28c13c02a29457200019ebeef968d04fb07273c418",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "5a67468993bca3f650e6a941d9c4e11a6447473a2e7b3131e0bf006c9e461724",
+  "version": 1,
+  "visible": true,
+  "warnings": []
+}

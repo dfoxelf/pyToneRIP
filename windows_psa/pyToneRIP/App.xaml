@@ -1,17 +1,62 @@
 <Application x:Class="pyToneRIP.App" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <Application.Resources>
     <ResourceDictionary>
-      <SolidColorBrush x:Key="PageBackgroundBrush" Color="#FFF7F8FA" />
-      <SolidColorBrush x:Key="AppSurfaceBrush" Color="#FFF3F5F8" />
-      <SolidColorBrush x:Key="CardBackgroundBrush" Color="#FFFFFFFF" />
-      <SolidColorBrush x:Key="TableHeaderBrush" Color="#FFF0F2F5" />
-      <SolidColorBrush x:Key="StatusBarBrush" Color="#FFE9EDF2" />
-      <SolidColorBrush x:Key="SectionBorderBrush" Color="#22000000" />
-      <SolidColorBrush x:Key="SecondaryTextBrush" Color="#FF5E6875" />
-      <SolidColorBrush x:Key="AccentBrush" Color="#FF0078D4" />
-      <SolidColorBrush x:Key="LogSuccessBrush" Color="#FF147A4A" />
-      <SolidColorBrush x:Key="LogWarningBrush" Color="#FF9A6500" />
-      <SolidColorBrush x:Key="LogErrorBrush" Color="#FFB42318" />
+      <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Light">
+          <Color x:Key="PageBackgroundColor">#FFF7F8FA</Color>
+          <Color x:Key="AppSurfaceColor">#FFF3F5F8</Color>
+          <Color x:Key="CardBackgroundColor">#FFFFFFFF</Color>
+          <Color x:Key="TableHeaderColor">#FFF0F2F5</Color>
+          <Color x:Key="StatusBarColor">#FFE9EDF2</Color>
+          <Color x:Key="SectionBorderColor">#22000000</Color>
+          <Color x:Key="SecondaryTextColor">#FF5E6875</Color>
+          <Color x:Key="AccentColor">#FF0078D4</Color>
+          <Color x:Key="LogSuccessColor">#FF147A4A</Color>
+          <Color x:Key="LogWarningColor">#FF9A6500</Color>
+          <Color x:Key="LogErrorColor">#FFB42318</Color>
+          <Color x:Key="ExampleBackgroundColor">#FFF5F7FA</Color>
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Dark">
+          <Color x:Key="PageBackgroundColor">#FF181818</Color>
+          <Color x:Key="AppSurfaceColor">#FF202020</Color>
+          <Color x:Key="CardBackgroundColor">#FF292929</Color>
+          <Color x:Key="TableHeaderColor">#FF333333</Color>
+          <Color x:Key="StatusBarColor">#FF252525</Color>
+          <Color x:Key="SectionBorderColor">#33FFFFFF</Color>
+          <Color x:Key="SecondaryTextColor">#FFC5C5C5</Color>
+          <Color x:Key="AccentColor">#FF60CDFF</Color>
+          <Color x:Key="LogSuccessColor">#FF6CCB8A</Color>
+          <Color x:Key="LogWarningColor">#FFFFD479</Color>
+          <Color x:Key="LogErrorColor">#FFFF8A80</Color>
+          <Color x:Key="ExampleBackgroundColor">#FF333333</Color>
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="HighContrast">
+          <Color x:Key="PageBackgroundColor">#FF000000</Color>
+          <Color x:Key="AppSurfaceColor">#FF000000</Color>
+          <Color x:Key="CardBackgroundColor">#FF000000</Color>
+          <Color x:Key="TableHeaderColor">#FF000000</Color>
+          <Color x:Key="StatusBarColor">#FF000000</Color>
+          <Color x:Key="SectionBorderColor">#FFFFFFFF</Color>
+          <Color x:Key="SecondaryTextColor">#FFFFFFFF</Color>
+          <Color x:Key="AccentColor">#FFFFFF00</Color>
+          <Color x:Key="LogSuccessColor">#FFFFFFFF</Color>
+          <Color x:Key="LogWarningColor">#FFFFFF00</Color>
+          <Color x:Key="LogErrorColor">#FFFF0000</Color>
+          <Color x:Key="ExampleBackgroundColor">#FF000000</Color>
+        </ResourceDictionary>
+      </ResourceDictionary.ThemeDictionaries>
+      <SolidColorBrush x:Key="PageBackgroundBrush" Color="{ThemeResource PageBackgroundColor}" />
+      <SolidColorBrush x:Key="AppSurfaceBrush" Color="{ThemeResource AppSurfaceColor}" />
+      <SolidColorBrush x:Key="CardBackgroundBrush" Color="{ThemeResource CardBackgroundColor}" />
+      <SolidColorBrush x:Key="TableHeaderBrush" Color="{ThemeResource TableHeaderColor}" />
+      <SolidColorBrush x:Key="StatusBarBrush" Color="{ThemeResource StatusBarColor}" />
+      <SolidColorBrush x:Key="SectionBorderBrush" Color="{ThemeResource SectionBorderColor}" />
+      <SolidColorBrush x:Key="SecondaryTextBrush" Color="{ThemeResource SecondaryTextColor}" />
+      <SolidColorBrush x:Key="AccentBrush" Color="{ThemeResource AccentColor}" />
+      <SolidColorBrush x:Key="LogSuccessBrush" Color="{ThemeResource LogSuccessColor}" />
+      <SolidColorBrush x:Key="LogWarningBrush" Color="{ThemeResource LogWarningColor}" />
+      <SolidColorBrush x:Key="LogErrorBrush" Color="{ThemeResource LogErrorColor}" />
+      <SolidColorBrush x:Key="ExampleBackgroundBrush" Color="{ThemeResource ExampleBackgroundColor}" />
       <Style x:Key="PageTitleStyle" TargetType="TextBlock">
         <Setter Property="FontSize" Value="28" />
         <Setter Property="FontWeight" Value="SemiBold" />

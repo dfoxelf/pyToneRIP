@@ -1571,22 +1571,28 @@ namespace pyToneRIP
         private void SetConnectionTestResult(PrinterNetworkState state)
         {
             ConnectionStatusText.Text = LocalizationService.Get("Choice." + state);
+            var darkTheme = Application.Current.RequestedTheme == ApplicationTheme.Dark;
             switch (state)
             {
                 case PrinterNetworkState.Online:
-                    ConnectionStatusText.Foreground = new SolidColorBrush(Colors.ForestGreen);
+                    ConnectionStatusText.Foreground = new SolidColorBrush(darkTheme
+                        ? Color.FromArgb(255, 126, 231, 135) : Colors.ForestGreen);
                     break;
                 case PrinterNetworkState.Printing:
-                    ConnectionStatusText.Foreground = new SolidColorBrush(Colors.DarkBlue);
+                    ConnectionStatusText.Foreground = new SolidColorBrush(darkTheme
+                        ? Color.FromArgb(255, 121, 192, 255) : Colors.DarkBlue);
                     break;
                 case PrinterNetworkState.Offline:
-                    ConnectionStatusText.Foreground = new SolidColorBrush(Colors.Firebrick);
+                    ConnectionStatusText.Foreground = new SolidColorBrush(darkTheme
+                        ? Color.FromArgb(255, 255, 123, 114) : Colors.Firebrick);
                     break;
                 case PrinterNetworkState.Checking:
-                    ConnectionStatusText.Foreground = new SolidColorBrush(Colors.DarkOrange);
+                    ConnectionStatusText.Foreground = new SolidColorBrush(darkTheme
+                        ? Color.FromArgb(255, 255, 166, 87) : Colors.DarkOrange);
                     break;
                 default:
-                    ConnectionStatusText.Foreground = new SolidColorBrush(Colors.Gray);
+                    ConnectionStatusText.Foreground = new SolidColorBrush(darkTheme
+                        ? Color.FromArgb(255, 201, 209, 217) : Colors.Gray);
                     break;
             }
         }

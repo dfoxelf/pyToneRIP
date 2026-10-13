@@ -4,7 +4,7 @@
 [![Release downloads](https://img.shields.io/github/downloads/dfoxelf/pyToneRIP/total?style=flat-square&label=release%20downloads)](https://github.com/dfoxelf/pyToneRIP/releases)
 [![License: GPL-3.0-only](https://img.shields.io/badge/license-GPL--3.0--only-blue?style=flat-square)](https://github.com/dfoxelf/pyToneRIP/blob/main/LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Windows%2011%20x64-0078D4?style=flat-square)](#install)
-[![Download latest Beta](https://img.shields.io/badge/Download-latest%20Beta-2ea44f?style=flat-square)](https://github.com/dfoxelf/pyToneRIP/releases/download/v1.0.0.207-beta/pyToneRIP-Setup-1.0.0.207-Beta.exe)
+[![Download latest Beta](https://img.shields.io/badge/Download-latest%20Beta-2ea44f?style=flat-square)](https://github.com/dfoxelf/pyToneRIP/releases/download/v1.0.0.208-beta/pyToneRIP-Setup-1.0.0.208-Beta.exe)
 
 Copyright © 2026 Alexander Eichhorn.
 
@@ -12,9 +12,9 @@ pyToneRIP is a monochrome Epson RIP for Windows 11. It contains the Python/Cytho
 
 ## Download the beta
 
-The current beta is **1.0.0.207**. [Download the setup installer](windows_psa/artifacts/pyToneRIP-Setup-1.0.0.207-Beta.exe) from this repository.
+The current beta is **1.0.0.208**. [Download the setup installer](https://github.com/dfoxelf/pyToneRIP/releases/download/v1.0.0.208-beta/pyToneRIP-Setup-1.0.0.208-Beta.exe).
 
-This beta adds USB printer discovery and output through a compatible Windows RAW USB queue, while keeping the existing RIP and ESC/P2 processing pipeline. The manager's connection interface is localized in all 27 supported languages. The catalog contains 174 Epson models; physical printer testing is ongoing.
+This beta adds Windows dark-theme support, distinguishes JIS B4 from ISO B4, and refreshes the printer catalog with seven package entries. USB printer discovery and output through a compatible Windows RAW USB queue remain available; physical printer testing is ongoing. The manager's connection interface is localized in all 27 supported languages.
 
 ## Support development and professional services
 
@@ -38,8 +38,8 @@ Run PowerShell from the repository root:
 
 ```powershell
 uv sync --locked
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows_psa\Build-ModelPackageSet.ps1 -Version 1.0.0.207
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows_psa\Build-InnoSetup.ps1 -Version 1.0.0.207
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows_psa\Build-ModelPackageSet.ps1 -Version 1.0.0.208
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows_psa\Build-InnoSetup.ps1 -Version 1.0.0.208
 ```
 
 Use a new four-part version for each build. The first script compiles Cython, freezes the Python runtime, builds and signs the Manager MSIX, and checks the result. The second produces `windows_psa/artifacts/pyToneRIP-Setup-<version>-Beta.exe`.
@@ -50,12 +50,12 @@ The bootstrap EXE is not Authenticode signed. Windows may show a publisher or Sm
 
 ## Install
 
-Run the generated `pyToneRIP-Setup-<version>-Beta.exe` on Windows 11 build 26100 or later. The installer requests administrator approval to trust the package certificate and install the Manager. Start pyToneRIP and add a printer through its interface.
+Run the [pyToneRIP 1.0.0.208 Beta installer](https://github.com/dfoxelf/pyToneRIP/releases/download/v1.0.0.208-beta/pyToneRIP-Setup-1.0.0.208-Beta.exe) on Windows 11 build 26100 or later. The installer requests administrator approval to trust the package certificate and install the Manager. Start pyToneRIP and add a printer through its interface.
 
 For a package without the bootstrap installer, open PowerShell as Administrator and run:
 
 ```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows_psa\artifacts\pyToneRIP-ModuleSet-1.0.0.207\Install-ModuleSet-Manager.ps1
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows_psa\artifacts\pyToneRIP-ModuleSet-1.0.0.208\Install-ModuleSet-Manager.ps1
 ```
 
 ## Source layout

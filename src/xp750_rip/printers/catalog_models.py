@@ -1573,7 +1573,7 @@ def _pages(
                 ("5x8", '5 × 8 in', 127.0, 203.2, 11),
                 ("10x15cm", '10 × 15 cm', 100.0, 150.0, 13),
                 ("L", 'L (3.5 × 5 in)', 88.9, 127.0, 15),
-                ("B4", 'B4 (JIS)', 257.0, 364.0, 63),
+                ("B4JIS", 'B4 (JIS)', 257.0, 364.0, 63),
                 ("Legal", 'Legal', 215.9, 355.6, 2),
                 ("HalfLetter", 'Half Letter', 139.7, 215.9, 7),
                 ("11x14", '11 × 14 in', 279.4, 355.6, 65),
@@ -1581,7 +1581,7 @@ def _pages(
             )
             for name, label, width_mm, height_mm, size_code in sizes:
                 if source_name == "Epson_SureColorP800" and name in {
-                    "B4", "Legal", "HalfLetter", "11x14", "12x12",
+                    "B4", "B4JIS", "Legal", "HalfLetter", "11x14", "12x12",
                 }:
                     continue
                 if any(p.ppd.name == name or (

@@ -116,7 +116,7 @@ namespace pyToneRIP
 
         private void BuildBootstrapVisual()
         {
-            var background = new SolidColorBrush(Color.FromArgb(255, 243, 245, 248));
+            var background = (SolidColorBrush)Application.Current.Resources["AppSurfaceBrush"];
             Background = background;
             splashCanvas = new Canvas { Background = background };
             splashImage = new Image
