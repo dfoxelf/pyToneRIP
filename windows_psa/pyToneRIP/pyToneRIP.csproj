@@ -72,6 +72,7 @@
     <Compile Include="Services\PrintTicketSynchronization.cs" />
     <Compile Include="Services\RipConfigurationProjection.cs" />
     <Compile Include="Services\PrinterSystemDefaultsService.cs" />
+    <Compile Include="Services\SettingsApplyNotifications.cs" />
     <Compile Include="Services\PrinterConnectivityService.cs" />
     <Compile Include="Services\PrinterSnmpService.cs" />
     <Compile Include="Services\EpsonBdcStatusParser.cs" />
@@ -176,6 +177,16 @@
           Condition="'$(AppxPackage)' == 'true'">
     <ItemGroup>
       <PackagingOutputs Include="@(_TechnicalPackagePayload)" />
+    </ItemGroup>
+  </Target>
+  <!-- The AppX ARM exclusion property covers arm only. Visual Studio can also
+       discover ARM64 framework packages and copy them into an x64 test layout. -->
+  <Target Name="RestrictTestLayoutFrameworkPackagesToX64"
+          BeforeTargets="_CreateTestLayout"
+          Condition="'$(Platform)' == 'x64'">
+    <ItemGroup>
+      <FrameworkSdkPackage Remove="@(FrameworkSdkPackage)"
+          Condition="'%(FrameworkSdkPackage.Architecture)' != 'x64' and '%(FrameworkSdkPackage.Architecture)' != 'neutral'" />
     </ItemGroup>
   </Target>
   <PropertyGroup>

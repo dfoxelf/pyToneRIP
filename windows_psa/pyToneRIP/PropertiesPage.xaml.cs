@@ -42,6 +42,7 @@ namespace pyToneRIP
         private bool connectionRefreshRunning;
         private bool usbRefreshRunning;
         private bool localizationStarted;
+        private bool applyRunning;
         private IReadOnlyList<DeferredLocalization.Entry> deferredStrings;
 
         private sealed class LocalizedValue
@@ -206,12 +207,16 @@ namespace pyToneRIP
                 InkLimitSlider.Minimum = capabilities.Adjustments.InkLimit.Minimum;
                 InkLimitSlider.Maximum = capabilities.Adjustments.InkLimit.Maximum;
                 WorkflowPrintTicket ticketForUi = session?.SessionPrintTicket;
-                var rasterChoices = PrintTicketSynchronization.ResolutionChoices(ticketForUi);
+                var rasterChoices = PrintTicketSynchronization.ResolutionChoices(
+                    ticketForUi, assignedModel.Id);
+                if (assignedModel.Id == "SureColorP900RIP")
+                    foreach (var choice in rasterChoices.Where(item => item.X == 720 && item.Y == 720))
+                        choice.DetailLabel = LocalizationService.Get("Printer.FinestDetail");
                 RasterResolutionBox.ItemsSource = rasterChoices;
                 RasterResolutionBox.SelectedItem = rasterChoices.FirstOrDefault(item =>
                     item.X == 600 && item.Y == 600) ?? rasterChoices.FirstOrDefault();
                 // The Manager page can apply a queue default without a PSA
-                // session ticket. Both raster choices are in every model PDC.
+                // session ticket. Raster choices match the assigned model PDC.
                 RasterResolutionBox.IsEnabled = true;
                 RasterResolutionBox.Opacity = 1;
 
@@ -573,6 +578,8 @@ namespace pyToneRIP
             for (var index = 0; index < settings.Count; index++)
             {
                 var setting = settings[index];
+                foreach (var choice in setting.Choices ?? new List<DeviceSettingChoice>())
+                    choice.LocalizedDisplayName = LocalizationService.DeviceSettingChoiceName(setting, choice);
                 var row = index / 2;
                 var column = index % 2;
                 if (DeviceSettingsFields.RowDefinitions.Count <= row)
@@ -583,7 +590,7 @@ namespace pyToneRIP
                 };
                 field.Children.Add(new TextBlock
                 {
-                    Text = setting.DisplayName ?? setting.Id,
+                    Text = LocalizationService.DeviceSettingName(setting),
                     Margin = new Thickness(0, 5, 8, 0),
                     VerticalAlignment = VerticalAlignment.Center,
                 });
@@ -973,7 +980,7 @@ namespace pyToneRIP
                 || page.AllowedMedia.Any(id => string.Equals(
                     id, media.Id, StringComparison.OrdinalIgnoreCase));
             var overrideEnabled = AllowUnsupportedPpdCombinationsBox?.IsChecked == true;
-            ApplyButton.IsEnabled = compatible || overrideEnabled;
+            ApplyButton.IsEnabled = !applyRunning && (compatible || overrideEnabled);
             if (!compatible)
             {
                 ValidationSummary.Text = overrideEnabled
@@ -1236,15 +1243,22 @@ namespace pyToneRIP
             SetRequiredFieldState(UsbDeviceBox, false);
             SetRequiredFieldState(
                 HostBox,
-                !PrinterInstanceStore.TryNormalizeIpv4(HostBox?.Text, out _));
+                !PrinterInstanceStore.TryNormalizeIpv4(HostBox?.Text, out _),
+                useSystemBackground: true);
         }
 
-        private static void SetRequiredFieldState(Control control, bool isMissing)
+        private static void SetRequiredFieldState(
+            Control control, bool isMissing, bool useSystemBackground = false)
         {
             if (control == null) return;
             if (isMissing)
             {
-                control.Background = (Brush)Application.Current.Resources["RequiredFieldBackgroundBrush"];
+                // Preserve the system text/background pair while an IP is
+                // incomplete; the border still marks the required field.
+                if (useSystemBackground)
+                    control.ClearValue(Control.BackgroundProperty);
+                else
+                    control.Background = (Brush)Application.Current.Resources["RequiredFieldBackgroundBrush"];
                 control.BorderBrush = (Brush)Application.Current.Resources["RequiredFieldBorderBrush"];
                 control.BorderThickness = new Thickness(2);
                 return;
@@ -1929,10 +1943,11 @@ namespace pyToneRIP
 
         private async void Apply(object sender, RoutedEventArgs args)
         {
+            if (applyRunning) return;
+            applyRunning = true;
+            ApplyButton.IsEnabled = false;
             try
             {
-                var defaultTicketSession = session != null
-                    && session.LaunchKind == SettingsLaunchKind.UserDefaultPrintTicket;
                 var configuration = BuildConfiguration();
                 if (configuration.Connection.Kind == "usb") await ValidateUsbDestinationAsync(configuration.Connection);
                 else await EnsureNetworkHostAvailableAsync(configuration.Connection.Host);
@@ -1943,62 +1958,80 @@ namespace pyToneRIP
                     RasterResolutionBox, "Windows raster resolution");
                 if (!page.WidthMm.HasValue || !page.HeightMm.HasValue)
                     throw new InvalidOperationException("Selected page has no physical dimensions.");
-                if (session != null)
-                {
-                    PrintTicketSynchronization.Apply(
-                        session.SessionPrintTicket,
-                        page.Id,
-                        page.WidthMm.Value,
-                        page.HeightMm.Value,
-                        configuration.Layout.Orientation,
-                        rasterResolution.X,
-                        rasterResolution.Y,
-                        configuration.Printer.Media,
-                        configuration.Printer.InputSource, page.Borderless);
-                    var validation = await session.SessionPrintTicket.ValidateAsync();
-                    if (!validation.Validated)
-                        throw new InvalidOperationException("PrintTicket validation failed: " + validation.ExtendedError);
-                    session.UpdatePrintTicket(session.SessionPrintTicket);
-                    if (defaultTicketSession)
-                    {
-                        try
-                        {
-                            await PrinterSystemDefaultsService.SetLegacyUserDefaultsAsync(
-                                printerName, page.Id, page.WidthMm.Value, page.HeightMm.Value,
-                                configuration.Layout.Orientation,
-                                rasterResolution.X, rasterResolution.Y, page.Borderless);
-                            await PrinterSystemDefaultsService.VerifyAndNotifyLegacyUserDefaultsAsync(
-                                printerName, page.Id, page.WidthMm.Value, page.HeightMm.Value,
-                                configuration.Layout.Orientation,
-                                rasterResolution.X, rasterResolution.Y, page.Borderless);
-                        }
-                        catch (Exception legacyError)
-                        {
-                            App.WriteStartupException(
-                                "PSA user defaults were updated, but legacy DEVMODE synchronization failed",
-                                legacyError);
-                        }
-                    }
-                }
-                else
-                {
-                    await PrinterSystemDefaultsService.ApplyUserDefaultsAsync(
-                        printerName,
-                        page.Id, page.WidthMm.Value, page.HeightMm.Value,
-                        configuration.Layout.Orientation,
-                        rasterResolution.X, rasterResolution.Y,
-                        configuration.Printer.Media, configuration.Printer.InputSource, page.Borderless);
-                }
+                // RIP settings belong to our store. A Windows PrintTicket
+                // failure must not discard them or leave a new queue unconfigured.
                 await ConfigurationCodec.WriteStoredAsync(printerUri, printerName, json);
                 var storedJson = await ConfigurationCodec.ReadStoredAsync(printerUri, printerName);
+                if (!string.Equals(json, storedJson, StringComparison.Ordinal))
+                    throw new InvalidOperationException("Saved RIP configuration does not match the requested settings.");
                 VerifyCalibrationPersistence(configuration, storedJson, "storage");
                 await UpdateInstanceAsync(configuration);
+                try
+                {
+                    await ApplyWindowsSettingsAsync(configuration, page, rasterResolution);
+                }
+                catch (Exception windowsError)
+                {
+                    await SettingsApplyNotifications.ReportFailureAsync(printerName, windowsError);
+                    CompleteAndClose();
+                    return;
+                }
                 ValidationSummary.Text = LocalizationService.Format("Code.ConfigurationSavedFor", QueueIdentityText.Text);
                 CompleteAndClose();
             }
             catch (Exception error)
             {
+                App.WriteStartupException("PropertiesPage.Apply failed: queue=" + printerName, error);
                 ValidationSummary.Text = LocalizationService.Format("Code.NotApplied", error.Message);
+            }
+            finally
+            {
+                applyRunning = false;
+                UpdatePageMediaCompatibility();
+            }
+        }
+
+        private async System.Threading.Tasks.Task ApplyWindowsSettingsAsync(
+            PyToneRipConfiguration configuration, CapabilityOption page,
+            RasterResolutionChoice rasterResolution)
+        {
+            if (session == null)
+            {
+                await PrinterSystemDefaultsService.ApplyUserDefaultsAsync(
+                    printerName, page.Id, page.WidthMm.Value, page.HeightMm.Value,
+                    configuration.Layout.Orientation, rasterResolution.X, rasterResolution.Y,
+                    configuration.Printer.Media, configuration.Printer.InputSource, page.Borderless);
+                return;
+            }
+            var ticket = session.SessionPrintTicket;
+            PrintTicketSynchronization.Apply(
+                ticket, page.Id, page.WidthMm.Value, page.HeightMm.Value,
+                configuration.Layout.Orientation, rasterResolution.X, rasterResolution.Y,
+                configuration.Printer.Media, configuration.Printer.InputSource, page.Borderless);
+            var validation = await PrintTicketSynchronization.ValidateAsync(
+                ticket, message => App.WriteStartupStage("queue=" + printerName
+                    + "; launch=" + session.LaunchKind + "; " + message));
+            if (!validation.Validated)
+                throw new InvalidOperationException("PrintTicket validation failed: " + validation.ExtendedError);
+            session.UpdatePrintTicket(ticket);
+            if (session.LaunchKind != SettingsLaunchKind.UserDefaultPrintTicket) return;
+            try
+            {
+                await PrinterSystemDefaultsService.SetLegacyUserDefaultsAsync(
+                    printerName, page.Id, page.WidthMm.Value, page.HeightMm.Value,
+                    configuration.Layout.Orientation,
+                    rasterResolution.X, rasterResolution.Y, page.Borderless);
+                await PrinterSystemDefaultsService.VerifyAndNotifyLegacyUserDefaultsAsync(
+                    printerName, page.Id, page.WidthMm.Value, page.HeightMm.Value,
+                    configuration.Layout.Orientation,
+                    rasterResolution.X, rasterResolution.Y, page.Borderless);
+            }
+            catch (Exception legacyError)
+            {
+                App.WriteStartupException(
+                    "PSA user defaults were updated, but legacy DEVMODE synchronization failed",
+                    legacyError);
+                await SettingsApplyNotifications.ReportFailureAsync(printerName, legacyError);
             }
         }
 

@@ -31,7 +31,7 @@
   <data name="Auto.5471BCBDC1ED.Text"><value>Curve 1</value></data>
   <data name="Auto.55EB8098D769.Header"><value>Logische inkt-ID&#x27;s (letters, cijfers, komma&#x27;s)</value></data>
   <data name="Auto.55EB8098D769.PlaceholderText"><value>K,C,M</value></data>
-  <data name="Auto.5C063BCAA06D.Header"><value>IPv4-adres</value></data>
+  <data name="Auto.5C063BCAA06D.Header"><value>Voer het IPv4-adres van uw printer in (bijv. 192.168.1.50)</value></data>
   <data name="Auto.5C37FF0F3134.Text"><value>Hoogte (mm)</value></data>
   <data name="Auto.5C6A98D0E847.Text"><value>Expertmodus: de geselecteerde combinatie van papier en pagina wordt mogelijk niet ondersteund door de fabrikant.</value></data>
   <data name="Auto.5D31AF069F1B.Content"><value>USB</value></data>
@@ -232,7 +232,7 @@
   <data name="MainPage.Table.Connection.Text"><value>Verbinding</value></data>
   <data name="MainPage.Table.Default.Text"><value>Standaard</value></data>
   <data name="MainPage.Table.Model.Text"><value>Model</value></data>
-  <data name="MainPage.Table.Network.Text"><value>Netwerk</value></data>
+  <data name="MainPage.Table.Network.Text"><value>Status</value></data>
   <data name="MainPage.Table.Printer.Text"><value>Printer</value></data>
   <data name="MainPage.Title.Text"><value>pyToneRIP</value></data>
   <data name="MainPage.WindowsPrinters.Content"><value>Windows-printers</value></data>
@@ -261,4 +261,32 @@
   <data name="Usb.DiscoveryFailed"><value>USB-detectie mislukt: {0}</value></data>
   <data name="Usb.SelectMatchingDevice"><value>Selecteer een aangesloten USB-printer die overeenkomt met het gekozen model.</value></data>
   <data name="Usb.DestinationChanged"><value>De USB-bestemming is niet beschikbaar of is gewijzigd. Sluit de printer opnieuw aan en vernieuw.</value></data>
+  <data name="Choice.RemovedFromWindows" xml:space="preserve"><value>Verwijderd uit Windows</value></data>
+  <data name="Code.PrinterQueueMissingRemoveConfiguration" xml:space="preserve"><value>De printer ‘{0}’ is niet meer aanwezig in Windows. De opgeslagen configuratie uit pyToneRIP verwijderen?</value></data>
+  <data name="Code.PrinterAlreadyRemovedConfigurationDeleted" xml:space="preserve"><value>De printer ‘{0}’ was al uit Windows verwijderd. De opgeslagen configuratie is uit pyToneRIP verwijderd.</value></data>
+  <data name="Code.ConfigurationSavedWindowsDefaultsFailed"><value>De RIP-instellingen zijn opgeslagen. De Windows-afdrukinstellingen konden niet volledig worden toegepast: {0}</value></data>
+  <data name="Printer.FinestDetail" xml:space="preserve"><value>Fijnste details</value></data>
+  <data name="DeviceSetting.Drying_Time" xml:space="preserve"><value>Droogtijd na printkopdoorgang</value></data>
+  <data name="DeviceSetting.Page_Drying_Time" xml:space="preserve"><value>Droogtijd na pagina</value></data>
+  <data name="DeviceSetting.Minimum_Scan_Drying_Time" xml:space="preserve"><value>Minimale droogtijd na printkopdoorgang</value></data>
+  <data name="DeviceSetting.Paper_Thickness" xml:space="preserve"><value>Papierdikte</value></data>
+  <data name="DeviceSetting.Paper_Suction" xml:space="preserve"><value>Papieraanzuiging</value></data>
+  <data name="DeviceSetting.Feed_Adjustment" xml:space="preserve"><value>Correctie papierdoorvoer</value></data>
+  <data name="DeviceSetting.Feed_Sequence" xml:space="preserve"><value>Volgorde papierdoorvoer</value></data>
+  <data name="DeviceSetting.Platen_Gap" xml:space="preserve"><value>Plaatopening</value></data>
+  <data name="DeviceSetting.Save_Paper_Roll_Paper" xml:space="preserve"><value>Rolpapier besparen</value></data>
+  <data name="DeviceSetting.Microweave_Precision" xml:space="preserve"><value>MicroWeave-precisiecorrectie</value></data>
+  <data name="DeviceChoice.MediaDefault" xml:space="preserve"><value>Volgens medium</value></data>
+  <data name="DeviceChoice.Default" xml:space="preserve"><value>Standaardwaarde</value></data>
+  <data name="DeviceChoice.Off" xml:space="preserve"><value>Uit</value></data>
+  <data name="DeviceChoice.On" xml:space="preserve"><value>Aan</value></data>
+  <data name="DeviceChoice.Large" xml:space="preserve"><value>Groot</value></data>
+  <data name="DeviceChoice.Wider" xml:space="preserve"><value>Breder</value></data>
+  <data name="DeviceChoice.Wide" xml:space="preserve"><value>Breed</value></data>
+  <data name="DeviceChoice.Standard" xml:space="preserve"><value>Standaard</value></data>
+  <data name="DeviceChoice.Narrow" xml:space="preserve"><value>Smal</value></data>
+  <data name="DeviceChoice.Model_A" xml:space="preserve"><value>Model A</value></data>
+  <data name="DeviceChoice.Model_B" xml:space="preserve"><value>Model B</value></data>
+  <data name="DeviceChoice.Code" xml:space="preserve"><value>Code {0}</value></data>
+  <data name="DeviceChoice.ThinPaper" xml:space="preserve"><value>{0} (dun papier)</value></data>
 </root>

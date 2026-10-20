@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using pyToneRIP.Tasks.Services;
 using Windows.ApplicationModel.Background;
 using Windows.Foundation;
+using Windows.Foundation.Metadata;
 using Windows.Graphics.Printing.PrintSupport;
 using Windows.Graphics.Printing.PrintTicket;
 using Windows.Storage;
@@ -29,13 +30,13 @@ namespace pyToneRIP.Tasks
 
                 taskDeferral = taskInstance.GetDeferral();
                 taskInstance.Canceled += OnTaskCanceled;
-                _ = WritePdcLogAsync("PrintSupportExtension Run entered");
+                QueuePdcLog("PrintSupportExtension Run entered");
 
                 var details = taskInstance.TriggerDetails as PrintSupportExtensionTriggerDetails;
                 session = details?.Session;
                 if (session == null)
                 {
-                    _ = WritePdcLogAsync("PrintSupportExtension session is unavailable");
+                    QueuePdcLog("PrintSupportExtension session is unavailable");
                     CompleteTaskOnce("session unavailable");
                     return;
                 }
@@ -43,7 +44,7 @@ namespace pyToneRIP.Tasks
                 session.PrintTicketValidationRequested += OnPrintTicketValidationRequested;
                 session.PrintDeviceCapabilitiesChanged += OnPrintDeviceCapabilitiesChanged;
                 session.Start();
-                _ = WritePdcLogAsync("PrintSupportExtension session started");
+                QueuePdcLog("PrintSupportExtension session started");
             }
             catch (Exception error)
             {
@@ -51,7 +52,7 @@ namespace pyToneRIP.Tasks
                 // The calling print UI is waiting on this session even though the
                 // extension runs separately; an abrupt activation failure can
                 // leave the Page Setup request without a valid completion path.
-                _ = WritePdcLogAsync(
+                QueuePdcLog(
                     "PrintSupportExtension Run FAILED: " + DescribeException(error));
                 DetachSessionHandlers();
                 CompleteTaskOnce("Run failure");
@@ -62,26 +63,22 @@ namespace pyToneRIP.Tasks
             IBackgroundTaskInstance sender,
             BackgroundTaskCancellationReason reason)
         {
-            _ = WritePdcLogAsync(
+            QueuePdcLog(
                 "PrintSupportExtension cancellation requested: " + reason);
             DetachSessionHandlers();
             CompleteTaskOnce("background-task cancellation");
         }
 
-        private static async void OnPrintTicketValidationRequested(
+        private static void OnPrintTicketValidationRequested(
             PrintSupportExtensionSession session,
             PrintSupportPrintTicketValidationRequestedEventArgs args)
         {
             Deferral callbackDeferral = null;
             var validationStatusWasSet = false;
+            var diagnostic = "PrintTicket validation completed: Resolved";
             try
             {
                 callbackDeferral = args.GetDeferral();
-                await WritePdcLogAsync(
-                    "PrintTicket validation entered: "
-                    + SummarizePrinter(session)
-                    + "; " + SummarizeTicket(args.PrintTicket));
-
                 // pyToneRIP currently does not rewrite the application's ticket
                 // here. Model constraints are already expressed by the installed
                 // per-queue PDC, so a ticket accepted by the Windows print UI is
@@ -89,13 +86,10 @@ namespace pyToneRIP.Tasks
                 args.SetPrintTicketValidationStatus(
                     WorkflowPrintTicketValidationStatus.Resolved);
                 validationStatusWasSet = true;
-                await WritePdcLogAsync(
-                    "PrintTicket validation completed: Resolved");
             }
             catch (Exception error)
             {
-                await WritePdcLogAsync(
-                    "PrintTicket validation FAILED: " + DescribeException(error));
+                diagnostic = "PrintTicket validation FAILED: " + DescribeException(error);
 
                 // If validation failed before a result was returned, explicitly
                 // reject the ticket instead of leaving Windows waiting for an
@@ -106,14 +100,12 @@ namespace pyToneRIP.Tasks
                     {
                         args.SetPrintTicketValidationStatus(
                             WorkflowPrintTicketValidationStatus.Invalid);
-                        await WritePdcLogAsync(
-                            "PrintTicket validation fallback completed: Invalid");
+                        diagnostic += "; PrintTicket validation fallback completed: Invalid";
                     }
                     catch (Exception fallbackError)
                     {
-                        await WritePdcLogAsync(
-                            "PrintTicket validation fallback FAILED: "
-                            + DescribeException(fallbackError));
+                        diagnostic += "; PrintTicket validation fallback FAILED: "
+                            + DescribeException(fallbackError);
                     }
                 }
             }
@@ -122,6 +114,10 @@ namespace pyToneRIP.Tasks
                 CompleteCallbackDeferralSafely(
                     callbackDeferral, "PrintTicket validation");
             }
+            // Windows is waiting for Complete, not just Set...Status. Optional
+            // COM reads and file I/O must not hold the validation deferral.
+            // Detailed ticket diagnostics belong at the ValidateAsync caller.
+            QueuePdcLog(diagnostic);
         }
 
         private async void OnPrintDeviceCapabilitiesChanged(
@@ -132,6 +128,7 @@ namespace pyToneRIP.Tasks
             try
             {
                 callbackDeferral = args.GetDeferral();
+                ConfigureLosslessMxdc(args);
                 var printerUri = session.Printer?.PrinterUri?.ToString();
                 var printerName = session.Printer?.PrinterName;
                 await WritePdcLogAsync(
@@ -176,6 +173,45 @@ namespace pyToneRIP.Tasks
             }
         }
 
+        private static void ConfigureLosslessMxdc(
+            PrintSupportPrintDeviceCapabilitiesChangedEventArgs args)
+        {
+            try
+            {
+                if (!ApiInformation.IsPropertyPresent(
+                    "Windows.Graphics.Printing.PrintSupport.PrintSupportPrintDeviceCapabilitiesChangedEventArgs",
+                    "MxdcImageQualityConfiguration"))
+                {
+                    QueuePdcLog("MXDC lossless image configuration is unavailable");
+                    return;
+                }
+
+                var quality = args.MxdcImageQualityConfiguration;
+                if (quality == null)
+                {
+                    QueuePdcLog("MXDC lossless image configuration returned null");
+                    return;
+                }
+
+                // RGB calibration encodes the channel in exact R/B bytes.
+                // JPEG in GDI-to-XPS destroys those selectors before XpsToTiff.
+                // Configure the queue for every PageOutputQuality, not per job.
+                quality.NormalOutputQuality = XpsImageQuality.Png;
+                quality.DraftOutputQuality = XpsImageQuality.Png;
+                quality.HighOutputQuality = XpsImageQuality.Png;
+                quality.PhotographicOutputQuality = XpsImageQuality.Png;
+                quality.TextOutputQuality = XpsImageQuality.Png;
+                quality.AutomaticOutputQuality = XpsImageQuality.Png;
+                quality.FaxOutputQuality = XpsImageQuality.Png;
+                QueuePdcLog("MXDC image configuration applied: PNG for all output qualities");
+            }
+            catch (Exception error)
+            {
+                QueuePdcLog("MXDC lossless image configuration FAILED: "
+                    + DescribeException(error));
+            }
+        }
+
         private void DetachSessionHandlers()
         {
             var activeSession = session;
@@ -192,7 +228,7 @@ namespace pyToneRIP.Tasks
             }
             catch (Exception error)
             {
-                _ = WritePdcLogAsync(
+                QueuePdcLog(
                     "PrintSupportExtension handler cleanup FAILED: "
                     + DescribeException(error));
             }
@@ -211,7 +247,7 @@ namespace pyToneRIP.Tasks
             }
             catch (Exception error)
             {
-                _ = WritePdcLogAsync(
+                QueuePdcLog(
                     "PrintSupportExtension task completion FAILED (" + reason
                     + "): " + DescribeException(error));
             }
@@ -230,22 +266,9 @@ namespace pyToneRIP.Tasks
             }
             catch (Exception error)
             {
-                _ = WritePdcLogAsync(
+                QueuePdcLog(
                     callbackName + " deferral completion FAILED: "
                     + DescribeException(error));
-            }
-        }
-
-        private static string SummarizePrinter(PrintSupportExtensionSession session)
-        {
-            try
-            {
-                return "uri=" + (session?.Printer?.PrinterUri?.ToString() ?? "")
-                    + "; name=" + (session?.Printer?.PrinterName ?? "");
-            }
-            catch (Exception error)
-            {
-                return "printer summary unavailable: " + DescribeException(error);
             }
         }
 
@@ -282,25 +305,12 @@ namespace pyToneRIP.Tasks
                 + "; names=" + string.Join(",", names);
         }
 
-        private static string SummarizeTicket(
-            Windows.Graphics.Printing.PrintTicket.WorkflowPrintTicket ticket)
+        private static void QueuePdcLog(string message)
         {
-            try
-            {
-                var selection = pyToneRIP.Shared.PrintTicketSynchronization.Read(ticket);
-                return "page=" + (selection.PageOptionName ?? "<absent>")
-                    + "; media=" + (selection.MediaOptionName ?? "<absent>")
-                    + "; input=" + (selection.InputOptionName ?? "<absent>")
-                    + "; size=" + (selection.PageWidthMm?.ToString("0.###") ?? "?")
-                    + "x" + (selection.PageHeightMm?.ToString("0.###") ?? "?")
-                    + "mm; orientation=" + (selection.OrientationOptionName ?? "<absent>")
-                    + "; resolution=" + (selection.ResolutionX?.ToString() ?? "?")
-                    + "x" + (selection.ResolutionY?.ToString() ?? "?");
-            }
-            catch (Exception error)
-            {
-                return "ticket summary unavailable: " + DescribeException(error);
-            }
+            // Keep file I/O off activation, validation and cancellation paths.
+            // Only the diagnostic string crosses threads, never a print object.
+            try { _ = Task.Run(() => WritePdcLogAsync(message)); }
+            catch { /* Diagnostics must not prevent the callback from returning. */ }
         }
 
         private static Task WritePdcLogAsync(string message)

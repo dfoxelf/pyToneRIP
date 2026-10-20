@@ -40,6 +40,9 @@ class EpsonEscp2ModeParameters:
     printer_weave_mode: int | None = None
     command_vertical_units: int | None = None
     command_horizontal_units: int | None = None
+    # Override only when host-weave rows use a different grid from PrinterDPI.
+    # Keep the original physical grid for other printer families.
+    weave_vertical_dpi: int | None = None
 
     @property
     def physical_xdpi(self) -> int:
@@ -57,7 +60,7 @@ class EpsonEscp2ModeParameters:
         return max(
             1,
             self.raw_nozzle_separation
-            * self.physical_vertical_dpi
+            * (self.weave_vertical_dpi or self.physical_vertical_dpi)
             // self.base_separation_dpi,
         )
 
@@ -100,7 +103,11 @@ class EpsonEscp2ModeParameters:
         return self.resolution_scale // self.physical_xdpi
 
     def effective_head_offset(self, raw_offset: int) -> int:
-        return raw_offset * self.physical_vertical_dpi // self.base_separation_dpi
+        return (
+            raw_offset
+            * (self.weave_vertical_dpi or self.physical_vertical_dpi)
+            // self.base_separation_dpi
+        )
 
 
 def _mode(

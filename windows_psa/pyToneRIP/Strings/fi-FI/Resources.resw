@@ -31,7 +31,7 @@
   <data name="Auto.5471BCBDC1ED.Text"><value>Käyrä 1</value></data>
   <data name="Auto.55EB8098D769.Header"><value>Loogiset mustetunnukset (kirjaimet, numerot, pilkut)</value></data>
   <data name="Auto.55EB8098D769.PlaceholderText"><value>K,C,M</value></data>
-  <data name="Auto.5C063BCAA06D.Header"><value>IPv4-osoite</value></data>
+  <data name="Auto.5C063BCAA06D.Header"><value>Anna tulostimesi IPv4-osoite (esim. 192.168.1.50)</value></data>
   <data name="Auto.5C37FF0F3134.Text"><value>Korkeus (mm)</value></data>
   <data name="Auto.5C6A98D0E847.Text"><value>Asiantuntijatila: valmistaja ei ehkä tue valittua paperi- ja sivuyhdistelmää.</value></data>
   <data name="Auto.5D31AF069F1B.Content"><value>USB</value></data>
@@ -232,7 +232,7 @@
   <data name="MainPage.Table.Connection.Text"><value>Yhteys</value></data>
   <data name="MainPage.Table.Default.Text"><value>Oletus</value></data>
   <data name="MainPage.Table.Model.Text"><value>Malli</value></data>
-  <data name="MainPage.Table.Network.Text"><value>Verkko</value></data>
+  <data name="MainPage.Table.Network.Text"><value>Tila</value></data>
   <data name="MainPage.Table.Printer.Text"><value>Tulostin</value></data>
   <data name="MainPage.Title.Text"><value>pyToneRIP</value></data>
   <data name="MainPage.WindowsPrinters.Content"><value>Windows-tulostimet</value></data>
@@ -261,4 +261,32 @@
   <data name="Usb.DiscoveryFailed"><value>USB-laitteiden haku epäonnistui: {0}</value></data>
   <data name="Usb.SelectMatchingDevice"><value>Valitse liitetty USB-tulostin, joka vastaa valittua mallia.</value></data>
   <data name="Usb.DestinationChanged"><value>USB-kohde ei ole käytettävissä tai se on muuttunut. Liitä tulostin uudelleen ja päivitä luettelo.</value></data>
+  <data name="Choice.RemovedFromWindows" xml:space="preserve"><value>Poistettu Windowsista</value></data>
+  <data name="Code.PrinterQueueMissingRemoveConfiguration" xml:space="preserve"><value>Tulostinta ”{0}” ei enää ole Windowsissa. Poistetaanko sen tallennettu määritys pyToneRIPistä?</value></data>
+  <data name="Code.PrinterAlreadyRemovedConfigurationDeleted" xml:space="preserve"><value>Tulostin ”{0}” oli jo poistettu Windowsista. Sen tallennettu määritys poistettiin pyToneRIPistä.</value></data>
+  <data name="Code.ConfigurationSavedWindowsDefaultsFailed"><value>RIP-asetukset on tallennettu. Windowsin tulostusasetuksia ei voitu ottaa kokonaan käyttöön: {0}</value></data>
+  <data name="Printer.FinestDetail" xml:space="preserve"><value>Tarkimmat yksityiskohdat</value></data>
+  <data name="DeviceSetting.Drying_Time" xml:space="preserve"><value>Kuivumisaika tulostuspään pyyhkäisyn jälkeen</value></data>
+  <data name="DeviceSetting.Page_Drying_Time" xml:space="preserve"><value>Kuivumisaika sivun jälkeen</value></data>
+  <data name="DeviceSetting.Minimum_Scan_Drying_Time" xml:space="preserve"><value>Vähimmäiskuivumisaika tulostuspään pyyhkäisyn jälkeen</value></data>
+  <data name="DeviceSetting.Paper_Thickness" xml:space="preserve"><value>Paperin paksuus</value></data>
+  <data name="DeviceSetting.Paper_Suction" xml:space="preserve"><value>Paperin imu</value></data>
+  <data name="DeviceSetting.Feed_Adjustment" xml:space="preserve"><value>Paperinsyötön säätö</value></data>
+  <data name="DeviceSetting.Feed_Sequence" xml:space="preserve"><value>Paperinsyötön järjestys</value></data>
+  <data name="DeviceSetting.Platen_Gap" xml:space="preserve"><value>Tulostuspään väli</value></data>
+  <data name="DeviceSetting.Save_Paper_Roll_Paper" xml:space="preserve"><value>Säästä rullapaperia</value></data>
+  <data name="DeviceSetting.Microweave_Precision" xml:space="preserve"><value>MicroWeave-tarkkuuskorjaus</value></data>
+  <data name="DeviceChoice.MediaDefault" xml:space="preserve"><value>Materiaalityypin mukaan</value></data>
+  <data name="DeviceChoice.Default" xml:space="preserve"><value>Oletus</value></data>
+  <data name="DeviceChoice.Off" xml:space="preserve"><value>Pois</value></data>
+  <data name="DeviceChoice.On" xml:space="preserve"><value>Päällä</value></data>
+  <data name="DeviceChoice.Large" xml:space="preserve"><value>Suuri</value></data>
+  <data name="DeviceChoice.Wider" xml:space="preserve"><value>Leveämpi</value></data>
+  <data name="DeviceChoice.Wide" xml:space="preserve"><value>Leveä</value></data>
+  <data name="DeviceChoice.Standard" xml:space="preserve"><value>Normaali</value></data>
+  <data name="DeviceChoice.Narrow" xml:space="preserve"><value>Kapea</value></data>
+  <data name="DeviceChoice.Model_A" xml:space="preserve"><value>Malli A</value></data>
+  <data name="DeviceChoice.Model_B" xml:space="preserve"><value>Malli B</value></data>
+  <data name="DeviceChoice.Code" xml:space="preserve"><value>Koodi {0}</value></data>
+  <data name="DeviceChoice.ThinPaper" xml:space="preserve"><value>{0} (ohut paperi)</value></data>
 </root>

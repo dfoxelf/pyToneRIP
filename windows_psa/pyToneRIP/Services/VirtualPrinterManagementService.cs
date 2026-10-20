@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using pyToneRIP.Models;
 using Windows.ApplicationModel;
 using Windows.Devices.Printers;
 using Windows.Globalization;
@@ -133,29 +134,86 @@ namespace pyToneRIP.Services
                 "The package does not contain an English PDR for model " + token + ".");
         }
 
-        public static async Task RemoveAsync(string printerName)
+        public static string GetPrinterUri(string portName)
+        {
+            if (string.IsNullOrWhiteSpace(portName))
+                return null;
+            var start = portName.IndexOf(PrinterUriPrefix, StringComparison.OrdinalIgnoreCase);
+            if (start < 0)
+                return null;
+            var end = portName.IndexOf("_S-1-", start, StringComparison.OrdinalIgnoreCase);
+            return (end < 0 ? portName.Substring(start)
+                : portName.Substring(start, end - start)).TrimEnd('_');
+        }
+
+        public static WindowsQueueDescriptor FindQueue(
+            PrinterInstanceRecord printer, IReadOnlyList<WindowsQueueDescriptor> queues)
+        {
+            if (queues == null)
+                throw new InvalidDataException("Windows printer enumeration returned no result.");
+            // A queue name can be reused after external deletion. Resolve the
+            // saved instance by URI/port so it cannot adopt another printer.
+            if (!string.IsNullOrWhiteSpace(printer.PrinterUri))
+                return queues.FirstOrDefault(queue => string.Equals(
+                    GetPrinterUri(queue.PortName), printer.PrinterUri,
+                    StringComparison.OrdinalIgnoreCase));
+            if (!string.IsNullOrWhiteSpace(printer.SystemQueueId))
+                return queues.FirstOrDefault(queue => string.Equals(
+                    queue.PortName, printer.SystemQueueId, StringComparison.OrdinalIgnoreCase));
+            throw new InvalidOperationException("The saved printer has no queue identity.");
+        }
+
+        public static async Task<WindowsQueueDescriptor> FindQueueAsync(PrinterInstanceRecord printer) =>
+            FindQueue(printer, await QueueHelperClient.ListAsync());
+
+        // true: Windows removed the queue; false: the saved instance is already absent.
+        public static async Task<bool> RemoveAsync(PrinterInstanceRecord printer)
         {
             AssertManagerPackage();
-            if (string.IsNullOrWhiteSpace(printerName))
-                throw new ArgumentException("A Windows printer name is required.", nameof(printerName));
+            var queue = await FindQueueAsync(printer);
+            if (queue == null)
+            {
+                App.WriteStartupStage("Virtual printer already absent: uri=" + printer.PrinterUri);
+                return false;
+            }
+            var printerName = queue.Name;
 
             IReadOnlyList<string> owned = VirtualPrinterManager.FindAllVirtualPrinters(
                 Package.Current.Id.FamilyName);
             if (owned == null || !owned.Any(item => string.Equals(
                 item, printerName, StringComparison.OrdinalIgnoreCase)))
             {
+                if (await FindQueueAsync(printer) == null)
+                    return false;
                 throw new InvalidOperationException(
                     "The requested virtual printer is not owned by pyToneRIP Manager.");
             }
 
             App.WriteStartupStage(
                 "VirtualPrinterManager remove begin: name=" + printerName);
-            var removed = await VirtualPrinterManager.RemoveVirtualPrinterAsync(printerName);
+            bool removed;
+            try
+            {
+                removed = await VirtualPrinterManager.RemoveVirtualPrinterAsync(printerName);
+            }
+            catch (Exception)
+            {
+                // Windows Settings may remove the queue after our enumeration.
+                // Only confirmed absence allows deleting the saved configuration.
+                if (await FindQueueAsync(printer) == null)
+                    return false;
+                throw;
+            }
             App.WriteStartupStage(
                 "VirtualPrinterManager remove returned: removed=" + removed);
             if (!removed)
+            {
+                if (await FindQueueAsync(printer) == null)
+                    return false;
                 throw new InvalidOperationException(
                     "Windows did not remove the virtual printer.");
+            }
+            return true;
         }
 
         private static void AssertPrinterUri(string token, string printerUri)

@@ -46,7 +46,8 @@ namespace pyToneRIP.Services
             Shared.PrintTicketSynchronization.Apply(
                 ticket, pageId, pageWidthMm, pageHeightMm,
                 orientation, resolutionX, resolutionY, mediaId, inputSourceId, borderless);
-            var validation = await ticket.ValidateAsync();
+            var validation = await Shared.PrintTicketSynchronization.ValidateAsync(
+                ticket, message => { _ = LogAsync("queue=" + queueName + "; " + message); });
             if (!validation.Validated)
                 throw new InvalidOperationException(
                     "Default PrintTicket validation failed: " + validation.ExtendedError);
@@ -87,6 +88,7 @@ namespace pyToneRIP.Services
                 legacySyncSucceeded = false;
                 await LogAsync("Legacy DEVMODE synchronization failed after modern PrintTicket commit: "
                     + queueName + "; " + error.GetBaseException().Message);
+                await SettingsApplyNotifications.ReportFailureAsync(queueName, error);
             }
             // Notify the Windows print system after changing queue preferences.
             // Keep this on the caller's UI apartment.

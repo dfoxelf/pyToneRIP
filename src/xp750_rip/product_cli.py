@@ -447,6 +447,105 @@ def _replay_print_copies(
     return size * (copies - 1)
 
 
+def _render_psa_document(
+    record: Path, *, bridge: dict[str, object], adapter_tiff: Path,
+    output_prn: Path, curve_root: Path | None, manifest: Path | None,
+    result_path: Path | None, performance_trace: PerformanceTrace | None,
+    live_transport: StreamingTransport | None,
+    cancel_check: Callable[[], None] | None,
+    send_progress: Callable[[int], None] | None,
+    send_total_bytes: Callable[[int], None] | None,
+) -> dict[str, object]:
+    """RIP each source page once, then assemble native copies in ticket order."""
+    from PIL import Image
+    from xp750_rip.windows_psa import print_ticket_collated, print_ticket_resolution, write_render_result
+
+    copies = int(bridge["copies"])
+    ticket = Path(str(bridge["print_ticket_file"]))
+    collated = print_ticket_collated(ticket)
+    dpi = print_ticket_resolution(ticket)
+    if output_prn.exists():
+        raise FileExistsError(f"Refusing to overwrite existing PRN: {output_prn}")
+    cache = output_prn.with_name(output_prn.name + ".pages")
+    cache.mkdir(parents=True, exist_ok=False)
+    pages: list[Path] = []
+    with Image.open(adapter_tiff) as image:
+        for index in range(image.n_frames):
+            if cancel_check is not None:
+                cancel_check()
+            image.seek(index)
+            page_input = cache / f"page-{index + 1}.tiff"
+            image.copy().save(page_input, format="TIFF", compression="tiff_lzw",
+                              dpi=dpi or image.info.get("dpi", (360, 360)))
+            page_prn = cache / f"page-{index + 1}.prn"
+            render_psa_job(
+                record, output_prn=page_prn, input_tiff=page_input,
+                curve_root=curve_root, normalized_tiff=cache / f"normalized-{index + 1}.tiff",
+                manifest=cache / f"page-{index + 1}.json",
+                performance_trace=performance_trace, cancel_check=cancel_check,
+            )
+            pages.append(page_prn)
+    ordered_pages = (
+        (page for _ in range(copies) for page in pages) if collated else
+        (page for page in pages for _ in range(copies))
+    )
+    total = sum(page.stat().st_size for page in pages) * copies
+    partial = output_prn.with_name(output_prn.name + ".partial")
+    digest = sha256()
+    written = 0
+    with partial.open("xb") as stream:
+        def produce(send_chunk: Callable[[bytes], None]) -> None:
+            nonlocal written
+            for page in ordered_pages:
+                with page.open("rb") as source:
+                    while True:
+                        if cancel_check is not None:
+                            cancel_check()
+                        chunk = source.read(1024 * 1024)
+                        if not chunk:
+                            break
+                        stream.write(chunk)
+                        digest.update(chunk)
+                        written += len(chunk)
+                        send_chunk(chunk)
+        if send_total_bytes is not None:
+            send_total_bytes(total)
+        receipt = (
+            live_transport.send_from_producer(
+                produce, cancel_check=cancel_check, progress=send_progress
+            ) if live_transport is not None else None
+        )
+        if live_transport is None:
+            produce(lambda chunk: None)
+        stream.flush()
+    if written != total or (receipt is not None and receipt.bytes_sent != total):
+        raise ValueError("Multi-page native job and transmitted byte count differ")
+    partial.rename(output_prn)
+    summary = {
+        "page_count": len(pages), "copies": copies, "collated": collated,
+        "stream_size": total, "stream_sha256": digest.hexdigest(),
+        "pages": [str(page) for page in pages],
+    }
+    if receipt is not None:
+        summary["transmission"] = {"status": "SENT", "bytes_sent": total,
+                                   "destination": receipt.destination, "copies": copies}
+    if manifest is not None:
+        manifest.parent.mkdir(parents=True, exist_ok=True)
+        manifest.write_text(json.dumps(summary, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    payload = write_render_result(
+        bridge=bridge, input_tiff=adapter_tiff, adapter_tiff=adapter_tiff,
+        prn_path=output_prn, manifest_path=manifest,
+    )
+    payload.update(page_count=len(pages), collated=collated, copies_in_prn=copies)
+    if receipt is not None:
+        payload.update(status="SENT", transport_attempted=True, transport={
+            "destination": receipt.destination, "bytes_sent": total, "copies": copies})
+    if result_path is not None:
+        result_path.parent.mkdir(parents=True, exist_ok=True)
+        result_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    return payload
+
+
 def render_psa_job(
     record: Path,
     *,
@@ -480,6 +579,17 @@ def render_psa_job(
         adapter_tiff = Path(str(bridge["adapter_tiff_file"]))
     if adapter_tiff is None:
         raise ValueError("job record не содержит adapter_tiff; укажите --input-tiff")
+    from PIL import Image
+    with Image.open(adapter_tiff) as image:
+        multiple_pages = image.n_frames > 1
+    if multiple_pages:
+        return _render_psa_document(
+            record, bridge=bridge, adapter_tiff=adapter_tiff, output_prn=output_prn,
+            curve_root=curve_root, manifest=manifest, result_path=result_path,
+            performance_trace=performance_trace, live_transport=live_transport,
+            cancel_check=cancel_check, send_progress=send_progress,
+            send_total_bytes=send_total_bytes,
+        )
     normalized_tiff = normalized_tiff or (
         record.resolve().parent / "python-input-grayscale.tiff"
     )

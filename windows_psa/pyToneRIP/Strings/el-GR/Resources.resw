@@ -31,7 +31,7 @@
   <data name="Auto.5471BCBDC1ED.Text"><value>Καμπύλη 1</value></data>
   <data name="Auto.55EB8098D769.Header"><value>Αναγνωριστικά λογικών μελανιών (γράμματα, ψηφία, κόμματα)</value></data>
   <data name="Auto.55EB8098D769.PlaceholderText"><value>K,C,M</value></data>
-  <data name="Auto.5C063BCAA06D.Header"><value>Διεύθυνση IPv4</value></data>
+  <data name="Auto.5C063BCAA06D.Header"><value>Εισαγάγετε τη διεύθυνση IPv4 του εκτυπωτή σας (π.χ. 192.168.1.50)</value></data>
   <data name="Auto.5C37FF0F3134.Text"><value>Ύψος (mm)</value></data>
   <data name="Auto.5C6A98D0E847.Text"><value>Λειτουργία ειδικού: ο επιλεγμένος συνδυασμός χαρτιού και σελίδας ενδέχεται να μην υποστηρίζεται από τον κατασκευαστή.</value></data>
   <data name="Auto.5D31AF069F1B.Content"><value>USB</value></data>
@@ -232,7 +232,7 @@
   <data name="MainPage.Table.Connection.Text"><value>Σύνδεση</value></data>
   <data name="MainPage.Table.Default.Text"><value>Αθέτηση</value></data>
   <data name="MainPage.Table.Model.Text"><value>Μοντέλο</value></data>
-  <data name="MainPage.Table.Network.Text"><value>Δίκτυο</value></data>
+  <data name="MainPage.Table.Network.Text"><value>Κατάσταση</value></data>
   <data name="MainPage.Table.Printer.Text"><value>Εκτυπωτής</value></data>
   <data name="MainPage.Title.Text"><value>pyToneRIP</value></data>
   <data name="MainPage.WindowsPrinters.Content"><value>Εκτυπωτές Windows</value></data>
@@ -261,4 +261,32 @@
   <data name="Usb.DiscoveryFailed"><value>Αποτυχία εντοπισμού USB: {0}</value></data>
   <data name="Usb.SelectMatchingDevice"><value>Επιλέξτε έναν συνδεδεμένο εκτυπωτή USB που αντιστοιχεί στο επιλεγμένο μοντέλο.</value></data>
   <data name="Usb.DestinationChanged"><value>Ο προορισμός USB δεν είναι διαθέσιμος ή έχει αλλάξει. Συνδέστε ξανά τον εκτυπωτή και ανανεώστε τη λίστα.</value></data>
+  <data name="Choice.RemovedFromWindows" xml:space="preserve"><value>Καταργήθηκε από τα Windows</value></data>
+  <data name="Code.PrinterQueueMissingRemoveConfiguration" xml:space="preserve"><value>Ο εκτυπωτής «{0}» δεν υπάρχει πλέον στα Windows. Να καταργηθεί η αποθηκευμένη διαμόρφωσή του από το pyToneRIP;</value></data>
+  <data name="Code.PrinterAlreadyRemovedConfigurationDeleted" xml:space="preserve"><value>Ο εκτυπωτής «{0}» είχε ήδη καταργηθεί από τα Windows. Η αποθηκευμένη διαμόρφωσή του καταργήθηκε από το pyToneRIP.</value></data>
+  <data name="Code.ConfigurationSavedWindowsDefaultsFailed"><value>Οι ρυθμίσεις RIP αποθηκεύτηκαν. Δεν ήταν δυνατή η πλήρης εφαρμογή των ρυθμίσεων εκτύπωσης των Windows: {0}</value></data>
+  <data name="Printer.FinestDetail" xml:space="preserve"><value>Μέγιστη λεπτομέρεια</value></data>
+  <data name="DeviceSetting.Drying_Time" xml:space="preserve"><value>Στέγνωμα μετά τη διέλευση κεφαλής</value></data>
+  <data name="DeviceSetting.Page_Drying_Time" xml:space="preserve"><value>Στέγνωμα μετά τη σελίδα</value></data>
+  <data name="DeviceSetting.Minimum_Scan_Drying_Time" xml:space="preserve"><value>Ελάχιστο στέγνωμα μετά τη διέλευση κεφαλής</value></data>
+  <data name="DeviceSetting.Paper_Thickness" xml:space="preserve"><value>Πάχος χαρτιού</value></data>
+  <data name="DeviceSetting.Paper_Suction" xml:space="preserve"><value>Αναρρόφηση χαρτιού</value></data>
+  <data name="DeviceSetting.Feed_Adjustment" xml:space="preserve"><value>Ρύθμιση τροφοδοσίας χαρτιού</value></data>
+  <data name="DeviceSetting.Feed_Sequence" xml:space="preserve"><value>Ακολουθία τροφοδοσίας χαρτιού</value></data>
+  <data name="DeviceSetting.Platen_Gap" xml:space="preserve"><value>Διάκενο κεφαλής</value></data>
+  <data name="DeviceSetting.Save_Paper_Roll_Paper" xml:space="preserve"><value>Εξοικονόμηση χαρτιού σε ρολό</value></data>
+  <data name="DeviceSetting.Microweave_Precision" xml:space="preserve"><value>Διόρθωση ακρίβειας MicroWeave</value></data>
+  <data name="DeviceChoice.MediaDefault" xml:space="preserve"><value>Σύμφωνα με το μέσο</value></data>
+  <data name="DeviceChoice.Default" xml:space="preserve"><value>Προεπιλογή</value></data>
+  <data name="DeviceChoice.Off" xml:space="preserve"><value>Ανενεργό</value></data>
+  <data name="DeviceChoice.On" xml:space="preserve"><value>Ενεργό</value></data>
+  <data name="DeviceChoice.Large" xml:space="preserve"><value>Μεγάλο</value></data>
+  <data name="DeviceChoice.Wider" xml:space="preserve"><value>Πλατύτερο</value></data>
+  <data name="DeviceChoice.Wide" xml:space="preserve"><value>Πλατύ</value></data>
+  <data name="DeviceChoice.Standard" xml:space="preserve"><value>Κανονικό</value></data>
+  <data name="DeviceChoice.Narrow" xml:space="preserve"><value>Στενό</value></data>
+  <data name="DeviceChoice.Model_A" xml:space="preserve"><value>Μοντέλο A</value></data>
+  <data name="DeviceChoice.Model_B" xml:space="preserve"><value>Μοντέλο B</value></data>
+  <data name="DeviceChoice.Code" xml:space="preserve"><value>Κωδικός {0}</value></data>
+  <data name="DeviceChoice.ThinPaper" xml:space="preserve"><value>{0} (λεπτό χαρτί)</value></data>
 </root>

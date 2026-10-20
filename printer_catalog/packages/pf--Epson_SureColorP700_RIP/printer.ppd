@@ -154,5 +154,8 @@
 *InputSlot Front_Fineart/Front Fineart: "<< /MediaPosition 0 >> setpagedevice"
 *InputSlot Front_Board/Front Board: "<< /MediaPosition 0 >> setpagedevice"
 *InputSlot Roll_Paper/Roll Paper: "<< /MediaPosition 0 >> setpagedevice"
+*InputSlot Front_No_Eject_Roller_Glossy_Paper/Front - No Eject Roller (Glossy Paper): "<< /MediaPosition 0 >> setpagedevice"
+*de.InputSlot Front_No_Eject_Roller_Glossy_Paper/Vorne - ohne Auswurfrolle (Glanzpapier): ""
+*ru.InputSlot Front_No_Eject_Roller_Glossy_Paper/Передняя подача без выходных роликов (глянцевая бумага): ""
 *CloseUI: *InputSlot
 *cupsFilter: "application/vnd.cups-raster 0 -"

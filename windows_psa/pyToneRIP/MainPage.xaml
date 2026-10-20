@@ -141,7 +141,7 @@
             <TextBlock x:Uid="MainPage/Table/Connection" Grid.Column="2" Text="Connection" VerticalAlignment="Center" FontWeight="SemiBold" TextWrapping="Wrap"/>
             <TextBlock x:Uid="MainPage/Table/Default" Grid.Column="3" Text="Default" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" FontWeight="SemiBold" TextWrapping="Wrap"/>
             <TextBlock x:Uid="MainPage/Table/Configuration" Grid.Column="4" Text="Configuration" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" FontWeight="SemiBold" TextWrapping="Wrap"/>
-            <TextBlock x:Uid="MainPage/Table/Network" Grid.Column="5" Text="Network" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" FontWeight="SemiBold" TextWrapping="Wrap"/>
+            <TextBlock x:Uid="MainPage/Table/Network" Grid.Column="5" Text="Status" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" FontWeight="SemiBold" TextWrapping="Wrap"/>
           </Grid>
           <ListView x:Name="PrinterList" Grid.Row="1" SelectionMode="Single"
                     SelectionChanged="PrinterSelectionChanged" DoubleTapped="PrinterItemDoubleTapped">

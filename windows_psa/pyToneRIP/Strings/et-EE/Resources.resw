@@ -31,7 +31,7 @@
   <data name="Auto.5471BCBDC1ED.Text"><value>Kõver 1</value></data>
   <data name="Auto.55EB8098D769.Header"><value>Loogilise tindi ID-d (tähed, numbrid, komad)</value></data>
   <data name="Auto.55EB8098D769.PlaceholderText"><value>K,C,M</value></data>
-  <data name="Auto.5C063BCAA06D.Header"><value>IPv4 aadress</value></data>
+  <data name="Auto.5C063BCAA06D.Header"><value>Sisestage oma printeri IPv4-aadress (nt 192.168.1.50)</value></data>
   <data name="Auto.5C37FF0F3134.Text"><value>Kõrgus (mm)</value></data>
   <data name="Auto.5C6A98D0E847.Text"><value>Eksperdirežiim: tootja ei pruugi valitud paberi ja lehe kombinatsiooni toetada.</value></data>
   <data name="Auto.5D31AF069F1B.Content"><value>USB</value></data>
@@ -232,7 +232,7 @@
   <data name="MainPage.Table.Connection.Text"><value>Ühendus</value></data>
   <data name="MainPage.Table.Default.Text"><value>Vaikimisi</value></data>
   <data name="MainPage.Table.Model.Text"><value>Mudel</value></data>
-  <data name="MainPage.Table.Network.Text"><value>Võrk</value></data>
+  <data name="MainPage.Table.Network.Text"><value>Olek</value></data>
   <data name="MainPage.Table.Printer.Text"><value>Printer</value></data>
   <data name="MainPage.Title.Text"><value>pyToneRIP</value></data>
   <data name="MainPage.WindowsPrinters.Content"><value>Windowsi printerid</value></data>
@@ -261,4 +261,32 @@
   <data name="Usb.DiscoveryFailed"><value>USB tuvastamine nurjus: {0}</value></data>
   <data name="Usb.SelectMatchingDevice"><value>Valige ühendatud USB-printer, mis vastab valitud mudelile.</value></data>
   <data name="Usb.DestinationChanged"><value>USB-sihtkoht pole saadaval või on muutunud. Ühendage printer uuesti ja värskendage loendit.</value></data>
+  <data name="Choice.RemovedFromWindows" xml:space="preserve"><value>Windowsist eemaldatud</value></data>
+  <data name="Code.PrinterQueueMissingRemoveConfiguration" xml:space="preserve"><value>Printerit „{0}“ pole enam Windowsis. Kas eemaldada selle salvestatud seadistus pyToneRIP-ist?</value></data>
+  <data name="Code.PrinterAlreadyRemovedConfigurationDeleted" xml:space="preserve"><value>Printer „{0}“ oli juba Windowsist eemaldatud. Selle salvestatud seadistus eemaldati pyToneRIP-ist.</value></data>
+  <data name="Code.ConfigurationSavedWindowsDefaultsFailed"><value>RIP-i sätted on salvestatud. Windowsi prindisätteid ei saanud täielikult rakendada: {0}</value></data>
+  <data name="Printer.FinestDetail" xml:space="preserve"><value>Peenimad detailid</value></data>
+  <data name="DeviceSetting.Drying_Time" xml:space="preserve"><value>Kuivamine pärast prindipea läbimist</value></data>
+  <data name="DeviceSetting.Page_Drying_Time" xml:space="preserve"><value>Kuivamine pärast lehte</value></data>
+  <data name="DeviceSetting.Minimum_Scan_Drying_Time" xml:space="preserve"><value>Vähim kuivamisaeg pärast prindipea läbimist</value></data>
+  <data name="DeviceSetting.Paper_Thickness" xml:space="preserve"><value>Paberi paksus</value></data>
+  <data name="DeviceSetting.Paper_Suction" xml:space="preserve"><value>Paberi vaakumhoid</value></data>
+  <data name="DeviceSetting.Feed_Adjustment" xml:space="preserve"><value>Paberi söötmise korrigeerimine</value></data>
+  <data name="DeviceSetting.Feed_Sequence" xml:space="preserve"><value>Paberi söötmise järjestus</value></data>
+  <data name="DeviceSetting.Platen_Gap" xml:space="preserve"><value>Prindipea vahe</value></data>
+  <data name="DeviceSetting.Save_Paper_Roll_Paper" xml:space="preserve"><value>Rullpaberi säästmine</value></data>
+  <data name="DeviceSetting.Microweave_Precision" xml:space="preserve"><value>MicroWeave’i täpsuskorrektsioon</value></data>
+  <data name="DeviceChoice.MediaDefault" xml:space="preserve"><value>Kandja järgi</value></data>
+  <data name="DeviceChoice.Default" xml:space="preserve"><value>Vaikimisi</value></data>
+  <data name="DeviceChoice.Off" xml:space="preserve"><value>Väljas</value></data>
+  <data name="DeviceChoice.On" xml:space="preserve"><value>Sees</value></data>
+  <data name="DeviceChoice.Large" xml:space="preserve"><value>Suur</value></data>
+  <data name="DeviceChoice.Wider" xml:space="preserve"><value>Laiem</value></data>
+  <data name="DeviceChoice.Wide" xml:space="preserve"><value>Lai</value></data>
+  <data name="DeviceChoice.Standard" xml:space="preserve"><value>Tavaline</value></data>
+  <data name="DeviceChoice.Narrow" xml:space="preserve"><value>Kitsas</value></data>
+  <data name="DeviceChoice.Model_A" xml:space="preserve"><value>Mudel A</value></data>
+  <data name="DeviceChoice.Model_B" xml:space="preserve"><value>Mudel B</value></data>
+  <data name="DeviceChoice.Code" xml:space="preserve"><value>Kood {0}</value></data>
+  <data name="DeviceChoice.ThinPaper" xml:space="preserve"><value>{0} (õhuke paber)</value></data>
 </root>

@@ -31,7 +31,7 @@
   <data name="Auto.5471BCBDC1ED.Text"><value>Kurva 1</value></data>
   <data name="Auto.55EB8098D769.Header"><value>IDs tal-linka loġika (ittri, ċifri, virgoli)</value></data>
   <data name="Auto.55EB8098D769.PlaceholderText"><value>K,C,M</value></data>
-  <data name="Auto.5C063BCAA06D.Header"><value>indirizz IPv4</value></data>
+  <data name="Auto.5C063BCAA06D.Header"><value>Daħħal l-indirizz IPv4 tal-printer tiegħek (eż. 192.168.1.50)</value></data>
   <data name="Auto.5C37FF0F3134.Text"><value>Għoli (mm)</value></data>
   <data name="Auto.5C6A98D0E847.Text"><value>Modalità esperta: il-karta magħżula u l-kombinazzjoni tal-paġna jistgħu ma jkunux appoġġjati mill-manifattur.</value></data>
   <data name="Auto.5D31AF069F1B.Content"><value>USB</value></data>
@@ -232,7 +232,7 @@
   <data name="MainPage.Table.Connection.Text"><value>Konnessjoni</value></data>
   <data name="MainPage.Table.Default.Text"><value>Default</value></data>
   <data name="MainPage.Table.Model.Text"><value>Mudell</value></data>
-  <data name="MainPage.Table.Network.Text"><value>Netwerk</value></data>
+  <data name="MainPage.Table.Network.Text"><value>Stat</value></data>
   <data name="MainPage.Table.Printer.Text"><value>Printer</value></data>
   <data name="MainPage.Title.Text"><value>pyToneRIP</value></data>
   <data name="MainPage.WindowsPrinters.Content"><value>Printers Windows</value></data>
@@ -261,4 +261,32 @@
   <data name="Usb.DiscoveryFailed"><value>It-tfittxija USB falliet: {0}</value></data>
   <data name="Usb.SelectMatchingDevice"><value>Agħżel printer USB imqabbad li jaqbel mal-mudell magħżul.</value></data>
   <data name="Usb.DestinationChanged"><value>Id-destinazzjoni USB mhix disponibbli jew inbidlet. Erġa’ qabbad il-printer u aġġorna l-lista.</value></data>
+  <data name="Choice.RemovedFromWindows" xml:space="preserve"><value>Imneħħi minn Windows</value></data>
+  <data name="Code.PrinterQueueMissingRemoveConfiguration" xml:space="preserve"><value>L-istampatur “{0}” m’għadux jinsab f’Windows. Trid tneħħi l-konfigurazzjoni ssejvjata tiegħu minn pyToneRIP?</value></data>
+  <data name="Code.PrinterAlreadyRemovedConfigurationDeleted" xml:space="preserve"><value>L-istampatur “{0}” kien diġà tneħħa minn Windows. Il-konfigurazzjoni ssejvjata tiegħu tneħħiet minn pyToneRIP.</value></data>
+  <data name="Code.ConfigurationSavedWindowsDefaultsFailed"><value>Is-settings tar-RIP ġew salvati. Is-settings tal-istampar tal-Windows ma setgħux jiġu applikati kompletament: {0}</value></data>
+  <data name="Printer.FinestDetail" xml:space="preserve"><value>L-ifjen dettalji</value></data>
+  <data name="DeviceSetting.Drying_Time" xml:space="preserve"><value>Tnixxif wara passaġġ tar-ras tal-istampar</value></data>
+  <data name="DeviceSetting.Page_Drying_Time" xml:space="preserve"><value>Tnixxif wara l-paġna</value></data>
+  <data name="DeviceSetting.Minimum_Scan_Drying_Time" xml:space="preserve"><value>Tnixxif minimu wara passaġġ tar-ras</value></data>
+  <data name="DeviceSetting.Paper_Thickness" xml:space="preserve"><value>Ħxuna tal-karta</value></data>
+  <data name="DeviceSetting.Paper_Suction" xml:space="preserve"><value>Ġbid tal-karta bil-vakwu</value></data>
+  <data name="DeviceSetting.Feed_Adjustment" xml:space="preserve"><value>Aġġustament tal-avvanz tal-karta</value></data>
+  <data name="DeviceSetting.Feed_Sequence" xml:space="preserve"><value>Sekwenza tal-avvanz tal-karta</value></data>
+  <data name="DeviceSetting.Platen_Gap" xml:space="preserve"><value>Spazju tar-ras tal-istampar</value></data>
+  <data name="DeviceSetting.Save_Paper_Roll_Paper" xml:space="preserve"><value>Iffrankar tal-karta f’romblu</value></data>
+  <data name="DeviceSetting.Microweave_Precision" xml:space="preserve"><value>Korrezzjoni tal-preċiżjoni MicroWeave</value></data>
+  <data name="DeviceChoice.MediaDefault" xml:space="preserve"><value>Skont il-midja</value></data>
+  <data name="DeviceChoice.Default" xml:space="preserve"><value>Predefinit</value></data>
+  <data name="DeviceChoice.Off" xml:space="preserve"><value>Mitfi</value></data>
+  <data name="DeviceChoice.On" xml:space="preserve"><value>Mixgħul</value></data>
+  <data name="DeviceChoice.Large" xml:space="preserve"><value>Kbir</value></data>
+  <data name="DeviceChoice.Wider" xml:space="preserve"><value>Usa’</value></data>
+  <data name="DeviceChoice.Wide" xml:space="preserve"><value>Wiesa’</value></data>
+  <data name="DeviceChoice.Standard" xml:space="preserve"><value>Standard</value></data>
+  <data name="DeviceChoice.Narrow" xml:space="preserve"><value>Dejjaq</value></data>
+  <data name="DeviceChoice.Model_A" xml:space="preserve"><value>Mudell A</value></data>
+  <data name="DeviceChoice.Model_B" xml:space="preserve"><value>Mudell B</value></data>
+  <data name="DeviceChoice.Code" xml:space="preserve"><value>Kodiċi {0}</value></data>
+  <data name="DeviceChoice.ThinPaper" xml:space="preserve"><value>{0} (karta rqiqa)</value></data>
 </root>

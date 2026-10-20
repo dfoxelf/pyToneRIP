@@ -250,6 +250,7 @@ def _mode_page_geometry(
 
 def _profile_imageable_origin_offsets(
     model: PrinterModel, page: PageCapability, native_mode: EpsonEscp2ModeParameters,
+    *, input_source: InputSourceCapability | None = None,
 ) -> tuple[int, int]:
     """Locate the cropped PPD imageable raster on the physical sheet."""
 
@@ -262,11 +263,20 @@ def _profile_imageable_origin_offsets(
         return 0, 0
     top_points = ppd.height_points - ppd.imageable_top_points
     top = round(top_points * native_mode.printed_vertical_dpi / 72)
+    if model.catalog_package_id == "pf--Epson_SureColorP900_RIP":
+        # P900 native X is relative to the printable area, as in independent
+        # ReferenceDriver captures. The Windows page mapper has already
+        # removed the left non-printable strip; adding it here shifts twice.
+        left = 0
+        if input_source is not None and input_source.medium_kind == "roll":
+            top = 0
     return top, left
 
 
 def _profile_initial_feed_offset_rows(
     model: PrinterModel, native_mode: EpsonEscp2ModeParameters,
+    *, page: PageCapability | None = None,
+    input_source: InputSourceCapability | None = None,
 ) -> int:
     """Place the first host-weave row at the printable head position.
 
@@ -277,6 +287,30 @@ def _profile_initial_feed_offset_rows(
     an offset between colour channels.
     """
 
+    if model.catalog_package_id == "gp--escp2-r2880":
+        if page is None or input_source is None:
+            raise ValueError("R2880 feed origin requires the page and physical feed")
+        if input_source.medium_kind == "roll":
+            return 0
+        # Independent R2880 captures locate the common channel origin one
+        # command unit and one 360-dpi stagger row before 1120 mils on sheets,
+        # or 900 mils on borderless sheets. Channel head offsets stay separate.
+        origin_mils = 900 if page.ppd.borderless else 1120
+        units = native_mode.vertical_units
+        origin = round(origin_mils * units / 1000) - 1
+        stagger = round(units / model.base_separation_dpi)
+        return round((origin - stagger) * native_mode.printed_vertical_dpi / units)
+    if model.catalog_package_id == "pf--Epson_SureColorP900_RIP":
+        if page is None or input_source is None:
+            raise ValueError("P900 feed origin requires the page and physical feed")
+        if input_source.medium_kind == "roll":
+            return 0
+        if page.ppd.borderless:
+            # Captured P900 borderless sheets start one command unit before
+            # 900 mils. Ordinary sheets retain their existing head-span setup.
+            units = native_mode.vertical_units
+            origin = round(900 * units / 1000) - 1
+            return round(origin * native_mode.printed_vertical_dpi / units)
     if model.catalog_package_id not in {
         "pf--Epson_EcoTank_ET2550",
         "pf--Epson_SureColorP400",
@@ -333,11 +367,10 @@ def _profile_bottom_margin_mils(model: PrinterModel) -> int | None:
 def _profile_borderless_bottom_extension_mils(
     model: PrinterModel, input_source: InputSourceCapability,
 ) -> int | None:
-    # ReferenceDriver ET-8500/8550 captures extend ESC (c by 935 units at 720
-    # page units and 1871 at 1440 page units, for both A4 and 4x6 sheets.
+    # Captured sheet limits extend by 935 units at 720/in and 1871 at 1440/in.
     if (
         model.escp2_profile is not None
-        and (model.escp2_profile.identity == "ET8550"
+        and (model.escp2_profile.identity in {"ET8550", "P700RIP"}
              or model.catalog_package_id == "gp--escp2-r2880")
         and input_source.medium_kind != "roll"
     ):
@@ -358,11 +391,11 @@ def _profile_top_margin_mils(
             "gp--escp2-r2880",
         }
         and input_source.medium_kind == "roll"
-        and not page.ppd.borderless
+        and (not page.ppd.borderless or model.escp2_profile.identity == "P700RIP")
     ):
         # ReferenceDriver P700/P900 roll captures use a 120-mil positive top,
         # while their cut sheets use the model's negative feed origin.
-        return 120
+        return 0 if page.ppd.borderless else 120
     # ReferenceDriver T7000 sheet captures use a 120-mil top in ESC (c. Its synthetic
     # PPD's 9-point imageable inset is only an approximation of this value.
     if (
@@ -616,7 +649,10 @@ def _profile_mode(mode: PrinterMode, model: PrinterModel) -> EpsonEscp2ModeParam
     command_vertical_units = None
     command_horizontal_units = None
     if profile is not None and profile.identity == "P700RIP":
-        command_vertical_units = _p700_mode_setup(mode)[2]
+        units = _p700_mode_setup(mode)[0]
+        scale = int.from_bytes(units[3:5], "little")
+        command_vertical_units = scale // units[1]
+        command_horizontal_units = scale // units[2]
     elif profile is not None and profile.identity == "ET8550":
         payload = _et8550_mode_setup(mode)[0]
         scale = int.from_bytes(payload[3:5], "little")
@@ -651,6 +687,14 @@ def _profile_mode(mode: PrinterMode, model: PrinterModel) -> EpsonEscp2ModeParam
         base_separation_dpi=model.base_separation_dpi,
         command_vertical_units=command_vertical_units,
         command_horizontal_units=command_horizontal_units,
+        # P700/P900 Super consumes 720 dpi rows while its command grid is
+        # 1440 dpi. Express nozzle pitch and head offsets in the source-row
+        # grid; ESC (U / ESC (D retain their independently captured values.
+        weave_vertical_dpi=(
+            mode.vertical_dpi
+            if profile is not None and profile.identity == "P700RIP"
+            else None
+        ),
     )
 
 
@@ -697,6 +741,7 @@ def _selected_device_commands(
 def _append_p700_remote_setup(
     output: bytearray,
     model: PrinterModel,
+    page: PageCapability,
     input_source: InputSourceCapability,
     selected: dict[str, str] | None,
 ) -> None:
@@ -714,11 +759,15 @@ def _append_p700_remote_setup(
 
     platen = payload("Platen_Gap")
     output.extend(commands.remote_payload("DP", b"\x00\x00"))
-    output.extend(commands.remote_payload("US", b"\x00\x00\x01"))
+    borderless_sheet = page.ppd.borderless and input_source.medium_kind != "roll"
+    output.extend(commands.remote_payload("US", bytes((0, 0, 2 if borderless_sheet else 1))))
     output.extend(commands.remote_payload("US", platen))
     output.extend(commands.remote_payload("US", b"\x00\x02\x00"))
-    output.extend(commands.remote_payload("FP", b"\x00\x00\x00"))
-    output.extend(commands.remote_payload("EX", b"\x00\x00\x00\x00\x05\x00"))
+    output.extend(commands.remote_payload("FP", bytes.fromhex("00b0ff" if page.ppd.borderless else "000000")))
+    output.extend(commands.remote_payload(
+        "EX", b"\x00\x00\x00\x00\x05" +
+        (b"\x01" if input_source.medium_kind == "roll" else b"\x00"),
+    ))
     if input_source.initialization_commands:
         for remote_command, feed_payload in input_source.initialization_commands:
             output.extend(commands.remote_payload(remote_command, feed_payload))
@@ -732,7 +781,9 @@ def _append_p700_remote_setup(
     if values.get(page_drying.identity, page_drying.default_choice) != page_drying.default_choice:
         output.extend(commands.remote_payload("DR", payload("Page_Drying_Time")))
     output.extend(commands.remote_payload("PH", payload("Paper_Thickness")))
-    output.extend(commands.remote_payload("AC", b"\x00\x40"))
+    output.extend(commands.remote_payload("AC", (
+        payload("Save_Paper_Roll_Paper") if "Save_Paper_Roll_Paper" in settings else b"\x00\x40"
+    )))
     output.extend(commands.remote_payload("US", platen))
 
 
@@ -756,7 +807,8 @@ def _append_et8550_remote_setup(
 
 
 def _append_r2880_remote_setup(
-    output: bytearray, model: PrinterModel, input_source: InputSourceCapability,
+    output: bytearray, model: PrinterModel, page: PageCapability,
+    input_source: InputSourceCapability,
     selected: dict[str, str] | None,
 ) -> None:
     """ReferenceDriver R2880 initialization verified for sheet and roll paths."""
@@ -771,10 +823,11 @@ def _append_r2880_remote_setup(
         values.get(platen.identity, platen.default_choice)
     ).remote_payload
     output.extend(commands.remote_payload("DP", b"\x00\x00"))
-    output.extend(commands.remote_payload("US", b"\x00\x00\x01"))
+    borderless = model.catalog_package_id == "gp--escp2-r2880" and page.ppd.borderless
+    output.extend(commands.remote_payload("US", bytes((0, 0, 2 if borderless else 1))))
     output.extend(commands.remote_payload("US", platen_payload))
     output.extend(commands.remote_payload("US", b"\x00\x02\x00"))
-    output.extend(commands.remote_payload("FP", b"\x00\x00\x00"))
+    output.extend(commands.remote_payload("FP", bytes.fromhex("00b0ff" if borderless else "000000")))
     output.extend(commands.remote_payload(
         "EX", b"\x00\x00\x00\x00\x05" +
         (b"\x01" if input_source.medium_kind == "roll" else b"\x00"),
@@ -821,6 +874,29 @@ def _use_alternate_print_method(
     )
 
 
+def resolve_profile_print_method(
+    model: PrinterModel,
+    mode: PrinterMode,
+    medium: MediaCapability,
+    device_settings: dict[str, str] | None = None,
+) -> int | None:
+    """Resolve ESC (m exactly as encoded; None means the command is absent."""
+
+    profile = model.escp2_profile
+    assert profile is not None
+    medium_print_method = dict(medium.print_methods).get(mode.identity)
+    return (
+        mode.escp2_alternate_print_method
+        if _use_alternate_print_method(model, device_settings)
+        and mode.escp2_alternate_print_method is not None
+        else mode.escp2_print_method_override
+        if mode.escp2_print_method_override is not None
+        else medium_print_method
+        if medium_print_method is not None
+        else profile.default_print_method
+    )
+
+
 def _encode_profile_stream(
     *,
     model: PrinterModel,
@@ -858,15 +934,17 @@ def _encode_profile_stream(
     for medium_command in _medium_mechanical_commands(medium):
         output.extend(medium_command)
     if profile.identity == "P700RIP":
-        _append_p700_remote_setup(output, model, input_source, device_settings)
+        _append_p700_remote_setup(output, model, page, input_source, device_settings)
     elif profile.identity == "ET8550":
         _append_et8550_remote_setup(output, model, page, input_source, device_settings)
     elif model.catalog_package_id in {"gp--escp2-r2880", "gp--escp2-r3000"}:
-        _append_r2880_remote_setup(output, model, input_source, device_settings)
+        _append_r2880_remote_setup(output, model, page, input_source, device_settings)
     else:
         for remote_command, payload in profile.remote_extras:
             output.extend(commands.remote_payload(remote_command, payload))
-        for device_command in _selected_device_commands(model, device_settings):
+        for device_command in _selected_device_commands(
+            model, device_settings, skip=("Save_Paper_Roll_Paper",)
+        ):
             output.extend(device_command)
         if input_source.initialization_commands:
             for remote_command, payload in input_source.initialization_commands:
@@ -878,6 +956,13 @@ def _encode_profile_stream(
                     path_number=input_source.path_number,
                 )
             )
+        save_roll = next((setting for setting in model.device_settings
+                          if setting.identity == "Save_Paper_Roll_Paper"), None)
+        if save_roll is not None:
+            choice = save_roll.choice((device_settings or {}).get(
+                save_roll.identity, save_roll.default_choice))
+            # Captured AC is applied after the physical PP path selection.
+            output.extend(commands.remote_payload(choice.remote_command, choice.remote_payload))
     _append_roll_mechanics(
         output,
         input_source=input_source,
@@ -961,16 +1046,8 @@ def _encode_profile_stream(
     if profile.identity == "ET8550":
         # Reference streams set ESC (D after the page geometry.
         output.extend(commands.extended_payload("D", _et8550_mode_setup(mode)[1]))
-    medium_print_method = dict(medium.print_methods).get(mode.identity)
-    print_method = (
-        mode.escp2_alternate_print_method
-        if _use_alternate_print_method(model, device_settings)
-        and mode.escp2_alternate_print_method is not None
-        else mode.escp2_print_method_override
-        if mode.escp2_print_method_override is not None
-        else medium_print_method
-        if medium_print_method is not None
-        else profile.default_print_method
+    print_method = resolve_profile_print_method(
+        model, mode, medium, device_settings
     )
     if print_method is not None:
         output.extend(commands.print_method(print_method))
@@ -1045,7 +1122,7 @@ class EpsonEscp2Backend:
                     raise ValueError(f"Physical path {path.value} is unavailable for this medium")
             native_mode = _profile_mode(mode, model)
             top_offset, left_offset = _profile_imageable_origin_offsets(
-                model, page, native_mode
+                model, page, native_mode, input_source=input_source,
             )
             first_line = top_offset + vertical_offset_rows
             page_height_rows = round((page.ppd.height_points + 10) * mode.vertical_dpi / 72)
@@ -1067,7 +1144,7 @@ class EpsonEscp2Backend:
                     _profile_borderless_bottom_extension_mils(model, input_source)
                 ),
                 borderless_top_extra_unit=(model.catalog_package_id != "gp--escp2-r2880"
-                    and not (model.escp2_profile.identity == "ET8550" and page.native_page_format_mils)),
+                    and not (model.escp2_profile.identity in {"ET8550", "P700RIP"} and page.native_page_format_mils)),
             )
             parts = _encode_profile_stream(
                 model=model,
@@ -1174,7 +1251,9 @@ class EpsonEscp2Backend:
             first_line=first_line,
             page_height_rows=page_height_rows,
             left_position_units=left_units,
-            initial_feed_offset_rows=_profile_initial_feed_offset_rows(model, native_mode),
+            initial_feed_offset_rows=_profile_initial_feed_offset_rows(
+                model, native_mode, page=page, input_source=input_source,
+            ),
             path_definitions=path_definitions,
             pass_sink=emit_pass,
             cancel_check=cancel_check,
@@ -1241,7 +1320,7 @@ class EpsonEscp2Backend:
             # top. Pro profiles place the top margin in ESC (c; cut-sheet
             # profiles need the PPD top offset in the raster coordinates.
             top_offset, left_offset = _profile_imageable_origin_offsets(
-                model, page, native_mode
+                model, page, native_mode, input_source=input_source,
             )
             first_line = top_offset + vertical_offset_rows
             page_height_rows = round(
@@ -1250,7 +1329,7 @@ class EpsonEscp2Backend:
             left_units = (
                 left_offset
                 + horizontal_offset_pixels
-                * mode.physical_horizontal_dpi
+                * native_mode.horizontal_units
                 // mode.horizontal_dpi
             )
             timings = WeaveStageTimings() if trace is not None else None
@@ -1261,7 +1340,9 @@ class EpsonEscp2Backend:
                     first_line=first_line,
                     page_height_rows=page_height_rows,
                     left_position_units=left_units,
-                    initial_feed_offset_rows=_profile_initial_feed_offset_rows(model, native_mode),
+                    initial_feed_offset_rows=_profile_initial_feed_offset_rows(
+                        model, native_mode, page=page, input_source=input_source,
+                    ),
                     path_definitions=model.physical_paths,
                 )
             else:
@@ -1272,7 +1353,9 @@ class EpsonEscp2Backend:
                         first_line=first_line,
                         page_height_rows=page_height_rows,
                         left_position_units=left_units,
-                        initial_feed_offset_rows=_profile_initial_feed_offset_rows(model, native_mode),
+                        initial_feed_offset_rows=_profile_initial_feed_offset_rows(
+                            model, native_mode, page=page, input_source=input_source,
+                        ),
                         path_definitions=model.physical_paths,
                         trace=trace,
                         timings=timings,
@@ -1311,7 +1394,7 @@ class EpsonEscp2Backend:
                     _profile_borderless_bottom_extension_mils(model, input_source)
                 ),
                 borderless_top_extra_unit=(model.catalog_package_id != "gp--escp2-r2880"
-                    and not (model.escp2_profile.identity == "ET8550" and page.native_page_format_mils)),
+                    and not (model.escp2_profile.identity in {"ET8550", "P700RIP"} and page.native_page_format_mils)),
             )
             encoded_passes = tuple(item.encode(timings) for item in passes)
             stream_started = perf_counter()

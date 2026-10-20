@@ -4,7 +4,7 @@
 """Transparent EpsonRIP-defined runtime controls for compiled QTR profiles.
 
 This module deliberately does not claim byte-compatible reproduction of the
-closed QuadToneRIP runtime.  It preserves the user-facing model (one to three
+closed external runtime.  It preserves the user-facing model (one to three
 complete profiles, optional H/M/S split tone, gamma and ink limit) while making
 every numerical rule explicit and testable.
 """

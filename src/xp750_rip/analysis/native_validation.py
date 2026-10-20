@@ -396,7 +396,8 @@ def validate_escp2_native(result: BackendRenderResult) -> NativeStreamValidation
         if (profile.identity in {"P700RIP", "ET8550"}
                 or result.model.catalog_package_id == "gp--escp2-r2880") \
                 and result.input_source.medium_kind == "roll":
-            expected_top = round(120 * page_units / 1000)
+            expected_top = (0 if profile.identity == "P700RIP" and page.borderless
+                            else round(120 * page_units / 1000))
     elif (
         ((result.model.catalog_package_id or "").startswith("pf--")
          or result.model.catalog_package_id in {"gp--escp2-r2880", "gp--escp2-r3000"})
@@ -425,7 +426,7 @@ def validate_escp2_native(result: BackendRenderResult) -> NativeStreamValidation
                 and result.input_source.medium_kind == "roll":
             expected_top = round(120 * page_units / 1000)
     if (
-        (profile.identity == "ET8550"
+        (profile.identity in {"ET8550", "P700RIP"}
          or result.model.catalog_package_id == "gp--escp2-r2880")
         and page.borderless
         and result.input_source.medium_kind != "roll"
@@ -433,6 +434,7 @@ def validate_escp2_native(result: BackendRenderResult) -> NativeStreamValidation
         # ET-8500/8550 tpprint cut sheets extend ESC (c by 935/1871 units
         # at 720/1440 page units, respectively.
         if (expected_top < 0 and result.model.catalog_package_id != "gp--escp2-r2880"
+                    and profile.identity != "P700RIP"
                 and not (profile.identity == "ET8550" and native_format is not None)):
             expected_top += 1
         expected_bottom = expected_height + round(1300 * page_units / 1000) - 1

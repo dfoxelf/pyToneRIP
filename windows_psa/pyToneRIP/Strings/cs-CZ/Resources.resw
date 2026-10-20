@@ -31,7 +31,7 @@
   <data name="Auto.5471BCBDC1ED.Text"><value>Křivka 1</value></data>
   <data name="Auto.55EB8098D769.Header"><value>Logická ID inkoustu (písmena, číslice, čárky)</value></data>
   <data name="Auto.55EB8098D769.PlaceholderText"><value>K,C,M</value></data>
-  <data name="Auto.5C063BCAA06D.Header"><value>IPv4 adresa</value></data>
+  <data name="Auto.5C063BCAA06D.Header"><value>Zadejte IPv4 adresu své tiskárny (např. 192.168.1.50)</value></data>
   <data name="Auto.5C37FF0F3134.Text"><value>Výška (mm)</value></data>
   <data name="Auto.5C6A98D0E847.Text"><value>Expertní režim: vybraná kombinace papíru a stránky nemusí být výrobcem podporována.</value></data>
   <data name="Auto.5D31AF069F1B.Content"><value>USB</value></data>
@@ -232,7 +232,7 @@
   <data name="MainPage.Table.Connection.Text"><value>Spojení</value></data>
   <data name="MainPage.Table.Default.Text"><value>Výchozí</value></data>
   <data name="MainPage.Table.Model.Text"><value>Model</value></data>
-  <data name="MainPage.Table.Network.Text"><value>Síť</value></data>
+  <data name="MainPage.Table.Network.Text"><value>Stav</value></data>
   <data name="MainPage.Table.Printer.Text"><value>Tiskárna</value></data>
   <data name="MainPage.Title.Text"><value>pyToneRIP</value></data>
   <data name="MainPage.WindowsPrinters.Content"><value>tiskárny Windows</value></data>
@@ -261,4 +261,32 @@
   <data name="Usb.DiscoveryFailed"><value>Vyhledání zařízení USB se nezdařilo: {0}</value></data>
   <data name="Usb.SelectMatchingDevice"><value>Vyberte připojenou tiskárnu USB odpovídající vybranému modelu.</value></data>
   <data name="Usb.DestinationChanged"><value>Cíl USB není dostupný nebo se změnil. Znovu připojte tiskárnu a obnovte seznam.</value></data>
+  <data name="Choice.RemovedFromWindows" xml:space="preserve"><value>Odebráno ze systému Windows</value></data>
+  <data name="Code.PrinterQueueMissingRemoveConfiguration" xml:space="preserve"><value>Tiskárna „{0}“ již není ve Windows. Odebrat její uloženou konfiguraci z pyToneRIP?</value></data>
+  <data name="Code.PrinterAlreadyRemovedConfigurationDeleted" xml:space="preserve"><value>Tiskárna „{0}“ již byla odebrána ze systému Windows. Její uložená konfigurace byla odebrána z pyToneRIP.</value></data>
+  <data name="Code.ConfigurationSavedWindowsDefaultsFailed"><value>Nastavení RIP bylo uloženo. Nastavení tisku Windows se nepodařilo plně použít: {0}</value></data>
+  <data name="Printer.FinestDetail" xml:space="preserve"><value>Nejjemnější detaily</value></data>
+  <data name="DeviceSetting.Drying_Time" xml:space="preserve"><value>Schnutí po průchodu hlavy</value></data>
+  <data name="DeviceSetting.Page_Drying_Time" xml:space="preserve"><value>Schnutí po stránce</value></data>
+  <data name="DeviceSetting.Minimum_Scan_Drying_Time" xml:space="preserve"><value>Minimální schnutí po průchodu hlavy</value></data>
+  <data name="DeviceSetting.Paper_Thickness" xml:space="preserve"><value>Tloušťka papíru</value></data>
+  <data name="DeviceSetting.Paper_Suction" xml:space="preserve"><value>Přisávání papíru</value></data>
+  <data name="DeviceSetting.Feed_Adjustment" xml:space="preserve"><value>Úprava posuvu papíru</value></data>
+  <data name="DeviceSetting.Feed_Sequence" xml:space="preserve"><value>Sekvence posuvu papíru</value></data>
+  <data name="DeviceSetting.Platen_Gap" xml:space="preserve"><value>Mezera tiskové hlavy</value></data>
+  <data name="DeviceSetting.Save_Paper_Roll_Paper" xml:space="preserve"><value>Úspora papíru v roli</value></data>
+  <data name="DeviceSetting.Microweave_Precision" xml:space="preserve"><value>Korekce přesnosti MicroWeave</value></data>
+  <data name="DeviceChoice.MediaDefault" xml:space="preserve"><value>Podle média</value></data>
+  <data name="DeviceChoice.Default" xml:space="preserve"><value>Výchozí</value></data>
+  <data name="DeviceChoice.Off" xml:space="preserve"><value>Vypnuto</value></data>
+  <data name="DeviceChoice.On" xml:space="preserve"><value>Zapnuto</value></data>
+  <data name="DeviceChoice.Large" xml:space="preserve"><value>Velká</value></data>
+  <data name="DeviceChoice.Wider" xml:space="preserve"><value>Širší</value></data>
+  <data name="DeviceChoice.Wide" xml:space="preserve"><value>Široká</value></data>
+  <data name="DeviceChoice.Standard" xml:space="preserve"><value>Standardní</value></data>
+  <data name="DeviceChoice.Narrow" xml:space="preserve"><value>Úzká</value></data>
+  <data name="DeviceChoice.Model_A" xml:space="preserve"><value>Model A</value></data>
+  <data name="DeviceChoice.Model_B" xml:space="preserve"><value>Model B</value></data>
+  <data name="DeviceChoice.Code" xml:space="preserve"><value>Kód {0}</value></data>
+  <data name="DeviceChoice.ThinPaper" xml:space="preserve"><value>{0} (tenký papír)</value></data>
 </root>

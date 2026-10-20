@@ -741,6 +741,38 @@ def error_diffusion_qtr_band_kernel(
     raise ValueError("unknown error-diffusion algorithm")
 
 
+cdef bint _qtr_row_is_zero(
+    const u8[:, ::1] codes,
+    const u16[::1] qtr_lut,
+    Py_ssize_t row,
+    Py_ssize_t width,
+) noexcept nogil:
+    cdef Py_ssize_t col
+    for col in range(width):
+        if qtr_lut[codes[row, col]] != 0:
+            return False
+    return True
+
+
+def qtr_active_rows_kernel(const u8[:, ::1] codes, const u16[::1] qtr_lut):
+    """Classify ink demand without allocating a full uint16 contone band."""
+    if qtr_lut.shape[0] != 256:
+        raise ValueError("QTR lookup table must have exactly 256 entries")
+    cdef Py_ssize_t row, col
+    cdef bint has_ink = False
+    cdef cnp.ndarray[u8, ndim=1] active = np.zeros(codes.shape[0], dtype=np.uint8)
+    cdef u8[::1] result = active
+    for col in range(256):
+        if qtr_lut[col] != 0:
+            has_ink = True
+            break
+    if has_ink:
+        with nogil:
+            for row in range(codes.shape[0]):
+                result[row] = not _qtr_row_is_zero(codes, qtr_lut, row, codes.shape[1])
+    return active
+
+
 def ordered_band_kernel(
     const u16[:, ::1] values,
     const u16[:, ::1] matrix,
@@ -921,6 +953,8 @@ def ordered_qtr_band_kernel(
             schedule="static",
             use_threads_if=band_height >= 32,
         ):
+            if _qtr_row_is_zero(codes, qtr_lut, local_y, width):
+                continue
             _ordered_qtr_1bit_row(
                 codes,
                 qtr_lut,
@@ -945,6 +979,8 @@ def ordered_qtr_band_kernel(
             schedule="static",
             use_threads_if=band_height >= 32,
         ):
+            if _qtr_row_is_zero(codes, qtr_lut, local_y, width):
+                continue
             global_y = global_start + local_y
             matrix_y = _positive_mod(global_y + y_offset, matrix_height)
             matrix_x = _positive_mod(x + x_offset, matrix_width)
@@ -1041,6 +1077,8 @@ def blue_noise_qtr_band_kernel(
         schedule="static",
         use_threads_if=band_height >= 32,
     ):
+        if _qtr_row_is_zero(codes, qtr_lut, local_y, width):
+            continue
         global_y = global_start + local_y
         shifted_y = global_y + y_offset + channel_y_phase
         tile_local_y = _positive_mod(shifted_y, matrix_height)
@@ -1158,6 +1196,8 @@ def very_fast_qtr_band_kernel(
         schedule="static",
         use_threads_if=band_height >= 32,
     ):
+        if _qtr_row_is_zero(codes, qtr_lut, local_y, width):
+            continue
         global_y = global_start + local_y
         matrix_y = _positive_mod(global_y + y_offset, matrix_height)
         matrix_x = _positive_mod(x + x_offset, matrix_width)

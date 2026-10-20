@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Threading.Tasks;
 using Windows.Data.Json;
 using Windows.Graphics.Printing.PrintTicket;
 
@@ -35,7 +37,9 @@ namespace pyToneRIP.Shared
     {
         public int X { get; set; }
         public int Y { get; set; }
-        public string DisplayName => X + " × " + Y + " DPI";
+        public string DetailLabel { get; set; }
+        public string DisplayName => X + " × " + Y + " DPI"
+            + (string.IsNullOrWhiteSpace(DetailLabel) ? "" : " — " + DetailLabel);
         public override string ToString() => DisplayName;
     }
 
@@ -134,8 +138,62 @@ namespace pyToneRIP.Shared
                     null, "Paper tray");
         }
 
+        public static async Task<WorkflowPrintTicketValidationResult> ValidateAsync(
+            WorkflowPrintTicket ticket, Action<string> log)
+        {
+            // Capture optional COM diagnostics before asking Windows to validate.
+            // Never read ticket features from the extension's pending callback.
+            WriteValidationLog(log, "PrintTicket validation begin: " + SummarizeTicket(ticket));
+            var timer = Stopwatch.StartNew();
+            try
+            {
+                var result = await ticket.ValidateAsync();
+                timer.Stop();
+                WriteValidationLog(log, "PrintTicket validation returned: validated="
+                    + result.Validated + "; elapsedMs=" + timer.ElapsedMilliseconds
+                    + "; error=" + (result.ExtendedError == null ? "<none>"
+                        : "0x" + result.ExtendedError.HResult.ToString("X8")
+                          + "; " + result.ExtendedError));
+                return result;
+            }
+            catch (Exception error)
+            {
+                timer.Stop();
+                WriteValidationLog(log, "PrintTicket validation threw: elapsedMs="
+                    + timer.ElapsedMilliseconds + "; HResult=0x"
+                    + error.HResult.ToString("X8") + "; " + error);
+                throw;
+            }
+        }
+
+        private static string SummarizeTicket(WorkflowPrintTicket ticket)
+        {
+            try
+            {
+                var selection = Read(ticket);
+                return "page=" + (selection.PageOptionName ?? "<absent>")
+                    + "; media=" + (selection.MediaOptionName ?? "<absent>")
+                    + "; input=" + (selection.InputOptionName ?? "<absent>")
+                    + "; size=" + (selection.PageWidthMm?.ToString("0.###") ?? "?")
+                    + "x" + (selection.PageHeightMm?.ToString("0.###") ?? "?")
+                    + "mm; orientation=" + (selection.OrientationOptionName ?? "<absent>")
+                    + "; resolution=" + (selection.ResolutionX?.ToString() ?? "?")
+                    + "x" + (selection.ResolutionY?.ToString() ?? "?");
+            }
+            catch (Exception error)
+            {
+                return "ticket summary unavailable: " + error;
+            }
+        }
+
+        private static void WriteValidationLog(Action<string> log, string message)
+        {
+            try { log?.Invoke(message); }
+            catch { /* Diagnostics must not change validation behavior. */ }
+        }
+
         public static IReadOnlyList<RasterResolutionChoice> ResolutionChoices(
-            WorkflowPrintTicket ticket)
+            WorkflowPrintTicket ticket, string modelId = null)
         {
             var feature = ticket?.PageResolutionFeature;
             var options = feature?.Options?
@@ -151,11 +209,17 @@ namespace pyToneRIP.Shared
                 .ThenBy(item => item.Y)
                 .ToList();
             if (options != null && options.Count > 0) return options;
-            return new[]
+            var fallback = new List<RasterResolutionChoice>
             {
                 new RasterResolutionChoice { X = 300, Y = 300 },
                 new RasterResolutionChoice { X = 600, Y = 600 },
             };
+            if (modelId == "SureColorP900RIP")
+            {
+                fallback.Add(new RasterResolutionChoice { X = 360, Y = 360 });
+                fallback.Add(new RasterResolutionChoice { X = 720, Y = 720 });
+            }
+            return fallback.OrderBy(item => item.X).ThenBy(item => item.Y).ToList();
         }
 
         public static string OverlayConfiguration(

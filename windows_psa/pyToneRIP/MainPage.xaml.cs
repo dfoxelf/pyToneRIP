@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using pyToneRIP.Models;
 using pyToneRIP.Services;
 using Windows.ApplicationModel;
+using Windows.Devices.Enumeration;
 using Windows.System;
 using Windows.Storage;
 using Windows.UI.Xaml.Media.Imaging;
@@ -27,6 +28,7 @@ namespace pyToneRIP
         private readonly DispatcherTimer progressTimer;
         private bool networkCheckRunning;
         private bool progressCheckRunning;
+        private bool settingsNotificationCheckRunning;
         private HashSet<string> activeTransmissionHosts =
             new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         private IReadOnlyCollection<PrinterJobActivity> activeJobActivities =
@@ -34,6 +36,12 @@ namespace pyToneRIP
         private DateTimeOffset nextTransportActivityRead = DateTimeOffset.MinValue;
         private bool defaultPrinterCheckRunning;
         private bool printerLifecycleRunning;
+        private DeviceWatcher windowsQueueWatcher;
+        private bool windowsQueueEnumerationCompleted;
+        private bool windowsQueueRefreshPending;
+        private bool registryLoading;
+        private bool managerPageLoaded;
+        private bool managerSuspended;
         private bool loadStarted;
         private readonly bool appOwnsStartup;
         private static bool nextInstanceUsesAppStartup;
@@ -70,15 +78,24 @@ namespace pyToneRIP
             progressTimer.Tick += ProgressTimerTick;
             Loaded += async (_, __) =>
             {
+                managerPageLoaded = true;
+                managerSuspended = false;
                 Window.Current.Activated += WindowActivated;
+                Application.Current.Suspending += QueueWatcherSuspending;
+                Application.Current.Resuming += QueueWatcherResuming;
+                StartWindowsQueueWatcher();
                 if (!appOwnsStartup)
                     await InitializeAsync();
             };
             Unloaded += (_, __) =>
             {
+                managerPageLoaded = false;
+                StopWindowsQueueWatcher();
                 networkTimer.Stop();
                 progressTimer.Stop();
                 Window.Current.Activated -= WindowActivated;
+                Application.Current.Suspending -= QueueWatcherSuspending;
+                Application.Current.Resuming -= QueueWatcherResuming;
                 ManagerLogger.LineWritten -= OnManagerLogLineWritten;
             };
         }
@@ -105,6 +122,8 @@ namespace pyToneRIP
             // probing printers behind the settings page.
             networkTimer.Stop();
             progressTimer.Stop();
+            managerPageLoaded = false;
+            StopWindowsQueueWatcher();
             base.OnNavigatedFrom(args);
         }
 
@@ -277,6 +296,14 @@ namespace pyToneRIP
 
         private async Task LoadAsync()
         {
+            if (printerLifecycleRunning)
+            {
+                windowsQueueRefreshPending = true;
+                return;
+            }
+            if (registryLoading)
+                return;
+            registryLoading = true;
             ManagerLogger.Write("Loading printer registry and Windows queue state.");
             try
             {
@@ -301,6 +328,35 @@ namespace pyToneRIP
                 StatusText.Text = LocalizationService.Format("Code.CouldNotLoadPrinterManager", error.Message);
                 ManagerLogger.WriteException("Loading printer manager", error);
             }
+            finally
+            {
+                registryLoading = false;
+                await RefreshPendingWindowsQueueStateAsync();
+            }
+            await RefreshSettingsNotificationsAsync();
+        }
+
+        private async Task RefreshSettingsNotificationsAsync()
+        {
+            if (settingsNotificationCheckRunning) return;
+            settingsNotificationCheckRunning = true;
+            try
+            {
+                foreach (var notification in await SettingsApplyNotifications.ReadPendingAsync())
+                {
+                    StatusText.Text = notification.QueueName + ": " + LocalizationService.Format(
+                        "Code.ConfigurationSavedWindowsDefaultsFailed", notification.Message);
+                    ManagerLogger.Write("RIP settings saved; Windows preferences failed: queue="
+                        + notification.QueueName + "; occurredUtc=" + notification.OccurredUtc
+                        + Environment.NewLine + notification.Details);
+                    await SettingsApplyNotifications.AcknowledgeAsync(notification);
+                }
+            }
+            catch (Exception error)
+            {
+                ManagerLogger.WriteException("Reading settings notifications", error);
+            }
+            finally { settingsNotificationCheckRunning = false; }
         }
 
         private void RefreshList()
@@ -330,7 +386,10 @@ namespace pyToneRIP
         {
             var values = (items ?? Enumerable.Empty<PrinterInstanceRecord>())
                 .Select(item => item.ConfigurationStatus)
-                .Concat(new[] { LocalizationService.Get("MainPage.Table.Configuration.Text") });
+                .Concat(new[] {
+                    LocalizationService.Get("MainPage.Table.Configuration.Text"),
+                    LocalizationService.Get("Choice.RemovedFromWindows"),
+                });
             var maximum = values.Select(value =>
             {
                 var probe = new TextBlock
@@ -569,7 +628,137 @@ namespace pyToneRIP
             // This catches changes made in Windows Settings while Manager was
             // in the background, without polling and launching QueueHelper on
             // a fixed timer while the user is doing nothing.
+            StartWindowsQueueWatcher();
             await RefreshDefaultPrinterStateAsync();
+        }
+
+        private void StartWindowsQueueWatcher()
+        {
+            if (!managerPageLoaded || managerSuspended || windowsQueueWatcher != null)
+                return;
+            try
+            {
+                // Microsoft documents this interface selector for installed
+                // print queues. It also enumerates VirtualPrinterManager queues.
+                const string selector =
+                    "System.Devices.InterfaceClassGuid:=\"{0ecef634-6ef0-472a-8085-5ad023ecbccd}\"";
+                var watcher = DeviceInformation.CreateWatcher(selector);
+                windowsQueueWatcher = watcher;
+                windowsQueueEnumerationCompleted = false;
+                watcher.Added += WindowsQueueAdded;
+                watcher.Removed += WindowsQueueChanged;
+                watcher.Updated += WindowsQueueChanged;
+                watcher.EnumerationCompleted += WindowsQueueEnumerationCompleted;
+                watcher.Stopped += WindowsQueueWatcherStopped;
+                watcher.Start();
+            }
+            catch (Exception error)
+            {
+                StopWindowsQueueWatcher();
+                ManagerLogger.WriteException("Starting WinRT print queue watcher", error);
+                StatusText.Text = LocalizationService.Format(
+                    "Code.PrinterListLoadedButWindowsQueueSynchronizationFailed", error.Message);
+            }
+        }
+
+        private void StopWindowsQueueWatcher()
+        {
+            var watcher = windowsQueueWatcher;
+            windowsQueueWatcher = null;
+            windowsQueueEnumerationCompleted = false;
+            windowsQueueRefreshPending = false;
+            if (watcher == null)
+                return;
+            // Stop is asynchronous. Unsubscribe first; already-dispatched UI
+            // callbacks also check the watcher instance before touching the page.
+            watcher.Added -= WindowsQueueAdded;
+            watcher.Removed -= WindowsQueueChanged;
+            watcher.Updated -= WindowsQueueChanged;
+            watcher.EnumerationCompleted -= WindowsQueueEnumerationCompleted;
+            watcher.Stopped -= WindowsQueueWatcherStopped;
+            try
+            {
+                if (watcher.Status == DeviceWatcherStatus.Started
+                    || watcher.Status == DeviceWatcherStatus.EnumerationCompleted)
+                    watcher.Stop();
+            }
+            catch (Exception error)
+            {
+                ManagerLogger.WriteException("Stopping WinRT print queue enumeration", error);
+            }
+        }
+
+        private void QueueWatcherSuspending(object sender, SuspendingEventArgs args)
+        {
+            managerSuspended = true;
+            StopWindowsQueueWatcher();
+        }
+
+        private void QueueWatcherResuming(object sender, object args)
+        {
+            managerSuspended = false;
+            StartWindowsQueueWatcher();
+        }
+
+        private void WindowsQueueAdded(DeviceWatcher sender, DeviceInformation args) =>
+            DispatchWindowsQueueChange(sender);
+
+        private void WindowsQueueChanged(DeviceWatcher sender, DeviceInformationUpdate args) =>
+            DispatchWindowsQueueChange(sender);
+
+        private void WindowsQueueEnumerationCompleted(DeviceWatcher sender, object args) =>
+            DispatchWindowsQueueChange(sender, enumerationCompleted: true);
+
+        private async void WindowsQueueWatcherStopped(DeviceWatcher sender, object args)
+        {
+            if (sender.Status != DeviceWatcherStatus.Aborted)
+                return;
+            try
+            {
+                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                {
+                    if (!ReferenceEquals(sender, windowsQueueWatcher))
+                        return;
+                    StopWindowsQueueWatcher();
+                    ManagerLogger.Write("WinRT print queue watcher aborted.");
+                });
+            }
+            catch (Exception error)
+            {
+                ManagerLogger.WriteException("Stopping WinRT print queue watcher", error);
+            }
+        }
+
+        private async void DispatchWindowsQueueChange(
+            DeviceWatcher sender, bool enumerationCompleted = false)
+        {
+            try
+            {
+                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                {
+                    if (!ReferenceEquals(sender, windowsQueueWatcher))
+                        return;
+                    if (enumerationCompleted)
+                        windowsQueueEnumerationCompleted = true;
+                    // Initial Added notifications form a snapshot, not separate
+                    // user changes. Reconcile once after EnumerationCompleted.
+                    if (!windowsQueueEnumerationCompleted)
+                        return;
+                    windowsQueueRefreshPending = true;
+                    _ = RefreshPendingWindowsQueueStateAsync();
+                });
+            }
+            catch (Exception error)
+            {
+                ManagerLogger.WriteException("Dispatching WinRT print queue change", error);
+            }
+        }
+
+        private async Task RefreshPendingWindowsQueueStateAsync()
+        {
+            if (windowsQueueRefreshPending && managerPageLoaded && !managerSuspended
+                && !registryLoading && !printerLifecycleRunning)
+                await RefreshDefaultPrinterStateAsync();
         }
 
         private async void ProgressTimerTick(object sender, object args) =>
@@ -581,6 +770,7 @@ namespace pyToneRIP
             progressCheckRunning = true;
             try
             {
+                await RefreshSettingsNotificationsAsync();
                 await RefreshTransportActivityAsync();
                 var progress = await JobProgressReader.ReadLatestAsync();
                 if (progress == null)
@@ -630,6 +820,11 @@ namespace pyToneRIP
                 activeTransmissionHosts = current;
                 activeJobActivities = activities;
                 if (ended) _ = RefreshNetworkStatesAsync();
+                if (registry.Instances.Any(item => item.IsWindowsQueueMissing))
+                {
+                    windowsQueueRefreshPending = true;
+                    _ = RefreshPendingWindowsQueueStateAsync();
+                }
             }
             catch (Exception error)
             {
@@ -659,12 +854,14 @@ namespace pyToneRIP
                         && string.Equals(item.QueueName, activity.QueueName,
                             StringComparison.OrdinalIgnoreCase);
                 if (!matches) continue;
-                var priority = activity.State == "Processing" ? 3
+                var priority = activity.State == "Printing" ? 4
+                    : activity.State == "Processing" ? 3
                     : activity.State == "Queued" ? 2
                     : activity.State == "Preparing" ? 1 : 0;
                 if (priority > best) best = priority;
             }
-            return best == 3 ? PrinterNetworkState.Processing.ToString()
+            return best == 4 ? PrinterNetworkState.Printing.ToString()
+                : best == 3 ? PrinterNetworkState.Processing.ToString()
                 : best == 2 ? PrinterNetworkState.Queued.ToString()
                 : best == 1 ? PrinterNetworkState.Preparing.ToString()
                 : null;
@@ -737,19 +934,38 @@ namespace pyToneRIP
             defaultPrinterCheckRunning = true;
             try
             {
-                ApplyDefaultPrinterState(await QueueHelperClient.ListAsync());
-                UpdateSelectedPrinterActions();
+                do
+                {
+                    windowsQueueRefreshPending = false;
+                    var currentRegistry = registry;
+                    var queues = await QueueHelperClient.ListAsync();
+                    // A load, suspension or queue lifecycle operation can start
+                    // while enumeration is in flight. Its final refresh wins.
+                    if (registryLoading || printerLifecycleRunning
+                        || !ReferenceEquals(currentRegistry, registry))
+                    {
+                        windowsQueueRefreshPending = true;
+                        return;
+                    }
+                    if (managerSuspended || !managerPageLoaded)
+                        return;
+                    ApplyDefaultPrinterState(queues);
+                    await RemoveMissingWindowsQueuesAsync();
+                    UpdateSelectedPrinterActions();
+                } while (windowsQueueRefreshPending);
             }
             catch (Exception error)
             {
                 // A transient helper failure must not make the whole Manager
                 // unusable. The toolbar Refresh action will retry the same
                 // live Windows query and report broader synchronization errors.
+                windowsQueueRefreshPending = false;
                 ManagerLogger.WriteException("Refreshing Windows default printer", error);
             }
             finally
             {
                 defaultPrinterCheckRunning = false;
+                await RefreshPendingWindowsQueueStateAsync();
             }
         }
 
@@ -1023,7 +1239,7 @@ namespace pyToneRIP
                     try
                     {
                         await VirtualPrinterManagementService.RemoveAsync(
-                            installedPrinter.QueueName);
+                            installedPrinter);
                     }
                     catch { }
                     throw;
@@ -1051,6 +1267,7 @@ namespace pyToneRIP
                 installationFinished = true;
                 printerLifecycleRunning = false;
                 progressDialog.IsPrimaryButtonEnabled = true;
+                await RefreshPendingWindowsQueueStateAsync();
             }
             await dialogOperation;
             if (installedPrinter != null)
@@ -1179,8 +1396,20 @@ namespace pyToneRIP
         private async void RemovePrinter(object sender, RoutedEventArgs args)
         {
             var selected = PrinterList.SelectedItem as PrinterInstanceRecord;
-            if (selected != null)
+            if (selected == null || printerLifecycleRunning)
+                return;
+            printerLifecycleRunning = true;
+            UpdateSelectedPrinterActions();
+            try
+            {
                 await RemoveDynamicPrinterAsync(selected);
+            }
+            finally
+            {
+                printerLifecycleRunning = false;
+                UpdateSelectedPrinterActions();
+                await RefreshPendingWindowsQueueStateAsync();
+            }
         }
 
         private async Task RemoveDynamicPrinterAsync(PrinterInstanceRecord selected)
@@ -1190,7 +1419,9 @@ namespace pyToneRIP
             var dialog = new ContentDialog
             {
                 Title = LocalizationService.Get("Code.RemovePrinter"),
-                Content = LocalizationService.Format("Code.WindowsWillRemoveTheVirtualQueueAndItsSavedPyToneRIPConfigurationTheSign",
+                Content = selected.IsWindowsQueueMissing
+                    ? LocalizationService.Format("Code.PrinterQueueMissingRemoveConfiguration", selected.QueueName)
+                    : LocalizationService.Format("Code.WindowsWillRemoveTheVirtualQueueAndItsSavedPyToneRIPConfigurationTheSign",
                     selected.QueueName, selected.ModelName),
                 PrimaryButtonText = LocalizationService.Get("Code.Remove"),
                 CloseButtonText = LocalizationService.Get("Code.Cancel"),
@@ -1202,15 +1433,26 @@ namespace pyToneRIP
             StatusText.Text = LocalizationService.Format("Code.Removing", selected.QueueName);
             try
             {
-                await VirtualPrinterManagementService.RemoveAsync(
-                    selected.QueueName);
-                registry.Instances.Remove(selected);
-                await PrinterInstanceStore.WriteAsync(registry);
+                var removedFromWindows = await VirtualPrinterManagementService.RemoveAsync(selected);
                 await Shared.QueueConfigurationStorage.DeleteAsync(
                     selected.PrinterUri, selected.QueueName);
+                var index = registry.Instances.IndexOf(selected);
+                registry.Instances.Remove(selected);
+                try
+                {
+                    await PrinterInstanceStore.WriteAsync(registry);
+                }
+                catch
+                {
+                    if (index >= 0)
+                        registry.Instances.Insert(index, selected);
+                    throw;
+                }
                 await RefreshDefaultPrinterStateAsync();
                 RefreshList();
-                StatusText.Text = LocalizationService.Format("Code.AndItsSavedConfigurationWereRemovedTheModelRemainsAvailableInManager",
+                StatusText.Text = LocalizationService.Format(removedFromWindows
+                    ? "Code.AndItsSavedConfigurationWereRemovedTheModelRemainsAvailableInManager"
+                    : "Code.PrinterAlreadyRemovedConfigurationDeleted",
                     selected.QueueName);
             }
             catch (Exception error)
@@ -1225,6 +1467,13 @@ namespace pyToneRIP
         {
             try
             {
+                var queue = await VirtualPrinterManagementService.FindQueueAsync(printer);
+                printer.IsWindowsQueueMissing = queue == null;
+                if (queue != null)
+                {
+                    printer.QueueName = queue.Name;
+                    printer.SystemQueueId = queue.PortName;
+                }
                 if (!await HasActivePrintJobAsync(printer))
                     return true;
             }
@@ -1251,7 +1500,8 @@ namespace pyToneRIP
             {
                 return true;
             }
-            return await QueueHelperClient.HasCurrentJobAsync(printer.QueueName);
+            return !printer.IsWindowsQueueMissing
+                && await QueueHelperClient.HasCurrentJobAsync(printer.QueueName);
         }
 
         private async Task ShowActiveJobRemovalBlockedAsync(PrinterInstanceRecord printer)
@@ -1547,13 +1797,8 @@ namespace pyToneRIP
                 foreach (var record in registry.Instances)
                 {
                     record.IsSystemDefault = false;
-                    var queue = !string.IsNullOrWhiteSpace(record.SystemQueueId)
-                        ? queues.FirstOrDefault(item => string.Equals(
-                            item.PortName, record.SystemQueueId, StringComparison.OrdinalIgnoreCase))
-                        : null;
-                    if (queue == null)
-                        queue = queues.FirstOrDefault(item => string.Equals(
-                            item.Name, record.QueueName, StringComparison.OrdinalIgnoreCase));
+                    var queue = VirtualPrinterManagementService.FindQueue(record, queues);
+                    record.IsWindowsQueueMissing = queue == null;
                     if (queue == null)
                         continue;
                     if (!string.Equals(record.QueueName, queue.Name, StringComparison.Ordinal) ||
@@ -1567,7 +1812,7 @@ namespace pyToneRIP
                 }
                 if (changed)
                     await PrinterInstanceStore.WriteAsync(registry);
-                return null;
+                return await RemoveMissingWindowsQueuesAsync();
             }
             catch (Exception error)
             {
@@ -1580,30 +1825,89 @@ namespace pyToneRIP
         private void ApplyDefaultPrinterState(
             System.Collections.Generic.IReadOnlyList<WindowsQueueDescriptor> queues)
         {
-            if (registry?.Instances == null)
+            if (registry?.Instances == null || queues == null)
                 return;
             foreach (var record in registry.Instances)
             {
-                record.IsSystemDefault = queues != null && queues.Any(queue =>
-                    queue.IsDefault && string.Equals(
-                        queue.Name, record.QueueName, StringComparison.OrdinalIgnoreCase));
+                var queue = VirtualPrinterManagementService.FindQueue(record, queues);
+                record.IsWindowsQueueMissing = queue == null;
+                record.IsSystemDefault = queue?.IsDefault == true;
             }
         }
 
-        private static string TryGetModelPrinterUri(string portName)
+        private async Task<string> RemoveMissingWindowsQueuesAsync()
         {
-            const string prefix = "pytone-rip:";
-            if (string.IsNullOrWhiteSpace(portName))
+            if (printerLifecycleRunning || registry?.Instances == null)
                 return null;
-            var start = portName.IndexOf(prefix, StringComparison.OrdinalIgnoreCase);
-            if (start < 0)
+            var missing = registry.Instances.Where(item => item.IsWindowsQueueMissing).ToList();
+            if (missing.Count == 0)
                 return null;
-            var end = portName.IndexOf("_S-1-", start, StringComparison.OrdinalIgnoreCase);
-            var value = end < 0
-                ? portName.Substring(start)
-                : portName.Substring(start, end - start);
-            return value.TrimEnd('_');
+
+            printerLifecycleRunning = true;
+            UpdateSelectedPrinterActions();
+            var listChanged = false;
+            string notification = null;
+            var selection = PrinterList.SelectedItem;
+            try
+            {
+                // A Removed notification is only a reason to reconcile. Confirm
+                // absence in a fresh, successful queue enumeration before cleanup.
+                var queues = await QueueHelperClient.ListAsync();
+                foreach (var printer in missing)
+                {
+                    if (VirtualPrinterManagementService.FindQueue(printer, queues) != null)
+                    {
+                        printer.IsWindowsQueueMissing = false;
+                        continue;
+                    }
+                    // Keep configuration available to an already-running RIP.
+                    // The existing progress timer retries when its activity ends.
+                    if (await HasActivePrintJobAsync(printer))
+                        continue;
+
+                    var configuration = await Shared.QueueConfigurationStorage.ReadAsync(
+                        printer.PrinterUri, printer.QueueName, allowLegacyFallback: false);
+                    await Shared.QueueConfigurationStorage.DeleteAsync(
+                        printer.PrinterUri, printer.QueueName);
+                    var index = registry.Instances.IndexOf(printer);
+                    registry.Instances.RemoveAt(index);
+                    try
+                    {
+                        await PrinterInstanceStore.WriteAsync(registry);
+                    }
+                    catch
+                    {
+                        registry.Instances.Insert(index, printer);
+                        if (configuration != null)
+                            await Shared.QueueConfigurationStorage.WriteAsync(
+                                printer.PrinterUri, printer.QueueName, configuration);
+                        throw;
+                    }
+                    listChanged = true;
+                    ManagerLogger.Write("Removed saved configuration for absent Windows queue: "
+                        + printer.QueueName + "; uri=" + printer.PrinterUri);
+                    notification = LocalizationService.Format(
+                        "Code.PrinterAlreadyRemovedConfigurationDeleted", printer.QueueName);
+                    StatusText.Text = notification;
+                }
+            }
+            finally
+            {
+                printerLifecycleRunning = false;
+                if (listChanged)
+                {
+                    RefreshList();
+                    if (selection is PrinterInstanceRecord previous
+                        && registry.Instances.Contains(previous))
+                        PrinterList.SelectedItem = previous;
+                }
+                UpdateSelectedPrinterActions();
+            }
+            return notification;
         }
+
+        private static string TryGetModelPrinterUri(string portName) =>
+            VirtualPrinterManagementService.GetPrinterUri(portName);
 
         private static string TryGetModelToken(string printerUri)
         {

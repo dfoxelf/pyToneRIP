@@ -31,7 +31,7 @@
   <data name="Auto.5471BCBDC1ED.Text"><value>Curva 1</value></data>
   <data name="Auto.55EB8098D769.Header"><value>ID inchiostro logico (lettere, cifre, virgole)</value></data>
   <data name="Auto.55EB8098D769.PlaceholderText"><value>K,C,M</value></data>
-  <data name="Auto.5C063BCAA06D.Header"><value>Indirizzo IPv4</value></data>
+  <data name="Auto.5C063BCAA06D.Header"><value>Inserisci l’indirizzo IPv4 della tua stampante (ad es. 192.168.1.50)</value></data>
   <data name="Auto.5C37FF0F3134.Text"><value>Altezza (mm)</value></data>
   <data name="Auto.5C6A98D0E847.Text"><value>Modalità esperto: la combinazione carta-pagina selezionata potrebbe non essere supportata dal produttore.</value></data>
   <data name="Auto.5D31AF069F1B.Content"><value>USB</value></data>
@@ -232,7 +232,7 @@
   <data name="MainPage.Table.Connection.Text"><value>Connessione</value></data>
   <data name="MainPage.Table.Default.Text"><value>Predefinita</value></data>
   <data name="MainPage.Table.Model.Text"><value>Modello</value></data>
-  <data name="MainPage.Table.Network.Text"><value>Rete</value></data>
+  <data name="MainPage.Table.Network.Text"><value>Stato</value></data>
   <data name="MainPage.Table.Printer.Text"><value>Stampante</value></data>
   <data name="MainPage.Title.Text"><value>pyToneRIP</value></data>
   <data name="MainPage.WindowsPrinters.Content"><value>Stampanti Windows</value></data>
@@ -261,4 +261,32 @@
   <data name="Usb.DiscoveryFailed"><value>Rilevamento USB non riuscito: {0}</value></data>
   <data name="Usb.SelectMatchingDevice"><value>Selezionare una stampante USB collegata corrispondente al modello scelto.</value></data>
   <data name="Usb.DestinationChanged"><value>La destinazione USB non è disponibile o è cambiata. Ricollegare la stampante e aggiornare l’elenco.</value></data>
+  <data name="Choice.RemovedFromWindows" xml:space="preserve"><value>Rimossa da Windows</value></data>
+  <data name="Code.PrinterQueueMissingRemoveConfiguration" xml:space="preserve"><value>La stampante «{0}» non è più presente in Windows. Rimuovere la sua configurazione salvata da pyToneRIP?</value></data>
+  <data name="Code.PrinterAlreadyRemovedConfigurationDeleted" xml:space="preserve"><value>La stampante «{0}» era già stata rimossa da Windows. La sua configurazione salvata è stata rimossa da pyToneRIP.</value></data>
+  <data name="Code.ConfigurationSavedWindowsDefaultsFailed"><value>Le impostazioni RIP sono state salvate. Non è stato possibile applicare completamente le impostazioni di stampa di Windows: {0}</value></data>
+  <data name="Printer.FinestDetail" xml:space="preserve"><value>Massimo dettaglio</value></data>
+  <data name="DeviceSetting.Drying_Time" xml:space="preserve"><value>Asciugatura dopo passaggio della testina</value></data>
+  <data name="DeviceSetting.Page_Drying_Time" xml:space="preserve"><value>Asciugatura dopo la pagina</value></data>
+  <data name="DeviceSetting.Minimum_Scan_Drying_Time" xml:space="preserve"><value>Asciugatura minima dopo passaggio della testina</value></data>
+  <data name="DeviceSetting.Paper_Thickness" xml:space="preserve"><value>Spessore carta</value></data>
+  <data name="DeviceSetting.Paper_Suction" xml:space="preserve"><value>Aspirazione carta</value></data>
+  <data name="DeviceSetting.Feed_Adjustment" xml:space="preserve"><value>Regolazione avanzamento carta</value></data>
+  <data name="DeviceSetting.Feed_Sequence" xml:space="preserve"><value>Sequenza avanzamento carta</value></data>
+  <data name="DeviceSetting.Platen_Gap" xml:space="preserve"><value>Distanza testina</value></data>
+  <data name="DeviceSetting.Save_Paper_Roll_Paper" xml:space="preserve"><value>Risparmio carta in rotolo</value></data>
+  <data name="DeviceSetting.Microweave_Precision" xml:space="preserve"><value>Correzione precisione MicroWeave</value></data>
+  <data name="DeviceChoice.MediaDefault" xml:space="preserve"><value>Predefinito del supporto</value></data>
+  <data name="DeviceChoice.Default" xml:space="preserve"><value>Predefinito</value></data>
+  <data name="DeviceChoice.Off" xml:space="preserve"><value>Disattivato</value></data>
+  <data name="DeviceChoice.On" xml:space="preserve"><value>Attivato</value></data>
+  <data name="DeviceChoice.Large" xml:space="preserve"><value>Grande</value></data>
+  <data name="DeviceChoice.Wider" xml:space="preserve"><value>Più largo</value></data>
+  <data name="DeviceChoice.Wide" xml:space="preserve"><value>Largo</value></data>
+  <data name="DeviceChoice.Standard" xml:space="preserve"><value>Standard</value></data>
+  <data name="DeviceChoice.Narrow" xml:space="preserve"><value>Stretto</value></data>
+  <data name="DeviceChoice.Model_A" xml:space="preserve"><value>Modello A</value></data>
+  <data name="DeviceChoice.Model_B" xml:space="preserve"><value>Modello B</value></data>
+  <data name="DeviceChoice.Code" xml:space="preserve"><value>Codice {0}</value></data>
+  <data name="DeviceChoice.ThinPaper" xml:space="preserve"><value>{0} (carta sottile)</value></data>
 </root>

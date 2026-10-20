@@ -1,7 +1,10 @@
 {
   "channels": [],
   "device_features": [
-    "platen_gap"
+    "paper_thickness",
+    "platen_gap",
+    "save_roll_paper",
+    "scan_drying_time"
   ],
   "driver": {
     "driver_mechanics": {
@@ -65,6 +68,19 @@
       },
       "idx": 3,
       "name": "Roll Paper"
+    },
+    {
+      "feed_mechanics": {
+        "medium_kind": "selected_cut_sheet_path",
+        "remote_paper_path": {
+          "number": 3,
+          "type": 2
+        },
+        "roll_cut_mode": "none",
+        "suppress_form_feed_after_page": false
+      },
+      "idx": 4,
+      "name": "Front No Eject Roller (Glossy Paper)"
     }
   ],
   "identity": {
@@ -436,6 +452,7 @@
       "idx": 15,
       "name": "Envelope #10",
       "page_mechanics": {
+        "format_bottom_margin_mils": 540,
         "media_size_code": 18,
         "sheet_geometry_class": "envelope",
         "special_media": {
@@ -450,6 +467,7 @@
       "idx": 16,
       "name": "Envelope DL",
       "page_mechanics": {
+        "format_bottom_margin_mils": 540,
         "media_size_code": 20,
         "sheet_geometry_class": "envelope",
         "special_media": {
@@ -464,6 +482,7 @@
       "idx": 17,
       "name": "Envelope C6",
       "page_mechanics": {
+        "format_bottom_margin_mils": 540,
         "media_size_code": 19,
         "sheet_geometry_class": "envelope",
         "special_media": {
@@ -478,6 +497,7 @@
       "idx": 18,
       "name": "Envel.132x220mm",
       "page_mechanics": {
+        "format_bottom_margin_mils": 540,
         "media_size_code": 21,
         "sheet_geometry_class": "envelope",
         "special_media": {

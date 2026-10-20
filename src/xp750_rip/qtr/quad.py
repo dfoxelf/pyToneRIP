@@ -1,7 +1,7 @@
 # Copyright (C) 2026 Alexander Eichhorn
 # SPDX-License-Identifier: GPL-3.0-only
 
-"""Preservation-first parser for compiled QuadToneRIP ``.quad`` tables.
+"""Preservation-first parser for compiled ``.quad`` calibration tables.
 
 A compiled QUAD file contains one 256-entry unsigned 16-bit table per logical
 ink.  Curve marker comments identify the tables in the supplied real profile.
@@ -13,7 +13,9 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 
-_HEADER_RE = re.compile(r"^##\s*QuadToneRIP\s+(.+?)\s*$", re.IGNORECASE)
+# The producing application's name is metadata; the RIP suffix identifies the
+# ink-declaration header. Preserve its original bytes when serializing.
+_HEADER_RE = re.compile(r"^##\s*\S*RIP\s+(.+?)\s*$", re.IGNORECASE)
 _VERSION_RE = re.compile(r"^#\s*QuadProfile\s+Version\s+(.+?)\s*$", re.IGNORECASE)
 _CURVE_RE = re.compile(r"^#\s*([^#\s]+)\s+curve\s*$", re.IGNORECASE)
 _INTEGER_RE = re.compile(r"^[0-9]+$")
@@ -69,7 +71,7 @@ class QuadProfile:
             raise ValueError("compiled QUAD profile contains duplicate curve markers")
         if self.declared_inks is not None and self.declared_inks != codes:
             raise ValueError(
-                "QuadToneRIP header ink order does not match curve marker order: "
+                "QUAD header ink order does not match curve marker order: "
                 f"{self.declared_inks!r} != {codes!r}"
             )
 
@@ -134,13 +136,13 @@ def parse_quad(text: str) -> QuadProfile:
             source_lines.append(QuadSourceLine(line_number, raw, "curve_marker", current_ink))
         elif header_match:
             if declared_inks is not None:
-                raise ValueError(f"line {line_number}: duplicate QuadToneRIP header")
+                raise ValueError(f"line {line_number}: duplicate QUAD header")
             header_value = header_match.group(1).strip()
             compact_header = "," not in header_value
             if compact_header:
                 if not re.fullmatch(r"[A-Za-z0-9]+", header_value):
                     raise ValueError(
-                        f"line {line_number}: malformed compact QuadToneRIP ink header"
+                        f"line {line_number}: malformed compact QUAD ink header"
                     )
                 # Older compiled profiles encode one single-character logical
                 # ink identity per header character and omit per-table markers.
@@ -149,7 +151,7 @@ def parse_quad(text: str) -> QuadProfile:
             else:
                 declared_inks = tuple(item.strip() for item in header_value.split(","))
             if not declared_inks or any(not item for item in declared_inks):
-                raise ValueError(f"line {line_number}: malformed QuadToneRIP ink header")
+                raise ValueError(f"line {line_number}: malformed QUAD ink header")
             source_lines.append(QuadSourceLine(line_number, raw, "header"))
         elif version_match:
             if version is not None:

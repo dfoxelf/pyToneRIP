@@ -25,6 +25,7 @@ namespace pyToneRIP.Services
         {
             [DataMember(Name = "schema")] public string Schema { get; set; }
             [DataMember(Name = "version")] public int Version { get; set; }
+            [DataMember(Name = "job_id")] public string JobId { get; set; }
             [DataMember(Name = "host")] public string Host { get; set; }
             [DataMember(Name = "active")] public bool Active { get; set; }
             [DataMember(Name = "updated_utc")] public string UpdatedUtc { get; set; }
@@ -169,6 +170,29 @@ namespace pyToneRIP.Services
                         State = queued ? "Queued"
                             : progress.Percent >= 32 ? "Processing" : "Preparing",
                     };
+                    // USBPRINT has no network host. Read the actual transport
+                    // activity for this job instead of inferring transmission
+                    // from a RIP percentage or a network address.
+                    try
+                    {
+                        var transportFile = await folder.GetFileAsync("transport-activity.json");
+                        TransportActivity transport;
+                        using (var stream = await transportFile.OpenStreamForReadAsync())
+                            transport = (TransportActivity)new DataContractJsonSerializer(
+                                typeof(TransportActivity)).ReadObject(stream);
+                        DateTimeOffset transportUpdated;
+                        if (!queued && transport?.Schema == "pytone-rip.transport-activity"
+                            && transport.Version == 1 && transport.Active
+                            && string.Equals(transport.JobId, progress.JobId, StringComparison.Ordinal)
+                            && DateTimeOffset.TryParse(transport.UpdatedUtc, out transportUpdated)
+                            && transportUpdated <= now.AddMinutes(1)
+                            && transportUpdated >= now.AddMinutes(-6))
+                            activity.State = "Printing";
+                    }
+                    catch (FileNotFoundException) { }
+                    catch (IOException) { }
+                    catch (UnauthorizedAccessException) { }
+                    catch (SerializationException) { }
                     try
                     {
                         var queueFile = await folder.GetFileAsync("job-queue.txt");

@@ -4,21 +4,21 @@
 """Bounded-memory QTR halftone production for the ESC/P2 backend.
 
 The retained full-page dither methods remain the readable reference.  This
-module changes only ownership and lifetime of buffers: it invokes the same AOT
-kernels with the same global coordinates and carries error-diffusion state
-between bands, but yields each physical band directly to the weave.
+module invokes AOT kernels with global coordinates and yields physical bands
+directly to the weave. Empty ink rows bypass screening; error diffusion settles
+three empty rows before resetting at a blank-region boundary, across bands.
 """
 
 from __future__ import annotations
 
 import os
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from concurrent.futures import ThreadPoolExecutor
-from typing import Callable
 
 import numpy as np
 
 from xp750_rip.contone import UINT16_MAX, LogicalChannelId
+from xp750_rip.dither.blank import EMPTY_SETTLE_ROWS, blank_row_spans
 from xp750_rip.dither.blue_noise import BlueNoiseFMDither, _channel_screen_parameters
 from xp750_rip.dither.error_diffusion import (
     VariableCoefficientErrorDiffusion,
@@ -62,9 +62,7 @@ class InvertedQtrRows(Sequence[bytes]):
         return self._rows[index].translate(self._table)
 
 
-def _code_array(
-    rows: Sequence[bytes], start: int, end: int, width: int
-) -> np.ndarray:
+def _code_array(rows: Sequence[bytes], start: int, end: int, width: int) -> np.ndarray:
     return np.frombuffer(
         b"".join(rows[index] for index in range(start, end)), dtype=np.uint8
     ).reshape(end - start, width)
@@ -122,8 +120,7 @@ def streaming_qtr_rasters(
     if len(set(paths)) != len(paths):
         if allow_multiple_logical_to_one_path:
             raise NotImplementedError(
-                "mixing multiple streaming logical inks into one PhysicalPath "
-                "is not implemented"
+                "mixing multiple streaming logical inks into one PhysicalPath is not implemented"
             )
         raise ValueError(
             "multiple streaming logical inks target one PhysicalPath; mixing is disabled"
@@ -143,6 +140,7 @@ def streaming_qtr_rasters(
             entropy_zhou_fang_qtr_band_kernel,
             ordered_qtr_band_kernel,
             ostromoukhov_qtr_band_kernel,
+            qtr_active_rows_kernel,
             very_fast_qtr_band_kernel,
             zhou_fang_qtr_band_kernel,
         )
@@ -151,6 +149,7 @@ def streaming_qtr_rasters(
             logical: np.asarray(qtr_luts[logical.value], dtype=np.uint16)
             for logical in logical_inks
         }
+        empty_runs = {logical: EMPTY_SETTLE_ROWS for logical in logical_inks}
         error_states: dict[LogicalChannelId, np.ndarray] = {}
         coefficients = modulation = endpoints = endpoint_codes = entropy = None
         selected_error_kernel = None
@@ -181,8 +180,7 @@ def streaming_qtr_rasters(
                 ),
             }[dither.algorithm]
             error_states = {
-                logical: np.zeros(width + 2, dtype=np.float64)
-                for logical in logical_inks
+                logical: np.zeros(width + 2, dtype=np.float64) for logical in logical_inks
             }
 
         matrix = None
@@ -198,14 +196,11 @@ def streaming_qtr_rasters(
             )
 
         parallel_error_diffusion = (
-            isinstance(dither, VariableCoefficientErrorDiffusion)
-            and len(logical_inks) > 1
+            isinstance(dither, VariableCoefficientErrorDiffusion) and len(logical_inks) > 1
         )
         executor = (
             ThreadPoolExecutor(
-                max_workers=min(
-                    len(logical_inks), max(1, (os.cpu_count() or 2) // 2)
-                ),
+                max_workers=min(len(logical_inks), max(1, (os.cpu_count() or 2) // 2)),
                 thread_name_prefix="pytone-stream-ed",
             )
             if parallel_error_diffusion
@@ -234,100 +229,121 @@ def streaming_qtr_rasters(
                 ]:
                     logical, path = item
                     lut = luts[logical]
-                    next_error = None
-                    if isinstance(dither, VariableCoefficientErrorDiffusion):
-                        assert selected_error_kernel is not None
-                        assert coefficients is not None and modulation is not None
-                        assert endpoints is not None and endpoint_codes is not None
-                        assert entropy is not None
-                        highpass = (
-                            _gaussian_highpass_band(
-                                codes, lut, band_start, band_end
+                    rows = band_end - band_start
+                    current_error = error_states.get(logical)
+                    active = qtr_active_rows_kernel(codes_for_band[:rows], lut)
+                    spans, empty_runs[logical] = blank_row_spans(
+                        active,
+                        empty_runs[logical],
+                        settle_rows=EMPTY_SETTLE_ROWS if current_error is not None else 0,
+                    )
+                    packed = np.zeros((bit_depth, rows, canvas_width // 8), dtype=np.uint8)
+                    for local_start, local_end, render in spans:
+                        if cancel_check is not None:
+                            cancel_check()
+                        if not render:
+                            if current_error is not None:
+                                current_error.fill(0)
+                            continue
+                        span_start = band_start + local_start
+                        span_end = band_start + local_end
+                        # Keep the next source row for exact clipped diffusion.
+                        span_codes = codes_for_band[local_start : local_end + 1]
+                        next_error = None
+                        if isinstance(dither, VariableCoefficientErrorDiffusion):
+                            assert selected_error_kernel is not None
+                            assert coefficients is not None and modulation is not None
+                            assert endpoints is not None and endpoint_codes is not None
+                            assert entropy is not None
+                            highpass = (
+                                _gaussian_highpass_band(codes, lut, span_start, span_end)
+                                if dither.algorithm
+                                is HalftoneAlgorithm.ENTROPY_CONSTRAINED_ZHOU_FANG
+                                else np.empty((0, 0), dtype=np.float64)
                             )
-                            if dither.algorithm
-                            is HalftoneAlgorithm.ENTROPY_CONSTRAINED_ZHOU_FANG
-                            else np.empty((0, 0), dtype=np.float64)
-                        )
-                        packed, next_error = selected_error_kernel(
-                            codes_for_band,
-                            lut,
-                            coefficients,
-                            modulation,
-                            endpoints,
-                            endpoint_codes,
-                            error_states[logical],
-                            highpass,
-                            entropy,
-                            band_end - band_start,
-                            band_start,
-                            height,
-                            canvas_width,
-                            0,
-                            bit_depth,
-                            dither.serpentine,
-                            dither.random_seed & 0xFFFFFFFF,
-                            dither.x_offset,
-                            dither.y_offset + band_start,
-                            dither.entropy_strength,
-                        )
-                    elif isinstance(dither, BlueNoiseFMDither):
-                        assert matrix is not None
-                        assert lower_bits is not None and upper_bits is not None
-                        assert range_points is not None
-                        phase_x, phase_y, channel_seed = _channel_screen_parameters(
-                            logical, dither.matrix
-                        )
-                        packed = blue_noise_qtr_band_kernel(
-                            codes_for_band[: band_end - band_start],
-                            lut,
-                            matrix,
-                            lower_bits,
-                            upper_bits,
-                            range_points,
-                            canvas_width,
-                            0,
-                            band_start,
-                            dither.x_offset,
-                            dither.y_offset,
-                            phase_x,
-                            phase_y,
-                            channel_seed,
-                            bit_depth,
-                        )
-                    elif isinstance(dither, GutenprintVeryFastDither):
-                        assert matrix is not None
-                        packed = very_fast_qtr_band_kernel(
-                            codes_for_band[: band_end - band_start],
-                            lut,
-                            matrix,
-                            canvas_width,
-                            0,
-                            band_start,
-                            dither.x_offset,
-                            dither.y_offset,
-                            bit_depth,
-                            dither.drops.endpoints[-1].bits,
-                        )
-                    else:
-                        assert isinstance(dither, GutenprintOrderedDither)
-                        assert matrix is not None
-                        assert lower_bits is not None and upper_bits is not None
-                        assert range_points is not None
-                        packed = ordered_qtr_band_kernel(
-                            codes_for_band[: band_end - band_start],
-                            lut,
-                            matrix,
-                            lower_bits,
-                            upper_bits,
-                            range_points,
-                            canvas_width,
-                            0,
-                            band_start,
-                            dither.x_offset,
-                            dither.y_offset,
-                            bit_depth,
-                        )
-                    return logical, path, packed, next_error
+                            span_packed, next_error = selected_error_kernel(
+                                span_codes,
+                                lut,
+                                coefficients,
+                                modulation,
+                                endpoints,
+                                endpoint_codes,
+                                current_error,
+                                highpass,
+                                entropy,
+                                span_end - span_start,
+                                span_start,
+                                height,
+                                canvas_width,
+                                0,
+                                bit_depth,
+                                dither.serpentine,
+                                dither.random_seed & 0xFFFFFFFF,
+                                dither.x_offset,
+                                dither.y_offset + span_start,
+                                dither.entropy_strength,
+                            )
+                        elif isinstance(dither, BlueNoiseFMDither):
+                            assert matrix is not None
+                            assert lower_bits is not None and upper_bits is not None
+                            assert range_points is not None
+                            phase_x, phase_y, channel_seed = _channel_screen_parameters(
+                                logical, dither.matrix
+                            )
+                            span_packed = blue_noise_qtr_band_kernel(
+                                span_codes[: span_end - span_start],
+                                lut,
+                                matrix,
+                                lower_bits,
+                                upper_bits,
+                                range_points,
+                                canvas_width,
+                                0,
+                                span_start,
+                                dither.x_offset,
+                                dither.y_offset,
+                                phase_x,
+                                phase_y,
+                                channel_seed,
+                                bit_depth,
+                            )
+                        elif isinstance(dither, GutenprintVeryFastDither):
+                            assert matrix is not None
+                            span_packed = very_fast_qtr_band_kernel(
+                                span_codes[: span_end - span_start],
+                                lut,
+                                matrix,
+                                canvas_width,
+                                0,
+                                span_start,
+                                dither.x_offset,
+                                dither.y_offset,
+                                bit_depth,
+                                dither.drops.endpoints[-1].bits,
+                            )
+                        else:
+                            assert isinstance(dither, GutenprintOrderedDither)
+                            assert matrix is not None
+                            assert lower_bits is not None and upper_bits is not None
+                            assert range_points is not None
+                            span_packed = ordered_qtr_band_kernel(
+                                span_codes[: span_end - span_start],
+                                lut,
+                                matrix,
+                                lower_bits,
+                                upper_bits,
+                                range_points,
+                                canvas_width,
+                                0,
+                                span_start,
+                                dither.x_offset,
+                                dither.y_offset,
+                                bit_depth,
+                            )
+                        packed[:, local_start:local_end] = span_packed
+                        if next_error is not None:
+                            current_error = next_error
+                    return logical, path, packed, current_error
 
                 items = tuple(zip(logical_inks, paths, strict=True))
                 rendered = (
@@ -340,9 +356,7 @@ def streaming_qtr_rasters(
                     if next_error is not None:
                         error_states[logical] = next_error
                     planes.append(
-                        RasterBandPlane(
-                            path, np.ascontiguousarray(packed, dtype=np.uint8)
-                        )
+                        RasterBandPlane(path, np.ascontiguousarray(packed, dtype=np.uint8))
                     )
                 yield PhysicalRasterBand(start, tuple(planes))
         finally:

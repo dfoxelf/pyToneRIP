@@ -760,6 +760,10 @@ def _schedule_single_nozzle_weave(
         band_height = next(iter(planes_by_path.values())).shape[1]
         for path in ordered_paths:
             bit_planes = planes_by_path[path]
+            # Absolute source rows still determine the next paper advance.
+            # An empty firmware-weave band needs neither splitting nor PackBits.
+            if not retain_row_trace and not np.any(bit_planes):
+                continue
             started = perf_counter()
             if mode.bit_depth == 2:
                 folded = weave_unpack_split_fold_kernel(

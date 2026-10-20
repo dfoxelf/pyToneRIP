@@ -22,6 +22,7 @@
     }
   ],
   "device_features": [
+    "platen_gap",
     "save_roll_paper"
   ],
   "driver": {

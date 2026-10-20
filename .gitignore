@@ -64,3 +64,12 @@ reference/microsoft-windows-driver-docs/
 
 # Files uploaded to GitHub Releases, not source code
 /release-assets/
+
+# Generated printer assets are recreated by the build
+/windows_psa/pyToneRIP/Assets/CapabilityModels/
+/windows_psa/pyToneRIP/Assets/PdcModels/
+/windows_psa/pyToneRIP/Assets/PdrModels/
+/windows_psa/pyToneRIP/Assets/capabilities.generated.json
+/windows_psa/pyToneRIP/Assets/capabilities.common.json
+/windows_psa/pyToneRIP/Assets/capabilities.index.json
+/windows_psa/pyToneRIP/Assets/catalog-signing.cer

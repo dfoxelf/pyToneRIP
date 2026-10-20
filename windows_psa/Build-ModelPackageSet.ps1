@@ -108,7 +108,7 @@ $localPfxPath = Join-Path $localSigningRoot "pyToneRIP-Development.pfx"
 $localPasswordPath = Join-Path $localSigningRoot "pyToneRIP-Development.password"
 # Каждый дочерний Python/uv процесс обязан использовать локальный cache проекта.
 # Присваивание стоит до первого child process, чтобы uv никогда не пытался писать
-# в C:\Users\...\AppData\Local\uv\cache, где sandbox уже давал Access Denied.
+# в пользовательском uv cache, где sandbox уже давал Access Denied.
 $env:UV_CACHE_DIR = Join-Path $repositoryRoot ".uv-cache"
 # Build hosts can use an ANSI console code page that cannot represent the
 # Russian diagnostics emitted by the Python CLI.  Keep child-process output

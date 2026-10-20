@@ -31,7 +31,7 @@
   <data name="Auto.5471BCBDC1ED.Text"><value>Curba 1</value></data>
   <data name="Auto.55EB8098D769.Header"><value>ID-uri logice de cerneală (litere, cifre, virgule)</value></data>
   <data name="Auto.55EB8098D769.PlaceholderText"><value>K,C,M</value></data>
-  <data name="Auto.5C063BCAA06D.Header"><value>adresa IPv4</value></data>
+  <data name="Auto.5C063BCAA06D.Header"><value>Introduceți adresa IPv4 a imprimantei dvs. (de ex. 192.168.1.50)</value></data>
   <data name="Auto.5C37FF0F3134.Text"><value>Înălțime (mm)</value></data>
   <data name="Auto.5C6A98D0E847.Text"><value>Modul expert: este posibil ca combinația de hârtie și pagină selectată să nu fie acceptată de producător.</value></data>
   <data name="Auto.5D31AF069F1B.Content"><value>USB</value></data>
@@ -232,7 +232,7 @@
   <data name="MainPage.Table.Connection.Text"><value>Conexiune</value></data>
   <data name="MainPage.Table.Default.Text"><value>Implicit</value></data>
   <data name="MainPage.Table.Model.Text"><value>Model</value></data>
-  <data name="MainPage.Table.Network.Text"><value>Reţea</value></data>
+  <data name="MainPage.Table.Network.Text"><value>Stare</value></data>
   <data name="MainPage.Table.Printer.Text"><value>Imprimanta</value></data>
   <data name="MainPage.Title.Text"><value>pyToneRIP</value></data>
   <data name="MainPage.WindowsPrinters.Content"><value>Imprimante Windows</value></data>
@@ -261,4 +261,32 @@
   <data name="Usb.DiscoveryFailed"><value>Detectarea USB a eșuat: {0}</value></data>
   <data name="Usb.SelectMatchingDevice"><value>Selectați o imprimantă USB conectată care corespunde modelului ales.</value></data>
   <data name="Usb.DestinationChanged"><value>Destinația USB nu este disponibilă sau s-a schimbat. Reconectați imprimanta și actualizați lista.</value></data>
+  <data name="Choice.RemovedFromWindows" xml:space="preserve"><value>Eliminată din Windows</value></data>
+  <data name="Code.PrinterQueueMissingRemoveConfiguration" xml:space="preserve"><value>Imprimanta „{0}” nu mai există în Windows. Eliminați configurația sa salvată din pyToneRIP?</value></data>
+  <data name="Code.PrinterAlreadyRemovedConfigurationDeleted" xml:space="preserve"><value>Imprimanta „{0}” fusese deja eliminată din Windows. Configurația sa salvată a fost eliminată din pyToneRIP.</value></data>
+  <data name="Code.ConfigurationSavedWindowsDefaultsFailed"><value>Setările RIP au fost salvate. Setările de imprimare Windows nu au putut fi aplicate complet: {0}</value></data>
+  <data name="Printer.FinestDetail" xml:space="preserve"><value>Cele mai fine detalii</value></data>
+  <data name="DeviceSetting.Drying_Time" xml:space="preserve"><value>Uscare după trecerea capului</value></data>
+  <data name="DeviceSetting.Page_Drying_Time" xml:space="preserve"><value>Uscare după pagină</value></data>
+  <data name="DeviceSetting.Minimum_Scan_Drying_Time" xml:space="preserve"><value>Uscare minimă după trecerea capului</value></data>
+  <data name="DeviceSetting.Paper_Thickness" xml:space="preserve"><value>Grosimea hârtiei</value></data>
+  <data name="DeviceSetting.Paper_Suction" xml:space="preserve"><value>Aspirarea hârtiei</value></data>
+  <data name="DeviceSetting.Feed_Adjustment" xml:space="preserve"><value>Reglarea avansului hârtiei</value></data>
+  <data name="DeviceSetting.Feed_Sequence" xml:space="preserve"><value>Secvența de avans a hârtiei</value></data>
+  <data name="DeviceSetting.Platen_Gap" xml:space="preserve"><value>Distanța capului de imprimare</value></data>
+  <data name="DeviceSetting.Save_Paper_Roll_Paper" xml:space="preserve"><value>Economisire hârtie în rolă</value></data>
+  <data name="DeviceSetting.Microweave_Precision" xml:space="preserve"><value>Corecția preciziei MicroWeave</value></data>
+  <data name="DeviceChoice.MediaDefault" xml:space="preserve"><value>Conform suportului</value></data>
+  <data name="DeviceChoice.Default" xml:space="preserve"><value>Implicit</value></data>
+  <data name="DeviceChoice.Off" xml:space="preserve"><value>Dezactivat</value></data>
+  <data name="DeviceChoice.On" xml:space="preserve"><value>Activat</value></data>
+  <data name="DeviceChoice.Large" xml:space="preserve"><value>Mare</value></data>
+  <data name="DeviceChoice.Wider" xml:space="preserve"><value>Mai larg</value></data>
+  <data name="DeviceChoice.Wide" xml:space="preserve"><value>Larg</value></data>
+  <data name="DeviceChoice.Standard" xml:space="preserve"><value>Standard</value></data>
+  <data name="DeviceChoice.Narrow" xml:space="preserve"><value>Îngust</value></data>
+  <data name="DeviceChoice.Model_A" xml:space="preserve"><value>Model A</value></data>
+  <data name="DeviceChoice.Model_B" xml:space="preserve"><value>Model B</value></data>
+  <data name="DeviceChoice.Code" xml:space="preserve"><value>Cod {0}</value></data>
+  <data name="DeviceChoice.ThinPaper" xml:space="preserve"><value>{0} (hârtie subțire)</value></data>
 </root>

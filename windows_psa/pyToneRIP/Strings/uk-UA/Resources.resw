@@ -31,7 +31,7 @@
   <data name="Auto.5471BCBDC1ED.Text"><value>Крива 1</value></data>
   <data name="Auto.55EB8098D769.Header"><value>Ідентифікатори логічних чорнил (літери, цифри, коми)</value></data>
   <data name="Auto.55EB8098D769.PlaceholderText"><value>K,C,M</value></data>
-  <data name="Auto.5C063BCAA06D.Header"><value>адреса IPv4</value></data>
+  <data name="Auto.5C063BCAA06D.Header"><value>Введіть IPv4-адресу вашого принтера (наприклад, 192.168.1.50)</value></data>
   <data name="Auto.5C37FF0F3134.Text"><value>Висота (мм)</value></data>
   <data name="Auto.5C6A98D0E847.Text"><value>Експертний режим: вибрана комбінація паперу та сторінки може не підтримуватися виробником.</value></data>
   <data name="Auto.5D31AF069F1B.Content"><value>USB</value></data>
@@ -232,7 +232,7 @@
   <data name="MainPage.Table.Connection.Text"><value>Підключення</value></data>
   <data name="MainPage.Table.Default.Text"><value>Типовий</value></data>
   <data name="MainPage.Table.Model.Text"><value>Модель</value></data>
-  <data name="MainPage.Table.Network.Text"><value>Мережа</value></data>
+  <data name="MainPage.Table.Network.Text"><value>Стан</value></data>
   <data name="MainPage.Table.Printer.Text"><value>Принтер</value></data>
   <data name="MainPage.Title.Text"><value>pyToneRIP</value></data>
   <data name="MainPage.WindowsPrinters.Content"><value>Принтери Windows</value></data>
@@ -261,4 +261,32 @@
   <data name="Usb.DiscoveryFailed"><value>Не вдалося виявити USB-принтер: {0}</value></data>
   <data name="Usb.SelectMatchingDevice"><value>Виберіть підключений USB-принтер, що відповідає вибраній моделі.</value></data>
   <data name="Usb.DestinationChanged"><value>USB-призначення недоступне або змінилося. Повторно підключіть принтер і оновіть список.</value></data>
+  <data name="Choice.RemovedFromWindows" xml:space="preserve"><value>Видалено з Windows</value></data>
+  <data name="Code.PrinterQueueMissingRemoveConfiguration" xml:space="preserve"><value>Принтера «{0}» більше немає у Windows. Видалити його збережену конфігурацію з pyToneRIP?</value></data>
+  <data name="Code.PrinterAlreadyRemovedConfigurationDeleted" xml:space="preserve"><value>Принтер «{0}» уже було видалено з Windows. Його збережену конфігурацію видалено з pyToneRIP.</value></data>
+  <data name="Code.ConfigurationSavedWindowsDefaultsFailed"><value>Налаштування RIP збережено. Не вдалося повністю застосувати параметри друку Windows: {0}</value></data>
+  <data name="Printer.FinestDetail" xml:space="preserve"><value>Точна деталізація</value></data>
+  <data name="DeviceSetting.Drying_Time" xml:space="preserve"><value>Сушіння після проходу головки</value></data>
+  <data name="DeviceSetting.Page_Drying_Time" xml:space="preserve"><value>Сушіння після сторінки</value></data>
+  <data name="DeviceSetting.Minimum_Scan_Drying_Time" xml:space="preserve"><value>Мінімальне сушіння після проходу головки</value></data>
+  <data name="DeviceSetting.Paper_Thickness" xml:space="preserve"><value>Товщина паперу</value></data>
+  <data name="DeviceSetting.Paper_Suction" xml:space="preserve"><value>Вакуумне притискання паперу</value></data>
+  <data name="DeviceSetting.Feed_Adjustment" xml:space="preserve"><value>Корекція подавання паперу</value></data>
+  <data name="DeviceSetting.Feed_Sequence" xml:space="preserve"><value>Послідовність подавання паперу</value></data>
+  <data name="DeviceSetting.Platen_Gap" xml:space="preserve"><value>Зазор друкувальної головки</value></data>
+  <data name="DeviceSetting.Save_Paper_Roll_Paper" xml:space="preserve"><value>Економія рулонного паперу</value></data>
+  <data name="DeviceSetting.Microweave_Precision" xml:space="preserve"><value>Корекція точності MicroWeave</value></data>
+  <data name="DeviceChoice.MediaDefault" xml:space="preserve"><value>За типом паперу</value></data>
+  <data name="DeviceChoice.Default" xml:space="preserve"><value>За замовчуванням</value></data>
+  <data name="DeviceChoice.Off" xml:space="preserve"><value>Вимк.</value></data>
+  <data name="DeviceChoice.On" xml:space="preserve"><value>Увімк.</value></data>
+  <data name="DeviceChoice.Large" xml:space="preserve"><value>Великий</value></data>
+  <data name="DeviceChoice.Wider" xml:space="preserve"><value>Ще ширший</value></data>
+  <data name="DeviceChoice.Wide" xml:space="preserve"><value>Широкий</value></data>
+  <data name="DeviceChoice.Standard" xml:space="preserve"><value>Стандартний</value></data>
+  <data name="DeviceChoice.Narrow" xml:space="preserve"><value>Вузький</value></data>
+  <data name="DeviceChoice.Model_A" xml:space="preserve"><value>Варіант A</value></data>
+  <data name="DeviceChoice.Model_B" xml:space="preserve"><value>Варіант B</value></data>
+  <data name="DeviceChoice.Code" xml:space="preserve"><value>Код {0}</value></data>
+  <data name="DeviceChoice.ThinPaper" xml:space="preserve"><value>{0} (тонкий папір)</value></data>
 </root>

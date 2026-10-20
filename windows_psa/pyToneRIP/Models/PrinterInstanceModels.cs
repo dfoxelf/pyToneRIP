@@ -21,6 +21,7 @@ namespace pyToneRIP.Models
     {
         private string networkStatus = "Unknown";
         private bool isSystemDefault;
+        private bool isWindowsQueueMissing;
         [DataMember(Name = "printer_uri", Order = 2)] public string PrinterUri { get; set; }
         [DataMember(Name = "queue_name", Order = 3)] public string QueueName { get; set; }
         [DataMember(Name = "model_id", Order = 4)] public string ModelId { get; set; }
@@ -41,20 +42,39 @@ namespace pyToneRIP.Models
             : (string.IsNullOrWhiteSpace(Host)
                 ? LocalizationService.Get("Choice.NetworkNotConfigured")
                 : Host + ":" + Port);
-        public string ConfigurationStatus => !Configured
+        public string ConfigurationStatus => IsWindowsQueueMissing
+            ? LocalizationService.Get("Choice.RemovedFromWindows")
+            : !Configured
             ? LocalizationService.Get("Choice.SetupRequired")
             : CalibrationMode
                 ? LocalizationService.Get("Choice.CalibrationRaw")
                 : LocalizationService.Get("Choice.Configured");
         public Brush ConfigurationStatusBrush => new SolidColorBrush(
-            CalibrationMode ? Color.FromArgb(255, 127, 255, 255) : Colors.Transparent);
-        public Brush ConfigurationStatusTextBrush => CalibrationMode
+            CalibrationMode && !IsWindowsQueueMissing
+                ? Color.FromArgb(255, 127, 255, 255) : Colors.Transparent);
+        public Brush ConfigurationStatusTextBrush => IsWindowsQueueMissing
+            ? SystemThemeBrush("SystemThemeErrorBrush")
+            : CalibrationMode
             ? SystemThemeBrush("SystemThemeAccentBrush")
             : SystemThemeBrush("PrimaryTextBrush");
         private static Brush SystemThemeBrush(string key) =>
             (Brush)Application.Current.Resources[key];
         public GridLength ConfigurationColumnWidth { get; set; } = GridLength.Auto;
         public GridLength NetworkColumnWidth { get; set; } = new GridLength(105);
+        // Live Windows state, never persisted as part of the printer configuration.
+        public bool IsWindowsQueueMissing
+        {
+            get => isWindowsQueueMissing;
+            set
+            {
+                if (isWindowsQueueMissing == value) return;
+                isWindowsQueueMissing = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsWindowsQueueMissing)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ConfigurationStatus)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ConfigurationStatusBrush)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ConfigurationStatusTextBrush)));
+            }
+        }
         // This value is deliberately not serialized. Windows is the source of
         // truth for the user's default printer, so Manager refreshes it from
         // GetDefaultPrinterW whenever it reads the live queue list.

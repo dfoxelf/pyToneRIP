@@ -17,8 +17,14 @@ namespace pyToneRIP.Services
         private const string RequestFolderName = "queue-helper";
         private const string ParameterGroupId = "QueueCommand";
 
-        public static Task<IReadOnlyList<WindowsQueueDescriptor>> ListAsync() =>
-            ExecuteAsync(new QueueHelperRequest { Operation = "list" });
+        public static async Task<IReadOnlyList<WindowsQueueDescriptor>> ListAsync()
+        {
+            var response = await ExecuteRawAsync(
+                new QueueHelperRequest { Operation = "list" }, maxAttempts: 150);
+            // A missing payload is not evidence that all queues were deleted.
+            return response.Queues
+                ?? throw new InvalidDataException("Queue helper returned no Windows printer list.");
+        }
 
         public static async Task<IReadOnlyList<UsbPrinterDescriptor>> DiscoverUsbPrintersAsync()
         {

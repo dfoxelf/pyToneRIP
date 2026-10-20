@@ -55,7 +55,7 @@ DEFAULT_UNIFIED_ROOT = Path(
 DEFAULT_QTR_ROOT = Path(
     os.environ.get(
         "PYTONERIP_QTR_ROOT",
-        str(DEVELOPMENT_CATALOG_ROOT.parent / "reference" / "QuadToneRIP" / "QuadTone"),
+        str(DEVELOPMENT_CATALOG_ROOT.parent / "reference" / "profile_library" / "profiles"),
     )
 )
 
@@ -2037,7 +2037,7 @@ def _qtr_base_tokens(qtr_root: Path) -> tuple[str, ...]:
 
 
 def _discover_reference_driver_packages(unified_root: Path, qtr_root: Path) -> set[str]:
-    """Map installed QuadToneRIP model directories to explicit unified IDs."""
+    """Map external profile-library model directories to explicit unified IDs."""
 
     aliases = {
         # Quad1430 targets the Artisan 1430 / Stylus Photo 1500W platform.

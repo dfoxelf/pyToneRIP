@@ -1,6 +1,11 @@
 {
   "channels": [],
-  "device_features": [],
+  "device_features": [
+    "paper_thickness",
+    "platen_gap",
+    "save_roll_paper",
+    "scan_drying_time"
+  ],
   "driver": {
     "driver_mechanics": {
       "command_level": 21,
@@ -63,6 +68,19 @@
       },
       "idx": 3,
       "name": "Roll Paper"
+    },
+    {
+      "feed_mechanics": {
+        "medium_kind": "selected_cut_sheet_path",
+        "remote_paper_path": {
+          "number": 3,
+          "type": 2
+        },
+        "roll_cut_mode": "none",
+        "suppress_form_feed_after_page": false
+      },
+      "idx": 4,
+      "name": "Front No Eject Roller (Glossy Paper)"
     }
   ],
   "identity": {
@@ -490,6 +508,7 @@
       "idx": 19,
       "name": "40x60cm",
       "page_mechanics": {
+        "format_bottom_margin_mils": 540,
         "media_size_code": 0,
         "sheet_geometry_class": "standard_sheet",
         "special_media": {

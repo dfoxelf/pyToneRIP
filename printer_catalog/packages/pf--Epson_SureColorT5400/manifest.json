@@ -16,7 +16,7 @@
   "runtime_source_file": "runtime-source.json",
   "runtime_source_sha256": "039ea7f0b1e08441b138540655717f39ffb90bb6597b145d3475e7b1f7576555",
   "schema": "pytone-rip.printer-support-package",
-  "source_sha256": "8af89c85b070ef1be2eaaafdbccfb3da2c228a61cfad54fa553d3ab2d026396f",
+  "source_sha256": "8dd45297daf0caad5c85270080bd2022de48f8382f2fe7c2c2f3f4c967ec729d",
   "version": 1,
   "visible": true,
   "warnings": [

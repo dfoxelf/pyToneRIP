@@ -110,7 +110,8 @@ namespace pyToneRIP.Tasks.Services
             using (var target = await adapterTiffFile.OpenAsync(FileAccessMode.ReadWrite))
             {
                 // The RIP repeats the completed native job for each copy.
-                // Exclude host copy expansion so XpsToTiff supplies one raster.
+                // Exclude host copy expansion so XpsToTiff supplies each page once.
+                // Python orders completed page streams according to DocumentCollate.
                 var hostProcessing =
                     PdlConversionHostBasedProcessingOperations.PageRotation |
                     PdlConversionHostBasedProcessingOperations.PageOrdering |

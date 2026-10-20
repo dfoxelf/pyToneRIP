@@ -1,7 +1,7 @@
 # Copyright (C) 2026 Alexander Eichhorn
 # SPDX-License-Identifier: GPL-3.0-only
 
-"""QuadToneRIP profile parsing and logical continuous-tone execution."""
+"""QUAD profile parsing and logical continuous-tone execution."""
 
 from xp750_rip.qtr.executor import (
     QtrExecutionResult,
@@ -22,7 +22,7 @@ __all__ = [
     "parse_qidf",
     "parse_quad",
 ]
-"""QuadToneRIP input formats and execution."""
+"""QUAD input formats and execution."""
 
 from xp750_rip.qtr.bundle import QtrProfileBundle, load_profile_bundle
 

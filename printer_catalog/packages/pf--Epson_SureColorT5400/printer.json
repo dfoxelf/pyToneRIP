@@ -1,12 +1,31 @@
 {
   "channels": [
-    {"esc_i_code": "0x00", "role": "black", "slot": "k"},
-    {"esc_i_code": "0x01", "role": "magenta", "slot": "m"},
-    {"esc_i_code": "0x02", "role": "cyan", "slot": "c"},
-    {"esc_i_code": "0x04", "role": "yellow", "slot": "y"}
+    {
+      "esc_i_code": "0x00",
+      "role": "black",
+      "slot": "k"
+    },
+    {
+      "esc_i_code": "0x01",
+      "role": "magenta",
+      "slot": "m"
+    },
+    {
+      "esc_i_code": "0x02",
+      "role": "cyan",
+      "slot": "c"
+    },
+    {
+      "esc_i_code": "0x04",
+      "role": "yellow",
+      "slot": "y"
+    }
   ],
   "device_features": [
-    "save_roll_paper"
+    "paper_suction",
+    "paper_thickness",
+    "save_roll_paper",
+    "scan_drying_time"
   ],
   "driver": {
     "driver_mechanics": {

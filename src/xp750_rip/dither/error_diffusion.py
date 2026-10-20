@@ -13,9 +13,11 @@ The two base tables below are transcribed from the original publications:
 The papers describe bilevel output.  pyToneRIP extends their quantizer to the
 printer's existing variable-drop endpoints: each sample is quantized to one
 of the two adjacent physical drop levels, and the resulting error is diffused
-in the original continuous-tone scale.  With endpoints (0, 65535) this is the
-published bilevel algorithm exactly; with Epson variable drops it is the
-standard multilevel error-diffusion extension and preserves dynamic droplets.
+in the original continuous-tone scale. Endpoints (0, 65535) use the published
+bilevel quantizer; Epson variable drops use its multilevel extension.
+Separately, the sparse-page policy settles three zero-ink rows after content,
+then clears diffusion state at the fourth. It is shared with streaming and
+does not change coefficients or screen coordinates in nonblank regions.
 """
 
 from __future__ import annotations
@@ -27,6 +29,7 @@ from itertools import pairwise
 import numpy as np
 
 from xp750_rip.contone import UINT16_MAX, LogicalChannelId
+from xp750_rip.dither.blank import EMPTY_SETTLE_ROWS, blank_row_spans
 from xp750_rip.dither.ordered import GutenprintDropModel
 from xp750_rip.dither.strategy import HalftoneAlgorithm
 from xp750_rip.halftone import LogicalDotPlane
@@ -288,54 +291,62 @@ class VariableCoefficientErrorDiffusion:
                 entropy_zhou_fang_qtr_band_kernel as selected_band_kernel,
             )
         bit_depth = self.drops.bit_depth
-        packed = np.zeros(
-            (bit_depth, canvas_height, canvas_width // 8), dtype=np.uint8
-        )
+        packed = np.zeros((bit_depth, canvas_height, canvas_width // 8), dtype=np.uint8)
         error_state = np.zeros(width + 2, dtype=np.float64)
         entropy = binary_entropy_table()
         # Large printer modes can exceed 750 million pixels. Bands avoid
         # a second full-raster byte copy and a multi-gigabyte high-pass
         # allocation while carrying the ED state across every boundary.
+        from xp750_rip._cython_kernels import qtr_active_rows_kernel
+
+        empty_run = EMPTY_SETTLE_ROWS
         band_rows = 256
-        for start in range(0, height, band_rows):
-            end = min(start + band_rows, height)
-            source_end = min(end + 1, height)
-            codes = np.frombuffer(
-                b"".join(code_rows[start:source_end]), dtype=np.uint8
-            ).reshape(source_end - start, width)
-            highpass = (
-                _gaussian_highpass_band(code_rows, lut, start, end)
-                if algorithm_code == 2
-                else np.empty((0, 0), dtype=np.float64)
-            )
-            packed_band, error_state = selected_band_kernel(
-                codes,
-                lut,
-                coefficients,
-                modulation,
-                endpoint_values,
-                endpoint_codes,
-                error_state,
-                highpass,
-                entropy,
-                end - start,
-                start,
-                height,
-                canvas_width,
-                x,
-                bit_depth,
-                self.serpentine,
-                self.random_seed & 0xFFFFFFFF,
-                x + self.x_offset,
-                y + self.y_offset + start,
-                self.entropy_strength,
-            )
-            packed[:, y + start : y + end] = packed_band
+        for band_start in range(0, height, band_rows):
+            band_end = min(band_start + band_rows, height)
+            source_end = min(band_end + 1, height)
+            band_codes = np.frombuffer(
+                b"".join(code_rows[band_start:source_end]), dtype=np.uint8
+            ).reshape(source_end - band_start, width)
+            active = qtr_active_rows_kernel(band_codes[: band_end - band_start], lut)
+            spans, empty_run = blank_row_spans(active, empty_run, settle_rows=EMPTY_SETTLE_ROWS)
+            for local_start, local_end, render in spans:
+                if not render:
+                    error_state.fill(0)
+                    continue
+                start = band_start + local_start
+                end = band_start + local_end
+                codes = band_codes[local_start : local_end + 1]
+                highpass = (
+                    _gaussian_highpass_band(code_rows, lut, start, end)
+                    if algorithm_code == 2
+                    else np.empty((0, 0), dtype=np.float64)
+                )
+                packed_band, error_state = selected_band_kernel(
+                    codes,
+                    lut,
+                    coefficients,
+                    modulation,
+                    endpoint_values,
+                    endpoint_codes,
+                    error_state,
+                    highpass,
+                    entropy,
+                    end - start,
+                    start,
+                    height,
+                    canvas_width,
+                    x,
+                    bit_depth,
+                    self.serpentine,
+                    self.random_seed & 0xFFFFFFFF,
+                    x + self.x_offset,
+                    y + self.y_offset + start,
+                    self.entropy_strength,
+                )
+                packed[:, y + start : y + end] = packed_band
 
         return LogicalDotPlane(
             identity=identity,
             width_pixels=canvas_width,
-            bit_plane_rows=tuple(
-                tuple(row.tobytes() for row in bit_plane) for bit_plane in packed
-            ),
+            bit_plane_rows=tuple(tuple(row.tobytes() for row in bit_plane) for bit_plane in packed),
         )

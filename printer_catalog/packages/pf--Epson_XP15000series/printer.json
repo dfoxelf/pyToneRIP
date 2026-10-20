@@ -27,7 +27,8 @@
     }
   ],
   "device_features": [
-    "microweave_precision"
+    "microweave_precision",
+    "platen_gap"
   ],
   "driver": {
     "driver_mechanics": {

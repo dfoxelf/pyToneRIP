@@ -257,8 +257,6 @@ class MediaCapability:
     print_methods: tuple[tuple[str, int], ...] = ()
     supported_modes: tuple[str, ...] = ()
     media_class: str = "generic"
-    # Gutenprint's per-paper ink coverage multiplier, applied before halftoning.
-    paper_density: float = 1.0
     # Per-medium mechanical defaults copied from the open ESC/P2 media table.
     # These are native one-byte protocol values, not RGB/ICC corrections.
     # Механические значения относятся к выбранной бумаге и передаются как
@@ -338,6 +336,14 @@ class PrinterModel:
         Ordinary PPD pages can describe the entire sheet. Pro models require
         the physical imageable rectangle for the selected weave and feed.
         """
+        if (self.escp2_profile is not None and self.escp2_profile.identity == "P700RIP"
+                and page.ppd.borderless and feed.medium_kind == "roll"):
+            # Sheet captures use physical dimensions; continuous borderless
+            # captures keep the descriptor's extra 200/300 mil canvas.
+            original = self.page(page.ppd.name).native_page_format_mils
+            if original is not None:
+                return replace(page, native_page_format_mils=(
+                    original[0] + 200, original[1] + 300, 0))
         if self.escp2_profile is not None and self.escp2_profile.identity == "ET8550":
             if feed.medium_kind == "roll":
                 # Captured continuous jobs include one inch of leading sheet

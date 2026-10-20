@@ -42,7 +42,10 @@
     }
   ],
   "device_features": [
-    "save_roll_paper"
+    "paper_suction",
+    "paper_thickness",
+    "save_roll_paper",
+    "scan_drying_time"
   ],
   "driver": {
     "driver_mechanics": {

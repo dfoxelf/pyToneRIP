@@ -491,6 +491,11 @@ def run_request(request_path: Path) -> dict[str, object]:
         copies = payload.get("copies_requested", 1)
         if isinstance(copies, bool) or not isinstance(copies, int) or not 1 <= copies <= 99:
             raise ValueError("copies_requested must be in 1..99")
+        copies_in_prn = payload.get("copies_in_prn", 1)
+        if (isinstance(copies_in_prn, bool) or not isinstance(copies_in_prn, int)
+                or copies_in_prn not in (1, copies)):
+            raise ValueError("copies_in_prn must be 1 or copies_requested")
+        copies //= copies_in_prn
         total_bytes = output_prn.stat().st_size * copies
         started = perf_counter()
         progress.write(

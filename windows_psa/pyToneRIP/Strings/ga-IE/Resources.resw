@@ -31,7 +31,7 @@
   <data name="Auto.5471BCBDC1ED.Text"><value>Cuar 1</value></data>
   <data name="Auto.55EB8098D769.Header"><value>Aitheantas dúch loighciúil (litreacha, digití, camóga)</value></data>
   <data name="Auto.55EB8098D769.PlaceholderText"><value>K,C,M</value></data>
-  <data name="Auto.5C063BCAA06D.Header"><value>Seoladh IPv4</value></data>
+  <data name="Auto.5C063BCAA06D.Header"><value>Cuir isteach seoladh IPv4 do phrintéara (m.sh. 192.168.1.50)</value></data>
   <data name="Auto.5C37FF0F3134.Text"><value>Airde (mm)</value></data>
   <data name="Auto.5C6A98D0E847.Text"><value>Mód saineolaí: ní fhéadfaidh an monaróir tacaíocht a thabhairt don chomhcheangal páipéir agus leathanach roghnaithe.</value></data>
   <data name="Auto.5D31AF069F1B.Content"><value>USB</value></data>
@@ -232,7 +232,7 @@
   <data name="MainPage.Table.Connection.Text"><value>Ceangal</value></data>
   <data name="MainPage.Table.Default.Text"><value>Réamhshocrú</value></data>
   <data name="MainPage.Table.Model.Text"><value>Múnla</value></data>
-  <data name="MainPage.Table.Network.Text"><value>Líonra</value></data>
+  <data name="MainPage.Table.Network.Text"><value>Stádas</value></data>
   <data name="MainPage.Table.Printer.Text"><value>Printéir</value></data>
   <data name="MainPage.Title.Text"><value>pyToneRIP</value></data>
   <data name="MainPage.WindowsPrinters.Content"><value>Printéirí Windows</value></data>
@@ -261,4 +261,32 @@
   <data name="Usb.DiscoveryFailed"><value>Theip ar aimsiú USB: {0}</value></data>
   <data name="Usb.SelectMatchingDevice"><value>Roghnaigh printéir USB ceangailte a mheaitseálann leis an tsamhail roghnaithe.</value></data>
   <data name="Usb.DestinationChanged"><value>Níl ceann scríbe USB ar fáil nó tá sé athraithe. Athcheangail an printéir agus athnuaigh an liosta.</value></data>
+  <data name="Choice.RemovedFromWindows" xml:space="preserve"><value>Bainte de Windows</value></data>
+  <data name="Code.PrinterQueueMissingRemoveConfiguration" xml:space="preserve"><value>Níl an printéir “{0}” i Windows a thuilleadh. An bhfuil tú ag iarraidh a chumraíocht shábháilte a bhaint de pyToneRIP?</value></data>
+  <data name="Code.PrinterAlreadyRemovedConfigurationDeleted" xml:space="preserve"><value>Bhí an printéir “{0}” bainte de Windows cheana féin. Baineadh a chumraíocht shábháilte de pyToneRIP.</value></data>
+  <data name="Code.ConfigurationSavedWindowsDefaultsFailed"><value>Sábháladh socruithe RIP. Níorbh fhéidir socruithe priontála Windows a chur i bhfeidhm go hiomlán: {0}</value></data>
+  <data name="Printer.FinestDetail" xml:space="preserve"><value>Mionsonraí is míne</value></data>
+  <data name="DeviceSetting.Drying_Time" xml:space="preserve"><value>Triomú tar éis phas an chinn priontála</value></data>
+  <data name="DeviceSetting.Page_Drying_Time" xml:space="preserve"><value>Triomú tar éis leathanaigh</value></data>
+  <data name="DeviceSetting.Minimum_Scan_Drying_Time" xml:space="preserve"><value>Íostriomú tar éis phas an chinn priontála</value></data>
+  <data name="DeviceSetting.Paper_Thickness" xml:space="preserve"><value>Tiús páipéir</value></data>
+  <data name="DeviceSetting.Paper_Suction" xml:space="preserve"><value>Súchán páipéir</value></data>
+  <data name="DeviceSetting.Feed_Adjustment" xml:space="preserve"><value>Coigeartú fothaithe páipéir</value></data>
+  <data name="DeviceSetting.Feed_Sequence" xml:space="preserve"><value>Seicheamh fothaithe páipéir</value></data>
+  <data name="DeviceSetting.Platen_Gap" xml:space="preserve"><value>Bearna an chinn priontála</value></data>
+  <data name="DeviceSetting.Save_Paper_Roll_Paper" xml:space="preserve"><value>Sábháil páipéar rolla</value></data>
+  <data name="DeviceSetting.Microweave_Precision" xml:space="preserve"><value>Ceartú beachtais MicroWeave</value></data>
+  <data name="DeviceChoice.MediaDefault" xml:space="preserve"><value>De réir an mheáin</value></data>
+  <data name="DeviceChoice.Default" xml:space="preserve"><value>Réamhshocrú</value></data>
+  <data name="DeviceChoice.Off" xml:space="preserve"><value>As</value></data>
+  <data name="DeviceChoice.On" xml:space="preserve"><value>Ar</value></data>
+  <data name="DeviceChoice.Large" xml:space="preserve"><value>Mór</value></data>
+  <data name="DeviceChoice.Wider" xml:space="preserve"><value>Níos leithne</value></data>
+  <data name="DeviceChoice.Wide" xml:space="preserve"><value>Leathan</value></data>
+  <data name="DeviceChoice.Standard" xml:space="preserve"><value>Caighdeánach</value></data>
+  <data name="DeviceChoice.Narrow" xml:space="preserve"><value>Caol</value></data>
+  <data name="DeviceChoice.Model_A" xml:space="preserve"><value>Samhail A</value></data>
+  <data name="DeviceChoice.Model_B" xml:space="preserve"><value>Samhail B</value></data>
+  <data name="DeviceChoice.Code" xml:space="preserve"><value>Cód {0}</value></data>
+  <data name="DeviceChoice.ThinPaper" xml:space="preserve"><value>{0} (páipéar tanaí)</value></data>
 </root>

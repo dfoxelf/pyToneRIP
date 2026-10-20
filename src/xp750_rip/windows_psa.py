@@ -22,7 +22,6 @@ from PIL import Image, ImageOps
 from xp750_rip.direction import PrintDirection, parse_print_direction
 from xp750_rip.dither.strategy import HalftoneAlgorithm, require_implemented_algorithm
 from xp750_rip.halftone import LogicalDotPlane
-from xp750_rip.input.tiff import decode_grayscale_tiff
 from xp750_rip.layout import LayoutOrientation, ResamplingMethod, _validate_request
 from xp750_rip.printers.capabilities import PageCapability, PrinterRegistry
 from xp750_rip.printers.xp750_capabilities import default_registry
@@ -402,6 +401,15 @@ def _paper_option_name(kind: str, identity: str) -> str:
     return kind + "_" + re.sub(r"[^A-Za-z0-9_.-]", "_", identity)
 
 
+def _windows_raster_resolutions(model_id: str | None) -> tuple[tuple[int, int], ...]:
+    # Native P900 Finest Detail changes the application's GDI resolution from
+    # 360 to 720 DPI, independently of printer quality / weave commands.
+    # Preserve existing choices and defaults, including saved configurations.
+    if model_id == "SureColorP900RIP":
+        return ((300, 300), (360, 360), (600, 600), (720, 720))
+    return ((300, 300), (600, 600))
+
+
 def export_print_device_resources(
     registry: PrinterRegistry | None = None,
     *,
@@ -465,19 +473,12 @@ def export_print_device_resources(
             lines.append(
                 f'  <data name="{escape(resource_name)}"><value>{escape(label)}</value></data>'
             )
-    lines.extend(
-        [
-            (
-                '  <data name="https://pytone-rip.local/printticket/2026/phase12/'
-                'Dpi300x300"><value>300 x 300 DPI</value></data>'
-            ),
-            (
-                '  <data name="https://pytone-rip.local/printticket/2026/phase12/'
-                'Dpi600x600"><value>600 x 600 DPI</value></data>'
-            ),
-            "</root>",
-        ]
-    )
+    for x_dpi, y_dpi in _windows_raster_resolutions(model.identity):
+        lines.append(
+            '  <data name="https://pytone-rip.local/printticket/2026/phase12/'
+            f'Dpi{x_dpi}x{y_dpi}"><value>{x_dpi} x {y_dpi} DPI</value></data>'
+        )
+    lines.append("</root>")
     return "\n".join(lines) + "\n"
 
 
@@ -494,7 +495,7 @@ def export_print_device_capabilities(
     # Windows rasterization resolution and the physical Epson print mode are
     # deliberately independent.  The former controls XpsToTiff input; the
     # latter remains a backend choice such as 1440x1440ov.
-    raster_resolutions = ((300, 300), (600, 600))
+    raster_resolutions = _windows_raster_resolutions(model_id)
     if model_id is not None:
         models = (selected_registry.get(model_id),)
     else:
@@ -543,6 +544,10 @@ def export_print_device_capabilities(
         '    <psf:Mandatory psf2:psftype="Property" xsi:type="xsd:QName">psk:Unconditional</psf:Mandatory>',
         '    <psf:UnitType psf2:psftype="Property" xsi:type="xsd:string">copies</psf:UnitType>',
         '  </psk:JobCopiesAllDocuments>',
+        '  <psk:DocumentCollate psf2:psftype="Feature" psf2:deviceProcessed="true">',
+        '    <psk:Uncollated psf2:psftype="Option" psf2:default="true" />',
+        '    <psk:Collated psf2:psftype="Option" />',
+        '  </psk:DocumentCollate>',
         '  <psk:PageMediaSize psf2:psftype="Feature">',
     ]
     ordered_pages = sorted(pages.values(), key=lambda item: (item.ppd.name != "A4", item.ppd.name))
@@ -1368,6 +1373,23 @@ def _result_artifact(path: Path) -> dict[str, object]:
     }
 
 
+def print_ticket_collated(path: Path) -> bool:
+    """Read document collation; absent tickets retain the uncollated default."""
+    root = ElementTree.parse(path).getroot()
+    for feature in root.iter():
+        if feature.tag.rsplit("}", 1)[-1] != "Feature":
+            continue
+        if feature.attrib.get("name", "").split(":")[-1] != "DocumentCollate":
+            continue
+        for option in feature:
+            if option.tag.rsplit("}", 1)[-1] == "Option":
+                name = option.attrib.get("name", "").split(":")[-1]
+                if name not in {"Collated", "Uncollated"}:
+                    raise ValueError(f"Unsupported DocumentCollate option: {name}")
+                return name == "Collated"
+    return False
+
+
 def print_ticket_resolution(path: Path) -> tuple[float, float] | None:
     """Read PageResolution X/Y from a captured PrintTicket."""
 
@@ -1426,7 +1448,6 @@ def normalize_adapter_tiff(
         grayscale.load()
         output.parent.mkdir(parents=True, exist_ok=True)
         grayscale.save(output, format="TIFF", compression="tiff_lzw", dpi=selected_dpi)
-    decode_grayscale_tiff(output)
     return output
 
 

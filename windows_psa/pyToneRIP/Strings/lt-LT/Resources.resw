@@ -31,7 +31,7 @@
   <data name="Auto.5471BCBDC1ED.Text"><value>1 kreivė</value></data>
   <data name="Auto.55EB8098D769.Header"><value>Loginio rašalo ID (raidės, skaitmenys, kableliai)</value></data>
   <data name="Auto.55EB8098D769.PlaceholderText"><value>K,C,M</value></data>
-  <data name="Auto.5C063BCAA06D.Header"><value>IPv4 adresas</value></data>
+  <data name="Auto.5C063BCAA06D.Header"><value>Įveskite savo spausdintuvo IPv4 adresą (pvz., 192.168.1.50)</value></data>
   <data name="Auto.5C37FF0F3134.Text"><value>Aukštis (mm)</value></data>
   <data name="Auto.5C6A98D0E847.Text"><value>Eksperto režimas: pasirinkto popieriaus ir lapų derinio gamintojas gali nepalaikyti.</value></data>
   <data name="Auto.5D31AF069F1B.Content"><value>USB</value></data>
@@ -232,7 +232,7 @@
   <data name="MainPage.Table.Connection.Text"><value>Ryšys</value></data>
   <data name="MainPage.Table.Default.Text"><value>Numatytoji</value></data>
   <data name="MainPage.Table.Model.Text"><value>Modelis</value></data>
-  <data name="MainPage.Table.Network.Text"><value>Tinklas</value></data>
+  <data name="MainPage.Table.Network.Text"><value>Būsena</value></data>
   <data name="MainPage.Table.Printer.Text"><value>Spausdintuvas</value></data>
   <data name="MainPage.Title.Text"><value>pyToneRIP</value></data>
   <data name="MainPage.WindowsPrinters.Content"><value>Windows spausdintuvai</value></data>
@@ -261,4 +261,32 @@
   <data name="Usb.DiscoveryFailed"><value>USB aptikimas nepavyko: {0}</value></data>
   <data name="Usb.SelectMatchingDevice"><value>Pasirinkite prijungtą USB spausdintuvą, atitinkantį pasirinktą modelį.</value></data>
   <data name="Usb.DestinationChanged"><value>USB paskirties vieta nepasiekiama arba pasikeitė. Iš naujo prijunkite spausdintuvą ir atnaujinkite sąrašą.</value></data>
+  <data name="Choice.RemovedFromWindows" xml:space="preserve"><value>Pašalintas iš „Windows“</value></data>
+  <data name="Code.PrinterQueueMissingRemoveConfiguration" xml:space="preserve"><value>Spausdintuvo „{0}“ sistemoje „Windows“ nebėra. Pašalinti jo išsaugotą konfigūraciją iš „pyToneRIP“?</value></data>
+  <data name="Code.PrinterAlreadyRemovedConfigurationDeleted" xml:space="preserve"><value>Spausdintuvas „{0}“ jau buvo pašalintas iš „Windows“. Jo išsaugota konfigūracija pašalinta iš „pyToneRIP“.</value></data>
+  <data name="Code.ConfigurationSavedWindowsDefaultsFailed"><value>RIP nuostatos išsaugotos. Nepavyko visiškai pritaikyti „Windows“ spausdinimo nuostatų: {0}</value></data>
+  <data name="Printer.FinestDetail" xml:space="preserve"><value>Smulkiausios detalės</value></data>
+  <data name="DeviceSetting.Drying_Time" xml:space="preserve"><value>Džiūvimas po spausdinimo galvutės perėjimo</value></data>
+  <data name="DeviceSetting.Page_Drying_Time" xml:space="preserve"><value>Džiūvimas po puslapio</value></data>
+  <data name="DeviceSetting.Minimum_Scan_Drying_Time" xml:space="preserve"><value>Trumpiausias džiūvimas po galvutės perėjimo</value></data>
+  <data name="DeviceSetting.Paper_Thickness" xml:space="preserve"><value>Popieriaus storis</value></data>
+  <data name="DeviceSetting.Paper_Suction" xml:space="preserve"><value>Popieriaus prisiurbimas</value></data>
+  <data name="DeviceSetting.Feed_Adjustment" xml:space="preserve"><value>Popieriaus tiekimo korekcija</value></data>
+  <data name="DeviceSetting.Feed_Sequence" xml:space="preserve"><value>Popieriaus tiekimo seka</value></data>
+  <data name="DeviceSetting.Platen_Gap" xml:space="preserve"><value>Spausdinimo galvutės tarpas</value></data>
+  <data name="DeviceSetting.Save_Paper_Roll_Paper" xml:space="preserve"><value>Ritininio popieriaus taupymas</value></data>
+  <data name="DeviceSetting.Microweave_Precision" xml:space="preserve"><value>MicroWeave tikslumo korekcija</value></data>
+  <data name="DeviceChoice.MediaDefault" xml:space="preserve"><value>Pagal laikmeną</value></data>
+  <data name="DeviceChoice.Default" xml:space="preserve"><value>Numatytoji reikšmė</value></data>
+  <data name="DeviceChoice.Off" xml:space="preserve"><value>Išjungta</value></data>
+  <data name="DeviceChoice.On" xml:space="preserve"><value>Įjungta</value></data>
+  <data name="DeviceChoice.Large" xml:space="preserve"><value>Didelis</value></data>
+  <data name="DeviceChoice.Wider" xml:space="preserve"><value>Platesnis</value></data>
+  <data name="DeviceChoice.Wide" xml:space="preserve"><value>Platus</value></data>
+  <data name="DeviceChoice.Standard" xml:space="preserve"><value>Standartinis</value></data>
+  <data name="DeviceChoice.Narrow" xml:space="preserve"><value>Siauras</value></data>
+  <data name="DeviceChoice.Model_A" xml:space="preserve"><value>Modelis A</value></data>
+  <data name="DeviceChoice.Model_B" xml:space="preserve"><value>Modelis B</value></data>
+  <data name="DeviceChoice.Code" xml:space="preserve"><value>Kodas {0}</value></data>
+  <data name="DeviceChoice.ThinPaper" xml:space="preserve"><value>{0} (plonas popierius)</value></data>
 </root>

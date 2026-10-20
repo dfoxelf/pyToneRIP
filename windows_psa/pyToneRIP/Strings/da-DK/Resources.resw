@@ -31,7 +31,7 @@
   <data name="Auto.5471BCBDC1ED.Text"><value>Kurve 1</value></data>
   <data name="Auto.55EB8098D769.Header"><value>Logiske blæk-id&#x27;er (bogstaver, cifre, kommaer)</value></data>
   <data name="Auto.55EB8098D769.PlaceholderText"><value>K,C,M</value></data>
-  <data name="Auto.5C063BCAA06D.Header"><value>IPv4-adresse</value></data>
+  <data name="Auto.5C063BCAA06D.Header"><value>Indtast din printers IPv4-adresse (f.eks. 192.168.1.50)</value></data>
   <data name="Auto.5C37FF0F3134.Text"><value>Højde (mm)</value></data>
   <data name="Auto.5C6A98D0E847.Text"><value>Eksperttilstand: Den valgte papir- og sidekombination understøttes muligvis ikke af producenten.</value></data>
   <data name="Auto.5D31AF069F1B.Content"><value>USB</value></data>
@@ -232,7 +232,7 @@
   <data name="MainPage.Table.Connection.Text"><value>Forbindelse</value></data>
   <data name="MainPage.Table.Default.Text"><value>Misligholdelse</value></data>
   <data name="MainPage.Table.Model.Text"><value>Model</value></data>
-  <data name="MainPage.Table.Network.Text"><value>Netværk</value></data>
+  <data name="MainPage.Table.Network.Text"><value>Status</value></data>
   <data name="MainPage.Table.Printer.Text"><value>Printer</value></data>
   <data name="MainPage.Title.Text"><value>pyToneRIP</value></data>
   <data name="MainPage.WindowsPrinters.Content"><value>Windows-printere</value></data>
@@ -261,4 +261,32 @@
   <data name="Usb.DiscoveryFailed"><value>USB-søgning mislykkedes: {0}</value></data>
   <data name="Usb.SelectMatchingDevice"><value>Vælg en tilsluttet USB-printer, der svarer til den valgte model.</value></data>
   <data name="Usb.DestinationChanged"><value>USB-destinationen er utilgængelig eller ændret. Tilslut printeren igen, og opdater listen.</value></data>
+  <data name="Choice.RemovedFromWindows" xml:space="preserve"><value>Fjernet fra Windows</value></data>
+  <data name="Code.PrinterQueueMissingRemoveConfiguration" xml:space="preserve"><value>Printeren »{0}« findes ikke længere i Windows. Vil du fjerne dens gemte konfiguration fra pyToneRIP?</value></data>
+  <data name="Code.PrinterAlreadyRemovedConfigurationDeleted" xml:space="preserve"><value>Printeren »{0}« var allerede fjernet fra Windows. Dens gemte konfiguration er blevet fjernet fra pyToneRIP.</value></data>
+  <data name="Code.ConfigurationSavedWindowsDefaultsFailed"><value>RIP-indstillingerne er gemt. Windows-udskriftsindstillingerne kunne ikke anvendes fuldt ud: {0}</value></data>
+  <data name="Printer.FinestDetail" xml:space="preserve"><value>Fineste detaljer</value></data>
+  <data name="DeviceSetting.Drying_Time" xml:space="preserve"><value>Tørretid efter printhovedpassage</value></data>
+  <data name="DeviceSetting.Page_Drying_Time" xml:space="preserve"><value>Tørretid efter side</value></data>
+  <data name="DeviceSetting.Minimum_Scan_Drying_Time" xml:space="preserve"><value>Mindste tørretid efter printhovedpassage</value></data>
+  <data name="DeviceSetting.Paper_Thickness" xml:space="preserve"><value>Papirtykkelse</value></data>
+  <data name="DeviceSetting.Paper_Suction" xml:space="preserve"><value>Papirsugning</value></data>
+  <data name="DeviceSetting.Feed_Adjustment" xml:space="preserve"><value>Justering af papirfremføring</value></data>
+  <data name="DeviceSetting.Feed_Sequence" xml:space="preserve"><value>Papirfremføringssekvens</value></data>
+  <data name="DeviceSetting.Platen_Gap" xml:space="preserve"><value>Pladeafstand</value></data>
+  <data name="DeviceSetting.Save_Paper_Roll_Paper" xml:space="preserve"><value>Spar rullepapir</value></data>
+  <data name="DeviceSetting.Microweave_Precision" xml:space="preserve"><value>MicroWeave-præcisionskorrektion</value></data>
+  <data name="DeviceChoice.MediaDefault" xml:space="preserve"><value>Efter medietype</value></data>
+  <data name="DeviceChoice.Default" xml:space="preserve"><value>Standardværdi</value></data>
+  <data name="DeviceChoice.Off" xml:space="preserve"><value>Fra</value></data>
+  <data name="DeviceChoice.On" xml:space="preserve"><value>Til</value></data>
+  <data name="DeviceChoice.Large" xml:space="preserve"><value>Stor</value></data>
+  <data name="DeviceChoice.Wider" xml:space="preserve"><value>Bredere</value></data>
+  <data name="DeviceChoice.Wide" xml:space="preserve"><value>Bred</value></data>
+  <data name="DeviceChoice.Standard" xml:space="preserve"><value>Standard</value></data>
+  <data name="DeviceChoice.Narrow" xml:space="preserve"><value>Smal</value></data>
+  <data name="DeviceChoice.Model_A" xml:space="preserve"><value>Model A</value></data>
+  <data name="DeviceChoice.Model_B" xml:space="preserve"><value>Model B</value></data>
+  <data name="DeviceChoice.Code" xml:space="preserve"><value>Kode {0}</value></data>
+  <data name="DeviceChoice.ThinPaper" xml:space="preserve"><value>{0} (tyndt papir)</value></data>
 </root>

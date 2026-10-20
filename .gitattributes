@@ -1,0 +1,5 @@
+# Preserve reviewed source bytes and catalog checksums across every checkout.
+# Newline conversion would invalidate hashes of PPD and runtime input files.
+* -text whitespace=cr-at-eol
+# Preserve third-party installer translations verbatim, including their spacing.
+windows_psa/installer/Languages/*.isl -whitespace

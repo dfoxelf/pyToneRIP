@@ -1220,27 +1220,6 @@ _R2880_PAGE_SIZES = {
 # physical formats. Its captured Letter job confirms byte 1 independently.
 _R3000_PAGE_SIZES = _R2880_PAGE_SIZES
 
-# Gutenprint model 115 -> media/f360_ultrachrome_k3v.xml, Density under each
-# paper's ink configuration. Photo and matte black carry the same value here.
-_R3000_PAPER_DENSITY = {
-    "Plain": 0.72, "Postcard": 0.72, "Envelope": 0.72, "Inkjet": 0.72,
-    "GlossyFilm": 0.83, "Transparency": 0.83, "BackFilm": 0.83,
-    "Matte": 0.92, "MatteHeavy": 0.92, "Coated": 0.83,
-    "Photo": 1.0, "GlossyPhoto": 0.72,
-    "Semigloss": 0.72, "Luster": 0.72,
-    "ArchivalMatte": 0.92, "WaterColorRadiant": 0.92,
-    "GlossyPaper": 0.83, "Ilford": 0.83,
-}
-
-# P800 model 130 uses the same f360_ultrachrome_k3v paper table. These are
-# scalar coverage limits, equal for ultra3photo/ultra3matte, not tone curves.
-# Key by MI because product aliases replace Gutenprint names during merging.
-_P800_PAPER_DENSITY_BY_MI = {
-    0: 0.72, 1: 0.72, 3: 0.92, 5: 0.92, 6: 1.0, 7: 0.83,
-    9: 0.83, 10: 0.83, 11: 0.72, 12: 0.72, 13: 0.72,
-    15: 0.92, 19: 0.83, 23: 0.83, 29: 0.72,
-}
-
 
 def _pages(
     source: dict[str, Any],
@@ -1406,13 +1385,19 @@ def _pages(
                 if len(codes) == 1:
                     descriptor = matching[0]
             media_size_code, geometry_class, special_selector, native_format, physical_size = page_fields(descriptor)
-            if et_driver and descriptor is not None:
+            p700_rip = source_name in {"Epson_SureColorP700_RIP", "Epson_SureColorP900_RIP"}
+            if (et_driver or p700_rip) and descriptor is not None:
                 # Exact command canvas from the descriptor; Windows keeps its
                 # physical sheet dimensions. Borderless descriptors include
                 # the driver's extra 200/300 mil canvas, not a larger sheet.
                 width_mils = int(descriptor["width_mils"]) - (200 if page.borderless else 0)
                 height_mils = int(descriptor["height_mils"]) - (300 if page.borderless else 0)
-                native_format = (width_mils, height_mils, 120)
+                bottom_mils = int((descriptor.get("page_mechanics") or {}).get(
+                    "format_bottom_margin_mils", 120))
+                native_format = (width_mils, height_mils, bottom_mils)
+                if p700_rip and not page.borderless:
+                    page = replace(page, imageable_bottom_points=max(
+                        page.imageable_bottom_points, bottom_mils * 72 / 1000))
             if (
                 t_series_sheet_bottom_mm is not None
                 and geometry_class != "roll"
@@ -1429,7 +1414,7 @@ def _pages(
                 media_size_code, width_mils, height_mils = _R3000_PAGE_SIZES[page.name]
                 native_format = (width_mils, height_mils, 60 if r3000 else 120)
                 physical_size = (width_mils * 25.4 / 1000, height_mils * 25.4 / 1000)
-            if p700_roll_width and descriptor is not None and not page.borderless:
+            if p700_roll_width and not p700_rip and descriptor is not None and not page.borderless:
                 # ReferenceDriver's source dimensions are in mils. Rounded PPD points
                 # otherwise add 1-2 native units to A4 and other sheet limits.
                 native_format = (
@@ -2071,13 +2056,12 @@ def _media(
         # A synthetic PPD or one for another manufacturer is not Epson evidence.
         normalized = tuple(result)
     if package.package_id == "gp--escp2-r2880":
-        # Neither the Epson R2880 media list nor its installed ReferenceDriver TPP
-        # offers ColorLife. Gutenprint's generic Other has no PaperMedia code.
-        # Keep distinct native Gutenprint codes, and add the two ReferenceDriver-only
-        # MI selectors confirmed in live PRNs without reusing their code/name.
+        # Gutenprint's exact model includes ColorLife with its own MI 23,
+        # even though the product paper menu omits it. Keep distinct native
+        # codes and the two additional selectors confirmed in product PRNs.
         normalized = tuple(
             medium for medium in normalized
-            if medium.gutenprint_name not in {"ColorLife", "Other"}
+            if medium.gutenprint_name != "Other"
         )
         by_name = {medium.display_name: medium for medium in normalized}
         normalized += (
@@ -2100,11 +2084,11 @@ def _media(
             display_name="Epson Photo Glossy", media_code=14,
             source="ReferenceDriver R2000 captured REMOTE1 MI"),)
     if package.package_id == "gp--escp2-r3000":
-        # The product's paper list omits ColorLife and the generic Other has
-        # no MI byte. Keep one public selector per code for this model.
+        # Keep the exact model's ColorLife MI 23. The generic Other has no MI
+        # byte; canonicalization below keeps one public selector per code.
         normalized = tuple(
             medium for medium in normalized
-            if medium.gutenprint_name not in {"ColorLife", "Other"}
+            if medium.gutenprint_name != "Other"
         )
         by_name = {medium.display_name: medium for medium in normalized}
         normalized += (
@@ -2119,14 +2103,10 @@ def _media(
                 source="R3000 product paper descriptor",
             ),
         )
-        normalized = tuple(
-            replace(medium, paper_density=_R3000_PAPER_DENSITY[medium.gutenprint_name])
-            for medium in normalized
-        )
     if package.model_id.startswith(("Stylus_Pro_", "SureColor_P", "SC_P")) or package.package_id in {
         "pf--Epson_SureColorP700_RIP", "pf--Epson_SureColorP900_RIP",
     }:
-        consumer_only = ("postcard", "envelope", "cd", "dvd", "colorlife")
+        consumer_only = ("postcard", "envelope", "cd", "dvd")
         normalized = tuple(
             medium
             for medium in normalized
@@ -2157,9 +2137,6 @@ def _media(
         ),
     )
     if package.package_id == "pf--Epson_SureColorP800":
-        canonical = tuple(replace(
-            medium, paper_density=_P800_PAPER_DENSITY_BY_MI[medium.media_code]
-        ) for medium in canonical)
         # The synthetic PPD uses the older glossy ID. Keep saved selections,
         # and map the old duplicate Plain MI0B choice to the distinct plain MI0.
         native_aliases += (
@@ -2353,10 +2330,10 @@ def _feature_setting(identity: str) -> DeviceSettingCapability:
         return _fixed_setting(
             "Save_Paper_Roll_Paper",
             "Save roll paper",
-            "LB",
+            "AC",
             (
-                ("Off", "Off", bytes((0, 1, 0))),
-                ("On", "On", bytes((0, 1, 1))),
+                ("Off", "Off", bytes((0, 0x40))),
+                ("On", "On", bytes((0, 0x41))),
             ),
         )
     if identity == "platen_gap":
@@ -2481,6 +2458,22 @@ def _normalize_photo_model_controls(
         ))
         settings = tuple(gap if setting.identity == "Platen_Gap" else setting
                          for setting in settings)
+
+        if package.package_id == "gp--escp2-3880":
+            # Epson 3880 Paper Configuration uses tenths of a millimetre:
+            # an offline capture of UI value 15 sends PH 00 0f. The imported
+            # media table contains only 1 and 2, not the full manual range.
+            # Keep Auto and Code_1/Code_2 so saved jobs retain their meaning.
+            thickness = _automatic_runtime_setting("PaperThickness", tuple(range(1, 16)))
+            thickness = replace(thickness, choices=tuple(
+                replace(choice, display_name=f"{choice.remote_payload[1] / 10:.1f} mm")
+                if choice.remote_command else choice
+                for choice in thickness.choices
+            ))
+            settings = tuple(
+                thickness if setting.identity == "Paper_Thickness" else setting
+                for setting in settings
+            )
 
     if package.package_id in {
         "pf--Epson_SureColorP600",

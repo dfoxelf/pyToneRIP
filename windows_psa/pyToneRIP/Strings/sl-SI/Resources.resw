@@ -31,7 +31,7 @@
   <data name="Auto.5471BCBDC1ED.Text"><value>Krivulja 1</value></data>
   <data name="Auto.55EB8098D769.Header"><value>ID-ji logičnega črnila (črke, številke, vejice)</value></data>
   <data name="Auto.55EB8098D769.PlaceholderText"><value>K,C,M</value></data>
-  <data name="Auto.5C063BCAA06D.Header"><value>naslov IPv4</value></data>
+  <data name="Auto.5C063BCAA06D.Header"><value>Vnesite naslov IPv4 svojega tiskalnika (npr. 192.168.1.50)</value></data>
   <data name="Auto.5C37FF0F3134.Text"><value>Višina (mm)</value></data>
   <data name="Auto.5C6A98D0E847.Text"><value>Strokovni način: izbrane kombinacije papirja in strani proizvajalec morda ne podpira.</value></data>
   <data name="Auto.5D31AF069F1B.Content"><value>USB</value></data>
@@ -232,7 +232,7 @@
   <data name="MainPage.Table.Connection.Text"><value>Povezava</value></data>
   <data name="MainPage.Table.Default.Text"><value>Privzeto</value></data>
   <data name="MainPage.Table.Model.Text"><value>Model</value></data>
-  <data name="MainPage.Table.Network.Text"><value>Omrežje</value></data>
+  <data name="MainPage.Table.Network.Text"><value>Stanje</value></data>
   <data name="MainPage.Table.Printer.Text"><value>Tiskalnik</value></data>
   <data name="MainPage.Title.Text"><value>pyToneRIP</value></data>
   <data name="MainPage.WindowsPrinters.Content"><value>Windows tiskalniki</value></data>
@@ -261,4 +261,32 @@
   <data name="Usb.DiscoveryFailed"><value>Odkrivanje USB ni uspelo: {0}</value></data>
   <data name="Usb.SelectMatchingDevice"><value>Izberite priključen tiskalnik USB, ki ustreza izbranemu modelu.</value></data>
   <data name="Usb.DestinationChanged"><value>Cilj USB ni na voljo ali se je spremenil. Znova priključite tiskalnik in osvežite seznam.</value></data>
+  <data name="Choice.RemovedFromWindows" xml:space="preserve"><value>Odstranjen iz sistema Windows</value></data>
+  <data name="Code.PrinterQueueMissingRemoveConfiguration" xml:space="preserve"><value>Tiskalnika »{0}« ni več v sistemu Windows. Ali želite odstraniti njegovo shranjeno konfiguracijo iz pyToneRIP?</value></data>
+  <data name="Code.PrinterAlreadyRemovedConfigurationDeleted" xml:space="preserve"><value>Tiskalnik »{0}« je bil že odstranjen iz sistema Windows. Njegova shranjena konfiguracija je bila odstranjena iz pyToneRIP.</value></data>
+  <data name="Code.ConfigurationSavedWindowsDefaultsFailed"><value>Nastavitve RIP so shranjene. Nastavitev tiskanja sistema Windows ni bilo mogoče v celoti uveljaviti: {0}</value></data>
+  <data name="Printer.FinestDetail" xml:space="preserve"><value>Najfinejše podrobnosti</value></data>
+  <data name="DeviceSetting.Drying_Time" xml:space="preserve"><value>Sušenje po prehodu glave</value></data>
+  <data name="DeviceSetting.Page_Drying_Time" xml:space="preserve"><value>Sušenje po strani</value></data>
+  <data name="DeviceSetting.Minimum_Scan_Drying_Time" xml:space="preserve"><value>Najkrajše sušenje po prehodu glave</value></data>
+  <data name="DeviceSetting.Paper_Thickness" xml:space="preserve"><value>Debelina papirja</value></data>
+  <data name="DeviceSetting.Paper_Suction" xml:space="preserve"><value>Vakuumski prijem papirja</value></data>
+  <data name="DeviceSetting.Feed_Adjustment" xml:space="preserve"><value>Prilagoditev podajanja papirja</value></data>
+  <data name="DeviceSetting.Feed_Sequence" xml:space="preserve"><value>Zaporedje podajanja papirja</value></data>
+  <data name="DeviceSetting.Platen_Gap" xml:space="preserve"><value>Razmik tiskalne glave</value></data>
+  <data name="DeviceSetting.Save_Paper_Roll_Paper" xml:space="preserve"><value>Varčevanje s papirjem v zvitku</value></data>
+  <data name="DeviceSetting.Microweave_Precision" xml:space="preserve"><value>Popravek natančnosti MicroWeave</value></data>
+  <data name="DeviceChoice.MediaDefault" xml:space="preserve"><value>Glede na medij</value></data>
+  <data name="DeviceChoice.Default" xml:space="preserve"><value>Privzeto</value></data>
+  <data name="DeviceChoice.Off" xml:space="preserve"><value>Izklopljeno</value></data>
+  <data name="DeviceChoice.On" xml:space="preserve"><value>Vklopljeno</value></data>
+  <data name="DeviceChoice.Large" xml:space="preserve"><value>Velik</value></data>
+  <data name="DeviceChoice.Wider" xml:space="preserve"><value>Širši</value></data>
+  <data name="DeviceChoice.Wide" xml:space="preserve"><value>Širok</value></data>
+  <data name="DeviceChoice.Standard" xml:space="preserve"><value>Standardni</value></data>
+  <data name="DeviceChoice.Narrow" xml:space="preserve"><value>Ozek</value></data>
+  <data name="DeviceChoice.Model_A" xml:space="preserve"><value>Model A</value></data>
+  <data name="DeviceChoice.Model_B" xml:space="preserve"><value>Model B</value></data>
+  <data name="DeviceChoice.Code" xml:space="preserve"><value>Koda {0}</value></data>
+  <data name="DeviceChoice.ThinPaper" xml:space="preserve"><value>{0} (tanek papir)</value></data>
 </root>

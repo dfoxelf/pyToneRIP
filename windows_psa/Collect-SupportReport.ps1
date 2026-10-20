@@ -58,6 +58,7 @@ function Get-CodeDescription([string]$code) {
         '0X80070002' { return 'File not found' }
         '0X80070057' { return 'Invalid argument' }
         '0X80004005' { return 'Unspecified failure' }
+        '0X800705B4' { return 'Operation timed out' }
         '0X8000FFFF' { return 'Unexpected failure' }
         default { return $null }
     }
@@ -69,7 +70,17 @@ function Get-TechnicalContext([string]$line) {
     $labels = [System.Collections.Generic.List[string]]::new()
     foreach ($item in @(
         @{ Pattern = 'PDC callback|PDC/PDR callback|PrintSupportExtension'; Text = 'Print capabilities callback' },
+        @{ Pattern = 'PrintSupportExtension Run entered'; Text = 'Print extension activation entered' },
+        @{ Pattern = 'PrintSupportExtension session started'; Text = 'Print extension session started' },
+        @{ Pattern = 'PrintSupportExtension session is unavailable'; Text = 'Print extension session unavailable' },
+        @{ Pattern = 'PrintSupportExtension cancellation requested'; Text = 'Print extension cancelled' },
+        @{ Pattern = 'PDC callback entered'; Text = 'PDC callback entered' },
+        @{ Pattern = 'PDC callback completed'; Text = 'PDC callback completed' },
         @{ Pattern = 'PrintTicket validation|Default PrintTicket validation'; Text = 'PrintTicket validation' },
+        @{ Pattern = 'PrintTicket validation begin'; Text = 'PrintTicket validation request begin' },
+        @{ Pattern = 'PrintTicket validation returned'; Text = 'PrintTicket validation request returned' },
+        @{ Pattern = 'PrintTicket validation threw'; Text = 'PrintTicket validation request threw' },
+        @{ Pattern = 'PrintTicket validation completed:\s*Resolved'; Text = 'PrintTicket callback completed: Resolved' },
         @{ Pattern = 'User defaults|DEVMODE|SetUserDefaults|VerifyUserDefaults'; Text = 'Windows printer defaults / DEVMODE' },
         @{ Pattern = 'Print settings session'; Text = 'Print settings activation context' },
         @{ Pattern = 'WM_DEVMODECHANGE'; Text = 'Printer default settings notification' },
@@ -86,9 +97,12 @@ function Get-TechnicalContext([string]$line) {
         }
     }
     foreach ($field in [regex]::Matches($line,
-        '(?i)\b(page|readback|orientation|raster|status|model|stage|dpi|resolution|media|input|launch|delivered)\s*=\s*([A-Za-z0-9_.:+-]{1,96})(?=[;\s]|$)')) {
+        '(?i)\b(page|readback|orientation|raster|status|model|stage|dpi|resolution|media|input|launch|delivered|validated|elapsedMs|refreshPolicy)\s*=\s*([A-Za-z0-9_.:+-]{1,96})(?=[;\s]|$)')) {
         $labels.Add($field.Groups[1].Value + '=' + $field.Groups[2].Value)
     }
+    $cancellation = [regex]::Match($line,
+        '(?i)PrintSupportExtension cancellation requested:\s*([A-Za-z]{1,48})\b')
+    if ($cancellation.Success) { $labels.Add('cancellationReason=' + $cancellation.Groups[1].Value) }
     $stackMethod = [regex]::Match($line, '\bat\s+((?:pyToneRIP|Windows|System)\.[A-Za-z0-9_.+`]+)\s*\(')
     if ($stackMethod.Success) { $labels.Add('method=' + $stackMethod.Groups[1].Value) }
     return $labels -join '; '
@@ -169,6 +183,174 @@ function Get-TechnicalSummary([string]$path) {
     foreach ($record in $records) { [void]$summary.AppendLine($record) }
     [void]$summary.AppendLine('TECHNICAL TIMELINE:')
     foreach ($record in $timeline) { [void]$summary.AppendLine($record) }
+    return $summary.ToString()
+}
+
+function Protect-DiagnosticText([string]$text) {
+    # Keep exception messages and stack frames, replacing private values in place.
+    # Version numbers, HRESULTs, method names and source line numbers are diagnostic data.
+    $text = [regex]::Replace($text, '(?i)(["''])(?:[a-z]:[\\/]|\\\\)[^\r\n]*?\1(?=\s|[),;:]|$)', '<path>')
+    $text = [regex]::Replace($text,
+        '(?im)(?:[a-z]:[\\/]|\\\\)[^\r\n]*?(?=:line\s+\d+|\s+(?:HRESULT|error|elapsedMs|validated)\s*=|$)', '<path>')
+    $text = [regex]::Replace($text, '(?i)\b(?:https?|ipp|ipps|socket|tcp)://[^\s<>"'']+', '<endpoint>')
+    $text = [regex]::Replace($text, '(?<![\w.])(?:\d{1,3}\.){3}\d{1,3}(?![\w.])', {
+        param($match)
+        $address = $null
+        $prefix = $text.Substring([Math]::Max(0, $match.Index - 48), [Math]::Min(48, $match.Index))
+        if ($prefix -match '(?i)\b(?:version|build|release|CLR|assembly)\s*[:=]?\s*$') { return $match.Value }
+        if ([System.Net.IPAddress]::TryParse($match.Value, [ref]$address)) { return '<ip>' }
+        return $match.Value
+    })
+    $text = [regex]::Replace($text, '(?i)(?<![\w:])(?:[0-9a-f]{0,4}:){2,}[0-9a-f:.]*(?:%[\w.-]+)?(?![\w:])', {
+        param($match)
+        $address = $null
+        if ([System.Net.IPAddress]::TryParse($match.Value, [ref]$address) -and
+            $address.AddressFamily -eq [System.Net.Sockets.AddressFamily]::InterNetworkV6) { return '<ip>' }
+        return $match.Value
+    })
+    $text = [regex]::Replace($text, '(?i)(["''])[^\r\n]*?\.(?:tiff?|jpe?g|png|quad|pdf|psd|psb|bmp|o?xps)\1', '<document>')
+    $text = [regex]::Replace($text, '(?i)(?<![\w.])[^\s<>"''=|]+\.(?:tiff?|jpe?g|png|quad|pdf|psd|psb|bmp|o?xps)\b', '<document>')
+    return $text
+}
+
+function Get-ErrorDetails([string]$path) {
+    if ([System.IO.File]::GetLastWriteTime($path) -lt $reportStartTime) {
+        return 'Source log was not modified during the reporting period.'
+    }
+    $records = [System.Collections.Generic.Queue[string]]::new()
+    $block = [System.Text.StringBuilder]::new()
+    $includeRecord = $true
+    $selectedErrors = 0
+    $inputStream = [System.IO.File]::Open($path, [System.IO.FileMode]::Open,
+        [System.IO.FileAccess]::Read, [System.IO.FileShare]::ReadWrite)
+    try {
+        $truncated = $inputStream.Length -gt 8MB
+        if ($truncated) { [void]$inputStream.Seek(-8MB, [System.IO.SeekOrigin]::End) }
+        $reader = [System.IO.StreamReader]::new($inputStream, [System.Text.Encoding]::UTF8, $true, 4096, $true)
+        try {
+            if ($truncated) { [void]$reader.ReadLine() }
+            # A null sentinel flushes the last multiline exception as one record.
+            do {
+                $line = $reader.ReadLine()
+                $recordStart = $null -ne $line -and ($line -match '^\s*\d{4}-\d{2}-\d{2}T' -or $line -match '^[^|]+\s\|\s')
+                if ($recordStart -or $null -eq $line) {
+                    $record = $block.ToString()
+                    if ($includeRecord -and $record -match '(?i)\b(error|failed|failure|fatal|abort|cannot|could not|timed? out|timeout|[\w.]*Exception)\b|\b0x(?!00000000\b)[0-9a-f]{8}\b') {
+                        $selectedErrors++
+                        $records.Enqueue((Protect-DiagnosticText $record))
+                        if ($records.Count -gt 200) { [void]$records.Dequeue() }
+                    }
+                    [void]$block.Clear()
+                    $time = [regex]::Match([string]$line, '^\s*\d{4}-\d{2}-\d{2}T[\d:.+Z-]+').Value
+                    $parsedTime = [DateTimeOffset]::MinValue
+                    if ($time -and [DateTimeOffset]::TryParse($time, [ref]$parsedTime)) {
+                        $includeRecord = $parsedTime.LocalDateTime -ge $reportStartTime
+                    }
+                }
+                if ($null -ne $line) { [void]$block.AppendLine($line) }
+            } while ($null -ne $line)
+        }
+        finally { $reader.Dispose() }
+    }
+    finally { $inputStream.Dispose() }
+    $details = [System.Text.StringBuilder]::new()
+    [void]$details.AppendLine('Error records with original messages, HRESULTs, inner exceptions and stack traces when present in the source log.')
+    [void]$details.AppendLine('Paths, document/profile filenames and IP/URL endpoints are replaced; messages are not reduced to fixed labels.')
+    [void]$details.AppendLine("Only the last 8 MiB were scanned: $truncated; matching records: $selectedErrors; exported last records: $($records.Count); limit: 200.")
+    [void]$details.AppendLine('Undated lines follow the preceding dated record; undated logs use their last modification time.')
+    if ($records.Count -eq 0) { [void]$details.AppendLine('No matching error records were found in this source log.') }
+    foreach ($record in $records) {
+        [void]$details.AppendLine('--- ERROR RECORD ---')
+        [void]$details.Append($record)
+    }
+    return $details.ToString()
+}
+
+function Get-PrintApiEnvironment {
+    $summary = [System.Text.StringBuilder]::new()
+    [void]$summary.AppendLine('Read-only OS and print API snapshot. API presence does not prove that an operation succeeds.')
+    try {
+        $version = Get-ItemProperty -LiteralPath 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -ErrorAction Stop
+        foreach ($field in @('EditionID', 'DisplayVersion', 'CurrentBuild', 'UBR')) {
+            $value = [string]$version.$field
+            if ($value -match '^[A-Za-z0-9_. -]{1,64}$') {
+                [void]$summary.AppendLine($field + '=' + $value)
+            }
+        }
+        if ([string]$version.CurrentBuild -match '^\d{4,6}$' -and [string]$version.UBR -match '^\d{1,8}$') {
+            [void]$summary.AppendLine('Full OS build=' + $version.CurrentBuild + '.' + $version.UBR)
+        }
+    }
+    catch { [void]$summary.AppendLine('OS registry version unavailable; exception=' + $_.Exception.GetBaseException().GetType().Name) }
+    try {
+        [void]$summary.AppendLine('OS architecture=' + [System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)
+        [void]$summary.AppendLine('Process architecture=' + [System.Runtime.InteropServices.RuntimeInformation]::ProcessArchitecture)
+    }
+    catch { [void]$summary.AppendLine('Architecture details unavailable; process64=' + [Environment]::Is64BitProcess) }
+    foreach ($packageName in @('pyToneRIP.Manager', 'MicrosoftWindows.Client.CBS')) {
+        try {
+            foreach ($package in @(Get-AppxPackage -Name $packageName -ErrorAction Stop)) {
+                [void]$summary.AppendLine('Package=' + $packageName + '; version=' + $package.Version + '; architecture=' + $package.Architecture)
+            }
+        }
+        catch { [void]$summary.AppendLine('Package=' + $packageName + '; version unavailable; exception=' + $_.Exception.GetBaseException().GetType().Name) }
+    }
+    $systemDirectory = if ([Environment]::Is64BitOperatingSystem -and -not [Environment]::Is64BitProcess) {
+        Join-Path $env:SystemRoot 'Sysnative'
+    } else { Join-Path $env:SystemRoot 'System32' }
+    foreach ($fileName in @(
+        'Print.PrintSupport.Source.dll', 'Print.Workflow.Source.dll', 'PrintWorkflowService.dll',
+        'Windows.Graphics.Printing.Workflow.dll', 'Windows.Graphics.Printing.Workflow.Native.dll',
+        'PrintPlatformConfig.dll', 'ModernPrintConfigHelper.dll', 'prntvpt.dll', 'spoolss.dll',
+        'spoolsv.exe', 'winspool.drv'
+    )) {
+        try {
+            $path = Join-Path $systemDirectory $fileName
+            if ([System.IO.File]::Exists($path)) {
+                $version = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($path)
+                [void]$summary.AppendLine(('Component={0}; version={1}.{2}.{3}.{4}' -f $fileName,
+                    $version.FileMajorPart, $version.FileMinorPart, $version.FileBuildPart, $version.FilePrivatePart))
+            } else { [void]$summary.AppendLine('Component=' + $fileName + '; not present') }
+        }
+        catch { [void]$summary.AppendLine('Component=' + $fileName + '; version unavailable; exception=' + $_.Exception.GetBaseException().GetType().Name) }
+    }
+    try {
+        $api = [Windows.Foundation.Metadata.ApiInformation,Windows.Foundation,ContentType=WindowsRuntime]
+        foreach ($major in @(19, 20)) {
+            [void]$summary.AppendLine('UniversalApiContract.' + $major + '=' +
+                $api::IsApiContractPresent('Windows.Foundation.UniversalApiContract', $major))
+        }
+        $checks = @(
+            @{ Kind='Method'; Type='Windows.Devices.Printers.VirtualPrinterManager'; Name='InstallVirtualPrinterAsync'; Count=1 },
+            @{ Kind='Method'; Type='Windows.Devices.Printers.VirtualPrinterManager'; Name='InstallVirtualPrinterAsync'; Count=2 },
+            @{ Kind='Method'; Type='Windows.Devices.Printers.VirtualPrinterManager'; Name='FindAllVirtualPrinters'; Count=1 },
+            @{ Kind='Method'; Type='Windows.Devices.Printers.VirtualPrinterManager'; Name='RemoveVirtualPrinterAsync'; Count=1 },
+            @{ Kind='Method'; Type='Windows.Devices.Printers.IppPrintDevice'; Name='FromPrinterName'; Count=1 },
+            @{ Kind='Property'; Type='Windows.Devices.Printers.IppPrintDevice'; Name='CanModifyUserDefaultPrintTicket' },
+            @{ Kind='WriteableProperty'; Type='Windows.Devices.Printers.IppPrintDevice'; Name='UserDefaultPrintTicket' },
+            @{ Kind='Method'; Type='Windows.Devices.Printers.IppPrintDevice'; Name='RefreshPrintDeviceCapabilities'; Count=0 },
+            @{ Kind='Method'; Type='Windows.Graphics.Printing.PrintTicket.WorkflowPrintTicket'; Name='ValidateAsync'; Count=0 },
+            @{ Kind='Method'; Type='Windows.Graphics.Printing.PrintSupport.PrintSupportSettingsUISession'; Name='UpdatePrintTicket'; Count=1 },
+            @{ Kind='Method'; Type='Windows.Graphics.Printing.PrintSupport.PrintSupportExtensionSession'; Name='Start'; Count=0 },
+            @{ Kind='Event'; Type='Windows.Graphics.Printing.PrintSupport.PrintSupportExtensionSession'; Name='PrintTicketValidationRequested' },
+            @{ Kind='Event'; Type='Windows.Graphics.Printing.PrintSupport.PrintSupportExtensionSession'; Name='PrintDeviceCapabilitiesChanged' },
+            @{ Kind='Method'; Type='Windows.Graphics.Printing.PrintSupport.PrintSupportPrintTicketValidationRequestedEventArgs'; Name='GetDeferral'; Count=0 },
+            @{ Kind='Method'; Type='Windows.Graphics.Printing.PrintSupport.PrintSupportPrintTicketValidationRequestedEventArgs'; Name='SetPrintTicketValidationStatus'; Count=1 },
+            @{ Kind='Method'; Type='Windows.Graphics.Printing.PrintSupport.PrintSupportPrintDeviceCapabilitiesChangedEventArgs'; Name='SetPrintDeviceCapabilitiesUpdatePolicy'; Count=1 },
+            @{ Kind='Method'; Type='Windows.Graphics.Printing.PrintSupport.PrintSupportPrintDeviceCapabilitiesUpdatePolicy'; Name='CreatePeriodicRefresh'; Count=1 }
+        )
+        foreach ($check in $checks) {
+            $present = switch ($check.Kind) {
+                'Method' { $api::IsMethodPresent($check.Type, $check.Name, [uint32]$check.Count) }
+                'Property' { $api::IsPropertyPresent($check.Type, $check.Name) }
+                'WriteableProperty' { $api::IsWriteablePropertyPresent($check.Type, $check.Name) }
+                'Event' { $api::IsEventPresent($check.Type, $check.Name) }
+            }
+            $arity = if ($check.Kind -eq 'Method') { '/' + $check.Count } else { '' }
+            [void]$summary.AppendLine('API=' + $check.Type + '.' + $check.Name + $arity + '; present=' + $present)
+        }
+    }
+    catch { [void]$summary.AppendLine('API metadata probe unavailable; exception=' + $_.Exception.GetBaseException().GetType().Name) }
     return $summary.ToString()
 }
 
@@ -306,13 +488,18 @@ try {
     $archive = [System.IO.Compression.ZipArchive]::new($file, [System.IO.Compression.ZipArchiveMode]::Create)
     $included = [System.Collections.Generic.List[string]]::new()
     foreach ($source in $sources) {
-        $entry = $archive.CreateEntry($source.Entry, [System.IO.Compression.CompressionLevel]::Optimal)
+      foreach ($format in @('summary', 'details')) {
+        $entryName = if ($format -eq 'summary') { $source.Entry } else { $source.Entry.Replace('.diagnostics.txt', '.errors.txt') }
+        $entry = $archive.CreateEntry($entryName, [System.IO.Compression.CompressionLevel]::Optimal)
         $entryWriter = [System.IO.StreamWriter]::new($entry.Open(), [System.Text.UTF8Encoding]::new($false))
         try {
             if ([string]::IsNullOrWhiteSpace($source.Path) -or -not [System.IO.File]::Exists($source.Path)) {
                 $entryWriter.WriteLine('Source log is not present. This is not evidence that no error occurred.')
             } else {
-                try { $entryWriter.Write((Get-TechnicalSummary $source.Path)) }
+                try {
+                    if ($format -eq 'summary') { $entryWriter.Write((Get-TechnicalSummary $source.Path)) }
+                    else { $entryWriter.Write((Get-ErrorDetails $source.Path)) }
+                }
                 catch {
                     $cause = $_.Exception.GetBaseException()
                     $entryWriter.WriteLine('Source log could not be read; exception={0}; HRESULT=0x{1:X8}', $cause.GetType().Name, $cause.HResult)
@@ -320,7 +507,8 @@ try {
             }
         }
         finally { $entryWriter.Dispose() }
-        $included.Add($source.Entry)
+        $included.Add($entryName)
+      }
     }
     $eventText = [System.Text.StringBuilder]::new()
     [void]$eventText.AppendLine("Windows application crashes, hangs and errors, printing and system diagnostics from the last $LookbackDays days. Original event messages are excluded.")
@@ -390,16 +578,22 @@ try {
     try { $defaultsWriter.Write((Get-PrinterDefaultsSummary)) }
     finally { $defaultsWriter.Dispose() }
     $included.Add('printer-defaults.txt')
+    $environmentEntry = $archive.CreateEntry('print-api-environment.txt', [System.IO.Compression.CompressionLevel]::Optimal)
+    $environmentWriter = [System.IO.StreamWriter]::new($environmentEntry.Open(), [System.Text.UTF8Encoding]::new($false))
+    try { $environmentWriter.Write((Get-PrintApiEnvironment)) }
+    finally { $environmentWriter.Dispose() }
+    $included.Add('print-api-environment.txt')
     $manifest = $archive.CreateEntry('README.txt')
     $writer = [System.IO.StreamWriter]::new($manifest.Open(), [System.Text.UTF8Encoding]::new($false))
     try {
         $writer.WriteLine('pyToneRIP technical diagnostics. No files are sent by the application.')
-        $writer.WriteLine('Original log lines and Windows event messages are excluded.')
-        $writer.WriteLine('Application logs contain technical error summaries and a settings timeline. Missing or unreadable logs are reported explicitly.')
+        $writer.WriteLine('*.errors.txt contain detailed application/installer error records: original messages, HRESULTs, inner exceptions and stack traces when logged. Paths, document/profile filenames and IP/URL endpoints are replaced.')
+        $writer.WriteLine('*.diagnostics.txt contain compact technical summaries and a settings timeline. Missing or unreadable logs are reported explicitly in both formats.')
         $writer.WriteLine('Windows reports cover crashes and hangs of any application, plus printing and system events. Look in windows-events.txt for the time, application, fault module and exception code.')
-        $writer.WriteLine('Document contents, personal paths, IP addresses and arbitrary event/log text are excluded.')
+        $writer.WriteLine('Document contents and full raw log files are not collected. Original Windows event messages are excluded; their structured technical fields are in windows-events.txt.')
         $writer.WriteLine('Created: ' + (Get-Date).ToString('O'))
         $writer.WriteLine('Windows version: ' + [Environment]::OSVersion.Version.ToString())
+        $writer.WriteLine('Full OS build, installed print component versions and runtime APIs: print-api-environment.txt')
         $writer.WriteLine('64-bit operating system: ' + [Environment]::Is64BitOperatingSystem)
         $writer.WriteLine('PowerShell version: ' + $PSVersionTable.PSVersion.ToString())
         $writer.WriteLine('Lookback days: ' + $LookbackDays)

@@ -38,11 +38,12 @@ from xp750_rip.escp2.backend import (
     BackendStreamResult,
     EpsonEscp2Backend,
     GeneratedModeRasterJob,
+    resolve_profile_print_method,
 )
 from xp750_rip.input.tiff import decode_grayscale_tiff
 from xp750_rip.layout import ImageSizeRequest, PageLayout, calculate_page_layout
 from xp750_rip.performance import PerformanceTrace
-from xp750_rip.printers.capabilities import MediaCapability, PrinterInstance, PrinterMode
+from xp750_rip.printers.capabilities import PrinterInstance, PrinterMode
 from xp750_rip.qtr.bundle import QtrProfileBundle
 from xp750_rip.qtr.raster_executor import (
     black_is_zero_raster_to_qtr_codes,
@@ -58,14 +59,12 @@ from xp750_rip.streaming_raster import streaming_qtr_rasters
 from xp750_rip.transport import TransmissionReceipt, Transport
 
 
-def _resolution_density_factor(mode: PrinterMode, medium: MediaCapability) -> float:
-    """Apply Gutenprint's paper and mode coverage before halftoning QTR ink."""
+def _resolution_density_factor(mode: PrinterMode) -> float:
+    """Apply the printer mode's coverage without an extra paper multiplier."""
 
     if not math.isfinite(mode.density) or mode.density <= 0:
         raise ValueError(f"Invalid ESC/P2 density for mode {mode.identity}: {mode.density}")
-    if not math.isfinite(medium.paper_density) or medium.paper_density <= 0:
-        raise ValueError(f"Invalid paper density for medium {medium.identity}: {medium.paper_density}")
-    return min(1.0, mode.density * medium.paper_density)
+    return min(1.0, mode.density)
 
 
 def _scale_qtr_luts_for_mode(
@@ -453,10 +452,9 @@ class MonoRipService:
             }
         else:
             runtime_luts = compile_runtime_luts(runtime)
-        # Gutenprint multiplies paper Density and escp2_density before dither.
-        # Both QUAD ink requests and raw calibration targets use the same
-        # printer mode, drop grid and physical density.
-        resolution_density_factor = _resolution_density_factor(mode, medium)
+        # Normal and calibration printing share the mode's coverage factor.
+        # Paper selection must not add another reduction to the curve values.
+        resolution_density_factor = _resolution_density_factor(mode)
         runtime_luts = _scale_qtr_luts_for_mode(
             runtime_luts, resolution_density_factor
         )
@@ -655,6 +653,16 @@ class MonoRipService:
             logical.value: configuration.router.mapping[logical].value for logical in selected
         }
         manifest_started = perf_counter()
+        manifest_print_method = (
+            resolve_profile_print_method(
+                model, mode, medium, dict(configuration.device_settings)
+            )
+            if model.escp2_profile is not None
+            and model.backend_family != self.backend.family
+            else medium.print_method(mode.identity)
+            if medium.implemented
+            else None
+        )
         if trace is not None:
             trace.event("manifest construction START")
         calibration_runtime_manifest = (
@@ -766,7 +774,6 @@ class MonoRipService:
                 "nozzle_separation": mode.nozzle_separation,
                 "escp2_ink_type": mode.escp2_ink_type,
                 "density": mode.density,
-                "paper_density": medium.paper_density,
                 "applied_qtr_density_factor": resolution_density_factor,
                 "source": mode.source,
                 "blocked_reason": mode.blocked_reason,
@@ -778,8 +785,8 @@ class MonoRipService:
                 "gutenprint_name": medium.gutenprint_name,
                 "paper_media_code": medium.media_code,
                 "print_method": (
-                    f"0x{medium.print_method(mode.identity):02X}"
-                    if medium.implemented
+                    f"0x{manifest_print_method:02X}"
+                    if manifest_print_method is not None
                     else None
                 ),
             },
@@ -826,6 +833,11 @@ class MonoRipService:
                 ],
                 "serpentine": (
                     True if halftone_algorithm in error_diffusion_algorithms else None
+                ),
+                "blank_region_policy": (
+                    "per-ink zero demand; settle 3 rows, clear on fourth"
+                    if halftone_algorithm in error_diffusion_algorithms
+                    else "skip zero ink demand; preserve absolute screen coordinates"
                 ),
                 "coefficient_source": (
                     "Ostromoukhov SIGGRAPH 2001 Appendix I"

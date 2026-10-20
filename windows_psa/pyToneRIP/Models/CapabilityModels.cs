@@ -61,7 +61,8 @@ namespace pyToneRIP.Models
         [DataMember(Name = "id")] public string Id { get; set; }
         [DataMember(Name = "display_name")] public string DisplayName { get; set; }
 
-        public override string ToString() => DisplayName ?? Id;
+        [IgnoreDataMember] public string LocalizedDisplayName { get; set; }
+        public override string ToString() => LocalizedDisplayName ?? DisplayName ?? Id;
     }
 
     [DataContract]

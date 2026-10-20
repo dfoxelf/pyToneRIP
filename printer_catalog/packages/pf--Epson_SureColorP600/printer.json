@@ -1,7 +1,10 @@
 {
   "channels": [],
   "device_features": [
-    "platen_gap"
+    "paper_thickness",
+    "platen_gap",
+    "save_roll_paper",
+    "scan_drying_time"
   ],
   "driver": {
     "driver_mechanics": {
