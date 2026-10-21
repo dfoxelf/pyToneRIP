@@ -505,9 +505,9 @@ namespace pyToneRIP
                     ?? InkLabels.ShortName(path.FactoryRole)
                     ?? "")
                     .Trim().ToUpperInvariant();
-                // Physical PK/MK slots are user-selectable destinations for K,
-                // not extra logical curves in the initial channel list.
-                if (logical == "PK" || logical == "MK" || logical == "PBK"
+                // Shared PK/MK states were handled above. An independent MK
+                // path (P900) has its own QUAD curve and must remain separate.
+                if (logical == "PK" || logical == "PBK"
                     || logical == "BK" || logical == "PK/MK" || logical == "MK/PK")
                     logical = "K";
                 // Logical QUAD names differ from vivid cartridge labels.
@@ -517,8 +517,8 @@ namespace pyToneRIP
                 if (logical == "G") logical = "GR";
                 logical = new string(logical.Where(char.IsLetterOrDigit).ToArray());
                 if (string.IsNullOrWhiteSpace(logical)) logical = "INK" + (index + 1);
-                // Distinct black ink slots are routing choices for the same
-                // QTR K curve, not additional invented K2 curve channels.
+                // Repeated K labels do not invent K2. An explicitly named
+                // independent MK curve is retained above.
                 if (logical == "K" && result.ContainsKey("K")) continue;
                 var unique = logical;
                 var suffix = 2;
@@ -542,6 +542,8 @@ namespace pyToneRIP
                     || new[] { "K", "BLACK", "PHOTO_BLACK", "MATTE_BLACK", "PHOTOBLACK", "MATTEBLACK" }
                     .Contains((item.FactoryRole ?? "").ToUpperInvariant()))
                 .Select(item => item.Id));
+            // Separate black banks can carry independent K and MK curves.
+            if (blackPaths.Count > 1) return;
             var aliasIndexes = logicalInks
                 .Select((item, index) => new { Ink = item, Index = index })
                 .Where(item => new[] { "PK", "MK", "PBK", "BK" }.Contains(item.Ink)
@@ -1089,33 +1091,59 @@ namespace pyToneRIP
             }
         }
 
+        private static string DefaultMkRoute(
+            Dictionary<string, string> defaults, Dictionary<string, string> existing)
+        {
+            var target = defaults["MK"];
+            // A saved K -> physical MK assignment remains authoritative.
+            // Give the newly restored MK curve the unused other black bank.
+            if (existing.Values.Contains(target) && defaults.TryGetValue("K", out string other)
+                && !existing.Values.Contains(other)) return other;
+            return target;
+        }
+
         private async System.Threading.Tasks.Task UpdateLogicalInksFromCurveAsync(bool replace)
         {
-            if (CalibrationEnabledBox.IsChecked == true || ActiveCurveCount() == 0) return;
-            var path = Curve1Box.Text.Trim();
-            var inks = await ExternalCurveAccessStore.ReadLogicalInksAsync(path);
-            // Some headers declare both black curves. Start with one logical
-            // K; the user selects its physical destination in the routing UI.
-            if (inks.Contains("K"))
-                inks = inks.Where(ink => ink != "PK" && ink != "MK").ToList();
-            if (!string.Equals(path, Curve1Box.Text.Trim(), StringComparison.Ordinal)) return;
-            var defaults = DefaultRoutes(PrinterBox.SelectedItem as PrinterCapability);
             Func<string, string> canonical = ink => ink == "VM" ? "M" : ink == "VLM" ? "LM"
                 : ink == "O" ? "OR" : ink == "G" ? "GR" : ink;
+            if (CalibrationEnabledBox.IsChecked == true || ActiveCurveCount() == 0)
+            {
+                var initialDefaults = DefaultRoutes(PrinterBox.SelectedItem as PrinterCapability);
+                var initialInks = LogicalInks();
+                if (initialDefaults.ContainsKey("MK") && !initialInks.Contains("MK")
+                    && initialInks.Count == initialDefaults.Count - 1
+                    && initialInks.All(ink => initialDefaults.ContainsKey(canonical(ink))))
+                {
+                    LogicalInksBox.Text = string.Join(",", initialInks.Concat(new[] { "MK" }));
+                    routes["MK"] = DefaultMkRoute(initialDefaults, routes);
+                    RebuildRoutes();
+                }
+                return;
+            }
+            var path = Curve1Box.Text.Trim();
+            var inks = await ExternalCurveAccessStore.ReadLogicalInksAsync(path);
+            if (!string.Equals(path, Curve1Box.Text.Trim(), StringComparison.Ordinal)) return;
+            var defaults = DefaultRoutes(PrinterBox.SelectedItem as PrinterCapability);
             var current = LogicalInks();
             // Repair the old automatically generated cartridge-name list when
             // reopening settings; retain deliberate, valid custom routing.
             var wasDefault = current.Count == defaults.Count && current.All(ink =>
                 defaults.TryGetValue(canonical(ink), out string destination)
                 && routes.TryGetValue(ink, out string selected) && selected == destination);
-            if (!replace && !wasDefault) return;
+            // Repair the previous automatic nine-channel P900 list which
+            // omitted MK. Preserve every existing physical assignment.
+            var missingIndependentMk = defaults.ContainsKey("MK") && !current.Contains("MK")
+                && current.Count == defaults.Count - 1
+                && current.All(ink => defaults.ContainsKey(canonical(ink)));
+            if (!replace && !wasDefault && !missingIndependentMk) return;
             var mapping = new Dictionary<string, string>();
             foreach (var ink in inks)
             {
                 if (routes.TryGetValue(ink, out string selected)) mapping[ink] = selected;
                 else if (routes.TryGetValue(ink == "M" ? "VM" : ink == "LM" ? "VLM" : ink, out selected))
                     mapping[ink] = selected;
-                else if (defaults.TryGetValue(ink, out selected)) mapping[ink] = selected;
+                else if (defaults.TryGetValue(ink, out selected))
+                    mapping[ink] = ink == "MK" ? DefaultMkRoute(defaults, routes) : selected;
             }
             routes.Clear();
             foreach (var item in mapping) routes[item.Key] = item.Value;

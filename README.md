@@ -17,10 +17,10 @@ The current beta is **1.0.0.219**. [Download the setup installer](https://github
 <details>
 <summary>Verify the installer checksum</summary>
 
-Installer size: **56,993,379 bytes**. SHA-256:
+Installer size: **56,995,970 bytes**. SHA-256:
 
 ```text
-a8d018e607085b20cf6ee3acfefd408aace5814fdcdcde71d79c71a1e3a14d14
+898cccbbecc9bb9597da77c8617bfc5e290343aa17a4b709caea0dfb1df51b59
 ```
 
 ```powershell
@@ -29,12 +29,13 @@ Get-FileHash .\pyToneRIP-Setup-1.0.0.219-Beta.exe -Algorithm SHA256
 
 </details>
 
-This beta adds streaming dithering choices and improves multipage processing, printer capabilities, and Windows print settings.
+This rebuilt 1.0.0.219 beta corrects P900 K/MK channel handling and retains the original USB transport. It also includes the streaming dithering, multipage processing, printer capability, and Windows print settings changes listed below.
 
 - **Dithering:** added X2Y1 with tone-dependent threshold modulation and serpentine traversal, plus Coupled ED variants for C/M and C/M + LC/LM. Preferences shows variants compatible with the selected printer's ink channels. The implementations retain state across streaming bands and handle blank regions.
 - **Multipage streaming:** the live transport can receive the first page while later pages are still being processed. Job configuration and curve snapshots are prepared once; additional copies reuse rendered data.
 - **Windows rasterization:** added 360 and 720 DPI input raster choices for every model, alongside 300 and 600 DPI. These settings are separate from the printer's physical print resolution.
 - **Printer capabilities:** added the P800 720 x 1440 photo mode and restored missing Stylus Pro 3880 sheet formats, including 4 x 6 inches. The 3880 catalog now contains 25 sheet formats; the model does not support roll feed.
+- **P900 QUAD channels:** retain separate logical K and MK curves from ten-channel profiles, with independent physical routing and simultaneous output on either glossy or matte paper. Restore MK in older automatic channel lists while preserving user assignments.
 - **Print settings and diagnostics:** corrected application of legacy per-user defaults in Preferences and expanded support-report collection of PrintTickets, DEVMODE settings, and Windows print/security configuration.
 - **Protocol support:** extended native command encoding and validation for explicitly supported mode variants.
 

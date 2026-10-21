@@ -833,16 +833,10 @@ def _migrate_interchangeable_black_routes(
     routing: dict[str, str],
     ink_configuration: str | None,
 ) -> tuple[list[str], dict[str, str]]:
-    """Convert the temporary .117 PK/MK routing schema back to QTR K.
+    """Migrate legacy black aliases only for a single black raster path.
 
-    PK and MK describe the physical ink currently occupying a shared printer
-    path. They are not separate QTR curve channels. Only models that explicitly
-    declare both interchangeable states are migrated; ordinary logical names
-    on all other printers are preserved byte-for-byte.
-
-    PK и MK описывают физическое состояние общего канала принтера, а не имена
-    кривых QUAD. Миграция применяется только к моделям, которые явно объявляют
-    обе переключаемые конфигурации, и превращает старые PK=P0/MK=P0 в K=P0.
+    Independent banks, such as P900 PK and MK, have separate QUAD curves.
+    Their names and user-selected physical assignments must remain intact.
     """
 
     black_aliases = {"PK", "MK", "PBK", "BK"}
@@ -859,6 +853,8 @@ def _migrate_interchangeable_black_routes(
         or (path.factory_role or "").casefold().replace("_", "")
         in {"k", "black", "photoblack", "matteblack", "pbk", "bk"}
     }
+    if len(black_paths) > 1:
+        return logical_inks, routing
     present_aliases = [
         item for item in logical_inks
         if item in black_aliases and routing.get(item) in black_paths
