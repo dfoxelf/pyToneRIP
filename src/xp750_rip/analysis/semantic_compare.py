@@ -111,14 +111,14 @@ def compare_phase3c_to_golden(
         ("GRAPHICS_MODE", ("enabled",), "graphics mode"),
         ("UNIT_SETUP", ("page_unit", "vertical_unit", "horizontal_unit", "base_unit"), "units"),
         ("GRAY_MODE", ("payload_hex",), "gray mode"),
-        ("MICROWEAVE", ("value",), "printer MicroWeave"),
+        ("MICROWEAVE", ("payload_hex",), "printer MicroWeave"),
         ("DIRECTION", ("value",), "printing direction"),
         ("DOT_SIZE", ("dot_size",), "dot size"),
         ("RESOLUTION", ("base_unit", "vertical_unit", "horizontal_unit"), "resolution"),
         ("PAGE_LENGTH", ("value",), "page length"),
         ("PAGE_FORMAT", ("top", "bottom"), "page format"),
         ("PAPER_DIMENSIONS", ("width", "height"), "paper dimensions"),
-        ("PRINT_METHOD", ("value",), "print method"),
+        ("PRINT_METHOD", ("payload_hex",), "print method"),
     ):
         golden_record = _named(golden, name)
         candidate_record = _named(candidate, name)

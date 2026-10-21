@@ -196,7 +196,7 @@ namespace pyToneRIP
                 }
                 PrinterBox.ItemsSource = new[] { assignedModel };
                 PrinterBox.IsEnabled = false;
-                DitherBox.ItemsSource = capabilities.Dither;
+                DitherBox.ItemsSource = assignedModel.CompatibleDithers(capabilities.Dither);
                 DirectionBox.ItemsSource = LocalizedValues(capabilities.Layout.Directions);
                 SizingBox.ItemsSource = LocalizedValues(capabilities.Layout.SizingModes);
                 OrientationBox.ItemsSource = LocalizedValues(capabilities.Layout.Orientations);
@@ -208,7 +208,7 @@ namespace pyToneRIP
                 InkLimitSlider.Maximum = capabilities.Adjustments.InkLimit.Maximum;
                 WorkflowPrintTicket ticketForUi = session?.SessionPrintTicket;
                 var rasterChoices = PrintTicketSynchronization.ResolutionChoices(
-                    ticketForUi, assignedModel.Id);
+                    ticketForUi);
                 if (assignedModel.Id == "SureColorP900RIP")
                     foreach (var choice in rasterChoices.Where(item => item.X == 720 && item.Y == 720))
                         choice.DetailLabel = LocalizationService.Get("Printer.FinestDetail");
@@ -231,7 +231,8 @@ namespace pyToneRIP
 
                 SelectPrinter(originalConfiguration?.Printer?.Model ?? instance?.ModelId);
                 SelectString(DirectionBox, originalConfiguration?.Printer?.Direction);
-                SelectOption(DitherBox, originalConfiguration?.Adjustments?.Dither);
+                SelectOption(DitherBox, assignedModel.CompatibleDitherSelection(
+                    originalConfiguration?.Adjustments?.Dither));
                 SelectString(SizingBox, originalConfiguration?.Layout?.Sizing);
                 SelectString(OrientationBox, originalConfiguration?.Layout?.Orientation);
                 SelectString(PlacementBox, originalConfiguration?.Layout?.Placement);
@@ -247,6 +248,13 @@ namespace pyToneRIP
                 ApplyStoredRasterResolution(originalConfiguration?.Printer);
                 if (ticketForUi != null)
                     await LoadSessionPrintTicketSelectionAsync(ticketForUi);
+                try { await UpdateLogicalInksFromCurveAsync(false); }
+                catch (Exception curveError)
+                {
+                    // Keep Preferences editable when a previously selected
+                    // profile was removed; Apply performs the strict check.
+                    App.WriteStartupException("QUAD channel preview failed", curveError);
+                }
                 ApplyButton.IsEnabled = true;
                 ValidationSummary.Text = session == null
                     ? LocalizationService.Get("Code.ConfigurationIsStoredForThisPrinterSlotWindowsQueueRenameIsManagedInWind")
@@ -303,7 +311,7 @@ namespace pyToneRIP
                 catch (Exception error)
                 {
                     App.WriteStartupException(
-                        "Could not read legacy per-user DEVMODE; using the session PrintTicket",
+                        "Could not apply legacy per-user defaults; using the session PrintTicket",
                         error);
                 }
             }
@@ -320,6 +328,8 @@ namespace pyToneRIP
                 "Print settings ticket loaded: launch=" + session.LaunchKind
                 + "; page=" + originalConfiguration.Printer.Page
                 + "; media=" + originalConfiguration.Printer.Media
+                + "; orientation=" + originalConfiguration.Layout.Orientation
+                + "; sessionOrientation=" + PrintTicketSynchronization.Read(ticket).OrientationOptionName
                 + "; resolution=" + originalConfiguration.Printer.RasterResolutionX
                 + "x" + originalConfiguration.Printer.RasterResolutionY);
         }
@@ -371,7 +381,7 @@ namespace pyToneRIP
             SelectCalibrationMode(value.Calibration?.Mode ?? "rgb_selectors");
             var configuredInks = (value.Channels?.LogicalInks
                 ?? new List<string> { "K" })
-                .Select(item => (item ?? "").Trim().ToUpperInvariant())
+                .Select(item => (item ?? "").Trim())
                 .Where(item => item.Length > 0)
                 .Distinct()
                 .ToList();
@@ -495,11 +505,16 @@ namespace pyToneRIP
                     ?? InkLabels.ShortName(path.FactoryRole)
                     ?? "")
                     .Trim().ToUpperInvariant();
-                // PK/MK are alternative physical states of one black raster
-                // address on P600/P800. Calibration targets address it as K.
+                // Physical PK/MK slots are user-selectable destinations for K,
+                // not extra logical curves in the initial channel list.
                 if (logical == "PK" || logical == "MK" || logical == "PBK"
                     || logical == "BK" || logical == "PK/MK" || logical == "MK/PK")
                     logical = "K";
+                // Logical QUAD names differ from vivid cartridge labels.
+                if (logical == "VM") logical = "M";
+                if (logical == "VLM") logical = "LM";
+                if (logical == "O") logical = "OR";
+                if (logical == "G") logical = "GR";
                 logical = new string(logical.Where(char.IsLetterOrDigit).ToArray());
                 if (string.IsNullOrWhiteSpace(logical)) logical = "INK" + (index + 1);
                 // Distinct black ink slots are routing choices for the same
@@ -1067,6 +1082,58 @@ namespace pyToneRIP
             var file = await picker.PickSingleFileAsync();
             if (file == null) return;
             CurveBoxes()[index].Text = ExternalCurveAccessStore.Register(file);
+            try { await UpdateLogicalInksFromCurveAsync(index == 0); }
+            catch (Exception error)
+            {
+                ValidationSummary.Text = LocalizationService.Format("Code.NotApplied", error.Message);
+            }
+        }
+
+        private async System.Threading.Tasks.Task UpdateLogicalInksFromCurveAsync(bool replace)
+        {
+            if (CalibrationEnabledBox.IsChecked == true || ActiveCurveCount() == 0) return;
+            var path = Curve1Box.Text.Trim();
+            var inks = await ExternalCurveAccessStore.ReadLogicalInksAsync(path);
+            // Some headers declare both black curves. Start with one logical
+            // K; the user selects its physical destination in the routing UI.
+            if (inks.Contains("K"))
+                inks = inks.Where(ink => ink != "PK" && ink != "MK").ToList();
+            if (!string.Equals(path, Curve1Box.Text.Trim(), StringComparison.Ordinal)) return;
+            var defaults = DefaultRoutes(PrinterBox.SelectedItem as PrinterCapability);
+            Func<string, string> canonical = ink => ink == "VM" ? "M" : ink == "VLM" ? "LM"
+                : ink == "O" ? "OR" : ink == "G" ? "GR" : ink;
+            var current = LogicalInks();
+            // Repair the old automatically generated cartridge-name list when
+            // reopening settings; retain deliberate, valid custom routing.
+            var wasDefault = current.Count == defaults.Count && current.All(ink =>
+                defaults.TryGetValue(canonical(ink), out string destination)
+                && routes.TryGetValue(ink, out string selected) && selected == destination);
+            if (!replace && !wasDefault) return;
+            var mapping = new Dictionary<string, string>();
+            foreach (var ink in inks)
+            {
+                if (routes.TryGetValue(ink, out string selected)) mapping[ink] = selected;
+                else if (routes.TryGetValue(ink == "M" ? "VM" : ink == "LM" ? "VLM" : ink, out selected))
+                    mapping[ink] = selected;
+                else if (defaults.TryGetValue(ink, out selected)) mapping[ink] = selected;
+            }
+            routes.Clear();
+            foreach (var item in mapping) routes[item.Key] = item.Value;
+            LogicalInksBox.Text = string.Join(",", inks);
+            RebuildRoutes();
+        }
+
+        private static async System.Threading.Tasks.Task ValidateCurveChannelsAsync(PyToneRipConfiguration configuration)
+        {
+            if (configuration.Calibration?.Enabled == true) return;
+            foreach (var path in configuration.Profiles.Curves)
+            {
+                var inks = await ExternalCurveAccessStore.ReadLogicalInksAsync(path);
+                var missing = configuration.Channels.LogicalInks.Where(ink => !inks.Contains(ink)).ToList();
+                if (missing.Count > 0)
+                    throw new InvalidOperationException("QUAD does not contain logical inks: "
+                        + string.Join(", ", missing) + ". Available: " + string.Join(", ", inks));
+            }
         }
 
         private static bool HasMediaSpecificModes(PrinterCapability printer) =>
@@ -1340,7 +1407,7 @@ namespace pyToneRIP
 
         private static string NormalizeLogicalInkText(string value) =>
             new string((value ?? "").Where(character =>
-                char.IsLetterOrDigit(character) || character == ',').ToArray()).ToUpperInvariant();
+                char.IsLetterOrDigit(character) || character == ',').ToArray());
 
         private void RebuildRoutes()
         {
@@ -1949,6 +2016,7 @@ namespace pyToneRIP
             try
             {
                 var configuration = BuildConfiguration();
+                await ValidateCurveChannelsAsync(configuration);
                 if (configuration.Connection.Kind == "usb") await ValidateUsbDestinationAsync(configuration.Connection);
                 else await EnsureNetworkHostAvailableAsync(configuration.Connection.Host);
                 var json = ConfigurationCodec.Serialize(configuration);
@@ -2197,7 +2265,7 @@ namespace pyToneRIP
         private static string RequiredString(ComboBox box, string name) =>
             (box.SelectedItem as LocalizedValue)?.Value
             ?? throw new InvalidOperationException("Select " + name + ".");
-        private List<string> LogicalInks() => (LogicalInksBox?.Text ?? "").Split(',').Select(value => value.Trim().ToUpperInvariant()).Where(value => value.Length > 0).Distinct().ToList();
+        private List<string> LogicalInks() => (LogicalInksBox?.Text ?? "").Split(',').Select(value => value.Trim()).Where(value => value.Length > 0).Distinct().ToList();
         private static bool IsValidIpv4(string value) { if (string.IsNullOrWhiteSpace(value)) return false; var parts = value.Split('.'); return parts.Length == 4 && parts.All(part => part.Length > 0 && part.All(char.IsDigit) && byte.TryParse(part, NumberStyles.None, CultureInfo.InvariantCulture, out byte _)); }
         private static double? OptionalNumber(string text) { if (string.IsNullOrWhiteSpace(text)) return null; if (double.TryParse(text, NumberStyles.Float, CultureInfo.CurrentCulture, out double value)) return value; throw new InvalidOperationException("Layout values must be numbers."); }
         private static string Number(double? value) => value?.ToString(CultureInfo.CurrentCulture) ?? "";

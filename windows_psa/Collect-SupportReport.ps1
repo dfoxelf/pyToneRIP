@@ -4,7 +4,9 @@ param(
     [string]$ManagerLogPath,
     [string]$OutputDirectory,
     [string]$ResultPath,
-    [ValidateRange(1, 30)][int]$LookbackDays = 1
+    [ValidateRange(1, 30)][int]$LookbackDays = 1,
+    [string]$PrintProbeQueueName,
+    [string]$PrintProbeOutputPath
 )
 
 $ErrorActionPreference = 'Stop'
@@ -365,7 +367,8 @@ function Get-EventTechnicalDetails($eventRecord) {
     $parts = [System.Collections.Generic.List[string]]::new()
     foreach ($name in @('AppName', 'ModuleName', 'AppVersion', 'ModuleVersion',
         'ExceptionCode', 'FaultingOffset', 'ProcessId', 'ErrorCode', 'HResult',
-        'ResultCode', 'Status', 'EventName', 'PackageFullName')) {
+        'ResultCode', 'Status', 'EventName', 'PackageFullName', 'StatusCode',
+        'RequestedSigningLevel', 'ValidatedSigningLevel', 'SigningScenario', 'PolicyId', 'RuleId')) {
         $value = [string]$fields[$name]
         if ($value -and $value -match '^[A-Za-z0-9_.+ -]{1,200}$') {
             $parts.Add($name + '=' + $value)
@@ -400,6 +403,318 @@ function Get-EventTechnicalDetails($eventRecord) {
     $context = Get-TechnicalContext $eventText
     if ($context) { $parts.Add('context=' + $context) }
     return $parts -join '; '
+}
+
+function Format-ProbeError($failure) {
+    $parts = [System.Collections.Generic.List[string]]::new()
+    $errorObject = $failure.Exception
+    while ($null -ne $errorObject) {
+        $parts.Add(('{0}; HRESULT=0x{1:X8}; message={2}; stack={3}' -f
+            $errorObject.GetType().FullName, $errorObject.HResult,
+            (Protect-DiagnosticText $errorObject.Message), (Protect-DiagnosticText $errorObject.StackTrace)))
+        $errorObject = $errorObject.InnerException
+    }
+    return $parts -join [Environment]::NewLine
+}
+
+function Get-PrintQueueProbe([string]$queueName) {
+    $results = [ordered]@{}
+    $results['context'] = 'Read-only Windows PowerShell probe; not the PSA package identity. CanModify=false here does not prove that the Manager lacks permission. XML is queue configuration, never job/document data.'
+    if (-not ('SupportReportDevModeProbe' -as [type])) {
+        Add-Type -TypeDefinition @'
+using System;
+using System.ComponentModel;
+using System.Runtime.InteropServices;
+public static class SupportReportDevModeProbe {
+    public static void DisposeObject(object value) {
+        IDisposable disposable=value as IDisposable;
+        if(disposable!=null) disposable.Dispose();
+    }
+    [DllImport("winspool.drv", CharSet=CharSet.Unicode, SetLastError=true)]
+    static extern bool OpenPrinterW(string name,out IntPtr printer,IntPtr defaults);
+    [DllImport("winspool.drv", SetLastError=true)]
+    static extern bool GetPrinterW(IntPtr printer,uint level,IntPtr buffer,uint size,ref uint needed);
+    [DllImport("winspool.drv", CharSet=CharSet.Unicode, SetLastError=true)]
+    static extern int DocumentPropertiesW(IntPtr window,IntPtr printer,string name,IntPtr output,IntPtr input,uint flags);
+    [DllImport("winspool.drv")] static extern bool ClosePrinter(IntPtr printer);
+    static byte[] Copy(IntPtr mode,int available) {
+        if(mode==IntPtr.Zero) return null;
+        if(available<72) throw new InvalidOperationException("DEVMODE buffer is too short");
+        int length=(ushort)Marshal.ReadInt16(mode,68)+(ushort)Marshal.ReadInt16(mode,70);
+        if(length<72 || length>available) throw new InvalidOperationException("DEVMODE size is invalid");
+        byte[] data=new byte[length]; Marshal.Copy(mode,data,0,length); return data;
+    }
+    public static byte[] Read(string name,uint level) {
+        IntPtr printer;
+        if(!OpenPrinterW(name,out printer,IntPtr.Zero)) throw new Win32Exception(Marshal.GetLastWin32Error(),"OpenPrinter");
+        try {
+            uint needed=0; GetPrinterW(printer,level,IntPtr.Zero,0,ref needed);
+            if(needed<IntPtr.Size) throw new Win32Exception(Marshal.GetLastWin32Error(),"GetPrinter size");
+            IntPtr buffer=Marshal.AllocHGlobal((int)needed);
+            try {
+                if(!GetPrinterW(printer,level,buffer,needed,ref needed)) throw new Win32Exception(Marshal.GetLastWin32Error(),"GetPrinter");
+                IntPtr mode=Marshal.ReadIntPtr(buffer);
+                if(mode==IntPtr.Zero) return null;
+                long offset=mode.ToInt64()-buffer.ToInt64();
+                if(offset<0 || offset>needed-72) throw new InvalidOperationException("DEVMODE pointer outside GetPrinter buffer");
+                return Copy(mode,(int)(needed-offset));
+            } finally {Marshal.FreeHGlobal(buffer);}
+        } finally {ClosePrinter(printer);}
+    }
+    public static byte[] Effective(string name) {
+        IntPtr printer;
+        if(!OpenPrinterW(name,out printer,IntPtr.Zero)) throw new Win32Exception(Marshal.GetLastWin32Error(),"OpenPrinter");
+        try {
+            int size=DocumentPropertiesW(IntPtr.Zero,printer,name,IntPtr.Zero,IntPtr.Zero,0);
+            if(size<72) throw new Win32Exception(Marshal.GetLastWin32Error(),"DocumentProperties size");
+            IntPtr mode=Marshal.AllocHGlobal(size);
+            try {
+                int result=DocumentPropertiesW(IntPtr.Zero,printer,name,mode,IntPtr.Zero,2);
+                if(result!=1) throw new InvalidOperationException("DocumentProperties DM_OUT_BUFFER returned "+result);
+                return Copy(mode,size);
+            } finally {Marshal.FreeHGlobal(mode);}
+        } finally {ClosePrinter(printer);}
+    }
+}
+'@
+    }
+    $printingReady = $false
+    try { Add-Type -AssemblyName System.Printing, ReachFramework; $printingReady = $true }
+    catch { $results['system-printing-load.error.txt'] = Format-ProbeError $_ }
+    # Keep global, per-user and application defaults independent: one broken
+    # provider path must not prevent collecting the remaining sources.
+    foreach ($source in @('global', 'user', 'effective')) {
+        try {
+            $data = switch ($source) {
+                'global' { [SupportReportDevModeProbe]::Read($queueName,8) }
+                'user' { [SupportReportDevModeProbe]::Read($queueName,9) }
+                'effective' { [SupportReportDevModeProbe]::Effective($queueName) }
+            }
+            if ($null -eq $data) { $results["$source-devmode.txt"] = 'DEVMODE absent'; continue }
+            $data = [byte[]]$data
+            $hash = [System.Security.Cryptography.SHA256]::Create()
+            try { $digest = [BitConverter]::ToString($hash.ComputeHash($data)).Replace('-','') }
+            finally { $hash.Dispose() }
+            $results["$source-devmode.txt"] = 'bytes=' + $data.Length + '; publicBytes=' +
+                [BitConverter]::ToUInt16($data,68) + '; privateBytes=' + [BitConverter]::ToUInt16($data,70) +
+                '; specVersion=' + [BitConverter]::ToUInt16($data,64) + '; driverVersion=' +
+                [BitConverter]::ToUInt16($data,66) + '; sha256=' + $digest
+            if ($printingReady) {
+                $converter = [System.Printing.Interop.PrintTicketConverter]::new($queueName,1)
+                try {
+                    $ticket = $converter.ConvertDevModeToPrintTicket($data)
+                    try {
+                        $stream = $ticket.GetXmlStream()
+                        $reader = [System.IO.StreamReader]::new($stream)
+                        try { $results["$source-devmode-printticket.xml"] = $reader.ReadToEnd() }
+                        finally { $reader.Dispose() }
+                    } finally { [SupportReportDevModeProbe]::DisposeObject($ticket) }
+                } finally { $converter.Dispose() }
+            }
+        } catch { $results["$source-devmode.error.txt"] = Format-ProbeError $_ }
+    }
+    if ($printingReady) {
+        $server = $null; $queue = $null
+        try {
+            $server = [System.Printing.LocalPrintServer]::new()
+            $queue = $server.GetPrintQueue($queueName)
+            foreach ($property in @('DefaultPrintTicket','UserPrintTicket')) {
+                try {
+                    $ticket = $queue.$property
+                    if ($null -eq $ticket) { $results["$property.txt"] = 'Ticket absent'; continue }
+                    try {
+                        $reader = [System.IO.StreamReader]::new($ticket.GetXmlStream())
+                        try { $results["$property.xml"] = $reader.ReadToEnd() }
+                        finally { $reader.Dispose() }
+                    } finally { [SupportReportDevModeProbe]::DisposeObject($ticket) }
+                } catch { $results["$property.error.txt"] = Format-ProbeError $_ }
+            }
+            try {
+                $reader = [System.IO.StreamReader]::new($queue.GetPrintCapabilitiesAsXml())
+                try { $results['PrintCapabilities.xml'] = $reader.ReadToEnd() }
+                finally { $reader.Dispose() }
+            } catch { $results['PrintCapabilities.error.txt'] = Format-ProbeError $_ }
+        } catch { $results['PrintQueue.error.txt'] = Format-ProbeError $_ }
+        finally { if ($null -ne $queue) { $queue.Dispose() }; if ($null -ne $server) { $server.Dispose() } }
+    }
+    try {
+        $configuration = Get-PrintConfiguration -PrinterName $queueName -ErrorAction Stop
+        if ([string]::IsNullOrWhiteSpace($configuration.PrintTicketXML)) { throw 'Get-PrintConfiguration returned no PrintTicketXML' }
+        $results['Get-PrintConfiguration.xml'] = [string]$configuration.PrintTicketXML
+    } catch { $results['Get-PrintConfiguration.error.txt'] = Format-ProbeError $_ }
+    try {
+        $device = [Windows.Devices.Printers.IppPrintDevice, Windows.Devices.Printers, ContentType=WindowsRuntime]::FromPrinterName($queueName)
+        if ($null -eq $device) { throw 'IppPrintDevice.FromPrinterName returned null' }
+        foreach ($property in @('CanModifyUserDefaultPrintTicket','DeviceKind')) {
+            try { $results["IppPrintDevice-$property.txt"] = [string]$device.$property }
+            catch { $results["IppPrintDevice-$property.error.txt"] = Format-ProbeError $_ }
+        }
+        try {
+            $ticket = $device.UserDefaultPrintTicket
+            if ($null -eq $ticket) { throw 'UserDefaultPrintTicket returned null' }
+            $results['IppPrintDevice-UserDefaultPrintTicket.xml'] = $ticket.XmlNode.GetXml()
+            try { $results['IppPrintDevice-PrintCapabilities.xml'] = $ticket.GetCapabilities().XmlNode.GetXml() }
+            catch { $results['IppPrintDevice-PrintCapabilities.error.txt'] = Format-ProbeError $_ }
+        } catch { $results['IppPrintDevice-UserDefaultPrintTicket.error.txt'] = Format-ProbeError $_ }
+    } catch { $results['IppPrintDevice-resolve.error.txt'] = Format-ProbeError $_ }
+    return $results
+}
+
+# Run provider calls in a disposable read-only child process. A provider hang
+# must not freeze the Manager or prevent exporting the other diagnostic logs.
+if (-not [string]::IsNullOrWhiteSpace($PrintProbeOutputPath)) {
+    try { $probe = Get-PrintQueueProbe $PrintProbeQueueName }
+    catch { $probe = @{ 'probe.error.txt' = (Format-ProbeError $_) } }
+    [System.IO.File]::WriteAllText($PrintProbeOutputPath, ($probe | ConvertTo-Json -Depth 8), [System.Text.UTF8Encoding]::new($false))
+    exit
+}
+
+function Add-ReportText($archive, $included, [string]$name, [string]$value) {
+    $entry = $archive.CreateEntry($name, [System.IO.Compression.CompressionLevel]::Optimal)
+    $writer = [System.IO.StreamWriter]::new($entry.Open(), [System.Text.UTF8Encoding]::new($false))
+    try { $writer.Write($value) } finally { $writer.Dispose() }
+    $included.Add($name)
+}
+
+function Get-PrintSecuritySnapshot {
+    $lines = [System.Collections.Generic.List[string]]::new()
+    $lines.Add('Read-only security/policy snapshot. Missing values mean absent/not configured, not necessarily disabled. A configured protection is not evidence that it caused E_FAIL.')
+    $lines.Add('Collector context is Windows PowerShell, not the packaged Manager. Registry state may require a reboot before becoming effective.')
+    $selections = @(
+        @{ Path='HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System'; Names=@('EnableLUA','ConsentPromptBehaviorAdmin','ConsentPromptBehaviorUser','PromptOnSecureDesktop','FilterAdministratorToken','EnableVirtualization','ValidateAdminCodeSignatures','EnableSecureUIAPaths') },
+        @{ Path='HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Printers\WPP'; Names=@('WindowsProtectedPrintGroupPolicyState') },
+        @{ Path='HKLM:\SYSTEM\CurrentControlSet\Control\Print'; Names=@('WindowsProtectedPrintMode','WindowsProtectedPrintGroupPolicyState','RpcAuthnLevelPrivacyEnabled','RestrictDriverInstallationToAdministrators') },
+        @{ Path='HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Printers'; Names=@('DisableWebPrinting','DisableHTTPPrinting','DisableHTTPPrintingPolicy','RegisterSpoolerRemoteRpcEndPoint','PrintDriverIsolationExecutionPolicy','PrintDriverIsolationOverrideCompat','KMPrintersAreBlocked') },
+        @{ Path='HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Printers\PointAndPrint'; Names=@('RestrictDriverInstallationToAdministrators','Restricted','TrustedServers','NoWarningNoElevationOnInstall','UpdatePromptSettings') },
+        @{ Path='HKLM:\SOFTWARE\Policies\Microsoft\Windows\Appx'; Names=@('AllowAllTrustedApps','AllowDevelopmentWithoutDevLicense','BlockNonAdminUserInstall','RestrictAppToSystemVolume') },
+        @{ Path='HKLM:\SOFTWARE\Policies\Microsoft\WindowsStore'; Names=@('DisableStoreApps','RemoveWindowsStore') },
+        @{ Path='HKCU:\SOFTWARE\Policies\Microsoft\Windows NT\Printers\PointAndPrint'; Names=@('Restricted','TrustedServers','NoWarningNoElevationOnInstall','UpdatePromptSettings') }
+    )
+    foreach ($selection in $selections) {
+        try {
+            if (-not (Test-Path -LiteralPath $selection.Path)) { $lines.Add($selection.Path + ': key absent'); continue }
+            $values = Get-ItemProperty -LiteralPath $selection.Path -ErrorAction Stop
+            foreach ($name in $selection.Names) {
+                $property = $values.PSObject.Properties[$name]
+                $value = if ($null -eq $property) { '<absent>' } else { [string]$property.Value }
+                if ($value -notmatch '^(?:<absent>|[0-9A-Fa-fx -]{1,64})$') { $value = '<non-numeric value>' }
+                $lines.Add($selection.Path + '; ' + $name + '=' + $value)
+            }
+        } catch { $lines.Add((Format-ProbeError $_)) }
+    }
+    foreach ($collection in @('Exe','Dll','Msi','Script','Appx')) {
+        $path = 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\SrpV2\' + $collection
+        try {
+            if (Test-Path -LiteralPath $path) {
+                $value = Get-ItemProperty -LiteralPath $path -ErrorAction Stop
+                $lines.Add('AppLocker collection=' + $collection + '; EnforcementMode=' + $value.EnforcementMode)
+            } else { $lines.Add('AppLocker collection=' + $collection + '; registry policy absent') }
+        } catch { $lines.Add((Format-ProbeError $_)) }
+    }
+    try {
+        $identity = [System.Security.Principal.WindowsIdentity]::GetCurrent()
+        try {
+            $principal = [System.Security.Principal.WindowsPrincipal]::new($identity)
+            $lines.Add('Collector token administrator=' + $principal.IsInRole([System.Security.Principal.WindowsBuiltInRole]::Administrator))
+            $lines.Add('Collector token system=' + $identity.IsSystem + '; impersonation=' + $identity.ImpersonationLevel)
+        } finally { $identity.Dispose() }
+    } catch { $lines.Add((Format-ProbeError $_)) }
+    try {
+        foreach ($service in @(Get-Service -Name Spooler,PrintWorkflowUserSvc*,AppXSvc,ClipSVC,StateRepository -ErrorAction Stop)) {
+            $name = $service.Name -replace '_[0-9a-fA-F]+$','_<instance>'
+            $lines.Add('Service=' + $name + '; status=' + $service.Status + '; startType=' + $service.StartType)
+        }
+    } catch { $lines.Add('Service snapshot: ' + (Format-ProbeError $_)) }
+    try {
+        $defender = Get-MpPreference -ErrorAction Stop
+        foreach ($name in @('DisableRealtimeMonitoring','DisableBehaviorMonitoring','EnableControlledFolderAccess','PUAProtection','AttackSurfaceReductionRules_Ids','AttackSurfaceReductionRules_Actions')) {
+            $lines.Add('Defender ' + $name + '=' + ($defender.$name -join ','))
+        }
+    } catch { $lines.Add('Defender snapshot: ' + (Format-ProbeError $_)) }
+    try {
+        foreach ($guard in @(Get-CimInstance -Namespace root\Microsoft\Windows\DeviceGuard -ClassName Win32_DeviceGuard -ErrorAction Stop)) {
+            foreach ($name in @('VirtualizationBasedSecurityStatus','CodeIntegrityPolicyEnforcementStatus','UsermodeCodeIntegrityPolicyEnforcementStatus','SecurityServicesConfigured','SecurityServicesRunning')) {
+                $lines.Add('DeviceGuard ' + $name + '=' + ($guard.$name -join ','))
+            }
+        }
+    } catch { $lines.Add('DeviceGuard snapshot: ' + (Format-ProbeError $_)) }
+    return $lines -join [Environment]::NewLine
+}
+
+function Add-PrintProviderDiagnostics($archive, $included) {
+    $inventory = [System.Text.StringBuilder]::new()
+    [void]$inventory.AppendLine('Read-only diagnostics. No preferences, registry values, media or queues are changed. Queue numbers are local to this report.')
+    [void]$inventory.AppendLine('Original queue PrintTicket/PrintCapabilities XML may contain vendor private DEVMODE and printer identifiers. No document/job tickets are read. Software presence is not proof of causation.')
+    $printers = @()
+    try {
+        $printers = @(Get-CimInstance Win32_Printer -ErrorAction Stop | Where-Object {
+            $_.PortName -like 'pyToneRIP.Manager_*' -or $_.Name -like 'pyToneRIP*' -or
+            $_.DriverName -match '(?i)EPSON' -or $_.Name -match '(?i)\bP900\b'
+        } | Sort-Object @{Expression={if ($_.Name -like 'pyToneRIP*') {0} else {1}}}, DriverName, Name)
+    } catch { [void]$inventory.AppendLine((Format-ProbeError $_)) }
+    [void]$inventory.AppendLine('Relevant queues=' + $printers.Count + '; detailed provider probes limited to first 6 queues, 15 seconds each.')
+    $number = 0
+    foreach ($printer in $printers) {
+        $number++
+        [void]$inventory.AppendLine("Queue $number; driver=$($printer.DriverName); virtual=$($printer.PortName -like 'pyToneRIP.Manager_*'); default=$($printer.Default); attributes=$($printer.Attributes); status=$($printer.PrinterStatus); workOffline=$($printer.WorkOffline)")
+        if ($number -gt 6) { continue }
+        $probePath = Join-Path ([System.IO.Path]::GetTempPath()) ('pyToneRIP-print-probe-' + [guid]::NewGuid().ToString('N') + '.json')
+        $process = $null
+        try {
+            $command = "& '" + $PSCommandPath.Replace("'","''") + "' -PrintProbeQueueName '" +
+                ([string]$printer.Name).Replace("'","''") + "' -PrintProbeOutputPath '" + $probePath.Replace("'","''") + "'"
+            $encoded = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($command))
+            $process = Start-Process -FilePath (Join-Path $PSHOME 'powershell.exe') -WindowStyle Hidden -PassThru -ArgumentList @(
+                '-NoProfile','-NonInteractive','-Sta','-ExecutionPolicy','Bypass','-EncodedCommand',$encoded)
+            if (-not $process.WaitForExit(15000)) {
+                $process.Kill()
+                Add-ReportText $archive $included "printing/queue-$number/probe.error.txt" 'Provider probe exceeded 15 seconds; only the diagnostic child process was terminated. Other report sources remain available.'
+            } elseif (-not (Test-Path -LiteralPath $probePath)) {
+                Add-ReportText $archive $included "printing/queue-$number/probe.error.txt" ('Provider child returned no result; exitCode=' + $process.ExitCode)
+            } else {
+                $result = Get-Content -LiteralPath $probePath -Encoding UTF8 -Raw | ConvertFrom-Json
+                foreach ($item in $result.PSObject.Properties) {
+                    if ($item.Name -notmatch '^[A-Za-z0-9_.-]+$') { continue }
+                    Add-ReportText $archive $included "printing/queue-$number/$($item.Name)" ([string]$item.Value)
+                }
+            }
+        } catch { Add-ReportText $archive $included "printing/queue-$number/probe.error.txt" (Format-ProbeError $_) }
+        finally {
+            if ($null -ne $process) {
+                if (-not $process.HasExited) { $process.Kill(); [void]$process.WaitForExit(2000) }
+                $process.Dispose()
+            }
+            if (Test-Path -LiteralPath $probePath) { Remove-Item -LiteralPath $probePath -ErrorAction SilentlyContinue }
+        }
+    }
+    try {
+        $driverNames = @($printers | ForEach-Object DriverName | Select-Object -Unique)
+        foreach ($driver in @(Get-PrinterDriver -ErrorAction Stop | Where-Object { $_.Name -in $driverNames })) {
+            [void]$inventory.AppendLine("Driver=$($driver.Name); manufacturer=$($driver.Manufacturer); version=$($driver.DriverVersion); major=$($driver.MajorVersion); environment=$($driver.PrinterEnvironment)")
+            $driverFiles = @($driver.DriverPath, $driver.ConfigFile, $driver.DataFile, $driver.InfPath) + @($driver.DependentFiles)
+            foreach ($path in @($driverFiles | Where-Object { $_ } | Select-Object -Unique)) {
+                try {
+                    if (-not (Test-Path -LiteralPath $path -PathType Leaf)) { continue }
+                    $item = Get-Item -LiteralPath $path
+                    $digest = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash
+                    [void]$inventory.AppendLine("DriverFile=$($item.Name); bytes=$($item.Length); version=$($item.VersionInfo.FileVersion); modifiedUtc=$($item.LastWriteTimeUtc.ToString('O')); sha256=$digest")
+                } catch { [void]$inventory.AppendLine((Format-ProbeError $_)) }
+            }
+        }
+    } catch { [void]$inventory.AppendLine('Driver inventory: ' + (Format-ProbeError $_)) }
+    foreach ($root in @('HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall',
+        'HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall',
+        'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall')) {
+        try {
+            foreach ($key in @(Get-ChildItem -LiteralPath $root -ErrorAction Stop)) {
+                $software = Get-ItemProperty -LiteralPath $key.PSPath -ErrorAction SilentlyContinue
+                if ($software.DisplayName -match '(?i)EPSON|Media Installer') {
+                    [void]$inventory.AppendLine("Software=$($software.DisplayName); version=$($software.DisplayVersion); publisher=$($software.Publisher); installDate=$($software.InstallDate)")
+                }
+            }
+        } catch { [void]$inventory.AppendLine('Software inventory: ' + (Format-ProbeError $_)) }
+    }
+    Add-ReportText $archive $included 'printing/inventory.txt' $inventory.ToString()
 }
 
 function Get-PrinterDefaultsSummary {
@@ -524,7 +839,12 @@ try {
         'Microsoft-Windows-AppModel-Runtime/Admin',
         'Microsoft-Windows-TWinUI/Operational',
         'Microsoft-Windows-PrintService/Admin',
-        'Microsoft-Windows-PrintService/Operational'
+        'Microsoft-Windows-PrintService/Operational',
+        'Microsoft-Windows-CodeIntegrity/Operational',
+        'Microsoft-Windows-AppLocker/EXE and DLL',
+        'Microsoft-Windows-AppLocker/Packaged app-Execution',
+        'Microsoft-Windows-AppLocker/Packaged app-Deployment',
+        'Microsoft-Windows-Windows Defender/Operational'
     )) { $queries += @{ Channel = $channel } }
     $exportedRecords = [System.Collections.Generic.HashSet[string]]::new()
     foreach ($query in $queries) {
@@ -583,6 +903,8 @@ try {
     try { $environmentWriter.Write((Get-PrintApiEnvironment)) }
     finally { $environmentWriter.Dispose() }
     $included.Add('print-api-environment.txt')
+    Add-PrintProviderDiagnostics $archive $included
+    Add-ReportText $archive $included 'printing/security-policy.txt' (Get-PrintSecuritySnapshot)
     $manifest = $archive.CreateEntry('README.txt')
     $writer = [System.IO.StreamWriter]::new($manifest.Open(), [System.Text.UTF8Encoding]::new($false))
     try {
@@ -591,6 +913,7 @@ try {
         $writer.WriteLine('*.diagnostics.txt contain compact technical summaries and a settings timeline. Missing or unreadable logs are reported explicitly in both formats.')
         $writer.WriteLine('Windows reports cover crashes and hangs of any application, plus printing and system events. Look in windows-events.txt for the time, application, fault module and exception code.')
         $writer.WriteLine('Document contents and full raw log files are not collected. Original Windows event messages are excluded; their structured technical fields are in windows-events.txt.')
+        $writer.WriteLine('printing/ contains original queue-level PrintTicket/PrintCapabilities XML, which may include vendor private DEVMODE and printer identifiers, plus driver/software versions and hashes. No print jobs or document tickets are read. Provider probes run read-only outside the PSA package; compare their results with the packaged Manager error logs.')
         $writer.WriteLine('Created: ' + (Get-Date).ToString('O'))
         $writer.WriteLine('Windows version: ' + [Environment]::OSVersion.Version.ToString())
         $writer.WriteLine('Full OS build, installed print component versions and runtime APIs: print-api-environment.txt')

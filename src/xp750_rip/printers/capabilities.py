@@ -21,6 +21,8 @@ class PhysicalPathDefinition:
     escp2_selector: int | None = None
     head_offset: int = 0
     allocation_index: int = 0
+    # Factory ink/media association for defaults, not a restriction on explicit
+    # routing: refilled printers can use different inks in every physical path.
     media_classes: tuple[str, ...] = ()
     # Stable user-facing ink code. The logical QTR channel remains independent
     # from this factory label: for example logical K may be routed to physical
@@ -207,6 +209,24 @@ class PrinterMode:
     # For example, ReferenceDriver ET-2550 PhotoPlus is 5760 x 1440 DPI while its
     # PrinterDPI grid remains 1440 x 1440. Keep the two values independent.
     output_resolution_dpi: tuple[int, int] | None = None
+
+    # Explicit protocol dialects, never selected from DPI or family-name
+    # guesses. Existing modes retain their captured one-byte commands.
+    escp2_print_method_payload_length: int = 1
+    escp2_printer_weave_variant: int | None = None
+
+    def __post_init__(self) -> None:
+        if self.escp2_print_method_payload_length not in (1, 4):
+            raise ValueError("ESC (m payload length must be 1 or 4")
+        method_limit = 0xFF if self.escp2_print_method_payload_length == 1 else 0xFFFF
+        for method in (self.escp2_print_method_override, self.escp2_alternate_print_method):
+            if method is not None and not 0 <= method <= method_limit:
+                raise ValueError("Print method does not fit the selected ESC (m dialect")
+        if self.escp2_printer_weave_variant is not None:
+            if self.escp2_printer_weave_mode is None:
+                raise ValueError("Extended firmware weave requires an explicit mode")
+            if not 0 <= self.escp2_printer_weave_variant <= 0xFF:
+                raise ValueError("Firmware weave variant must fit one byte")
 
     @property
     def escp2_ink_type(self) -> int:

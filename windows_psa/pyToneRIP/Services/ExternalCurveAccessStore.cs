@@ -1,7 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
@@ -45,6 +48,40 @@ namespace pyToneRIP.Shared
             var direct = await StorageFile.GetFileFromPathAsync(path);
             Validate(direct);
             return direct;
+        }
+
+        public static async Task<IReadOnlyList<string>> ReadLogicalInksAsync(string path)
+        {
+            var file = await OpenCurrentAsync(path);
+            return ParseLogicalInks(await FileIO.ReadTextAsync(file));
+        }
+
+        internal static IReadOnlyList<string> ParseLogicalInks(string text)
+        {
+            List<string> declared = null;
+            var markers = new List<string>();
+            foreach (var raw in (text ?? "").Split('\n'))
+            {
+                var line = raw.Trim().TrimStart('\uFEFF');
+                var header = Regex.Match(line, @"^##\s*\S*RIP\s+(.+?)\s*$", RegexOptions.IgnoreCase);
+                if (header.Success)
+                {
+                    if (declared != null) throw new InvalidDataException("Duplicate QUAD ink header.");
+                    var value = header.Groups[1].Value.Trim();
+                    declared = value.Contains(",")
+                        ? value.Split(',').Select(item => item.Trim()).ToList()
+                        : value.Select(item => item.ToString()).ToList();
+                }
+                var marker = Regex.Match(line, @"^#\s*([^#\s]+)\s+curve\s*$", RegexOptions.IgnoreCase);
+                if (marker.Success) markers.Add(marker.Groups[1].Value);
+            }
+            var inks = declared ?? markers;
+            if (inks.Count == 0 || inks.Any(string.IsNullOrWhiteSpace)
+                || inks.Distinct(StringComparer.Ordinal).Count() != inks.Count)
+                throw new InvalidDataException("QUAD has no valid logical ink declaration.");
+            if (declared != null && markers.Count > 0 && !declared.SequenceEqual(markers))
+                throw new InvalidDataException("QUAD header ink order does not match curve markers.");
+            return inks;
         }
 
         private static void Validate(StorageFile file)

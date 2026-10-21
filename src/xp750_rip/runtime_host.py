@@ -18,6 +18,7 @@ from typing import Any, Callable
 
 from xp750_rip.performance import PerformanceTrace
 from xp750_rip.product_cli import render_psa_job
+from xp750_rip.qtr.bundle import load_profile_bundle
 from xp750_rip.transport import RawTcpTransport, StreamingTransport, TransportTransmissionError
 from xp750_rip.windows_printer_transport import WindowsPrinterTransport
 from xp750_rip.windows_usb_transport import WindowsUsbInterfaceTransport
@@ -129,11 +130,11 @@ class RenderProgressAdapter:
         if label == "TOTAL":
             # This is bookkeeping after the job outcome is already known.
             # A late cancellation marker cannot undo completed transmission.
-            self.progress.record_stage(label)
             return
         _raise_if_cancelled(self.job_dir)
         if not (label.endswith(" START") or "logical contone plane" in label):
-            self.progress.record_stage(label)
+            # Full START/END/DATA details already live in performance.log.
+            # Keep the Manager history to actual progress transitions.
             return
         percent = min(self.next_percent, 88)
         self.next_percent = min(self.next_percent + 2, 88)
@@ -217,10 +218,19 @@ def _validate_external_curve_sources(configuration: dict[str, Any]) -> None:
     calibration = configuration.get("calibration")
     if isinstance(calibration, dict) and calibration.get("enabled") is True:
         return
+    requested = configuration.get("channels", {}).get("logical_inks", ())
     for curve in configuration["profiles"]["curves"]:
         curve_path = Path(curve).resolve(strict=True)
         if not curve_path.is_file() or curve_path.suffix.casefold() != ".quad":
             raise ValueError("RIP curve must be an existing external .quad file")
+        # Reject stale cartridge-name selections before TIFF normalization or
+        # transport construction. QUAD identities are case-sensitive and are
+        # independent of the physical Epson cartridge labels.
+        bundle = load_profile_bundle(quad_path=curve_path)
+        missing = [ink for ink in requested if ink not in bundle.logical_inks]
+        if missing:
+            raise ValueError("QUAD does not contain logical inks: " + ", ".join(missing)
+                             + ". Available: " + ", ".join(bundle.logical_inks))
 
 
 def _network_transport(

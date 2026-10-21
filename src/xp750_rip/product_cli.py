@@ -8,7 +8,7 @@ from __future__ import annotations
 import argparse
 import json
 from collections.abc import Callable
-from dataclasses import asdict
+from dataclasses import asdict, replace
 from hashlib import sha256
 from pathlib import Path
 from time import perf_counter
@@ -448,17 +448,23 @@ def _replay_print_copies(
 
 
 def _render_psa_document(
-    record: Path, *, bridge: dict[str, object], adapter_tiff: Path,
-    output_prn: Path, curve_root: Path | None, manifest: Path | None,
+    *, bridge: dict[str, object], prepared_job: PrintJobConfiguration, adapter_tiff: Path,
+    output_prn: Path, manifest: Path | None,
     result_path: Path | None, performance_trace: PerformanceTrace | None,
     live_transport: StreamingTransport | None,
     cancel_check: Callable[[], None] | None,
     send_progress: Callable[[int], None] | None,
     send_total_bytes: Callable[[int], None] | None,
 ) -> dict[str, object]:
-    """RIP each source page once, then assemble native copies in ticket order."""
+    """Stream the first native pages and replay captured copies in ticket order."""
     from PIL import Image
-    from xp750_rip.windows_psa import print_ticket_collated, print_ticket_resolution, write_render_result
+
+    from xp750_rip.windows_psa import (
+        normalize_adapter_page,
+        print_ticket_collated,
+        print_ticket_resolution,
+        write_render_result,
+    )
 
     copies = int(bridge["copies"])
     ticket = Path(str(bridge["print_ticket_file"]))
@@ -469,34 +475,23 @@ def _render_psa_document(
     cache = output_prn.with_name(output_prn.name + ".pages")
     cache.mkdir(parents=True, exist_ok=False)
     pages: list[Path] = []
-    with Image.open(adapter_tiff) as image:
-        for index in range(image.n_frames):
-            if cancel_check is not None:
-                cancel_check()
-            image.seek(index)
-            page_input = cache / f"page-{index + 1}.tiff"
-            image.copy().save(page_input, format="TIFF", compression="tiff_lzw",
-                              dpi=dpi or image.info.get("dpi", (360, 360)))
-            page_prn = cache / f"page-{index + 1}.prn"
-            render_psa_job(
-                record, output_prn=page_prn, input_tiff=page_input,
-                curve_root=curve_root, normalized_tiff=cache / f"normalized-{index + 1}.tiff",
-                manifest=cache / f"page-{index + 1}.json",
-                performance_trace=performance_trace, cancel_check=cancel_check,
-            )
-            pages.append(page_prn)
-    ordered_pages = (
-        (page for _ in range(copies) for page in pages) if collated else
-        (page for page in pages for _ in range(copies))
-    )
-    total = sum(page.stat().st_size for page in pages) * copies
     partial = output_prn.with_name(output_prn.name + ".partial")
     digest = sha256()
     written = 0
     with partial.open("xb") as stream:
         def produce(send_chunk: Callable[[bytes], None]) -> None:
             nonlocal written
-            for page in ordered_pages:
+
+            def emit(chunk: bytes) -> None:
+                nonlocal written
+                if cancel_check is not None:
+                    cancel_check()
+                stream.write(chunk)
+                digest.update(chunk)
+                written += len(chunk)
+                send_chunk(chunk)
+
+            def replay(page: Path) -> None:
                 with page.open("rb") as source:
                     while True:
                         if cancel_check is not None:
@@ -504,12 +499,58 @@ def _render_psa_document(
                         chunk = source.read(1024 * 1024)
                         if not chunk:
                             break
-                        stream.write(chunk)
-                        digest.update(chunk)
-                        written += len(chunk)
-                        send_chunk(chunk)
-        if send_total_bytes is not None:
-            send_total_bytes(total)
+                        emit(chunk)
+
+            rgb_calibration = "rgb_selectors" in bridge["render_argument_tokens"]
+            with Image.open(adapter_tiff) as image:
+                for index in range(image.n_frames):
+                    if cancel_check is not None:
+                        cancel_check()
+                    image.seek(index)
+                    page_input = cache / f"normalized-{index + 1}.tiff"
+                    if performance_trace is not None:
+                        performance_trace.event(f"Document page {index + 1} START")
+                    if rgb_calibration:
+                        image.copy().save(page_input, format="TIFF", compression="tiff_lzw",
+                                          dpi=dpi or image.info.get("dpi", (360, 360)))
+                    else:
+                        normalize_adapter_page(image, page_input, dpi=dpi)
+                    page_prn = cache / f"page-{index + 1}.prn"
+                    page_manifest = cache / f"page-{index + 1}.json"
+                    job = _resolve_psa_page_job(
+                        prepared_job, page_input, page_prn, page_manifest, performance_trace
+                    )
+                    if live_transport is None:
+                        MonoRipService().execute(job, send=False, transport=None)
+                        replay(page_prn)
+                    else:
+                        page_digest = sha256()
+                        with page_prn.open("xb") as captured:
+                            def capture(chunk: bytes, page_digest=page_digest) -> None:
+                                captured.write(chunk)
+                                page_digest.update(chunk)
+                                emit(chunk)
+
+                            rendered = MonoRipService().render(
+                                job, write_chunk=capture, cancel_check=cancel_check
+                            )
+                            if (captured.tell() != rendered.stream_size or
+                                    page_digest.hexdigest() != rendered.stream_sha256):
+                                raise ValueError("Captured document page differs from live RIP")
+                        page_manifest.write_text(
+                            json.dumps(rendered.manifest, ensure_ascii=False, indent=2) + "\n",
+                            encoding="utf-8",
+                        )
+                    pages.append(page_prn)
+                    if not collated:
+                        for _ in range(1, copies):
+                            replay(page_prn)
+            if send_total_bytes is not None:
+                send_total_bytes(sum(page.stat().st_size for page in pages) * copies)
+            if collated:
+                for _ in range(1, copies):
+                    for page in pages:
+                        replay(page)
         receipt = (
             live_transport.send_from_producer(
                 produce, cancel_check=cancel_check, progress=send_progress
@@ -518,6 +559,7 @@ def _render_psa_document(
         if live_transport is None:
             produce(lambda chunk: None)
         stream.flush()
+    total = sum(page.stat().st_size for page in pages) * copies
     if written != total or (receipt is not None and receipt.bytes_sent != total):
         raise ValueError("Multi-page native job and transmitted byte count differ")
     partial.rename(output_prn)
@@ -546,6 +588,16 @@ def _render_psa_document(
     return payload
 
 
+def _resolve_psa_page_job(
+    prepared_job: PrintJobConfiguration, normalized_tiff: Path, output_prn: Path,
+    manifest: Path | None, performance_trace: PerformanceTrace | None,
+) -> PrintJobConfiguration:
+    return replace(
+        prepared_job, source_image=normalized_tiff, performance_trace=performance_trace,
+        output=replace(prepared_job.output, prn_path=output_prn, manifest_path=manifest),
+    )
+
+
 def render_psa_job(
     record: Path,
     *,
@@ -563,16 +615,18 @@ def render_psa_job(
 ) -> dict[str, object]:
     """Render a PSA job in strict offline or opt-in live delivery mode."""
 
-    from xp750_rip.cli import build_parser
     from xp750_rip.windows_psa import (
-        PDL_ADAPTER_TIFF_TOKEN,
-        bridge_job_record,
         normalize_adapter_tiff,
+        prepare_job_record,
         print_ticket_resolution,
         write_render_result,
     )
 
-    bridge = bridge_job_record(record, curve_root=curve_root)
+    if performance_trace is None:
+        bridge, prepared_job = prepare_job_record(record, curve_root=curve_root)
+    else:
+        with performance_trace.stage("PSA job preparation"):
+            bridge, prepared_job = prepare_job_record(record, curve_root=curve_root)
     copies = int(bridge["copies"])
     adapter_tiff = input_tiff
     if adapter_tiff is None and bridge.get("adapter_tiff_file"):
@@ -584,8 +638,9 @@ def render_psa_job(
         multiple_pages = image.n_frames > 1
     if multiple_pages:
         return _render_psa_document(
-            record, bridge=bridge, adapter_tiff=adapter_tiff, output_prn=output_prn,
-            curve_root=curve_root, manifest=manifest, result_path=result_path,
+            bridge=bridge, prepared_job=prepared_job,
+            adapter_tiff=adapter_tiff, output_prn=output_prn,
+            manifest=manifest, result_path=result_path,
             performance_trace=performance_trace, live_transport=live_transport,
             cancel_check=cancel_check, send_progress=send_progress,
             send_total_bytes=send_total_bytes,
@@ -605,19 +660,7 @@ def render_psa_job(
         normalize_adapter_tiff(adapter_tiff, normalized_tiff, dpi=ticket_dpi)
     if cancel_check is not None:
         cancel_check()
-    tokens = [
-        str(normalized_tiff) if item == PDL_ADAPTER_TIFF_TOKEN else item
-        for item in bridge["render_argument_tokens"]
-    ]
-    tokens.extend(("--output", str(output_prn)))
-    if manifest is not None:
-        tokens.extend(("--manifest", str(manifest)))
-    render_args = build_parser().parse_args(tokens)
-    if performance_trace is not None:
-        render_args.performance_trace = performance_trace
-    job, transport = _resolve_job(render_args)
-    if transport is not None:
-        raise AssertionError("psa-render-job must never create a transport")
+    job = _resolve_psa_page_job(prepared_job, normalized_tiff, output_prn, manifest, performance_trace)
     if live_transport is not None:
         output_prn.parent.mkdir(parents=True, exist_ok=True)
         if output_prn.exists():

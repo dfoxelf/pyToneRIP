@@ -14,6 +14,7 @@ import re
 from collections.abc import Mapping
 from hashlib import sha256
 from pathlib import Path, PureWindowsPath
+from typing import TYPE_CHECKING
 from xml.etree import ElementTree
 from xml.sax.saxutils import escape
 
@@ -31,6 +32,9 @@ from xp750_rip.qtr.runtime_controls import (
     QTR_INK_LIMIT_MAX,
     QTR_INK_LIMIT_MIN,
 )
+
+if TYPE_CHECKING:
+    from xp750_rip.application import PrintJobConfiguration
 
 CAPABILITY_SCHEMA = "pytone-rip.capabilities"
 CONFIGURATION_SCHEMA = "pytone-rip.configuration"
@@ -201,7 +205,7 @@ def export_capabilities(registry: PrinterRegistry | None = None) -> dict[str, ob
         dithers.append(
             {
                 "id": algorithm.value,
-                "display_name": algorithm.value,
+                "display_name": algorithm.display_name,
                 **_option_status(
                     implemented=True,
                     blocked_reason=None,
@@ -401,13 +405,11 @@ def _paper_option_name(kind: str, identity: str) -> str:
     return kind + "_" + re.sub(r"[^A-Za-z0-9_.-]", "_", identity)
 
 
-def _windows_raster_resolutions(model_id: str | None) -> tuple[tuple[int, int], ...]:
-    # Native P900 Finest Detail changes the application's GDI resolution from
-    # 360 to 720 DPI, independently of printer quality / weave commands.
-    # Preserve existing choices and defaults, including saved configurations.
-    if model_id == "SureColorP900RIP":
-        return ((300, 300), (360, 360), (600, 600), (720, 720))
-    return ((300, 300), (600, 600))
+def _windows_raster_resolutions() -> tuple[tuple[int, int], ...]:
+    # PageResolution selects the Windows XpsToTiff input raster for every
+    # model, independently of physical drop resolution and weave commands.
+    # Retain existing IDs and the 600 DPI default for saved configurations.
+    return ((300, 300), (360, 360), (600, 600), (720, 720))
 
 
 def export_print_device_resources(
@@ -473,7 +475,7 @@ def export_print_device_resources(
             lines.append(
                 f'  <data name="{escape(resource_name)}"><value>{escape(label)}</value></data>'
             )
-    for x_dpi, y_dpi in _windows_raster_resolutions(model.identity):
+    for x_dpi, y_dpi in _windows_raster_resolutions():
         lines.append(
             '  <data name="https://pytone-rip.local/printticket/2026/phase12/'
             f'Dpi{x_dpi}x{y_dpi}"><value>{x_dpi} x {y_dpi} DPI</value></data>'
@@ -495,7 +497,7 @@ def export_print_device_capabilities(
     # Windows rasterization resolution and the physical Epson print mode are
     # deliberately independent.  The former controls XpsToTiff input; the
     # latter remains a backend choice such as 1440x1440ov.
-    raster_resolutions = _windows_raster_resolutions(model_id)
+    raster_resolutions = _windows_raster_resolutions()
     if model_id is not None:
         models = (selected_registry.get(model_id),)
     else:
@@ -843,12 +845,14 @@ def _migrate_interchangeable_black_routes(
     обе переключаемые конфигурации, и превращает старые PK=P0/MK=P0 в K=P0.
     """
 
+    black_aliases = {"PK", "MK", "PBK", "BK"}
+    if not black_aliases.intersection(logical_inks):
+        return logical_inks, routing
     try:
         model = default_registry().get(model_id)
         selected_configuration = model.ink_configuration(ink_configuration)
     except KeyError:
         return logical_inks, routing
-    black_aliases = {"PK", "MK", "PBK", "BK"}
     black_paths = {
         path.identity.value for path in model.physical_paths
         if (path.short_name or "").upper() in {"K", "PK", "MK", "PBK", "BK", "PK/MK"}
@@ -1139,7 +1143,7 @@ def configuration_to_argument_tokens(configuration: Mapping[str, object]) -> lis
     return tokens
 
 
-def validate_argument_tokens(tokens: list[str]) -> None:
+def validate_argument_tokens(tokens: list[str]) -> PrintJobConfiguration:
     """Apply existing argparse, QTR, registry, layout, and routing validation."""
 
     from xp750_rip.cli import build_parser
@@ -1180,6 +1184,7 @@ def validate_argument_tokens(tokens: list[str]) -> None:
         dummy_planes,
         available_paths=tuple(item.identity for item in model.physical_paths),
     )
+    return job
 
 
 def _artifact_path(record_dir: Path, value: object, context: str) -> Path:
@@ -1194,11 +1199,11 @@ def _artifact_path(record_dir: Path, value: object, context: str) -> Path:
     if relative.is_absolute() or ".." in relative.parts:
         raise ValueError(f"{context}.file must stay within the job record directory")
     path = record_dir / relative
-    data = path.read_bytes()
-    if len(data) != _integer(artifact["size_bytes"], f"{context}.size_bytes"):
+    size, digest = _file_size_and_digest(path)
+    if size != _integer(artifact["size_bytes"], f"{context}.size_bytes"):
         raise ValueError(f"{context} size mismatch")
     expected_hash = _string(artifact["sha256"], f"{context}.sha256").casefold()
-    if sha256(data).hexdigest() != expected_hash:
+    if digest != expected_hash:
         raise ValueError(f"{context} SHA-256 mismatch")
     return path
 
@@ -1274,6 +1279,14 @@ def bridge_job_record(
     record_path: Path, *, curve_root: Path | None = None
 ) -> dict[str, object]:
     """Validate a captured PSA record and stop at the explicit PDL boundary."""
+    bridge, _ = prepare_job_record(record_path, curve_root=curve_root)
+    return bridge
+
+
+def prepare_job_record(
+    record_path: Path, *, curve_root: Path | None = None,
+) -> tuple[dict[str, object], PrintJobConfiguration]:
+    """Validate once and retain the exact configuration and curve snapshots."""
 
     resolved_record = record_path.resolve()
     record = json.loads(resolved_record.read_text(encoding="utf-8"))
@@ -1335,7 +1348,7 @@ def bridge_job_record(
     curve_mappings: list[dict[str, str]] = []
     if curve_root is not None:
         tokens, curve_mappings = _remap_curve_tokens(tokens, curve_root)
-    validate_argument_tokens(tokens)
+    prepared_job = validate_argument_tokens(tokens)
     result = {
         "schema": BRIDGE_RESULT_SCHEMA,
         "version": SCHEMA_VERSION,
@@ -1350,7 +1363,7 @@ def bridge_job_record(
     }
     if adapter_tiff_path is not None:
         result["adapter_tiff_file"] = str(adapter_tiff_path.resolve())
-    return result
+    return result, prepared_job
 
 
 def write_bridge_result(record_path: Path, output: Path | None = None) -> dict[str, object]:
@@ -1365,12 +1378,23 @@ def write_bridge_result(record_path: Path, output: Path | None = None) -> dict[s
 
 def _result_artifact(path: Path) -> dict[str, object]:
     resolved = path.resolve()
-    data = resolved.read_bytes()
+    size, digest = _file_size_and_digest(resolved)
     return {
         "file": str(resolved),
-        "size_bytes": len(data),
-        "sha256": sha256(data).hexdigest(),
+        "size_bytes": size,
+        "sha256": digest,
     }
+
+
+def _file_size_and_digest(path: Path) -> tuple[int, str]:
+    """Verify large spool artifacts with bounded memory."""
+    digest = sha256()
+    size = 0
+    with path.open("rb") as source:
+        for chunk in iter(lambda: source.read(1024 * 1024), b""):
+            size += len(chunk)
+            digest.update(chunk)
+    return size, digest.hexdigest()
 
 
 def print_ticket_collated(path: Path) -> bool:
@@ -1431,23 +1455,31 @@ def normalize_adapter_tiff(
     with Image.open(resolved_source) as image:
         if getattr(image, "n_frames", 1) != 1:
             raise ValueError("Phase 12.2 пока поддерживает только одностраничный TIFF")
-        dpi_value = image.info.get("dpi")
-        selected_dpi = dpi or (
-            (float(dpi_value[0]), float(dpi_value[1]))
-            if isinstance(dpi_value, tuple) and len(dpi_value) == 2
-            else (360.0, 360.0)
-        )
-        oriented = ImageOps.exif_transpose(image)
-        if oriented.mode in {"RGBA", "LA"} or "transparency" in oriented.info:
-            rgba = oriented.convert("RGBA")
-            background = Image.new("RGBA", rgba.size, (255, 255, 255, 255))
-            background.alpha_composite(rgba)
-            grayscale = background.convert("RGB").convert("L")
-        else:
-            grayscale = oriented.convert("L")
-        grayscale.load()
-        output.parent.mkdir(parents=True, exist_ok=True)
-        grayscale.save(output, format="TIFF", compression="tiff_lzw", dpi=selected_dpi)
+        normalize_adapter_page(image, output, dpi=dpi)
+    return output
+
+
+def normalize_adapter_page(
+    image: Image.Image, output: Path, *, dpi: tuple[float, float] | None = None,
+) -> Path:
+    """Normalize the current decoded frame without an intermediate color TIFF."""
+    dpi_value = image.info.get("dpi")
+    selected_dpi = dpi or (
+        (float(dpi_value[0]), float(dpi_value[1]))
+        if isinstance(dpi_value, tuple) and len(dpi_value) == 2
+        else (360.0, 360.0)
+    )
+    oriented = ImageOps.exif_transpose(image)
+    if oriented.mode in {"RGBA", "LA"} or "transparency" in oriented.info:
+        rgba = oriented.convert("RGBA")
+        background = Image.new("RGBA", rgba.size, (255, 255, 255, 255))
+        background.alpha_composite(rgba)
+        grayscale = background.convert("RGB").convert("L")
+    else:
+        grayscale = oriented.convert("L")
+    grayscale.load()
+    output.parent.mkdir(parents=True, exist_ok=True)
+    grayscale.save(output, format="TIFF", compression="tiff_lzw", dpi=selected_dpi)
     return output
 
 
@@ -1467,7 +1499,10 @@ def write_render_result(
         "prn": _result_artifact(prn_path),
     }
     if adapter_tiff is not None:
-        artifacts["adapter_tiff"] = _result_artifact(adapter_tiff)
+        artifacts["adapter_tiff"] = (
+            dict(artifacts["input_tiff"]) if adapter_tiff.resolve() == input_tiff.resolve()
+            else _result_artifact(adapter_tiff)
+        )
     if manifest_path is not None:
         artifacts["manifest"] = _result_artifact(manifest_path)
     result: dict[str, object] = {

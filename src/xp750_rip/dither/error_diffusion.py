@@ -1,7 +1,7 @@
 # Copyright (C) 2026 Alexander Eichhorn
 # SPDX-License-Identifier: GPL-3.0-only
 
-"""Variable-coefficient error diffusion for the production QTR path.
+"""Variable-coefficient and constant-weight diffusion for the production QTR path.
 
 The two base tables below are transcribed from the original publications:
 
@@ -18,13 +18,18 @@ bilevel quantizer; Epson variable drops use its multilevel extension.
 Separately, the sparse-page policy settles three zero-ink rows after content,
 then clears diffusion state at the fourth. It is shared with streaming and
 does not change coefficients or screen coordinates in nonblank regions.
+
+X2Y1 combines signed four-neighbour diffusion with tone-dependent threshold
+modulation. It uses weights 11/19 ahead, then 3/19, 4/19 and 1/19 on the next
+row. Its noise sequence and cursor persist across bands and blank regions.
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass
-from functools import lru_cache
+from functools import lru_cache, partial
 from itertools import pairwise
+from zlib import crc32
 
 import numpy as np
 
@@ -110,11 +115,74 @@ ZHOU_FANG_2003_MODULATION_KEYS: tuple[tuple[int, float], ...] = (
     (127, 1.00),
 )
 
+# Verified ReferenceDriver Noise_NatInv amplitude knots, signed int16 units.
+# The input folds around 32767.5; adjacent knots are 512 input units apart.
+X2Y1_NAT_INV_AMPLITUDES = (
+    0, 374, 737, 1047, 1371, 1628, 1930, 2287,
+    2782, 2715, 2903, 3225, 3397, 3403, 3690, 3668,
+    4406, 3680, 4745, 4301, 3779, 5468, 5160, 3537,
+    4055, 6075, 6501, 4750, 3170, 3193, 4684, 6493,
+    7907, 6717, 5021, 3547, 2311, 2095, 2988, 4107,
+    5416, 6916, 8610, 9056, 7612, 6110, 4762, 3573,
+    2548, 1693, 1011, 566, 646, 1007, 1446, 1964,
+    2560, 3231, 3975, 4791, 5675, 6625, 7638, 8709, 9830,
+)
+
+
+def x2y1_channel_seed(seed: int, identity: LogicalChannelId) -> int:
+    """Stable per-ink noise streams, independent of Python's randomized hash."""
+    return (seed ^ crc32(identity.value.encode("utf-8"))) & 0xFFFFFFFF
+
+
+@lru_cache(maxsize=32)
+def x2y1_noise_sequence(seed: int) -> np.ndarray:
+    """Shuffle all signed 15-bit values using MT19937 and rejection sampling.
+
+    Reconstructs the ascending Fisher-Yates draw contract: draw j uniformly
+    from [0,i], then exchange entries i/j. The cursor advances only for pixels
+    whose interpolated amplitude is positive, exactly across band boundaries.
+    """
+    rng = np.random.RandomState(seed & 0xFFFFFFFF)
+    noise = np.arange(-16384, 16384, dtype=np.int16)
+    draws = rng.randint(0, 1 << 32, size=32768, dtype=np.uint32)
+    position = 0
+    for index in range(1, len(noise)):
+        bound = index + 1
+        limit = ((1 << 32) // bound) * bound
+        while True:
+            if position == len(draws):
+                draws = rng.randint(0, 1 << 32, size=32768, dtype=np.uint32)
+                position = 0
+            draw = int(draws[position])
+            position += 1
+            if draw < limit:
+                break
+        other = draw % bound
+        noise[index], noise[other] = noise[other], noise[index]
+    noise.setflags(write=False)
+    return noise
+
+
 _ALGORITHM_CODES = {
     HalftoneAlgorithm.OSTROMOUKHOV: 0,
     HalftoneAlgorithm.ZHOU_FANG: 1,
     HalftoneAlgorithm.ENTROPY_CONSTRAINED_ZHOU_FANG: 2,
+    HalftoneAlgorithm.X2Y1: 3,
 }
+
+
+def error_diffusion_tables(algorithm: HalftoneAlgorithm) -> tuple[np.ndarray, np.ndarray]:
+    """Return tables for the compiled scan selected once per job.
+
+    X2Y1 uses compiled constant weights and the verified 65-knot threshold
+    modulation table. Its coefficient placeholder is never read by the scan.
+    """
+
+    if algorithm is HalftoneAlgorithm.X2Y1:
+        return np.zeros((256, 3), dtype=np.float64), np.array(X2Y1_NAT_INV_AMPLITUDES, dtype=np.float64)
+    if algorithm is HalftoneAlgorithm.OSTROMOUKHOV:
+        return ostromoukhov_coefficients(), np.zeros(256, dtype=np.float64)
+    return zhou_fang_coefficients(), zhou_fang_modulation()
 
 
 def _mirror_half(values: np.ndarray) -> np.ndarray:
@@ -258,16 +326,7 @@ class VariableCoefficientErrorDiffusion:
             raise ValueError("QTR code raster exceeds dither canvas bounds")
 
         lut = np.asarray(qtr_lut, dtype=np.uint16)
-        coefficients = (
-            ostromoukhov_coefficients()
-            if self.algorithm is HalftoneAlgorithm.OSTROMOUKHOV
-            else zhou_fang_coefficients()
-        )
-        modulation = (
-            np.zeros(256, dtype=np.float64)
-            if self.algorithm is HalftoneAlgorithm.OSTROMOUKHOV
-            else zhou_fang_modulation()
-        )
+        coefficients, modulation = error_diffusion_tables(self.algorithm)
         endpoint_values = np.asarray(
             [endpoint.value / UINT16_MAX for endpoint in self.drops.endpoints],
             dtype=np.float64,
@@ -285,6 +344,15 @@ class VariableCoefficientErrorDiffusion:
         elif self.algorithm is HalftoneAlgorithm.ZHOU_FANG:
             from xp750_rip._cython_kernels import (
                 zhou_fang_qtr_band_kernel as selected_band_kernel,
+            )
+        elif self.algorithm is HalftoneAlgorithm.X2Y1:
+            from xp750_rip._cython_kernels import (
+                x2y1_qtr_band_kernel as selected_band_kernel,
+            )
+            selected_band_kernel = partial(
+                selected_band_kernel,
+                noise_samples=x2y1_noise_sequence(x2y1_channel_seed(self.random_seed, identity)),
+                noise_index=np.zeros(1, dtype=np.intp),
             )
         else:
             from xp750_rip._cython_kernels import (

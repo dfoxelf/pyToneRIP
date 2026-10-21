@@ -10,6 +10,7 @@
 
 from dataclasses import dataclass
 from enum import StrEnum
+from hashlib import sha256
 from struct import unpack_from
 
 from xp750_rip.escp2.packbits import decode_rows as packbits_decode_rows
@@ -99,6 +100,7 @@ _REMOTE_NAMES = {
     b"FP": "REMOTE_FP",
     b"PM": "REMOTE_PM",
     b"JS": "REMOTE_JS",
+    b"JX": "REMOTE_JX",
     b"SN": "REMOTE_SN",
     b"PP": "REMOTE_PP",
     b"MI": "REMOTE_MI",
@@ -166,6 +168,15 @@ def _decode_extended_parameters(code: bytes, payload: bytes) -> dict[str, Parame
         )
     elif code in {b"K", b"i", b"m", b"s"} and len(payload) == 1:
         params["value"] = payload[0]
+    elif code == b"K" and len(payload) == 2:
+        params.update({"reserved": payload[0], "value": payload[1]})
+    elif code == b"i" and len(payload) == 3:
+        params.update({"value": payload[0], "variant": payload[1], "reserved": payload[2]})
+    elif code == b"m" and len(payload) == 4:
+        params.update({
+            "value": int.from_bytes(payload[:2], "little"),
+            "reserved": int.from_bytes(payload[2:], "little"),
+        })
     elif code == b"e" and len(payload) == 2:
         params.update({"reserved": payload[0], "dot_size": payload[1]})
     elif code == b"D" and len(payload) == 4:
@@ -200,7 +211,39 @@ def _decode_remote_parameters(code: bytes, payload: bytes) -> dict[str, Paramete
         "payload_length": len(payload),
         "payload_hex": payload.hex(" "),
     }
-    if code == b"JS" and payload:
+    if code == b"EX" and len(payload) >= 6 and payload[:4] == bytes(4):
+        selector = int.from_bytes(payload[4:6], "little")
+        params["extension_selector"] = selector
+        if selector == 0x37:
+            # Opaque printer-side resource: preserve identity and size without
+            # pretending its table format or banding effect has been decoded.
+            params["resource_length"] = len(payload) - 6
+            params["resource_sha256"] = sha256(payload[6:]).hexdigest()
+    elif code == b"JX":
+        params["job_phase"] = "unknown"
+        if payload == b"\x00\x00\x01\x01\x02":
+            params["job_phase"] = "end"
+        elif (len(payload) >= 29 and payload[:7] == b"\x00\x00\x01\x01\x01\x02\x08"
+              and payload[11:19] == b"\x00\x00\x00\x00\x0f\x02\x01\x00"):
+            # Decode only the verified tagged dialect. Unknown or malformed
+            # variants remain opaque, with their complete original bytes.
+            fields: dict[str, ParameterValue] = {}
+            cursor = 19
+            for tag in (0x08, 0x0C, 0x0D, 0x18, 0x17):
+                if cursor + 2 > len(payload) or payload[cursor] != tag:
+                    break
+                length = payload[cursor + 1]
+                cursor += 2
+                if cursor + length > len(payload):
+                    break
+                fields[f"field_{tag:02x}_hex"] = payload[cursor:cursor + length].hex(" ")
+                cursor += length
+            else:
+                if cursor == len(payload):
+                    params.update(fields)
+                    params["job_phase"] = "start"
+                    params["job_flags"] = tuple(payload[7:11])
+    elif code == b"JS" and payload:
         params["leading_byte"] = payload[0]
         params["label"] = payload[1:].rstrip(b"\x00").decode("ascii", errors="replace")
     elif code == b"PP" and len(payload) == 3:
@@ -262,7 +305,7 @@ def _decode_remote_parameters(code: bytes, payload: bytes) -> dict[str, Paramete
                 "value": payload[2],
             }
         )
-    elif code == b"PH" and len(payload) == 2:
+    elif code == b"PH" and len(payload) in (2, 3):
         params.update(
             {
                 "leading_byte": payload[0],
@@ -270,7 +313,7 @@ def _decode_remote_parameters(code: bytes, payload: bytes) -> dict[str, Paramete
                 # label choices in 0.1 mm steps, but that cannot be assumed
                 # for every Epson family. / Не выдаём код за миллиметры без
                 # явной таблицы конкретной модели.
-                "thickness_code": payload[1],
+                "thickness_code": int.from_bytes(payload[1:], "little"),
             }
         )
     elif code == b"US" and len(payload) == 3:

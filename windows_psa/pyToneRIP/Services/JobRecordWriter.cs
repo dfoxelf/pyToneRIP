@@ -96,6 +96,10 @@ namespace pyToneRIP.Tasks.Services
             if (copies < 1 || copies > 99)
                 throw new InvalidDataException(
                     "JobCopiesAllDocuments must be between 1 and 99.");
+            // Resolve the configuration and any stale borderless flag before
+            // persisting/rendering the ticket. XpsToTiff and the RIP must see
+            // the same supported paper selection.
+            var configurationJson = await ReadAndValidateConfigurationAsync(ticket, session);
             var ticketText = ticket.XmlNode.GetXml();
             var ticketArtifact = await WriteTextAndHashAsync(folder, "print-ticket.xml", ticketText);
             var adapterTiffFile = await folder.CreateFileAsync(
@@ -126,7 +130,6 @@ namespace pyToneRIP.Tasks.Services
                 + adapterTiffArtifact.SizeBytes + " bytes");
             await JobProgressWriter.WriteAsync(
                 folder, jobId, 25, "WINDOWS_TIFF_READY", "Windows page raster is ready");
-            var configurationJson = await ReadAndValidateConfigurationAsync(ticket, session);
             ThrowIfCancellationRequested();
             var sourceCurvePaths = ReadExternalCurvePaths(configurationJson);
             var configurationArtifact = await WriteTextAndHashAsync(
@@ -275,7 +278,8 @@ namespace pyToneRIP.Tasks.Services
                 new Uri("ms-appx:///Assets/capabilities.generated.json"));
             var capabilityJson = await FileIO.ReadTextAsync(capabilityFile);
             return PrintTicketSynchronization.OverlayConfiguration(
-                ticket, json, capabilityJson);
+                ticket, json, capabilityJson,
+                pyToneRIP.Tasks.VirtualPrinterBackgroundTask.WriteWorkflowStage);
         }
 
         private static List<string> ReadExternalCurvePaths(string configurationJson)

@@ -984,6 +984,7 @@ namespace pyToneRIP.QueueHelper
             try
             {
                 var data = ReadStoredDevMode(handle, 9);
+                var hasUserDevMode = data != null;
                 if (data == null)
                 {
                     var size = DocumentPropertiesW(IntPtr.Zero, handle, queue.Name,
@@ -1010,6 +1011,8 @@ namespace pyToneRIP.QueueHelper
                         throw new InvalidDataException("Per-user DEVMODE contains no readable page dimensions.");
                     return new LegacyPrinterDefaults
                     {
+                        HasUserDevMode = hasUserDevMode,
+                        PrintTicketXml = ReadTicketXml(ticket.GetXmlStream()),
                         PageWidthMm = widthMm.Value,
                         PageHeightMm = heightMm.Value,
                         Borderless = ticket.PageBorderless.HasValue
@@ -1023,6 +1026,13 @@ namespace pyToneRIP.QueueHelper
                 }
             }
             finally { ClosePrinter(handle); }
+        }
+
+        private static string ReadTicketXml(System.IO.Stream stream)
+        {
+            using (stream)
+            using (var reader = new System.IO.StreamReader(stream, System.Text.Encoding.UTF8, true))
+                return reader.ReadToEnd();
         }
 
         private static byte[] ReadStoredDevMode(IntPtr handle, uint level)
@@ -1591,6 +1601,8 @@ namespace pyToneRIP.QueueHelper
     [DataContract]
     internal sealed class LegacyPrinterDefaults
     {
+        [DataMember(Name = "print_ticket_xml", Order = 7, EmitDefaultValue = false)] public string PrintTicketXml { get; set; }
+        [DataMember(Name = "has_user_devmode", Order = 8)] public bool HasUserDevMode { get; set; }
         [DataMember(Name = "page_width_mm", Order = 1)] public double PageWidthMm { get; set; }
         [DataMember(Name = "page_height_mm", Order = 2)] public double PageHeightMm { get; set; }
         [DataMember(Name = "borderless", Order = 3, EmitDefaultValue = false)] public bool? Borderless { get; set; }

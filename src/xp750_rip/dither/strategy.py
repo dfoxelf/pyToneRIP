@@ -21,6 +21,18 @@ class HalftoneAlgorithm(StrEnum):
     OSTROMOUKHOV = "Ostromoukhov (2001)"
     ZHOU_FANG = "Zhou-Fang (2003)"
     ENTROPY_CONSTRAINED_ZHOU_FANG = "Entropy-Constrained Zhou-Fang"
+    X2Y1 = "X2Y1"
+    COUPLED_ED = "Coupled ED"
+    COUPLED_ED_CM = "Coupled ED (C/M)"
+
+    @property
+    def is_coupled(self) -> bool:
+        return self in (HalftoneAlgorithm.COUPLED_ED, HalftoneAlgorithm.COUPLED_ED_CM)
+
+    @property
+    def display_name(self) -> str:
+        # Keep the existing full-pair ID readable by saved configurations.
+        return "Coupled ED (C/M + LC/LM)" if self is HalftoneAlgorithm.COUPLED_ED else self.value
 
     @property
     def gutenprint_identifier(self) -> str:
@@ -34,6 +46,9 @@ class HalftoneAlgorithm(StrEnum):
             HalftoneAlgorithm.BLUE_NOISE_FM: "pyToneRIP.BlueNoiseFM",
             HalftoneAlgorithm.OSTROMOUKHOV: "pyToneRIP.Ostromoukhov2001",
             HalftoneAlgorithm.ZHOU_FANG: "pyToneRIP.ZhouFang2003",
+            HalftoneAlgorithm.X2Y1: "pyToneRIP.X2Y1",
+            HalftoneAlgorithm.COUPLED_ED: "pyToneRIP.CoupledED",
+            HalftoneAlgorithm.COUPLED_ED_CM: "pyToneRIP.CoupledED.CM",
             HalftoneAlgorithm.ENTROPY_CONSTRAINED_ZHOU_FANG: (
                 "pyToneRIP.EntropyConstrainedZhouFang"
             ),

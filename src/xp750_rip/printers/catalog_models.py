@@ -189,6 +189,8 @@ def _canonical_media(
                 mode.escp2_dot_size_override,
                 print_methods.get(mode_id, mode.escp2_print_method_override),
                 mode.escp2_printer_weave_mode,
+                mode.escp2_printer_weave_variant,
+                mode.escp2_print_method_payload_length,
                 mode.escp2_alternate_print_method,
                 mode.escp2_default_direction,
                 mode.escp2_emit_legacy_s_mode_2,
@@ -974,6 +976,15 @@ def _vendor_modes(
                 ),
                 escp2_dot_size_override=int(escp2["variable_dot_mode"]),
                 escp2_print_method_override=int(print_method["default"]),
+                escp2_print_method_payload_length=int(print_method.get("payload_length", 1)),
+                escp2_printer_weave_mode=(
+                    int(escp2["firmware_weave"]["mode"])
+                    if "firmware_weave" in escp2 else None
+                ),
+                escp2_printer_weave_variant=(
+                    int(escp2["firmware_weave"]["variant"])
+                    if "variant" in escp2.get("firmware_weave", {}) else None
+                ),
                 escp2_alternate_print_method=(
                     int(print_method["precision_variant"])
                     if "precision_variant" in print_method
@@ -1042,6 +1053,15 @@ def _gutenprint_modes(
                         if item.get("printer_weave_mode") is not None
                         else None
                     ),
+                    escp2_printer_weave_variant=(
+                        int(item["printer_weave_variant"])
+                        if item.get("printer_weave_variant") is not None else None
+                    ),
+                    escp2_print_method_override=(
+                        int(item["print_method"])
+                        if item.get("print_method") is not None else None
+                    ),
+                    escp2_print_method_payload_length=int(item.get("print_method_payload_length", 1)),
                     drop_sizes=tuple(float(value) for value in item.get("drop_sizes", ())) or (1.0,),
                     density=float(item.get("density") or 1.0),
                     source="Gutenprint ESC/P2 model data",
@@ -1219,6 +1239,59 @@ _R2880_PAGE_SIZES = {
 # The R3000 product descriptor assigns the same MI size bytes to these
 # physical formats. Its captured Letter job confirms byte 1 independently.
 _R3000_PAGE_SIZES = _R2880_PAGE_SIZES
+
+
+def _pro3880_sheet_pages(
+    pages: tuple[PageCapability, ...],
+) -> tuple[PageCapability, ...]:
+    """Complete the regional PPD from Epson's 3880 paper specifications.
+
+    https://support2.epson.net/manuals/english/lfp/styluspro38803885/ug/html/infor_1.htm
+    The model has three cut-sheet paths and no roll-paper mechanism.
+    Existing page identities and command selectors remain stable.
+    """
+    sheets = (
+        ("Letter", "Letter", 215.9, 279.4),
+        ("Legal", "Legal", 215.9, 355.6),
+        ("HalfLetter", "Half Letter", 139.7, 215.9),
+        ("Tabloid", "US B (11 × 17 in)", 279.4, 431.8),
+        ("EngineeringC", "US C (17 × 22 in)", 431.8, 558.8),
+        ("A6", "A6", 105.0, 148.0),
+        ("A5", "A5", 148.0, 210.0),
+        ("A4", "A4", 210.0, 297.0),
+        ("A3", "A3", 297.0, 420.0),
+        ("A3Plus", "A3+ / US B+", 329.0, 483.0),
+        ("A2", "A2", 420.0, 594.0),
+        ("B5", "B5 (JIS)", 182.0, 257.0),
+        ("B4", "B4 (JIS)", 257.0, 364.0),
+        ("B3", "B3 (JIS)", 364.0, 514.0),
+        ("L", "L (3.5 × 5 in)", 88.9, 127.0),
+        ("4X6FULL", "4 × 6 in", 101.6, 152.4),
+        ("5x7", "5 × 7 in", 127.0, 177.8),
+        ("Wide", "16:9 wide (102 × 181 mm)", 102.0, 181.0),
+        ("8x10", "8 × 10 in", 203.2, 254.0),
+        ("10x12", "10 × 12 in", 254.0, 304.8),
+        ("11x14", "11 × 14 in", 279.4, 355.6),
+        ("12x12", "12 × 12 in", 304.8, 304.8),
+        ("16x20", "16 × 20 in", 406.4, 508.0),
+    )
+    result = list(pages)
+    indices = {page.ppd.name: i for i, page in enumerate(result)}
+    margin = 3.0 * 72 / 25.4
+    for name, label, width_mm, height_mm in sheets:
+        width, height = width_mm * 72 / 25.4, height_mm * 72 / 25.4
+        ppd = PpdPage(name, label, width, height, margin, margin,
+                      width - margin, height - margin)
+        if name in indices:
+            index = indices[name]
+            result[index] = replace(result[index], ppd=ppd,
+                                    physical_media_size_mm=(width_mm, height_mm))
+        else:
+            result.append(PageCapability(
+                ppd, True, True, media_size_code=99,
+                physical_media_size_mm=(width_mm, height_mm),
+            ))
+    return tuple(result)
 
 
 def _pages(
@@ -2150,6 +2223,44 @@ def _media(
     return canonical, aliases
 
 
+def _p800_vertical_photo_mode(
+    modes: tuple[PrinterMode, ...], media: tuple[MediaCapability, ...],
+) -> tuple[tuple[PrinterMode, ...], tuple[MediaCapability, ...]]:
+    """Add the native 720x1440 grid for the two qualified photo media.
+
+    ReferenceDriver describes a 720-square contone input to its own rasterizer.
+    Our rasterizer produces dots on the full 720x1440 grid using the existing
+    P800 softweave. The 0x12 drop model and density come from the equal-area
+    1440x720 native mode, independently of the external SDK's MW selector.
+    """
+
+    qualified = {"Epson_Premium_Luster", "Photo_Quality_Glossy_Paper"}
+    if not qualified.intersection(m.identity for m in media):
+        return modes, media
+    template = next(m for m in modes if m.identity == "1440x720sw")
+    mode = replace(
+        template, identity="720x1440sw", display_name="720 x 1440 DPI",
+        horizontal_dpi=720, vertical_dpi=1440,
+        physical_horizontal_dpi=720, physical_vertical_dpi=1440,
+        horizontal_passes=720 // template.base_resolution_dpi,
+        ordered_matrix_id="matrix-1x2", output_resolution_dpi=(720, 1440),
+        source="ReferenceDriver photo grid; native P800 softweave and drop model",
+    )
+    index = next(i for i, m in enumerate(modes) if m.identity == "1440sw")
+    modes = (*modes[:index], mode, *modes[index:])
+    media = tuple(
+        replace(
+            m, supported_modes=(*m.supported_modes, mode.identity),
+            print_methods=(
+                (*m.print_methods, (mode.identity, dict(m.print_methods)[template.identity]))
+                if template.identity in dict(m.print_methods) else m.print_methods
+            ),
+        )
+        if m.identity in qualified else m for m in media
+    )
+    return modes, media
+
+
 def _drying_choices(
     *, selector: int, page_units: bool, maximum_scan_seconds: int = 10
 ) -> tuple[DeviceSettingChoice, ...]:
@@ -2599,6 +2710,8 @@ def load_catalog_model(
         trust_ppd_imageable_area=package.ppd_source == "vendor.ppd",
         include_unmatched_native_pages=package.package_id == "pf--Epson_EcoTank_ET2550",
     )
+    if package.package_id == "gp--escp2-3880":
+        pages = _pro3880_sheet_pages(pages)
     if (
         package.ppd_source != "vendor.ppd"
         and package.package_id.removeprefix("gp--") in CAPTURED_PRO_MEDIA_BY_DRIVER
@@ -2613,6 +2726,8 @@ def load_catalog_model(
     media, device_settings = _normalize_photo_model_controls(
         package, media, device_settings
     )
+    if package.package_id == "pf--Epson_SureColorP800":
+        modes, media = _p800_vertical_photo_mode(modes, media)
     # A descriptor can contain modes dedicated only to a branded ICC medium
     # removed by _canonical_media. Such a mode has no valid selectable medium
     # in this monochrome RIP and must not survive as an orphan GUI choice.

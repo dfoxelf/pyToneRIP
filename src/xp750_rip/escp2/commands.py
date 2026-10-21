@@ -1,7 +1,7 @@
 # Copyright (C) 2026 Alexander Eichhorn
 # SPDX-License-Identifier: GPL-3.0-only
 
-"""Encoding for the restricted ESC/P2 command subset used in Phases 2 and 3C.
+"""Encoding for the Epson ESC/P2 commands used by native printer backends.
 
 Sources: Gutenprint 5.3.5 ``src/main/escp2-driver.c`` lines 48-56,
 221-337, 339-496, 525-583, 644-681 and 791-802; model data comes from
@@ -82,6 +82,46 @@ def remote_job_start(label: str) -> bytes:
     return _remote(b"JS", b"\x00" + encoded_label + b"\x00")
 
 
+def remote_job_start_extended(
+    *, flags: bytes, metadata: tuple[bytes, bytes, bytes, bytes, bytes],
+) -> bytes:
+    """Encode the verified ReferenceDriver JX start dialect as an explicit opt-in.
+
+    Flags and metadata remain byte-valued: their application-level meanings
+    and text encoding are model dependent. Metadata follows tags 08/0C/0D/18/17.
+    Reject oversized fields instead of truncating the one-byte lengths.
+    """
+
+    if not isinstance(flags, bytes) or len(flags) != 4:
+        raise ValueError("JX flags must contain exactly four bytes")
+    if len(metadata) != 5:
+        raise ValueError("JX metadata must contain exactly five fields")
+    payload = b"\x00\x00\x01\x01\x01\x02\x08" + flags + bytes(4) + b"\x0f\x02\x01\x00"
+    for tag, value in zip((0x08, 0x0C, 0x0D, 0x18, 0x17), metadata, strict=True):
+        if not isinstance(value, bytes) or len(value) > 255:
+            raise ValueError("each JX metadata field must contain at most 255 bytes")
+        payload += bytes((tag, len(value))) + value
+    return _remote(b"JX", payload)
+
+
+def remote_job_end_extended() -> bytes:
+    """Encode the matching verified JX end record, without assuming EX lifecycle."""
+
+    return _remote(b"JX", b"\x00\x00\x01\x01\x02")
+
+
+def remote_weave_resource(resource: bytes) -> bytes:
+    """Wrap an externally supplied opaque resource in EX selector 0037.
+
+    Resource provenance, model identity and placement in the job must be
+    checked by the caller. No third-party resource is bundled by this codec.
+    """
+
+    if not isinstance(resource, bytes) or not 0 < len(resource) <= 65529:
+        raise ValueError("EX resource must contain 1..65529 bytes")
+    return _remote(b"EX", bytes(4) + b"\x37\x00" + resource)
+
+
 def remote_sn(value: int = 0) -> bytes:
     return _remote(b"SN", bytes((_u8(value, "SN value"),)))
 
@@ -119,10 +159,18 @@ def remote_vacuum_intensity(value: int) -> bytes:
     return _remote(b"SN", bytes((0, 5, _u8(value, "vacuum intensity"))))
 
 
-def remote_paper_thickness(value: int) -> bytes:
-    """Encode the printer-specific paper-thickness byte (REMOTE1 PH)."""
+def remote_paper_thickness(value: int, *, payload_length: int = 2) -> bytes:
+    """Encode the model's PH byte or word; the wire units are model specific."""
 
-    return _remote(b"PH", bytes((0, _u8(value, "paper thickness"))))
+    if payload_length == 2:
+        payload = bytes((0, _u8(value, "paper thickness")))
+    elif payload_length == 3:
+        if not 0 <= value <= 0xFFFF:
+            raise ValueError("paper thickness must fit an unsigned 16-bit integer")
+        payload = b"\x00" + pack("<H", value)
+    else:
+        raise ValueError("paper thickness payload_length must be 2 or 3")
+    return _remote(b"PH", payload)
 
 
 def remote_feed_sequence(value: int) -> bytes:
@@ -230,8 +278,17 @@ def gray_mode(mode: int = 1) -> bytes:
     return _extended(b"K", bytes((0, mode)))
 
 
-def microweave(mode: int = 0) -> bytes:
-    return _extended(b"i", bytes((mode,)))
+def microweave(mode: int = 0, *, variant: int | None = None) -> bytes:
+    """Encode the model-selected one- or three-byte firmware weave form.
+
+    The extended form is ``mode, variant, 0``. Its second byte is model
+    specific; it must not be inferred from the print-method number.
+    """
+
+    payload = bytes((_u8(mode, "microweave mode"),))
+    if variant is not None:
+        payload += bytes((_u8(variant, "microweave variant"), 0))
+    return _extended(b"i", payload)
 
 
 def unidirectional(enabled: bool) -> bytes:
@@ -270,8 +327,23 @@ def paper_dimensions(width: int, height: int) -> bytes:
     return _extended(b"S", pack("<II", width, height))
 
 
-def print_method(method: int) -> bytes:
-    return _extended(b"m", bytes((_u8(method, "print method"),)))
+def print_method(method: int, *, payload_length: int = 1) -> bytes:
+    """Encode a model-qualified ESC (m dialect, preserving its exact width.
+
+    The four-byte form contains a little-endian method word followed by two
+    reserved zero bytes. It is distinct from the legacy one-byte form even
+    when the method number is the same.
+    """
+
+    if payload_length == 1:
+        payload = bytes((_u8(method, "print method"),))
+    elif payload_length == 4:
+        if not 0 <= method <= 0xFFFF:
+            raise ValueError("print method must fit an unsigned 16-bit integer")
+        payload = pack("<HH", method, 0)
+    else:
+        raise ValueError("print method payload_length must be 1 or 4")
+    return _extended(b"m", payload)
 
 
 def relative_vertical(advance: int) -> bytes:

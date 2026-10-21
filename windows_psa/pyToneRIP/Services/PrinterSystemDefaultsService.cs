@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using Windows.Devices.Printers;
 using Windows.Graphics.Printing.PrintTicket;
@@ -40,7 +42,8 @@ namespace pyToneRIP.Services
             if (!printer.CanModifyUserDefaultPrintTicket)
                 throw new InvalidOperationException(
                     "Windows did not authorize this PSA to modify the queue user default PrintTicket.");
-            var ticket = printer.UserDefaultPrintTicket;
+            await LogAsync("User defaults apply begin: queue=" + queueName);
+            var ticket = await ReadInitialUserDefaultPrintTicketAsync(printer, queueName);
             if (ticket == null)
                 throw new InvalidOperationException("Windows returned no user default PrintTicket.");
             Shared.PrintTicketSynchronization.Apply(
@@ -128,6 +131,30 @@ namespace pyToneRIP.Services
                 queueName, pageId, pageWidthMm, pageHeightMm,
                 orientation, resolutionX, resolutionY, borderless);
             await QueueHelperClient.NotifyUserDefaultsChangedAsync(queueName);
+        }
+
+        private static async Task<WorkflowPrintTicket> ReadInitialUserDefaultPrintTicketAsync(
+            IppPrintDevice printer, string queueName)
+        {
+            try { return printer.UserDefaultPrintTicket; }
+            catch (Exception error) when (error.HResult == unchecked((int)0x80004005))
+            {
+                await LogAsync("Initial UserDefaultPrintTicket read failed: queue=" + queueName
+                    + "; HRESULT=0x80004005; checking effective DEVMODE");
+                var defaults = await QueueHelperClient.ReadLegacyUserDefaultsAsync(queueName);
+                // A fresh queue can have global defaults without per-user data.
+                // Only seed from the effective Windows ticket in that case;
+                // existing user defaults and post-save readback must not be masked.
+                if (defaults.HasUserDevMode || string.IsNullOrWhiteSpace(defaults.PrintTicketXml))
+                    throw;
+                using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(defaults.PrintTicketXml)))
+                using (var input = stream.AsInputStream())
+                {
+                    var ticket = new WorkflowPrintTicket(queueName, input);
+                    await LogAsync("Initial user ticket loaded from effective DEVMODE: queue=" + queueName);
+                    return ticket;
+                }
+            }
         }
 
         private static IppPrintDevice Resolve(string queueName)

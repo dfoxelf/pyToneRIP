@@ -21,6 +21,175 @@ ctypedef cnp.int64_t i64
 cnp.import_array()
 
 
+cdef struct SingleAdaptiveEDPolicy:
+    int unused
+
+cdef struct CoupledAdaptiveEDPolicy:
+    int unused
+
+ctypedef fused AdaptiveEDPolicy:
+    SingleAdaptiveEDPolicy
+    CoupledAdaptiveEDPolicy
+
+
+cdef u32 _adaptive_ed_scan(
+    AdaptiveEDPolicy policy,
+    const u8[:, :, ::1] codes,
+    const u16[:, ::1] luts,
+    const i64[:, ::1] levels,
+    i64[:, :, ::1] errors,
+    u8[:, :, :, ::1] packed,
+    Py_ssize_t row_offset,
+    Py_ssize_t x_offset,
+    bint serpentine,
+    u32 random_state,
+) noexcept nogil:
+    """ReferenceDriver recurrence, specialized before entering the pixel loop.
+
+    Error is quantized-minus-requested. The widened signed state avoids
+    dependence on a vendor's int16 overflow. Physical endpoints and group
+    PRNG ownership are explicitly defined by this RIP, not byte compatibility.
+    """
+    cdef Py_ssize_t height = codes.shape[1], width = codes.shape[2]
+    cdef Py_ssize_t channels = codes.shape[0]
+    cdef Py_ssize_t y, x, c, b, index, current, following, neighbour, column
+    cdef int direction, strength, ratio, table_index
+    cdef i64 original[2]
+    cdef i64 adjusted[2]
+    cdef i64 candidate[2]
+    cdef i64 quantum[2]
+    cdef i64 noise[2]
+    cdef i64 pair_strength[2]
+    cdef i64 output_code[2]
+    cdef i64 entry, gate, minimum, difference
+    cdef i64 residual, half, quarter, sixteenth, adaptive
+    cdef u8 mask
+    for y in range(height):
+        current = y & 1
+        following = 1 - current
+        for c in range(channels):
+            for column in range(width + 2):
+                errors[following, c, column] = 0
+        direction = -1 if serpentine and ((row_offset + y) & 1) else 1
+        x = width - 1 if direction < 0 else 0
+        while 0 <= x < width:
+            index = x + 1
+            for c in range(channels):
+                original[c] = luts[c, codes[c, y, x]] >> 1
+                adjusted[c] = original[c] - errors[current, c, index]
+                if original[c] != 0:
+                    random_state = random_state * <u32>0x343fd + <u32>0x269ec3
+                    entry = levels[original[c] >> 8, 0]
+                    noise[c] = ((random_state >> 16) & 255) * ((entry >> 16) & 255)
+                    pair_strength[c] = (entry >> 24) & 255
+                else:
+                    noise[c] = 0
+                    pair_strength[c] = 0
+                candidate[c] = adjusted[c] - noise[c]
+                quantum[c] = 0
+                output_code[c] = 0
+            if AdaptiveEDPolicy is CoupledAdaptiveEDPolicy:
+                strength = <int>min(pair_strength[0], pair_strength[1])
+                minimum = min(original[0], original[1])
+                if minimum == 0:
+                    strength = 0
+                else:
+                    difference = original[0] - original[1]
+                    if difference < 0:
+                        difference = -difference
+                    ratio = <int>((difference * 255) // minimum)
+                    if ratio > 510:
+                        strength = max(0, strength + 510 - ratio)
+                gate = candidate[0] + candidate[1] + (256 - strength) * 127
+                if candidate[0] > 0 and gate > 0:
+                    table_index = <int>(256 + ((candidate[0] - 1) >> 8))
+                    table_index = max(0, min(2047, table_index))
+                    entry = levels[table_index, 0]
+                    quantum[0] = ((entry >> 8) & 255) * 257
+                    output_code[0] = entry & 255
+                    gate -= quantum[0]
+                if candidate[1] > 0 and gate > 0:
+                    table_index = <int>(256 + ((candidate[1] - 1) >> 8))
+                    table_index = max(0, min(2047, table_index))
+                    entry = levels[table_index, 0]
+                    quantum[1] = ((entry >> 8) & 255) * 257
+                    output_code[1] = entry & 255
+            else:
+                if candidate[0] > 0:
+                    table_index = <int>(256 + ((candidate[0] - 1) >> 8))
+                    table_index = max(0, min(2047, table_index))
+                    entry = levels[table_index, 0]
+                    quantum[0] = ((entry >> 8) & 255) * 257
+                    output_code[0] = entry & 255
+            mask = <u8>(0x80 >> ((x_offset + x) & 7))
+            for c in range(channels):
+                for b in range(packed.shape[1]):
+                    if output_code[c] & (1 << b):
+                        packed[c, b, y, (x_offset + x) >> 3] |= mask
+                residual = quantum[c] - adjusted[c]
+                half = residual >> 1
+                quarter = half >> 1
+                sixteenth = quarter >> 2
+                adaptive = residual if residual <= 16383 else max(32767 - residual, 0)
+                adaptive >>= 2
+                neighbour = x + direction
+                if 0 <= neighbour < width:
+                    errors[current, c, neighbour + 1] += adaptive - sixteenth + half
+                    errors[following, c, neighbour + 1] += sixteenth
+                neighbour = x - direction
+                if 0 <= neighbour < width:
+                    errors[following, c, neighbour + 1] += quarter - sixteenth
+                errors[following, c, index] += residual + sixteenth - adaptive - quarter - half
+            x += direction
+    return random_state
+
+
+def adaptive_ed_band_kernel(
+    const u8[:, :, ::1] codes,
+    const u16[:, ::1] luts,
+    const i64[:, ::1] levels,
+    const i64[:, ::1] initial_error,
+    Py_ssize_t canvas_width,
+    int bit_depth,
+    Py_ssize_t row_offset,
+    Py_ssize_t x_offset,
+    bint serpentine,
+    u32 random_state,
+    bint coupled,
+):
+    """Select the single/pair specialization once per band, never per pixel."""
+    cdef Py_ssize_t channels = 2 if coupled else 1
+    cdef Py_ssize_t height = codes.shape[1], width = codes.shape[2]
+    if (codes.shape[0] != channels or height <= 0 or width <= 0
+            or luts.shape[0] != channels or luts.shape[1] != 256
+            or levels.shape[0] != 2048 or levels.shape[1] != 1
+            or initial_error.shape[0] != channels or initial_error.shape[1] != width + 2
+            or canvas_width <= 0 or canvas_width % 8 or x_offset < 0
+            or x_offset + width > canvas_width
+            or bit_depth < 1 or bit_depth > 8):
+        raise ValueError("invalid adaptive ED band geometry or state")
+    cdef cnp.ndarray[i64, ndim=3] errors_array = np.zeros((2, channels, width + 2), dtype=np.int64)
+    cdef i64[:, :, ::1] errors = errors_array
+    errors_array[0] = np.asarray(initial_error)
+    cdef cnp.ndarray[u8, ndim=4] output = np.zeros(
+        (channels, bit_depth, height, canvas_width // 8), dtype=np.uint8
+    )
+    cdef u8[:, :, :, ::1] packed = output
+    cdef SingleAdaptiveEDPolicy single_policy
+    cdef CoupledAdaptiveEDPolicy pair_policy
+    if coupled:
+        pair_policy.unused = 0
+        with nogil:
+            random_state = _adaptive_ed_scan(pair_policy, codes, luts, levels, errors,
+                packed, row_offset, x_offset, serpentine, random_state)
+    else:
+        single_policy.unused = 0
+        with nogil:
+            random_state = _adaptive_ed_scan(single_policy, codes, luts, levels, errors,
+                packed, row_offset, x_offset, serpentine, random_state)
+    return output, np.array(errors_array[height & 1], copy=True), int(random_state)
+
+
 cdef inline Py_ssize_t _positive_mod(Py_ssize_t value, Py_ssize_t divisor) noexcept nogil:
     cdef Py_ssize_t result = value % divisor
     if result < 0:
@@ -198,10 +367,16 @@ cdef struct EntropyZhouFangThresholdPolicy:
     u8 marker
 
 
+cdef struct X2Y1ThresholdPolicy:
+    const cnp.int16_t* noise_samples
+    Py_ssize_t* noise_index
+
+
 ctypedef fused ErrorDiffusionThresholdPolicy:
     OstromoukhovThresholdPolicy
     ZhouFangThresholdPolicy
     EntropyZhouFangThresholdPolicy
+    X2Y1ThresholdPolicy
 
 
 cdef void _error_diffusion_qtr_scan(
@@ -230,7 +405,7 @@ cdef void _error_diffusion_qtr_scan(
     double* current_error,
     double* next_error,
 ) noexcept nogil:
-    """Run one compile-time-specialized variable-coefficient ED scan.
+    """Run one compile-time-specialized error-diffusion scan.
 
     ``ErrorDiffusionThresholdPolicy`` is a Cython fused type.  Cython emits a
     separate C function for each policy and resolves every ``Policy is ...``
@@ -238,9 +413,9 @@ cdef void _error_diffusion_qtr_scan(
     contains no runtime algorithm discriminator at all: the public wrapper
     chooses one specialization once, before the first pixel is processed.
 
-    Keeping one source body preserves identical quantization, clipping,
-    serpentine geometry and bit packing across all three algorithms without
-    maintaining three error-prone copies of the diffusion loop.
+    Keeping one source body shares quantization, serpentine geometry and bit
+    packing across the four policies. X2Y1 conserves signed residuals; the
+    variable-coefficient policies retain their established clipping behavior.
     """
 
     cdef Py_ssize_t width = codes.shape[1]
@@ -249,6 +424,9 @@ cdef void _error_diffusion_qtr_scan(
     cdef Py_ssize_t future_x, diagonal_x, error_index, clear_index
     cdef Py_ssize_t upper
     cdef int direction, level, bit_index
+    cdef int tone_position, tone_index, tone_rest, amplitude, perturbation
+    cdef Py_ssize_t sample_index
+    cdef double original_fraction
     cdef double original, adjusted, lower_value, upper_value
     cdef double local_fraction, threshold, quantized, error
     cdef u16 dot_code
@@ -267,13 +445,16 @@ cdef void _error_diffusion_qtr_scan(
             error_index = local_x + 1
             original = normalized_lut[codes[local_y, local_x]]
             adjusted = original + current_error[error_index]
-            if adjusted < 0.0:
-                adjusted = 0.0
-            elif adjusted > 1.0:
-                adjusted = 1.0
+            if ErrorDiffusionThresholdPolicy is not X2Y1ThresholdPolicy:
+                if adjusted < 0.0:
+                    adjusted = 0.0
+                elif adjusted > 1.0:
+                    adjusted = 1.0
 
             level = <int>(adjusted * 255.0)
-            if level > 255:
+            if level < 0:
+                level = 0
+            elif level > 255:
                 level = 255
 
             # Locate the adjacent physical drop endpoints for multilevel ink.
@@ -288,6 +469,28 @@ cdef void _error_diffusion_qtr_scan(
                 # Ostromoukhov varies diffusion coefficients but uses the
                 # unmodulated midpoint quantizer from the 2001 paper.
                 threshold = 0.5
+            elif ErrorDiffusionThresholdPolicy is X2Y1ThresholdPolicy:
+                # Natural inverse: fold the original within-drop fraction,
+                # not the error-adjusted sample. Integer interpolation and
+                # signed truncation reproduce the recovered noise contract.
+                original_fraction = (original - lower_value) / (upper_value - lower_value)
+                if original_fraction < 0.0:
+                    original_fraction = 0.0
+                elif original_fraction > 1.0:
+                    original_fraction = 1.0
+                tone_position = <int>(original_fraction * 65535.0 + 0.5)
+                if tone_position > 32767:
+                    tone_position = 65535 - tone_position
+                tone_index = tone_position >> 9
+                tone_rest = tone_position & 511
+                amplitude = <int>((modulation[tone_index] * (512 - tone_rest)
+                    + modulation[tone_index + 1] * tone_rest) / 512.0)
+                threshold = 0.5
+                if amplitude > 0:
+                    sample_index = policy.noise_index[0]
+                    perturbation = <int>(policy.noise_samples[sample_index] * amplitude / 16384.0)
+                    policy.noise_index[0] = (sample_index + 1) & 32767
+                    threshold -= perturbation / 65535.0
             elif ErrorDiffusionThresholdPolicy is ZhouFangThresholdPolicy:
                 # Zhou-Fang Eq. (1), on its original 8-bit scale.  This whole
                 # expression exists only in the classic Zhou-Fang specialization.
@@ -336,28 +539,42 @@ cdef void _error_diffusion_qtr_scan(
             # Two padded scanline buffers preserve the exact serial dependency
             # with O(width) memory.  Serpentine rows mirror only the geometry.
             future_x = local_x + direction
-            if 0 <= future_x < width:
-                _accumulate_clipped_error(
-                    current_error,
-                    future_x + 1,
-                    normalized_lut[codes[local_y, future_x]],
-                    error * coefficients[level, 0],
-                )
-            if source_row_offset + local_y + 1 < total_height:
-                diagonal_x = local_x - direction
-                if 0 <= diagonal_x < width:
+            if ErrorDiffusionThresholdPolicy is X2Y1ThresholdPolicy:
+                # Independent four-neighbour X2Y1 kernel: ahead11, next-row
+                # back3, centre4, ahead1, all /19. Preserve signed residuals
+                # instead of clipping future contone values at each update.
+                if 0 <= future_x < width:
+                    current_error[future_x + 1] += error * (11.0 / 19.0)
+                if source_row_offset + local_y + 1 < total_height:
+                    diagonal_x = local_x - direction
+                    if 0 <= diagonal_x < width:
+                        next_error[diagonal_x + 1] += error * (3.0 / 19.0)
+                    next_error[error_index] += error * (4.0 / 19.0)
+                    if 0 <= future_x < width:
+                        next_error[future_x + 1] += error * (1.0 / 19.0)
+            else:
+                if 0 <= future_x < width:
+                    _accumulate_clipped_error(
+                        current_error,
+                        future_x + 1,
+                        normalized_lut[codes[local_y, future_x]],
+                        error * coefficients[level, 0],
+                    )
+                if source_row_offset + local_y + 1 < total_height:
+                    diagonal_x = local_x - direction
+                    if 0 <= diagonal_x < width:
+                        _accumulate_clipped_error(
+                            next_error,
+                            diagonal_x + 1,
+                            normalized_lut[codes[local_y + 1, diagonal_x]],
+                            error * coefficients[level, 1],
+                        )
                     _accumulate_clipped_error(
                         next_error,
-                        diagonal_x + 1,
-                        normalized_lut[codes[local_y + 1, diagonal_x]],
-                        error * coefficients[level, 1],
+                        error_index,
+                        normalized_lut[codes[local_y + 1, local_x]],
+                        error * coefficients[level, 2],
                     )
-                _accumulate_clipped_error(
-                    next_error,
-                    error_index,
-                    normalized_lut[codes[local_y + 1, local_x]],
-                    error * coefficients[level, 2],
-                )
 
             global_x = x + local_x
             byte_index = global_x >> 3
@@ -419,6 +636,9 @@ def error_diffusion_qtr_kernel(
     cdef OstromoukhovThresholdPolicy ostromoukhov_policy
     cdef ZhouFangThresholdPolicy zhou_fang_policy
     cdef EntropyZhouFangThresholdPolicy entropy_zhou_fang_policy
+    cdef X2Y1ThresholdPolicy x2y1_policy
+    cdef const cnp.int16_t[::1] x2y1_noise
+    cdef Py_ssize_t[::1] x2y1_cursor
 
     if height <= 0 or width <= 0:
         raise ValueError("QTR code raster must not be empty")
@@ -426,8 +646,8 @@ def error_diffusion_qtr_kernel(
         raise ValueError("QTR lookup table must have exactly 256 entries")
     if coefficients.shape[0] != 256 or coefficients.shape[1] != 3:
         raise ValueError("diffusion coefficients must have shape (256, 3)")
-    if modulation.shape[0] != 256:
-        raise ValueError("threshold modulation must have 256 entries")
+    if modulation.shape[0] != (65 if algorithm == 3 else 256):
+        raise ValueError("threshold modulation table has an invalid length")
     if endpoint_count < 2 or endpoint_codes.shape[0] != endpoint_count:
         raise ValueError("at least two matching drop endpoints are required")
     if canvas_width <= 0 or canvas_width % 8 or canvas_height <= 0:
@@ -436,7 +656,7 @@ def error_diffusion_qtr_kernel(
         raise ValueError("error-diffusion raster exceeds the output canvas")
     if bit_depth < 1 or bit_depth > 8:
         raise ValueError("bit_depth must be in range 1..8")
-    if algorithm < 0 or algorithm > 2:
+    if algorithm < 0 or algorithm > 3:
         raise ValueError("unknown error-diffusion algorithm")
     if algorithm == 2 and (highpass.shape[0] != height or highpass.shape[1] != width):
         raise ValueError("entropy high-pass image does not match the QTR raster")
@@ -462,6 +682,13 @@ def error_diffusion_qtr_kernel(
     current_error = &error_a[0]
     next_error = &error_b[0]
 
+    if algorithm == 3:
+        from xp750_rip.dither.error_diffusion import x2y1_noise_sequence
+        x2y1_noise = x2y1_noise_sequence(seed)
+        x2y1_cursor = np.zeros(1, dtype=np.intp)
+        x2y1_policy.noise_samples = &x2y1_noise[0]
+        x2y1_policy.noise_index = &x2y1_cursor[0]
+
     # Dispatch exactly once.  Each call below targets a different fused-type
     # specialization, so no runtime algorithm check exists in the pixel loop.
     with nogil:
@@ -481,9 +708,17 @@ def error_diffusion_qtr_kernel(
                 noise_x_offset, noise_y_offset, highpass, entropy_table,
                 entropy_strength, current_error, next_error,
             )
-        else:
+        elif algorithm == 2:
             _error_diffusion_qtr_scan(
                 entropy_zhou_fang_policy, codes, normalized_lut, coefficients, modulation,
+                endpoint_values, endpoint_codes, output, height, 0, height,
+                canvas_width, x, y, bit_depth, serpentine, seed,
+                noise_x_offset, noise_y_offset, highpass, entropy_table,
+                entropy_strength, current_error, next_error,
+            )
+        else:
+            _error_diffusion_qtr_scan(
+                x2y1_policy, codes, normalized_lut, coefficients, modulation,
                 endpoint_values, endpoint_codes, output, height, 0, height,
                 canvas_width, x, y, bit_depth, serpentine, seed,
                 noise_x_offset, noise_y_offset, highpass, entropy_table,
@@ -542,7 +777,12 @@ cdef object _error_diffusion_qtr_band_kernel(
         raise ValueError("QTR lookup table must have exactly 256 entries")
     if coefficients.shape[0] != 256 or coefficients.shape[1] != 3:
         raise ValueError("diffusion coefficients must have shape (256, 3)")
-    if modulation.shape[0] != 256 or entropy_table.shape[0] != 65537:
+    if ErrorDiffusionThresholdPolicy is X2Y1ThresholdPolicy:
+        if modulation.shape[0] != 65:
+            raise ValueError("X2Y1 threshold modulation must have 65 entries")
+    elif modulation.shape[0] != 256:
+        raise ValueError("threshold modulation must have 256 entries")
+    if entropy_table.shape[0] != 65537:
         raise ValueError("invalid threshold-modulation lookup tables")
     if endpoint_count < 2 or endpoint_codes.shape[0] != endpoint_count:
         raise ValueError("at least two matching drop endpoints are required")
@@ -692,6 +932,52 @@ def entropy_zhou_fang_qtr_band_kernel(
     )
 
 
+def x2y1_qtr_band_kernel(
+    const u8[:, ::1] codes,
+    const u16[::1] qtr_lut,
+    const double[:, ::1] coefficients,
+    const double[::1] modulation,
+    const double[::1] endpoint_values,
+    const u16[::1] endpoint_codes,
+    const double[::1] initial_error,
+    const double[:, ::1] highpass,
+    const double[::1] entropy_table,
+    Py_ssize_t output_height,
+    Py_ssize_t row_offset,
+    Py_ssize_t total_height,
+    Py_ssize_t canvas_width,
+    Py_ssize_t x,
+    int bit_depth,
+    bint serpentine,
+    u32 seed,
+    Py_ssize_t noise_x_base,
+    Py_ssize_t noise_y_base,
+    double entropy_strength,
+    noise_samples=None,
+    noise_index=None,
+):
+    """X2Y1 with 65-knot modulation and explicit cross-band noise cursor."""
+
+    cdef X2Y1ThresholdPolicy policy
+    if noise_samples is None:
+        from xp750_rip.dither.error_diffusion import x2y1_noise_sequence
+        noise_samples = x2y1_noise_sequence(seed)
+    if noise_index is None:
+        noise_index = np.zeros(1, dtype=np.intp)
+    cdef const cnp.int16_t[::1] samples = noise_samples
+    cdef Py_ssize_t[::1] cursor = noise_index
+    if samples.shape[0] != 32768 or cursor.shape[0] != 1 or not 0 <= cursor[0] < 32768:
+        raise ValueError("invalid X2Y1 noise sequence or cursor")
+    policy.noise_samples = &samples[0]
+    policy.noise_index = &cursor[0]
+    return _error_diffusion_qtr_band_kernel(
+        policy, codes, qtr_lut, coefficients, modulation, endpoint_values,
+        endpoint_codes, initial_error, highpass, entropy_table, output_height,
+        row_offset, total_height, canvas_width, x, bit_depth, serpentine, seed,
+        noise_x_base, noise_y_base, entropy_strength,
+    )
+
+
 def error_diffusion_qtr_band_kernel(
     const u8[:, ::1] codes,
     const u16[::1] qtr_lut,
@@ -733,6 +1019,13 @@ def error_diffusion_qtr_band_kernel(
         )
     if algorithm == 2:
         return entropy_zhou_fang_qtr_band_kernel(
+            codes, qtr_lut, coefficients, modulation, endpoint_values,
+            endpoint_codes, initial_error, highpass, entropy_table, output_height,
+            row_offset, total_height, canvas_width, x, bit_depth, serpentine, seed,
+            noise_x_base, noise_y_base, entropy_strength,
+        )
+    if algorithm == 3:
+        return x2y1_qtr_band_kernel(
             codes, qtr_lut, coefficients, modulation, endpoint_values,
             endpoint_codes, initial_error, highpass, entropy_table, output_height,
             row_offset, total_height, canvas_width, x, bit_depth, serpentine, seed,

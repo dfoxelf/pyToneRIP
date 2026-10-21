@@ -52,10 +52,12 @@ _MASKS = {
 }
 
 
-@lru_cache(maxsize=3)
+@lru_cache(maxsize=4)
 def load_blue_noise_fm_matrix(matrix_id: str = "matrix-1x1") -> OrderedDitherMatrix:
     """Load the progressive VAC mask matching the mode's physical DPI aspect."""
 
+    if matrix_id == "matrix-1x2":
+        return load_blue_noise_fm_matrix("matrix-2x1").transposed()
     try:
         filename, width, height, expected_hash = _MASKS[matrix_id]
     except KeyError as error:

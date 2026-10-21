@@ -865,7 +865,7 @@ def _medium_mechanical_commands(medium: MediaCapability) -> tuple[bytes, ...]:
 def _use_alternate_print_method(
     model: PrinterModel, selected: dict[str, str] | None
 ) -> bool:
-    """Return whether a selected local option requests the mode's second ESC (m byte."""
+    """Return whether a local option requests the mode's alternate ESC (m value."""
 
     values = selected or {}
     return any(
@@ -1002,7 +1002,10 @@ def _encode_profile_stream(
         )
         output.extend(commands.extended_payload("U", units_payload))
     output.extend(commands.gray_mode(2))
-    output.extend(commands.microweave(mode.escp2_printer_weave_mode or 0))
+    output.extend(commands.microweave(
+        mode.escp2_printer_weave_mode or 0,
+        variant=mode.escp2_printer_weave_variant,
+    ))
     output.extend(commands.unidirectional(direction is PrintDirection.UNIDIRECTIONAL))
     if mode.escp2_emit_legacy_s_mode_2:
         # Some early Epson modes require exactly ``ESC ( s 01 00 02`` after
@@ -1050,7 +1053,9 @@ def _encode_profile_stream(
         model, mode, medium, device_settings
     )
     if print_method is not None:
-        output.extend(commands.print_method(print_method))
+        output.extend(commands.print_method(
+            print_method, payload_length=mode.escp2_print_method_payload_length,
+        ))
     prefix_end = len(output)
     for item in encoded_passes:
         output.extend(item)
@@ -1115,11 +1120,8 @@ class EpsonEscp2Backend:
         profile_path = model.escp2_profile is not None and model.backend_family != self.family
         if profile_path:
             page = model.native_page(page, mode, input_source)
-            definitions = {item.identity: item for item in model.physical_paths}
-            for path in rasters.identities:
-                definition = definitions[path]
-                if definition.media_classes and medium.media_class not in definition.media_classes:
-                    raise ValueError(f"Physical path {path.value} is unavailable for this medium")
+            # Factory ink roles describe the original ink set. Explicit raster
+            # routing also supports refilled channels, independently of paper.
             native_mode = _profile_mode(mode, model)
             top_offset, left_offset = _profile_imageable_origin_offsets(
                 model, page, native_mode, input_source=input_source,
@@ -1306,15 +1308,7 @@ class EpsonEscp2Backend:
             )
         if model.escp2_profile is not None and model.backend_family != self.family:
             page = model.native_page(page, mode, input_source)
-            active_paths = set(rasters.identities)
-            definitions = {item.identity: item for item in model.physical_paths}
-            for path in active_paths:
-                allowed = definitions[path].media_classes
-                if allowed and medium.media_class not in allowed:
-                    raise ValueError(
-                        f"PhysicalPath {path.value} ({definitions[path].factory_role}) "
-                        f"is not available for {medium.media_class} media"
-                    )
+            # Paper selection does not restrict explicitly routed ink channels.
             native_mode = _profile_mode(mode, model)
             # Raster rows and placement offsets are relative to the imageable
             # top. Pro profiles place the top margin in ESC (c; cut-sheet

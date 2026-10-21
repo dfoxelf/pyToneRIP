@@ -12,6 +12,8 @@ namespace pyToneRIP.Shared
     [DataContract]
     internal sealed class LegacyPrinterDefaults
     {
+        [DataMember(Name = "print_ticket_xml", Order = 7, EmitDefaultValue = false)] public string PrintTicketXml { get; set; }
+        [DataMember(Name = "has_user_devmode", Order = 8)] public bool HasUserDevMode { get; set; }
         [DataMember(Name = "page_width_mm", Order = 1)] public double PageWidthMm { get; set; }
         [DataMember(Name = "page_height_mm", Order = 2)] public double PageHeightMm { get; set; }
         [DataMember(Name = "borderless", Order = 3, EmitDefaultValue = false)] public bool? Borderless { get; set; }
@@ -193,7 +195,7 @@ namespace pyToneRIP.Shared
         }
 
         public static IReadOnlyList<RasterResolutionChoice> ResolutionChoices(
-            WorkflowPrintTicket ticket, string modelId = null)
+            WorkflowPrintTicket ticket)
         {
             var feature = ticket?.PageResolutionFeature;
             var options = feature?.Options?
@@ -212,20 +214,18 @@ namespace pyToneRIP.Shared
             var fallback = new List<RasterResolutionChoice>
             {
                 new RasterResolutionChoice { X = 300, Y = 300 },
+                new RasterResolutionChoice { X = 360, Y = 360 },
                 new RasterResolutionChoice { X = 600, Y = 600 },
+                new RasterResolutionChoice { X = 720, Y = 720 },
             };
-            if (modelId == "SureColorP900RIP")
-            {
-                fallback.Add(new RasterResolutionChoice { X = 360, Y = 360 });
-                fallback.Add(new RasterResolutionChoice { X = 720, Y = 720 });
-            }
             return fallback.OrderBy(item => item.X).ThenBy(item => item.Y).ToList();
         }
 
         public static string OverlayConfiguration(
             WorkflowPrintTicket ticket,
             string configurationJson,
-            string capabilitiesJson)
+            string capabilitiesJson,
+            Action<string> log = null)
         {
             var selection = Read(ticket);
             var configuration = RipConfigurationProjection.FromQueueJson(configurationJson);
@@ -268,6 +268,29 @@ namespace pyToneRIP.Shared
                         (!selection.Borderless.HasValue || item.GetNamedBoolean("borderless") == selection.Borderless.Value)
                         && Math.Abs(item.GetNamedNumber("width_mm") - selection.PageWidthMm.Value) <= PageDimensionToleranceMm
                         && Math.Abs(item.GetNamedNumber("height_mm") - selection.PageHeightMm.Value) <= PageDimensionToleranceMm);
+            }
+            if (page == null && selection.Borderless == true)
+            {
+                // Applications can retain PageBorderless from an earlier
+                // DEVMODE while selecting a different, explicitly bordered
+                // paper (for example ISOA6). Resolve that conflict to the
+                // named supported paper only when no borderless match exists.
+                // Unknown names and explicit unsupported borderless page IDs
+                // still fail; supported normalized borderless sizes above win.
+                page = pages.FirstOrDefault(item => !item.GetNamedBoolean("borderless")
+                    && OptionNameMatchesPageId(selection.PageOptionName, item.GetNamedString("id"))
+                    && (!selection.PageWidthMm.HasValue || !selection.PageHeightMm.HasValue
+                        || (Math.Abs(item.GetNamedNumber("width_mm") - selection.PageWidthMm.Value) <= PageDimensionToleranceMm
+                            && Math.Abs(item.GetNamedNumber("height_mm") - selection.PageHeightMm.Value) <= PageDimensionToleranceMm)));
+                if (page != null)
+                {
+                    SetByMeasurements(ticket.PageBorderlessFeature,
+                        option => OptionNameIs(option, "None"), null, "Borderless printing");
+                    selection.Borderless = false;
+                    WriteValidationLog(log, "PrintTicket borderless conflict resolved: model="
+                        + printerId + "; page=" + selection.PageOptionName
+                        + "; unsupported Borderless replaced with None");
+                }
             }
             if (page != null)
             {
@@ -317,7 +340,12 @@ namespace pyToneRIP.Shared
             LegacyPrinterDefaults defaults)
         {
             if (defaults == null) throw new ArgumentNullException(nameof(defaults));
-            var configuration = RipConfigurationProjection.FromQueueJson(configurationJson);
+            // OverlayConfiguration already crossed the queue-to-RIP schema
+            // boundary. Apply the DEVMODE selection to that exact projection.
+            var configuration = JsonObject.Parse(configurationJson);
+            if (configuration.GetNamedString("schema", "") != RipConfigurationProjection.Schema
+                || configuration.GetNamedNumber("version", 0) != 1)
+                throw new ArgumentException("Projected configuration schema is invalid.", nameof(configurationJson));
             var printer = configuration.GetNamedObject("printer");
             var layout = configuration.GetNamedObject("layout");
             var catalog = JsonObject.Parse(capabilitiesJson);

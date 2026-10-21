@@ -55,6 +55,19 @@ class OrderedDitherMatrix:
         my = (y + y_offset) % self.height
         return self.thresholds[my * self.width + mx]
 
+    def transposed(self) -> OrderedDitherMatrix:
+        """Exchange axes while preserving the verified threshold samples."""
+
+        return OrderedDitherMatrix(
+            width=self.height,
+            height=self.width,
+            thresholds=tuple(
+                self.thresholds[y * self.width + x]
+                for x in range(self.width) for y in range(self.height)
+            ),
+            source=self.source + " (transposed)",
+        )
+
 
 @dataclass(frozen=True, slots=True)
 class _DropEndpoint:
@@ -431,10 +444,12 @@ def load_gutenprint_fast_matrix() -> OrderedDitherMatrix:
     )
 
 
-@lru_cache(maxsize=3)
+@lru_cache(maxsize=4)
 def load_gutenprint_matrix(matrix_id: str) -> OrderedDitherMatrix:
     """Load the exact standard matrix selected by Gutenprint for a DPI aspect."""
 
+    if matrix_id == "matrix-1x2":
+        return load_gutenprint_matrix_2x1().transposed()
     if matrix_id == "matrix-2x1":
         return load_gutenprint_matrix_2x1()
     try:

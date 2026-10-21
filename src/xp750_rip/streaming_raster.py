@@ -14,19 +14,21 @@ from __future__ import annotations
 import os
 from collections.abc import Callable, Sequence
 from concurrent.futures import ThreadPoolExecutor
+from functools import partial
 
 import numpy as np
 
 from xp750_rip.contone import UINT16_MAX, LogicalChannelId
 from xp750_rip.dither.blank import EMPTY_SETTLE_ROWS, blank_row_spans
 from xp750_rip.dither.blue_noise import BlueNoiseFMDither, _channel_screen_parameters
+from xp750_rip.dither.coupled import CoupledErrorDiffusion
 from xp750_rip.dither.error_diffusion import (
     VariableCoefficientErrorDiffusion,
     _gaussian_highpass_band,
     binary_entropy_table,
-    ostromoukhov_coefficients,
-    zhou_fang_coefficients,
-    zhou_fang_modulation,
+    error_diffusion_tables,
+    x2y1_channel_seed,
+    x2y1_noise_sequence,
 )
 from xp750_rip.dither.fast import GutenprintVeryFastDither
 from xp750_rip.dither.ordered import GutenprintOrderedDither, _drop_lookup
@@ -79,6 +81,7 @@ def streaming_qtr_rasters(
         | GutenprintVeryFastDither
         | BlueNoiseFMDither
         | VariableCoefficientErrorDiffusion
+        | CoupledErrorDiffusion
     ),
     canvas_width: int,
     available_paths: tuple[PhysicalPathId, ...] | None = None,
@@ -134,6 +137,24 @@ def streaming_qtr_rasters(
     height = len(codes)
     width = codes.width
 
+    if isinstance(dither, CoupledErrorDiffusion):
+        def produce_coupled():
+            if on_dither_start is not None:
+                on_dither_start()
+            sources = {ink: codes for ink in logical_inks}
+            for start, packed in dither.iter_bands(
+                sources, qtr_luts, logical_inks, canvas_width=canvas_width,
+                band_rows=band_rows, cancel_check=cancel_check,
+            ):
+                yield PhysicalRasterBand(start, tuple(
+                    RasterBandPlane(path, packed[ink])
+                    for ink, path in zip(logical_inks, paths, strict=True)
+                ))
+        return StreamingPhysicalRasterSet(
+            width_pixels=canvas_width, height_rows=height, bit_depth=bit_depth,
+            identities=paths, band_factory=produce_coupled,
+        )
+
     def produce():
         from xp750_rip._cython_kernels import (
             blue_noise_qtr_band_kernel,
@@ -142,6 +163,7 @@ def streaming_qtr_rasters(
             ostromoukhov_qtr_band_kernel,
             qtr_active_rows_kernel,
             very_fast_qtr_band_kernel,
+            x2y1_qtr_band_kernel,
             zhou_fang_qtr_band_kernel,
         )
 
@@ -153,17 +175,9 @@ def streaming_qtr_rasters(
         error_states: dict[LogicalChannelId, np.ndarray] = {}
         coefficients = modulation = endpoints = endpoint_codes = entropy = None
         selected_error_kernel = None
+        error_kernels = {}
         if isinstance(dither, VariableCoefficientErrorDiffusion):
-            coefficients = (
-                ostromoukhov_coefficients()
-                if dither.algorithm is HalftoneAlgorithm.OSTROMOUKHOV
-                else zhou_fang_coefficients()
-            )
-            modulation = (
-                np.zeros(256, dtype=np.float64)
-                if dither.algorithm is HalftoneAlgorithm.OSTROMOUKHOV
-                else zhou_fang_modulation()
-            )
+            coefficients, modulation = error_diffusion_tables(dither.algorithm)
             endpoints = np.asarray(
                 [endpoint.value / UINT16_MAX for endpoint in dither.drops.endpoints],
                 dtype=np.float64,
@@ -175,6 +189,7 @@ def streaming_qtr_rasters(
             selected_error_kernel = {
                 HalftoneAlgorithm.OSTROMOUKHOV: ostromoukhov_qtr_band_kernel,
                 HalftoneAlgorithm.ZHOU_FANG: zhou_fang_qtr_band_kernel,
+                HalftoneAlgorithm.X2Y1: x2y1_qtr_band_kernel,
                 HalftoneAlgorithm.ENTROPY_CONSTRAINED_ZHOU_FANG: (
                     entropy_zhou_fang_qtr_band_kernel
                 ),
@@ -182,6 +197,15 @@ def streaming_qtr_rasters(
             error_states = {
                 logical: np.zeros(width + 2, dtype=np.float64) for logical in logical_inks
             }
+            error_kernels = {logical: selected_error_kernel for logical in logical_inks}
+            if dither.algorithm is HalftoneAlgorithm.X2Y1:
+                error_kernels = {
+                    logical: partial(
+                        selected_error_kernel,
+                        noise_samples=x2y1_noise_sequence(x2y1_channel_seed(dither.random_seed, logical)),
+                        noise_index=np.zeros(1, dtype=np.intp),
+                    ) for logical in logical_inks
+                }
 
         matrix = None
         lower_bits = upper_bits = range_points = None
@@ -261,7 +285,7 @@ def streaming_qtr_rasters(
                                 is HalftoneAlgorithm.ENTROPY_CONSTRAINED_ZHOU_FANG
                                 else np.empty((0, 0), dtype=np.float64)
                             )
-                            span_packed, next_error = selected_error_kernel(
+                            span_packed, next_error = error_kernels[logical](
                                 span_codes,
                                 lut,
                                 coefficients,

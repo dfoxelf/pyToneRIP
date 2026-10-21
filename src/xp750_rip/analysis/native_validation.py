@@ -367,6 +367,14 @@ def validate_escp2_native(result: BackendRenderResult) -> NativeStreamValidation
         )
         and dot_size.parameters.get("dot_size") == expected_dot
     )
+    weave_records = [item for item in records if item.name == "MICROWEAVE"]
+    expected_weave = bytes((result.mode.escp2_printer_weave_mode or 0,))
+    if result.mode.escp2_printer_weave_variant is not None:
+        expected_weave += bytes((result.mode.escp2_printer_weave_variant, 0))
+    mode_ok = bool(
+        mode_ok and len(weave_records) == 1
+        and weave_records[0].parameters.get("payload_hex") == expected_weave.hex(" ")
+    )
 
     page = result.page.ppd
     expected_width = round(page.width_points * page_units / 72)
@@ -460,11 +468,19 @@ def validate_escp2_native(result: BackendRenderResult) -> NativeStreamValidation
         if result.medium.print_methods
         else profile.default_print_method
     )
-    method_ok = (
-        print_method is None
-        if expected_method is None
-        else bool(print_method and print_method.parameters.get("value") == expected_method)
-    )
+    method_records = [item for item in records if item.name == "PRINT_METHOD"]
+    if expected_method is None:
+        method_ok = not method_records
+    else:
+        length = result.mode.escp2_print_method_payload_length
+        expected_payload = (
+            expected_method.to_bytes(1, "little") if length == 1
+            else expected_method.to_bytes(2, "little") + bytes(2)
+        )
+        method_ok = bool(
+            len(method_records) == 1
+            and print_method.parameters.get("payload_hex") == expected_payload.hex(" ")
+        )
     init_commands = (
         () if result.model.catalog_package_id in {"gp--escp2-r2880", "gp--escp2-r3000"}
         else result.input_source.initialization_commands

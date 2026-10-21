@@ -24,6 +24,7 @@ from xp750_rip.calibration import decode_per_channel, decode_rgb_selectors
 from xp750_rip.contone import LogicalChannelId
 from xp750_rip.direction import PrintDirection
 from xp750_rip.dither.blue_noise import BlueNoiseFMDither, load_blue_noise_fm_matrix
+from xp750_rip.dither.coupled import CoupledErrorDiffusion, coupled_channel_groups
 from xp750_rip.dither.error_diffusion import VariableCoefficientErrorDiffusion
 from xp750_rip.dither.fast import GutenprintVeryFastDither
 from xp750_rip.dither.ordered import (
@@ -376,6 +377,9 @@ class MonoRipService:
             HalftoneAlgorithm.OSTROMOUKHOV,
             HalftoneAlgorithm.ZHOU_FANG,
             HalftoneAlgorithm.ENTROPY_CONSTRAINED_ZHOU_FANG,
+            HalftoneAlgorithm.X2Y1,
+            HalftoneAlgorithm.COUPLED_ED,
+            HalftoneAlgorithm.COUPLED_ED_CM,
         )
         if halftone_algorithm in error_diffusion_algorithms:
             matrix_id = None
@@ -411,7 +415,12 @@ class MonoRipService:
         y_offset = configuration.halftone.y_offset + (
             0 if legacy_canvas else layout.placement_y_rows
         )
-        if halftone_algorithm in error_diffusion_algorithms:
+        if halftone_algorithm.is_coupled:
+            dither = CoupledErrorDiffusion(
+                drops=drops, x_offset=x_offset, y_offset=y_offset,
+                couple_light_inks=halftone_algorithm is HalftoneAlgorithm.COUPLED_ED,
+            )
+        elif halftone_algorithm in error_diffusion_algorithms:
             dither = VariableCoefficientErrorDiffusion(
                 drops=drops,
                 algorithm=halftone_algorithm,
@@ -512,7 +521,15 @@ class MonoRipService:
             parallel_error_diffusion = (
                 halftone_algorithm in error_diffusion_algorithms and len(selected) > 1
             )
-            if parallel_error_diffusion:
+            if isinstance(dither, CoupledErrorDiffusion):
+                dots = dither.dither_channels_placed(
+                    {ink: calibration_codes[ink.value] if calibration_codes is not None
+                     else code_rows for ink in selected},
+                    runtime_luts, selected, canvas_width=dither_width, canvas_height=dither_height,
+                    x=layout.placement_x_pixels if legacy_canvas else 0,
+                    y=layout.placement_y_rows if legacy_canvas else 0,
+                )
+            elif parallel_error_diffusion:
                 worker_count = min(len(selected), max(1, (os.cpu_count() or 2) // 2))
                 if trace is not None:
                     trace.event(
@@ -789,6 +806,10 @@ class MonoRipService:
                     if manifest_print_method is not None
                     else None
                 ),
+                "print_method_payload_length": (
+                    mode.escp2_print_method_payload_length
+                    if manifest_print_method is not None else None
+                ),
             },
             "page": {
                 "id": page.ppd.name,
@@ -822,6 +843,10 @@ class MonoRipService:
                 "matrix_source": (
                     matrix.source
                     if matrix is not None
+                    else "coupled adaptive error diffusion; no threshold matrix"
+                    if halftone_algorithm.is_coupled
+                    else "constant-weight X2Y1 error diffusion; no threshold matrix"
+                    if halftone_algorithm is HalftoneAlgorithm.X2Y1
                     else "variable-coefficient error diffusion; no threshold matrix"
                 ),
                 "matrix_dimensions": (
@@ -835,11 +860,17 @@ class MonoRipService:
                     True if halftone_algorithm in error_diffusion_algorithms else None
                 ),
                 "blank_region_policy": (
+                    "per-group zero demand; settle 3 rows, clear on fourth; keep LCG state"
+                    if halftone_algorithm.is_coupled else
                     "per-ink zero demand; settle 3 rows, clear on fourth"
                     if halftone_algorithm in error_diffusion_algorithms
                     else "skip zero ink demand; preserve absolute screen coordinates"
                 ),
                 "coefficient_source": (
+                    "ReferenceDriver adaptive signed four-neighbour recurrence"
+                    if halftone_algorithm.is_coupled else
+                    "X2Y1: ahead 11/19, next-row back 3/19, centre 4/19, ahead 1/19"
+                    if halftone_algorithm is HalftoneAlgorithm.X2Y1 else
                     "Ostromoukhov SIGGRAPH 2001 Appendix I"
                     if halftone_algorithm is HalftoneAlgorithm.OSTROMOUKHOV
                     else (
@@ -852,6 +883,11 @@ class MonoRipService:
                     )
                 ),
                 "threshold_modulation": (
+                    "Noise_NatInv: 65 signed int16 amplitude knots; natural-inverse interpolation; "
+                    "MT19937 shuffled signed 15-bit samples; continuous per-ink cursor"
+                    if halftone_algorithm is HalftoneAlgorithm.X2Y1 else
+                    "conditional LCG 0x343FD/0x269EC3; level-dependent amplitude"
+                    if halftone_algorithm.is_coupled else
                     "Liu et al. 2014 entropy-constrained Zhou-Fang"
                     if halftone_algorithm
                     is HalftoneAlgorithm.ENTROPY_CONSTRAINED_ZHOU_FANG
@@ -862,9 +898,13 @@ class MonoRipService:
                     )
                 ),
                 "execution": (
+                    "AOT Cython specialized single/pair adaptive ED"
+                    if halftone_algorithm.is_coupled else
                     "Gutenprint variable-drop Adaptive fallback to Ordered"
                     if halftone_algorithm is HalftoneAlgorithm.ADAPTIVE_HYBRID
                     else (
+                        "AOT Cython serpentine X2Y1 error diffusion"
+                        if halftone_algorithm is HalftoneAlgorithm.X2Y1 else
                         "AOT Cython serpentine variable-coefficient error diffusion"
                         if halftone_algorithm in error_diffusion_algorithms
                         else "native selected algorithm"
@@ -874,6 +914,12 @@ class MonoRipService:
                     "deterministic aperiodic VAC phase/reflection per tile and ink"
                     if halftone_algorithm is HalftoneAlgorithm.BLUE_NOISE_FM
                     else None
+                ),
+                "coupled_channel_groups": (
+                    [[ink.value for ink in group] for group in coupled_channel_groups(
+                         selected, couple_light_inks=dither.couple_light_inks)
+                     if len(group) == 2]
+                    if halftone_algorithm.is_coupled else []
                 ),
             },
             "stream_size": live_size if live_backend is not None else len(backend_result.data),

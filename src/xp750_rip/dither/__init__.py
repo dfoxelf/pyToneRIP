@@ -4,6 +4,7 @@
 """Source-derived halftone implementations."""
 
 from xp750_rip.dither.blue_noise import BlueNoiseFMDither, load_blue_noise_fm_matrix
+from xp750_rip.dither.coupled import CoupledErrorDiffusion
 from xp750_rip.dither.error_diffusion import VariableCoefficientErrorDiffusion
 from xp750_rip.dither.fast import GutenprintVeryFastDither
 from xp750_rip.dither.ordered import (
@@ -22,10 +23,11 @@ from xp750_rip.dither.strategy import (
 )
 
 __all__ = [
+    "BlueNoiseFMDither",
+    "CoupledErrorDiffusion",
     "GutenprintDropModel",
     "GutenprintOrderedDither",
     "GutenprintVeryFastDither",
-    "BlueNoiseFMDither",
     "HalftoneAlgorithm",
     "HalftoneStrategy",
     "OrderedDitherMatrix",

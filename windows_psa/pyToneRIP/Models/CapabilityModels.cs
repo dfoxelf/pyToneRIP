@@ -33,6 +33,39 @@ namespace pyToneRIP.Models
         [DataMember(Name = "device_settings")] public List<DeviceSettingCapability> DeviceSettings { get; set; }
         [DataMember(Name = "maintenance_actions")] public List<MaintenanceActionCapability> MaintenanceActions { get; set; }
 
+        public List<CapabilityOption> CompatibleDithers(IEnumerable<CapabilityOption> algorithms)
+        {
+            var hasMainPair = HasInk("C") && HasInk("M");
+            var hasLightPair = HasInk("LC") && HasInk("LM");
+            return algorithms.Where(option =>
+                option.Id == "Coupled ED" ? hasMainPair && hasLightPair :
+                option.Id == "Coupled ED (C/M)" ? hasMainPair : true).ToList();
+        }
+
+        public string CompatibleDitherSelection(string selected)
+        {
+            // Older queues used one ID for both pairs. A printer without the
+            // light pair can retain the C/M behaviour under its explicit ID.
+            return selected == "Coupled ED" && !(HasInk("LC") && HasInk("LM"))
+                && HasInk("C") && HasInk("M") ? "Coupled ED (C/M)" : selected;
+        }
+
+        private bool HasInk(string expected)
+        {
+            return PhysicalPaths != null && PhysicalPaths.Any(path =>
+                MatchesInk(path.DefaultLogicalInk, expected)
+                || MatchesInk(path.ShortName, expected)
+                || MatchesInk(InkLabels.ShortName(path.FactoryRole), expected));
+        }
+
+        private static bool MatchesInk(string value, string expected)
+        {
+            var name = (value ?? "").Trim().ToUpperInvariant();
+            if (name == "VM") name = "M";
+            if (name == "VLM") name = "LM";
+            return name == expected;
+        }
+
         public override string ToString() => DisplayName + " [" + Id + "]";
     }
 
