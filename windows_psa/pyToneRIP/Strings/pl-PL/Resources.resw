@@ -114,6 +114,7 @@
   <data name="Choice.dimensions"><value>wymiary</value></data>
   <data name="Choice.fit"><value>pasować</value></data>
   <data name="Choice.lanczos"><value>Lanczos</value></data>
+  <data name="Choice.mitchell"><value>Mitchell–Netravali</value></data>
   <data name="Choice.landscape"><value>Pozioma</value></data>
   <data name="Choice.native"><value>Rozmiar oryginalny</value></data>
   <data name="Choice.nearest"><value>Najbliższy sąsiad</value></data>
@@ -209,6 +210,17 @@
   <data name="Code.WindowsPrinterRenamedToConfigurationRemainsLinkedByPrinterUri"><value>Nazwa drukarki Windows została zmieniona na {0}. Konfiguracja pozostaje połączona przez PrinterUri.</value></data>
   <data name="Code.WindowsWillRemoveTheVirtualQueueAndItsSavedPyToneRIPConfigurationTheSign"><value>System Windows usunie kolejkę wirtualną {0} i jej zapisaną konfigurację pyToneRIP. Podpisany moduł {1} pozostaje dostępny dla innej kolejki.</value></data>
   <data name="Language.Automatic.Text"><value>Automatycznie (Windows)</value></data>
+  <data name="DitherHelp.AdaptiveHybrid"><value>W obecnym RIP-ie ta opcja zgodności używa Ordered przy zmiennej wielkości kropli. Wybierz bezpośrednio Ordered: opcja nie zapewnia obecnie odrębnej korzyści jakościowej z przetwarzania adaptacyjnego.</value></data>
+  <data name="DitherHelp.BlueNoiseFM"><value>Używa maski progowej szumu niebieskiego, aby ograniczyć regularność rastra. Odpowiedni do zdjęć i płynnych przejść na niebie; drobna ziarnistość lub pozostałości struktury maski mogą być nadal widoczne.</value></data>
+  <data name="DitherHelp.CoupledED"><value>Koordynuje rozmieszczenie punktów w parach C/M i LC/LM za pomocą dyfuzji błędu i szumu progowego zależnego od tonu. Odpowiedni do drukarek z obiema parami; nakładanie punktów i równowaga atramentów w parze mogą się zmienić. Sprawdź wydruk próbny z własnymi krzywymi tonalnymi.</value></data>
+  <data name="DitherHelp.CoupledEDCM"><value>Koordynuje punkty w parze C/M; jasne atramenty i pozostałe kanały działają niezależnie. Odpowiedni do drukarek czterokolorowych lub gdy nie chcesz łączyć LC/LM; zmienia nakładanie i fakturę C/M bez sprzężenia jasnych atramentów.</value></data>
+  <data name="DitherHelp.EntropyZhouFang"><value>Dostosowuje modulację progu Zhou-Fang do tonu i lokalnej struktury obrazu. Odpowiedni do szczegółowych zdjęć z jednolitymi obszarami; wymaga dodatkowych obliczeń i może zmieniać odwzorowanie drobnych faktur.</value></data>
+  <data name="DitherHelp.Fast"><value>Używa małej uporządkowanej macierzy progów i kropli o zmiennym rozmiarze. Odpowiedni do prostej grafiki i wydruków próbnych; wzór może być wyraźniejszy w przejściach tonalnych. Nazwa nie gwarantuje szybszego przetwarzania.</value></data>
+  <data name="DitherHelp.Ordered"><value>Rozmieszcza krople atramentu o różnych rozmiarach według stałej macierzy progów. Odpowiedni do skal testowych i grafiki; na płynnych przejściach tonalnych może być widoczny powtarzalny wzór rastra.</value></data>
+  <data name="DitherHelp.Ostromoukhov"><value>Rozdziela błąd kwantyzacji między sąsiednie piksele z wagami zależnymi od tonu. Odpowiedni do szczegółowych zdjęć i przejść tonalnych; przy niektórych tonach mogą powstawać kierunkowe łańcuchy punktów.</value></data>
+  <data name="DitherHelp.VeryFast"><value>W każdej wybranej pozycji stawia tylko największą dostępną kroplę. Odpowiedni do orientacyjnych wydruków próbnych; ziarnistość jest grubsza, a gradacja w światłach może się pogorszyć. Większa szybkość nie jest gwarantowana.</value></data>
+  <data name="DitherHelp.X2Y1"><value>Używa dyfuzji błędu z naprzemiennym kierunkiem wierszy, wagami dla czterech sąsiadów i modulacją szumu zależną od tonu. Odpowiedni do nieba, zachodów słońca i rozległych przejść tonalnych; drobna ziarnistość lub kierunkowa faktura mogą pozostać widoczne.</value></data>
+  <data name="DitherHelp.ZhouFang"><value>Dodaje do dyfuzji błędu modulację progu kwantyzacji zależną od tonu, aby ograniczyć regularne struktury w półtonach. Odpowiedni do przejść, na których Ostromoukhov tworzy wzory; ziarnistość może być bardziej widoczna.</value></data>
   <data name="MainPage.About.Label"><value>Informacje…</value></data>
   <data name="MainPage.Add.Label"><value>Dodaj drukarkę</value></data>
   <data name="MainPage.Empty.Add.Content"><value>Dodaj drukarkę</value></data>
@@ -244,6 +256,8 @@
   <data name="Maintenance.nozzle_check.Title"><value>Wydrukuj test dysz</value></data>
   <data name="Maintenance.test_page.Description"><value>Wydrukuj mały, surowy wzór na każdy kanał, korzystając z wybranych ustawień modelu.</value></data>
   <data name="Maintenance.test_page.Title"><value>Wydrukuj stronę testową pyToneRIP</value></data>
+  <data name="Processing16Bit.Content"><value>Przetwarzanie 16-bitowe</value></data>
+  <data name="Processing16BitExperimental.Text"><value>(tryb eksperymentalny)</value></data>
   <data name="Splash.Continue.Content"><value>Kontynuuj</value></data>
   <data name="Splash.Description.Text"><value>Przygotowywanie silnika rastrowego i ładowanie zainstalowanych drukarek…</value></data>
   <data name="Splash.Title.Text"><value>Uruchamianie pyToneRIP</value></data>
@@ -289,4 +303,9 @@
   <data name="DeviceChoice.Model_B" xml:space="preserve"><value>Model B</value></data>
   <data name="DeviceChoice.Code" xml:space="preserve"><value>Kod {0}</value></data>
   <data name="DeviceChoice.ThinPaper" xml:space="preserve"><value>{0} (cienki papier)</value></data>
+  <data name="ResamplingHelp.nearest"><value>Kopiuje najbliższy piksel źródłowy bez wygładzania; przydatny do grafiki pikselowej i wzorców testowych wymagających zachowania wartości pikseli. Jest szybki, ale powiększanie zdjęć może powodować schodkowe krawędzie i nierówne przejścia.</value></data>
+  <data name="ResamplingHelp.bilinear"><value>Łączy sąsiednie piksele, zapewniając płynne przejścia i szybkie przetwarzanie. Przydatny, gdy ważna jest szybkość, ale zmiękcza drobne szczegóły i cienkie linie.</value></data>
+  <data name="ResamplingHelp.bicubic"><value>Stosuje filtr sześcienny, równoważąc ostrość i płynne przejścia tonalne na zdjęciach. Zachowuje więcej szczegółów niż metoda dwuliniowa, ale może tworzyć delikatne jasne lub ciemne obwódki przy kontrastowych krawędziach.</value></data>
+  <data name="ResamplingHelp.lanczos"><value>Dobrze zachowuje drobne szczegóły podczas przeliczania zdjęć na siatkę ditheringu, zwłaszcza przy zmniejszaniu. Wybierz go dla większej ostrości, zwracając uwagę na jasne lub ciemne obwódki przy kontrastowych krawędziach.</value></data>
+  <data name="ResamplingHelp.mitchell"><value>Równoważy szczegóły i płynne przejścia, tworząc mniej obwódek przy krawędziach niż Lanczos. Przydatny do zdjęć, na których obwódki przeszkadzają, kosztem nieco łagodniejszych drobnych szczegółów i wolniejszego przetwarzania.</value></data>
 </root>

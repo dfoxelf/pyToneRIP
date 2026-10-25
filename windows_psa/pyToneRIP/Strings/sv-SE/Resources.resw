@@ -114,6 +114,7 @@
   <data name="Choice.dimensions"><value>mått</value></data>
   <data name="Choice.fit"><value>Anpassa</value></data>
   <data name="Choice.lanczos"><value>lanczos</value></data>
+  <data name="Choice.mitchell"><value>Mitchell–Netravali</value></data>
   <data name="Choice.landscape"><value>Liggande</value></data>
   <data name="Choice.native"><value>Ursprunglig storlek</value></data>
   <data name="Choice.nearest"><value>Närmaste granne</value></data>
@@ -209,6 +210,17 @@
   <data name="Code.WindowsPrinterRenamedToConfigurationRemainsLinkedByPrinterUri"><value>Windows-skrivaren har bytt namn till {0}. Konfigurationen förblir länkad av PrinterUri.</value></data>
   <data name="Code.WindowsWillRemoveTheVirtualQueueAndItsSavedPyToneRIPConfigurationTheSign"><value>Windows tar bort den virtuella kön {0} och dess sparade pyToneRIP-konfiguration. Den signerade modulen {1} förblir tillgänglig för en annan kö.</value></data>
   <data name="Language.Automatic.Text"><value>Automatisk (Windows)</value></data>
+  <data name="DitherHelp.AdaptiveHybrid"><value>I nuvarande RIP använder detta kompatibilitetsalternativ Ordered för varierande droppstorlekar. Välj Ordered direkt: alternativet ger för närvarande ingen separat adaptiv kvalitetsfördel.</value></data>
+  <data name="DitherHelp.BlueNoiseFM"><value>Använder en tröskelmask med blått brus för att göra punktmönstret mindre regelbundet. Lämpligt för foton och mjuka tonövergångar i himlar; fin kornighet eller rester av maskens struktur kan fortfarande synas.</value></data>
+  <data name="DitherHelp.CoupledED"><value>Samordnar punktplaceringen inom paren C/M och LC/LM med felspridning och tonberoende tröskelbrus. Lämpligt för skrivare med båda paren; punktöverlappning och balansen mellan parade bläck kan ändras. Kontrollera en provutskrift med dina tonkurvor.</value></data>
+  <data name="DitherHelp.CoupledEDCM"><value>Samordnar punktplaceringen inom C/M-paret; ljusa bläck och övriga kanaler förblir oberoende. Lämpligt för fyrfärgsskrivare eller när LC/LM-koppling inte önskas; ändrar överlappning och textur i C/M utan att koppla de ljusa bläcken.</value></data>
+  <data name="DitherHelp.EntropyZhouFang"><value>Anpassar tröskelmoduleringen i Zhou-Fang efter ton och lokal bildstruktur. Lämpligt för detaljrika foton med jämna ytor; kräver fler beräkningar och kan ändra återgivningen av fina texturer.</value></data>
+  <data name="DitherHelp.Fast"><value>Använder en liten ordnad tröskelmatris med varierande droppstorlekar. Lämpligt för enkel grafik och provutskrifter; mönstret kan synas tydligare i tonövergångar. Namnet garanterar inte snabbare bearbetning.</value></data>
+  <data name="DitherHelp.Ordered"><value>Placerar bläckdroppar av olika storlek med en fast tröskelmatris. Lämpligt för testskalor och grafik; mjuka tonövergångar kan visa ett upprepat rastermönster.</value></data>
+  <data name="DitherHelp.Ostromoukhov"><value>Fördelar kvantiseringsfelet till angränsande pixlar med tonberoende vikter. Lämpligt för detaljrika foton och tonövergångar; vissa toner kan visa riktade kedjor av punkter.</value></data>
+  <data name="DitherHelp.VeryFast"><value>Använder endast den största tillgängliga droppen på varje vald punktposition. Lämpligt för grova provutskrifter; kornigheten blir grövre och nyanseringen i högdagrar kan försämras. Snabbare bearbetning garanteras inte.</value></data>
+  <data name="DitherHelp.X2Y1"><value>Använder felspridning med växlande riktning mellan rader, vikter för fyra grannar och tonberoende brusmodulering. Lämpligt för himlar, solnedgångar och breda tonövergångar; fin kornighet eller riktad textur kan fortfarande synas.</value></data>
+  <data name="DitherHelp.ZhouFang"><value>Lägger till tonberoende modulering av kvantiseringströskeln vid felspridning för att minska regelbundna strukturer i mellantoner. Lämpligt för tonövergångar där Ostromoukhov ger mönster; kornigheten kan bli tydligare.</value></data>
   <data name="MainPage.About.Label"><value>Om...</value></data>
   <data name="MainPage.Add.Label"><value>Lägg till skrivare</value></data>
   <data name="MainPage.Empty.Add.Content"><value>Lägg till skrivare</value></data>
@@ -244,6 +256,8 @@
   <data name="Maintenance.nozzle_check.Title"><value>Skriv ut munstyckeskontroll</value></data>
   <data name="Maintenance.test_page.Description"><value>Skriv ut ett litet råmönster per kanal med de valda modellinställningarna.</value></data>
   <data name="Maintenance.test_page.Title"><value>Skriv ut pyToneRIP-testsida</value></data>
+  <data name="Processing16Bit.Content"><value>16-bitars bearbetning</value></data>
+  <data name="Processing16BitExperimental.Text"><value>(experimentellt läge)</value></data>
   <data name="Splash.Continue.Content"><value>Fortsätta</value></data>
   <data name="Splash.Description.Text"><value>Förbereder rastermotorn och laddar installerade skrivare...</value></data>
   <data name="Splash.Title.Text"><value>Startar pyToneRIP</value></data>
@@ -289,4 +303,9 @@
   <data name="DeviceChoice.Model_B" xml:space="preserve"><value>Modell B</value></data>
   <data name="DeviceChoice.Code" xml:space="preserve"><value>Kod {0}</value></data>
   <data name="DeviceChoice.ThinPaper" xml:space="preserve"><value>{0} (tunt papper)</value></data>
+  <data name="ResamplingHelp.nearest"><value>Kopierar närmaste källpixel utan utjämning; lämpligt för pixelgrafik och testmönster där pixelvärdena ska bevaras. Metoden är snabb, men kan ge trappstegsformade kanter och grova övergångar när foton förstoras.</value></data>
+  <data name="ResamplingHelp.bilinear"><value>Blandar närliggande pixlar för mjuka övergångar och snabb bearbetning. Lämpligt när hastigheten är viktig, men gör fina detaljer och tunna linjer mjukare.</value></data>
+  <data name="ResamplingHelp.bicubic"><value>Använder ett kubiskt filter för balans mellan skärpa och mjuka tonövergångar i foton. Bevarar fler detaljer än bilinjär interpolation, men kan ge svaga ljusa eller mörka konturer vid kanter med hög kontrast.</value></data>
+  <data name="ResamplingHelp.lanczos"><value>Bevarar fina detaljer väl när foton räknas om till ditheringrastret, särskilt vid förminskning. Välj det för ett skarpare resultat, men se upp för ljusa eller mörka konturer vid kanter med hög kontrast.</value></data>
+  <data name="ResamplingHelp.mitchell"><value>Balanserar detaljer och mjuka övergångar med färre kantkonturer än Lanczos. Lämpligt för foton där sådana konturer stör, till priset av något mjukare fina detaljer och långsammare bearbetning.</value></data>
 </root>

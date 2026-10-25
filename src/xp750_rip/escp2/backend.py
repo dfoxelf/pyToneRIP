@@ -532,6 +532,7 @@ def _encode_mode96_stream(
     encoded_passes: tuple[bytes, ...],
     job_label: str,
     direction: PrintDirection,
+    remote_setup_commands: tuple[bytes, ...] = (),
     split_parts: bool = False,
 ) -> bytes | tuple[bytes, bytes]:
     mode = XP750_MODEL96_MODE_BY_ID[mode_id]
@@ -557,6 +558,8 @@ def _encode_mode96_stream(
             media_size=_paper_media_size(page),
         )
     )
+    for device_command in remote_setup_commands:
+        output.extend(device_command)
     _append_roll_mechanics(
         output,
         input_source=input_source,
@@ -725,7 +728,8 @@ def _selected_device_commands(
     for setting in model.device_settings:
         if setting.identity in skip:
             continue
-        if (model.catalog_package_id in {"gp--escp2-r2400", "gp--escp2-r2880"}
+        if ((model.catalog_package_id in {"gp--escp2-r2400", "gp--escp2-r2880"}
+             or model.backend_family == "epson_escp2_model96")
             and setting.identity == "Drying_Time" and setting.identity not in values):
             # Legacy jobs did not advertise a drying override. An explicit
             # selection, including Off, sends DR; unchanged jobs keep their header.
@@ -1183,6 +1187,7 @@ class EpsonEscp2Backend:
                     page=_page_geometry(page),
                 )
                 legacy_parts = _encode_fixed_model96_stream(
+                    remote_setup_commands=_selected_device_commands(model, device_settings),
                     profile=profile,
                     color_configuration=2,
                     job_label=job_label,
@@ -1216,6 +1221,7 @@ class EpsonEscp2Backend:
             left_units = horizontal_offset_pixels * native_mode.horizontal_units // native_mode.printed_horizontal_dpi
             geometry = _mode_page_geometry(page, native_mode.page_management_units)
             parts = _encode_mode96_stream(
+                remote_setup_commands=_selected_device_commands(model, device_settings),
                 mode_id=mode.identity,
                 medium=medium,
                 page=page,
@@ -1451,6 +1457,7 @@ class EpsonEscp2Backend:
                 passes = tuple(item.with_compressed_rows() for item in passes)
                 encoded_passes = tuple(item.encode() for item in passes)
                 data = _encode_fixed_model96_stream(
+                    remote_setup_commands=_selected_device_commands(model, device_settings),
                     profile=profile,
                     color_configuration=2,
                     job_label=job_label,
@@ -1466,6 +1473,7 @@ class EpsonEscp2Backend:
                 with trace.stage("ESC/P2 construction"):
                     encoded_passes = tuple(item.encode() for item in passes)
                     data = _encode_fixed_model96_stream(
+                        remote_setup_commands=_selected_device_commands(model, device_settings),
                         profile=profile,
                         color_configuration=2,
                         job_label=job_label,
@@ -1535,6 +1543,7 @@ class EpsonEscp2Backend:
                 passes = tuple(item.with_compressed_rows() for item in passes)
                 weave_schedule = replace(weave_schedule, passes=passes)
                 data = _encode_mode96_stream(
+                    remote_setup_commands=_selected_device_commands(model, device_settings),
                     mode_id=mode.identity,
                     medium=medium,
                     page=page,
@@ -1553,6 +1562,7 @@ class EpsonEscp2Backend:
                 encoded_passes = tuple(item.encode(timings) for item in passes)
                 stream_started = perf_counter()
                 data = _encode_mode96_stream(
+                    remote_setup_commands=_selected_device_commands(model, device_settings),
                     mode_id=mode.identity,
                     medium=medium,
                     page=page,

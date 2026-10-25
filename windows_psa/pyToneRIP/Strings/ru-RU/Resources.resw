@@ -114,6 +114,7 @@
   <data name="Choice.dimensions"><value>размеры</value></data>
   <data name="Choice.fit"><value>вписать</value></data>
   <data name="Choice.lanczos"><value>Ланчос</value></data>
+  <data name="Choice.mitchell"><value>Mitchell–Netravali</value></data>
   <data name="Choice.landscape"><value>альбомная</value></data>
   <data name="Choice.native"><value>исходный размер</value></data>
   <data name="Choice.nearest"><value>по ближайшему соседу</value></data>
@@ -209,6 +210,17 @@
   <data name="Code.WindowsPrinterRenamedToConfigurationRemainsLinkedByPrinterUri"><value>Принтер Windows переименован в {0}. Конфигурация остается связанной с помощью PrinterUri.</value></data>
   <data name="Code.WindowsWillRemoveTheVirtualQueueAndItsSavedPyToneRIPConfigurationTheSign"><value>Windows удалит виртуальную очередь {0} и ее сохраненную конфигурацию pyToneRIP. Подписанный модуль {1} остается доступным для другой очереди.</value></data>
   <data name="Language.Automatic.Text"><value>Автоматически (Windows)</value></data>
+  <data name="DitherHelp.AdaptiveHybrid"><value>В текущем RIP этот вариант совместимости использует Ordered для печати каплями переменного размера. Выбирайте непосредственно Ordered: отдельного преимущества адаптивной обработки этот вариант сейчас не даёт.</value></data>
+  <data name="DitherHelp.BlueNoiseFM"><value>Использует пороговую маску синего шума, чтобы сделать расположение растровых точек менее регулярным. Подходит для фотографий и плавных переходов неба; мелкая зернистость или остаточная структура маски могут оставаться заметными.</value></data>
+  <data name="DitherHelp.CoupledED"><value>Согласует постановку точек внутри пар C/M и LC/LM с помощью диффузии ошибки и зависящего от тона шума порога. Подходит для принтеров с обеими парами; перекрытие точек и баланс парных чернил могут измениться. Проверьте пробный отпечаток со своими тональными кривыми.</value></data>
+  <data name="DitherHelp.CoupledEDCM"><value>Согласует постановку точек внутри пары C/M; светлые чернила и остальные каналы обрабатываются независимо. Подходит для четырёхцветных принтеров или когда совместная обработка LC/LM нежелательна; меняет перекрытие и текстуру C/M без согласования пары светлых чернил.</value></data>
+  <data name="DitherHelp.EntropyZhouFang"><value>Настраивает модуляцию порога Zhou-Fang с учётом тона и локальной структуры изображения. Подходит для детальных фотографий с плавными участками; требует дополнительных вычислений и может менять передачу мелкой фактуры.</value></data>
+  <data name="DitherHelp.Fast"><value>Использует небольшую регулярную матрицу порогов и капли переменного размера. Подходит для простой графики и пробных отпечатков; на градиентах повторяющийся узор может быть заметнее, а название не гарантирует ускорения.</value></data>
+  <data name="DitherHelp.Ordered"><value>Размещает капли чернил разного размера по фиксированной матрице порогов. Подходит для тестовых шкал и графики; на плавных тональных градиентах может проявляться повторяющаяся структура растра.</value></data>
+  <data name="DitherHelp.Ostromoukhov"><value>Распределяет ошибку квантования между соседними пикселями с весами, зависящими от тона. Подходит для детальных фотографий и тональных переходов; в отдельных тонах могут появляться направленные цепочки точек.</value></data>
+  <data name="DitherHelp.VeryFast"><value>В каждой выбранной позиции ставит только самую крупную доступную каплю. Подходит для черновых пробных отпечатков; зернистость крупнее, а передача градаций в светах может ухудшиться. Ускорение не гарантируется.</value></data>
+  <data name="DitherHelp.X2Y1"><value>Использует диффузию ошибки с чередованием направления строк, весами для четырёх соседей и зависящей от тона шумовой модуляцией. Подходит для неба, закатов и протяжённых тональных градиентов; мелкая зернистость или направленная текстура могут сохраняться.</value></data>
+  <data name="DitherHelp.ZhouFang"><value>Добавляет к диффузии ошибки зависящую от тона модуляцию порога квантования, чтобы уменьшить регулярные структуры в полутонах. Подходит для градиентов, на которых Ostromoukhov даёт узор; зернистость может стать заметнее.</value></data>
   <data name="MainPage.About.Label"><value>О программе…</value></data>
   <data name="MainPage.Add.Label"><value>Добавить принтер</value></data>
   <data name="MainPage.Empty.Add.Content"><value>Добавить принтер</value></data>
@@ -244,6 +256,8 @@
   <data name="Maintenance.nozzle_check.Title"><value>Печать проверки дюз</value></data>
   <data name="Maintenance.test_page.Description"><value>Напечатайте небольшой необработанный шаблон для каждого канала, используя выбранные настройки модели.</value></data>
   <data name="Maintenance.test_page.Title"><value>Распечатать тестовую страницу pyToneRIP</value></data>
+  <data name="Processing16Bit.Content"><value>16-битная обработка</value></data>
+  <data name="Processing16BitExperimental.Text"><value>(экспериментальный режим)</value></data>
   <data name="Splash.Continue.Content"><value>Продолжить</value></data>
   <data name="Splash.Description.Text"><value>Подготовка растрового движка и загрузка установленных принтеров…</value></data>
   <data name="Splash.Title.Text"><value>Запуск pyToneRIP</value></data>
@@ -289,4 +303,9 @@
   <data name="DeviceChoice.Model_B" xml:space="preserve"><value>Вариант B</value></data>
   <data name="DeviceChoice.Code" xml:space="preserve"><value>Код {0}</value></data>
   <data name="DeviceChoice.ThinPaper" xml:space="preserve"><value>{0} (тонкая бумага)</value></data>
+  <data name="ResamplingHelp.nearest"><value>Копирует ближайший исходный пиксель без сглаживания; подходит для пиксельной графики и тестовых изображений, где важно сохранить значения пикселей. Работает быстро, но при увеличении фотографий может давать ступенчатые края и грубые переходы.</value></data>
+  <data name="ResamplingHelp.bilinear"><value>Смешивает соседние пиксели, обеспечивая плавные переходы и быструю обработку. Подходит, когда важна скорость, но смягчает мелкие детали и тонкие линии.</value></data>
+  <data name="ResamplingHelp.bicubic"><value>Использует кубический фильтр для баланса резкости и плавных тональных переходов на фотографиях. Сохраняет больше деталей, чем билинейный метод, но возле контрастных границ возможны небольшие светлые или тёмные ореолы.</value></data>
+  <data name="ResamplingHelp.lanczos"><value>Хорошо сохраняет мелкие детали при пересчёте фотографии на сетку дизеринга, особенно при уменьшении. Подходит для более резкого результата, но возле контрастных границ могут появляться светлые или тёмные ореолы.</value></data>
+  <data name="ResamplingHelp.mitchell"><value>Сочетает детализацию и плавные переходы с менее выраженными ореолами на границах, чем у Lanczos. Подходит для фотографий, где ореолы мешают, ценой немного более мягких мелких деталей и более медленной обработки.</value></data>
 </root>

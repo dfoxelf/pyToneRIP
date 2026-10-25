@@ -114,6 +114,7 @@
   <data name="Choice.dimensions"><value>mõõtmed</value></data>
   <data name="Choice.fit"><value>sobima</value></data>
   <data name="Choice.lanczos"><value>lanczos</value></data>
+  <data name="Choice.mitchell"><value>Mitchell–Netravali</value></data>
   <data name="Choice.landscape"><value>Rõhtpaigutus</value></data>
   <data name="Choice.native"><value>Algsuurus</value></data>
   <data name="Choice.nearest"><value>Lähim naaber</value></data>
@@ -209,6 +210,17 @@
   <data name="Code.WindowsPrinterRenamedToConfigurationRemainsLinkedByPrinterUri"><value>Windowsi printer nimetati ümber nimeks {0}. Seadistused jääb PrinterUri seotuks.</value></data>
   <data name="Code.WindowsWillRemoveTheVirtualQueueAndItsSavedPyToneRIPConfigurationTheSign"><value>Windows eemaldab virtuaalse järjekorra {0} ja selle salvestatud pyToneRIP konfiguratsiooni. Allkirjastatud moodul {1} ​​jääb teise järjekorra jaoks kättesaadavaks.</value></data>
   <data name="Language.Automatic.Text"><value>Automaatne (Windows)</value></data>
+  <data name="DitherHelp.AdaptiveHybrid"><value>Praeguses RIP-is kasutab see ühilduvusvalik muutuva tilgasuuruse korral meetodit Ordered. Valige otse Ordered: praegu ei anna see valik eraldi adaptiivset kvaliteedieelist.</value></data>
+  <data name="DitherHelp.BlueNoiseFM"><value>Kasutab sinise müra lävimaski, et vähendada punktimustri korrapärasust. Sobib fotodele ja taeva sujuvatele tooniüleminekutele; peen teralisus või maski jääkstruktuur võib siiski nähtavaks jääda.</value></data>
+  <data name="DitherHelp.CoupledED"><value>Kooskõlastab punktide paigutuse C/M- ja LC/LM-paarides veadifusiooni ning toonist sõltuva lävimüra abil. Sobib mõlema paariga printeritele; punktide kattumine ja paaristatud tintide tasakaal võivad muutuda. Kontrollige proovitrükki oma toonikõveratega.</value></data>
+  <data name="DitherHelp.CoupledEDCM"><value>Kooskõlastab punktide paigutuse C/M-paaris; heledad tindid ja muud kanalid jäävad sõltumatuks. Sobib neljavärviprinteritele või kui LC/LM-paari ühine töötlus pole soovitud; muudab C/M-kattumist ja tekstuuri heledaid tinte omavahel sidumata.</value></data>
+  <data name="DitherHelp.EntropyZhouFang"><value>Kohandab Zhou-Fang-lävemodulatsiooni tooni ja pildi kohaliku struktuuri järgi. Sobib detailsetele fotodele, milles on ühtlaseid alasid; vajab lisaarvutusi ja võib muuta peene faktuuri esitust.</value></data>
+  <data name="DitherHelp.Fast"><value>Kasutab väikest korrapärast lävimaatriksit ja muutuva suurusega tinditilku. Sobib lihtsale graafikale ja proovitrükile; korduv muster võib tooniüleminekutes rohkem silma paista. Nimi ei taga kiiremat töötlemist.</value></data>
+  <data name="DitherHelp.Ordered"><value>Paigutab eri suurusega tinditilku kindla lävimaatriksi järgi. Sobib testskaaladele ja graafikale; sujuvates tooniüleminekutes võib näha korduvat rastrimustrit.</value></data>
+  <data name="DitherHelp.Ostromoukhov"><value>Jaotab kvantimisvea naaberpikslitele toonist sõltuvate kaaludega. Sobib detailsetele fotodele ja tooniüleminekutele; mõnes toonis võivad tekkida kindla suunaga punktiahelad.</value></data>
+  <data name="DitherHelp.VeryFast"><value>Kasutab igas valitud punktiasukohas ainult suurimat saadaolevat tinditilka. Sobib ligikaudseks proovitrükiks; teralisus on jämedam ja heledate alade toonieristus võib halveneda. Kiirem töötlemine pole tagatud.</value></data>
+  <data name="DitherHelp.X2Y1"><value>Kasutab veadifusiooni vahelduva reasuuna, nelja naabri kaalude ja toonist sõltuva müramodulatsiooniga. Sobib taevale, päikeseloojangutele ja ulatuslikele tooniüleminekutele; peen teralisus või kindla suunaga tekstuur võib säilida.</value></data>
+  <data name="DitherHelp.ZhouFang"><value>Lisab veadifusioonile toonist sõltuva kvantimisläve modulatsiooni, et vähendada kesktoonide korrapäraseid struktuure. Sobib üleminekutele, kus Ostromoukhov tekitab mustreid; teralisus võib muutuda märgatavamaks.</value></data>
   <data name="MainPage.About.Label"><value>Umbes...</value></data>
   <data name="MainPage.Add.Label"><value>Lisage printer</value></data>
   <data name="MainPage.Empty.Add.Content"><value>Lisage printer</value></data>
@@ -244,6 +256,8 @@
   <data name="Maintenance.nozzle_check.Title"><value>Prindiotsiku kontroll</value></data>
   <data name="Maintenance.test_page.Description"><value>Printige valitud mudelisätteid kasutades väike toormuster kanali kohta.</value></data>
   <data name="Maintenance.test_page.Title"><value>Printige pyToneRIPi testleht</value></data>
+  <data name="Processing16Bit.Content"><value>16-bitine töötlus</value></data>
+  <data name="Processing16BitExperimental.Text"><value>(eksperimentaalne režiim)</value></data>
   <data name="Splash.Continue.Content"><value>Jätka</value></data>
   <data name="Splash.Description.Text"><value>Rastermootori ettevalmistamine ja installitud printerite laadimine...</value></data>
   <data name="Splash.Title.Text"><value>pyToneRIPi käivitamine</value></data>
@@ -289,4 +303,9 @@
   <data name="DeviceChoice.Model_B" xml:space="preserve"><value>Mudel B</value></data>
   <data name="DeviceChoice.Code" xml:space="preserve"><value>Kood {0}</value></data>
   <data name="DeviceChoice.ThinPaper" xml:space="preserve"><value>{0} (õhuke paber)</value></data>
+  <data name="ResamplingHelp.nearest"><value>Kopeerib lähima lähtepiksli ilma silumiseta; sobib pikselgraafikale ja testmustritele, mille piksliväärtused peavad säilima. Meetod on kiire, kuid fotode suurendamisel võivad tekkida sakilised servad ja järsud üleminekud.</value></data>
+  <data name="ResamplingHelp.bilinear"><value>Segab naaberpiksleid, et saavutada sujuvad üleminekud ja kiire töötlus. Sobib siis, kui kiirus on tähtis, kuid muudab peened detailid ja jooned pehmemaks.</value></data>
+  <data name="ResamplingHelp.bicubic"><value>Kasutab kuupfiltrit, et tasakaalustada fotode teravust ja sujuvaid tooniüleminekuid. Säilitab rohkem detaile kui bilineaarne meetod, kuid suure kontrastsusega servade ümber võivad tekkida nõrgad halod.</value></data>
+  <data name="ResamplingHelp.lanczos"><value>Säilitab peened detailid hästi fotode teisendamisel ditterduse võrgustikule, eriti vähendamisel. Valige teravama tulemuse jaoks, kuid jälgige heledaid või tumedaid halosid suure kontrastsusega servade ümber.</value></data>
+  <data name="ResamplingHelp.mitchell"><value>Tasakaalustab detaile ja sujuvaid üleminekuid, tekitades servade ümber vähem halosid kui Lanczos. Sobib fotodele, kus halod häirivad, kuid peened detailid muutuvad veidi pehmemaks ja töötlus on aeglasem.</value></data>
 </root>

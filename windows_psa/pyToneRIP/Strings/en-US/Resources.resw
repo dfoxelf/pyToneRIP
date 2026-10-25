@@ -114,6 +114,7 @@
   <data name="Choice.dimensions"><value>dimensions</value></data>
   <data name="Choice.fit"><value>fit</value></data>
   <data name="Choice.lanczos"><value>lanczos</value></data>
+  <data name="Choice.mitchell"><value>Mitchell–Netravali</value></data>
   <data name="Choice.landscape"><value>landscape</value></data>
   <data name="Choice.native"><value>native</value></data>
   <data name="Choice.nearest"><value>nearest</value></data>
@@ -209,6 +210,17 @@
   <data name="Code.WindowsPrinterRenamedToConfigurationRemainsLinkedByPrinterUri"><value>Windows printer renamed to {0}. Configuration remains linked by PrinterUri.</value></data>
   <data name="Code.WindowsWillRemoveTheVirtualQueueAndItsSavedPyToneRIPConfigurationTheSign"><value>Windows will remove the virtual queue {0} and its saved pyToneRIP configuration. The signed {1} module remains available for another queue.</value></data>
   <data name="Language.Automatic.Text"><value>Automatic (Windows)</value></data>
+  <data name="DitherHelp.AdaptiveHybrid"><value>In the current RIP, this compatibility option uses Ordered for variable-drop printing. Choose Ordered directly: this option currently provides no separate adaptive quality benefit.</value></data>
+  <data name="DitherHelp.BlueNoiseFM"><value>Uses a blue-noise threshold mask to reduce the regular appearance of the dot pattern. Suitable for photos and smooth sky gradients; fine grain or residual mask texture may remain visible.</value></data>
+  <data name="DitherHelp.CoupledED"><value>Coordinates dot placement within C/M and LC/LM pairs using error diffusion and tone-dependent threshold noise. Suitable for printers with both pairs; dot overlap and the balance between paired inks can change. Check a test print using your tone curves.</value></data>
+  <data name="DitherHelp.CoupledEDCM"><value>Coordinates dot placement within the C/M pair; light inks and other channels remain independent. Suitable for four-colour printers or when LC/LM coupling is unwanted; it changes C/M overlap and texture without coupling the light-ink pair.</value></data>
+  <data name="DitherHelp.EntropyZhouFang"><value>Adjusts Zhou-Fang threshold modulation using tone and local image structure. Suitable for detailed photos with smooth areas; it requires additional computation and can change the rendering of fine texture.</value></data>
+  <data name="DitherHelp.Fast"><value>Uses a small ordered threshold matrix with variable drop sizes. Suitable for simple graphics and test prints; gradients may show a more visible repeating pattern, and the name does not guarantee faster processing.</value></data>
+  <data name="DitherHelp.Ordered"><value>Places ink drops of different sizes using a fixed threshold matrix. Suitable for test charts and graphics; smooth tonal gradients may show a repeating raster pattern.</value></data>
+  <data name="DitherHelp.Ostromoukhov"><value>Distributes quantization error to neighbouring pixels with tone-dependent weights. Suitable for detailed photos and tonal transitions; some tones may show directional dot chains.</value></data>
+  <data name="DitherHelp.VeryFast"><value>Uses only the largest available drop at each selected dot position. Suitable for rough test prints; grain is coarser and highlight gradation can suffer. Faster processing is not guaranteed.</value></data>
+  <data name="DitherHelp.X2Y1"><value>Uses error diffusion with alternating row direction, four-neighbour weights and tone-dependent noise modulation. Suitable for skies, sunsets and broad tonal gradients; fine grain or directional texture may remain visible.</value></data>
+  <data name="DitherHelp.ZhouFang"><value>Adds tone-dependent quantization threshold modulation to error diffusion to reduce regular dot structures in midtones. Suitable for gradients that show patterns with Ostromoukhov; grain may become more noticeable.</value></data>
   <data name="MainPage.About.Label"><value>About...</value></data>
   <data name="MainPage.Add.Label"><value>Add printer</value></data>
   <data name="MainPage.Empty.Add.Content"><value>Add printer</value></data>
@@ -244,6 +256,8 @@
   <data name="Maintenance.nozzle_check.Title"><value>Print nozzle check</value></data>
   <data name="Maintenance.test_page.Description"><value>Print a small raw per-channel pattern using the selected model settings.</value></data>
   <data name="Maintenance.test_page.Title"><value>Print pyToneRIP test page</value></data>
+  <data name="Processing16Bit.Content"><value>16-bit processing</value></data>
+  <data name="Processing16BitExperimental.Text"><value>(experimental mode)</value></data>
   <data name="Splash.Continue.Content"><value>Continue</value></data>
   <data name="Splash.Description.Text"><value>Preparing the raster engine and loading installed printers...</value></data>
   <data name="Splash.Title.Text"><value>Starting pyToneRIP</value></data>
@@ -289,4 +303,9 @@
   <data name="DeviceChoice.Model_B" xml:space="preserve"><value>Model B</value></data>
   <data name="DeviceChoice.Code" xml:space="preserve"><value>Code {0}</value></data>
   <data name="DeviceChoice.ThinPaper" xml:space="preserve"><value>{0} (thin paper)</value></data>
+  <data name="ResamplingHelp.nearest"><value>Copies the nearest source pixel without smoothing; useful for pixel art and test patterns that need unchanged pixel values. It is fast, but enlarging photos can produce blocky edges and rough transitions.</value></data>
+  <data name="ResamplingHelp.bilinear"><value>Blends nearby pixels for smooth transitions with fast processing. Suitable when speed matters, but it softens fine details and thin lines.</value></data>
+  <data name="ResamplingHelp.bicubic"><value>Uses a cubic filter for a balance of sharpness and smooth tonal transitions in photos. It retains more detail than bilinear, but may create slight halos around high-contrast edges.</value></data>
+  <data name="ResamplingHelp.lanczos"><value>Preserves fine detail well when mapping photos to the dithering grid, especially when reducing size. Choose it for sharper results, but watch for light or dark halos around high-contrast edges.</value></data>
+  <data name="ResamplingHelp.mitchell"><value>Balances detail and smooth transitions with less edge ringing than Lanczos. Suitable for photos where halos are distracting, at the cost of slightly softer fine detail and slower processing.</value></data>
 </root>

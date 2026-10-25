@@ -114,6 +114,7 @@
   <data name="Choice.dimensions"><value>mitat</value></data>
   <data name="Choice.fit"><value>sovi</value></data>
   <data name="Choice.lanczos"><value>lanczos</value></data>
+  <data name="Choice.mitchell"><value>Mitchell–Netravali</value></data>
   <data name="Choice.landscape"><value>Vaaka</value></data>
   <data name="Choice.native"><value>Alkuperäinen koko</value></data>
   <data name="Choice.nearest"><value>Lähin naapuri</value></data>
@@ -209,6 +210,17 @@
   <data name="Code.WindowsPrinterRenamedToConfigurationRemainsLinkedByPrinterUri"><value>Windows-tulostin nimettiin uudelleen muotoon {0}. PrinterUri linkittää kokoonpanon.</value></data>
   <data name="Code.WindowsWillRemoveTheVirtualQueueAndItsSavedPyToneRIPConfigurationTheSign"><value>Windows poistaa virtuaalisen jonon {0} ja sen tallennetut pyToneRIP-määritykset. Allekirjoitettu {1}-moduuli on käytettävissä toisessa jonossa.</value></data>
   <data name="Language.Automatic.Text"><value>Automaattinen (Windows)</value></data>
+  <data name="DitherHelp.AdaptiveHybrid"><value>Nykyisessä RIP-toteutuksessa tämä yhteensopivuusvalinta käyttää Ordered-menetelmää vaihtuville pisarako’oille. Valitse suoraan Ordered: valinta ei tällä hetkellä tarjoa erillistä adaptiivista laatuetua.</value></data>
+  <data name="DitherHelp.BlueNoiseFM"><value>Käyttää sinisen kohinan kynnysmaskia vähentämään pistekuvion säännöllisyyttä. Sopii valokuville ja taivaan tasaisille sävyliukumille; hienoa rakeisuutta tai maskin jäännösrakennetta voi silti näkyä.</value></data>
+  <data name="DitherHelp.CoupledED"><value>Sovittaa pisteiden sijoittelun yhteen C/M- ja LC/LM-pareissa virhediffuusion ja sävystä riippuvan kynnyskohinan avulla. Sopii tulostimille, joissa on molemmat parit; pisteiden päällekkäisyys ja parin musteiden tasapaino voivat muuttua. Tarkista koetuloste omilla sävykäyrilläsi.</value></data>
+  <data name="DitherHelp.CoupledEDCM"><value>Sovittaa pisteiden sijoittelun yhteen C/M-parissa; vaaleat musteet ja muut kanavat pysyvät riippumattomina. Sopii neliväritulostimille tai kun LC/LM-paria ei haluta kytkeä yhteen; muuttaa C/M-pisteiden päällekkäisyyttä ja tekstuuria ilman vaaleiden musteiden yhteiskäsittelyä.</value></data>
+  <data name="DitherHelp.EntropyZhouFang"><value>Säätää Zhou-Fang-menetelmän kynnysmodulointia sävyn ja paikallisen kuvarakenteen mukaan. Sopii yksityiskohtaisille kuville, joissa on tasaisia alueita; vaatii lisälaskentaa ja voi muuttaa hienojen tekstuurien toistoa.</value></data>
+  <data name="DitherHelp.Fast"><value>Käyttää pientä järjestettyä kynnysmatriisia ja vaihtelevia pisarakokoja. Sopii yksinkertaiselle grafiikalle ja koetulosteille; toistuva kuvio voi näkyä selvemmin sävyliukumissa. Nimi ei takaa nopeampaa käsittelyä.</value></data>
+  <data name="DitherHelp.Ordered"><value>Sijoittaa erikokoiset mustepisarat kiinteän kynnysmatriisin avulla. Sopii testiasteikoille ja grafiikalle; tasaisissa sävyliukumissa voi näkyä toistuva rasterikuvio.</value></data>
+  <data name="DitherHelp.Ostromoukhov"><value>Jakaa kvantisointivirheen naapuripikseleille sävystä riippuvilla painoilla. Sopii yksityiskohtaisille valokuville ja sävysiirtymille; joissakin sävyissä voi esiintyä suuntautuneita pisteketjuja.</value></data>
+  <data name="DitherHelp.VeryFast"><value>Käyttää jokaisessa valitussa pistepaikassa vain suurinta saatavilla olevaa pisaraa. Sopii karkeisiin koetulosteisiin; rakeisuus on karkeampaa ja vaaleiden alueiden sävyntoisto voi heikentyä. Nopeampi käsittely ei ole taattu.</value></data>
+  <data name="DitherHelp.X2Y1"><value>Käyttää virhediffuusiota vuorottelevalla rivisuunnalla, neljän naapurin painoilla ja sävystä riippuvalla kohinamoduloinnilla. Sopii taivaille, auringonlaskuille ja laajoille sävyliukumille; hienoa rakeisuutta tai suuntautunutta tekstuuria voi silti näkyä.</value></data>
+  <data name="DitherHelp.ZhouFang"><value>Lisää virhediffuusioon sävystä riippuvan kvantisointikynnyksen moduloinnin vähentämään säännöllisiä rakenteita keskisävyissä. Sopii sävyliukumiin, joissa Ostromoukhov tuottaa kuvioita; rakeisuus voi korostua.</value></data>
   <data name="MainPage.About.Label"><value>Noin...</value></data>
   <data name="MainPage.Add.Label"><value>Lisää tulostin</value></data>
   <data name="MainPage.Empty.Add.Content"><value>Lisää tulostin</value></data>
@@ -244,6 +256,8 @@
   <data name="Maintenance.nozzle_check.Title"><value>Tulostussuuttimen tarkistus</value></data>
   <data name="Maintenance.test_page.Description"><value>Tulosta pieni raakakuvio kanavakohtaisesti käyttämällä valittuja malliasetuksia.</value></data>
   <data name="Maintenance.test_page.Title"><value>Tulosta pyToneRIP-testisivu</value></data>
+  <data name="Processing16Bit.Content"><value>16-bittinen käsittely</value></data>
+  <data name="Processing16BitExperimental.Text"><value>(kokeellinen tila)</value></data>
   <data name="Splash.Continue.Content"><value>Jatkaa</value></data>
   <data name="Splash.Description.Text"><value>Valmistellaan rasterimoottoria ja ladataan asennettuja tulostimia...</value></data>
   <data name="Splash.Title.Text"><value>Käynnistetään pyToneRIP</value></data>
@@ -289,4 +303,9 @@
   <data name="DeviceChoice.Model_B" xml:space="preserve"><value>Malli B</value></data>
   <data name="DeviceChoice.Code" xml:space="preserve"><value>Koodi {0}</value></data>
   <data name="DeviceChoice.ThinPaper" xml:space="preserve"><value>{0} (ohut paperi)</value></data>
+  <data name="ResamplingHelp.nearest"><value>Kopioi lähimmän lähdepikselin ilman pehmennystä; sopii pikseligrafiikkaan ja testikuvioihin, joissa pikseliarvot pitää säilyttää. Menetelmä on nopea, mutta valokuvia suurennettaessa reunat voivat muuttua porrasmaisiksi ja siirtymät karkeiksi.</value></data>
+  <data name="ResamplingHelp.bilinear"><value>Yhdistää lähekkäisiä pikseleitä, jolloin siirtymistä tulee pehmeitä ja käsittely on nopeaa. Sopii nopeutta painottavaan käyttöön, mutta pehmentää pieniä yksityiskohtia ja ohuita viivoja.</value></data>
+  <data name="ResamplingHelp.bicubic"><value>Käyttää kuutiosuodatinta valokuvan terävyyden ja pehmeiden sävysiirtymien tasapainottamiseen. Säilyttää enemmän yksityiskohtia kuin bilineaarinen menetelmä, mutta voi muodostaa lieviä vaaleita tai tummia reunuksia jyrkkiin kontrastirajoihin.</value></data>
+  <data name="ResamplingHelp.lanczos"><value>Säilyttää pienet yksityiskohdat hyvin muunnettaessa valokuvia rasterointiruudukkoon, erityisesti pienennettäessä. Valitse terävämpää tulosta varten, mutta tarkkaile vaaleita tai tummia reunuksia jyrkkien kontrastirajojen ympärillä.</value></data>
+  <data name="ResamplingHelp.mitchell"><value>Tasapainottaa yksityiskohdat ja pehmeät siirtymät sekä muodostaa vähemmän reunuksia kuin Lanczos. Sopii valokuviin, joissa reunukset häiritsevät, mutta pienet yksityiskohdat pehmenevät hieman ja käsittely hidastuu.</value></data>
 </root>

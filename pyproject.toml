@@ -6,9 +6,11 @@ readme = "README.md"
 license = "GPL-3.0-only"
 requires-python = ">=3.12"
 dependencies = [
+    "imagecodecs>=2026.8.16",
     "numpy>=2.5.2",
     "pillow>=12.3.0",
     "scipy>=1.18.0",
+    "tifffile>=2026.10.15",
 ]
 
 [project.scripts]

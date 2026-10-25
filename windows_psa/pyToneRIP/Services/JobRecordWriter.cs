@@ -102,34 +102,50 @@ namespace pyToneRIP.Tasks.Services
             var configurationJson = await ReadAndValidateConfigurationAsync(ticket, session);
             var ticketText = ticket.XmlNode.GetXml();
             var ticketArtifact = await WriteTextAndHashAsync(folder, "print-ticket.xml", ticketText);
-            var adapterTiffFile = await folder.CreateFileAsync(
-                "windows-converter-output.tiff",
-                CreationCollisionOption.FailIfExists);
-            var converter = args.GetPdlConverter(PrintWorkflowPdlConversionType.XpsToTiff);
-            pyToneRIP.Tasks.VirtualPrinterBackgroundTask.WriteWorkflowStage(
-                "JobRecordWriter XpsToTiff conversion begin");
-            await JobProgressWriter.WriteAsync(
-                folder, jobId, 15, "WINDOWS_RENDER", "Windows is rasterizing the page");
-            using (var source = await pdlFile.OpenAsync(FileAccessMode.Read))
-            using (var target = await adapterTiffFile.OpenAsync(FileAccessMode.ReadWrite))
+            var precision = JsonObject.Parse(configurationJson)
+                .GetNamedObject("adjustments").GetNamedNumber("processing_bits", 8);
+            if (precision != 8 && precision != 16)
+                throw new InvalidDataException("processing_bits must be 8 or 16.");
+            JobArtifact adapterTiffArtifact = null;
+            if (precision == 8)
             {
-                // The RIP repeats the completed native job for each copy.
-                // Exclude host copy expansion so XpsToTiff supplies each page once.
-                // Python orders completed page streams according to DocumentCollate.
-                var hostProcessing =
-                    PdlConversionHostBasedProcessingOperations.PageRotation |
-                    PdlConversionHostBasedProcessingOperations.PageOrdering |
-                    PdlConversionHostBasedProcessingOperations.BlankPageInsertion;
-                await converter.ConvertPdlAsync(ticket, source, target, hostProcessing);
-                await target.FlushAsync();
+                var adapterTiffFile = await folder.CreateFileAsync(
+                    "windows-converter-output.tiff",
+                    CreationCollisionOption.FailIfExists);
+                var converter = args.GetPdlConverter(PrintWorkflowPdlConversionType.XpsToTiff);
+                pyToneRIP.Tasks.VirtualPrinterBackgroundTask.WriteWorkflowStage(
+                    "JobRecordWriter XpsToTiff conversion begin");
+                await JobProgressWriter.WriteAsync(
+                    folder, jobId, 15, "WINDOWS_RENDER", "Windows is rasterizing the page");
+                using (var source = await pdlFile.OpenAsync(FileAccessMode.Read))
+                using (var target = await adapterTiffFile.OpenAsync(FileAccessMode.ReadWrite))
+                {
+                    // The RIP repeats the completed native job for each copy.
+                    // Exclude host copy expansion so XpsToTiff supplies each page once.
+                    // Python orders completed page streams according to DocumentCollate.
+                    var hostProcessing =
+                        PdlConversionHostBasedProcessingOperations.PageRotation |
+                        PdlConversionHostBasedProcessingOperations.PageOrdering |
+                        PdlConversionHostBasedProcessingOperations.BlankPageInsertion;
+                    await converter.ConvertPdlAsync(ticket, source, target, hostProcessing);
+                    await target.FlushAsync();
+                }
+                ThrowIfCancellationRequested();
+                adapterTiffArtifact = await HashFileAsync(adapterTiffFile);
+                pyToneRIP.Tasks.VirtualPrinterBackgroundTask.WriteWorkflowStage(
+                    "JobRecordWriter XpsToTiff conversion complete: "
+                    + adapterTiffArtifact.SizeBytes + " bytes");
+                await JobProgressWriter.WriteAsync(
+                    folder, jobId, 25, "WINDOWS_TIFF_READY", "Windows page raster is ready");
             }
-            ThrowIfCancellationRequested();
-            var adapterTiffArtifact = await HashFileAsync(adapterTiffFile);
-            pyToneRIP.Tasks.VirtualPrinterBackgroundTask.WriteWorkflowStage(
-                "JobRecordWriter XpsToTiff conversion complete: "
-                + adapterTiffArtifact.SizeBytes + " bytes");
-            await JobProgressWriter.WriteAsync(
-                folder, jobId, 25, "WINDOWS_TIFF_READY", "Windows page raster is ready");
+            else
+            {
+                // Preserve XPS resources and precision. The existing full-trust
+                // RIP process performs float32 rasterization before TIFF input.
+                await JobProgressWriter.WriteAsync(
+                    folder, jobId, 25, "WINDOWS_XPS_READY",
+                    "Windows XPS is ready for high-precision rendering in the desktop RIP");
+            }
             ThrowIfCancellationRequested();
             var sourceCurvePaths = ReadExternalCurvePaths(configurationJson);
             var configurationArtifact = await WriteTextAndHashAsync(
@@ -413,7 +429,7 @@ namespace pyToneRIP.Tasks.Services
         [DataMember(Name = "pdl", Order = 1)] public JobArtifact Pdl { get; set; }
         [DataMember(Name = "print_ticket", Order = 2)] public JobArtifact PrintTicket { get; set; }
         [DataMember(Name = "configuration", Order = 3)] public JobArtifact Configuration { get; set; }
-        [DataMember(Name = "adapter_tiff", Order = 4)] public JobArtifact AdapterTiff { get; set; }
+        [DataMember(Name = "adapter_tiff", Order = 4, EmitDefaultValue = false)] public JobArtifact AdapterTiff { get; set; }
     }
 
     [DataContract]

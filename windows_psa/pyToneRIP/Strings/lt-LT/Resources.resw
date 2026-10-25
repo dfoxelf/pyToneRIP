@@ -114,6 +114,7 @@
   <data name="Choice.dimensions"><value>matmenys</value></data>
   <data name="Choice.fit"><value>tinka</value></data>
   <data name="Choice.lanczos"><value>lanczos</value></data>
+  <data name="Choice.mitchell"><value>Mitchell–Netravali</value></data>
   <data name="Choice.landscape"><value>Gulsčias</value></data>
   <data name="Choice.native"><value>Pradinis dydis</value></data>
   <data name="Choice.nearest"><value>Artimiausias kaimynas</value></data>
@@ -209,6 +210,17 @@
   <data name="Code.WindowsPrinterRenamedToConfigurationRemainsLinkedByPrinterUri"><value>„Windows“ spausdintuvas pervardytas į {0}. Konfigūracija lieka susieta „PrinterUri“.</value></data>
   <data name="Code.WindowsWillRemoveTheVirtualQueueAndItsSavedPyToneRIPConfigurationTheSign"><value>„Windows“ pašalins virtualiąją eilę {0} ir jos išsaugotą „pyToneRIP“ konfigūraciją. Pasirašytas modulis {1} lieka prieinamas kitai eilei.</value></data>
   <data name="Language.Automatic.Text"><value>Automatinis („Windows“)</value></data>
+  <data name="DitherHelp.AdaptiveHybrid"><value>Dabartiniame RIP ši suderinamumo parinktis naudoja Ordered kintamo dydžio lašeliams. Rinkitės tiesiogiai Ordered: ši parinktis šiuo metu nesuteikia atskiro adaptyvios kokybės pranašumo.</value></data>
+  <data name="DitherHelp.BlueNoiseFM"><value>Naudoja mėlynojo triukšmo slenksčių kaukę, kad rastras būtų mažiau reguliarus. Tinka nuotraukoms ir tolygiems dangaus tonų perėjimams; smulkus grūdėtumas arba likusi kaukės struktūra gali išlikti matomi.</value></data>
+  <data name="DitherHelp.CoupledED"><value>Derina taškus C/M ir LC/LM porose naudodamas paklaidos difuziją ir nuo tono priklausantį slenksčio triukšmą. Tinka spausdintuvams su abiem poromis; taškų persidengimas ir suporuotų rašalų pusiausvyra gali keistis. Patikrinkite bandomąjį atspaudą su savo tonų kreivėmis.</value></data>
+  <data name="DitherHelp.CoupledEDCM"><value>Derina taškus C/M poroje; šviesūs rašalai ir kiti kanalai lieka nepriklausomi. Tinka keturių spalvų spausdintuvams arba kai LC/LM bendras apdorojimas nepageidaujamas; keičia C/M persidengimą ir tekstūrą nesusiedamas šviesių rašalų poros.</value></data>
+  <data name="DitherHelp.EntropyZhouFang"><value>Pritaiko Zhou-Fang slenksčio moduliaciją prie tono ir vietinės vaizdo struktūros. Tinka detalioms nuotraukoms su tolygiomis sritimis; reikia papildomų skaičiavimų ir gali pasikeisti smulkių faktūrų atkūrimas.</value></data>
+  <data name="DitherHelp.Fast"><value>Naudoja mažą tvarkingą slenksčių matricą ir kintamo dydžio lašelius. Tinka paprastai grafikai ir bandomiesiems atspaudams; perėjimuose raštas gali būti ryškesnis. Pavadinimas negarantuoja spartesnio apdorojimo.</value></data>
+  <data name="DitherHelp.Ordered"><value>Išdėsto įvairaus dydžio rašalo lašelius pagal fiksuotą slenksčių matricą. Tinka bandymo skalėms ir grafikai; tolygiuose tonų perėjimuose gali matytis pasikartojantis rastrinis raštas.</value></data>
+  <data name="DitherHelp.Ostromoukhov"><value>Paskirsto kvantavimo paklaidą gretimiems pikseliams su nuo tono priklausančiais svoriais. Tinka detalioms nuotraukoms ir tonų perėjimams; kai kuriuose tonuose gali susidaryti kryptingos taškų grandinės.</value></data>
+  <data name="DitherHelp.VeryFast"><value>Kiekvienoje pasirinktoje taško vietoje naudoja tik didžiausią galimą lašelį. Tinka apytiksliams bandomiesiems atspaudams; grūdėtumas stambesnis, o šviesių tonų gradacija gali pablogėti. Didesnė sparta negarantuojama.</value></data>
+  <data name="DitherHelp.X2Y1"><value>Naudoja paklaidos difuziją su besikeičiančia eilučių kryptimi, keturių kaimynų svoriais ir nuo tono priklausančia triukšmo moduliacija. Tinka dangui, saulėlydžiams ir platiems tonų perėjimams; smulkus grūdėtumas ar kryptinga tekstūra gali išlikti.</value></data>
+  <data name="DitherHelp.ZhouFang"><value>Papildo paklaidos difuziją nuo tono priklausančia kvantavimo slenksčio moduliacija, mažinančia reguliarias struktūras vidutiniuose tonuose. Tinka perėjimams, kuriuose Ostromoukhov sukuria raštus; grūdėtumas gali tapti pastebimesnis.</value></data>
   <data name="MainPage.About.Label"><value>Apie...</value></data>
   <data name="MainPage.Add.Label"><value>Pridėti spausdintuvą</value></data>
   <data name="MainPage.Empty.Add.Content"><value>Pridėti spausdintuvą</value></data>
@@ -244,6 +256,8 @@
   <data name="Maintenance.nozzle_check.Title"><value>Spausdinimo purkštukų patikrinimas</value></data>
   <data name="Maintenance.test_page.Description"><value>Išspausdinkite nedidelį neapdorotą kanalo raštą naudodami pasirinktus modelio nustatymus.</value></data>
   <data name="Maintenance.test_page.Title"><value>Išspausdinkite pyToneRIP bandomąjį puslapį</value></data>
+  <data name="Processing16Bit.Content"><value>16 bitų apdorojimas</value></data>
+  <data name="Processing16BitExperimental.Text"><value>(eksperimentinis režimas)</value></data>
   <data name="Splash.Continue.Content"><value>Tęsti</value></data>
   <data name="Splash.Description.Text"><value>Ruošiamas rastrinis variklis ir įkeliami įdiegti spausdintuvai...</value></data>
   <data name="Splash.Title.Text"><value>Paleidžiamas pyToneRIP</value></data>
@@ -289,4 +303,9 @@
   <data name="DeviceChoice.Model_B" xml:space="preserve"><value>Modelis B</value></data>
   <data name="DeviceChoice.Code" xml:space="preserve"><value>Kodas {0}</value></data>
   <data name="DeviceChoice.ThinPaper" xml:space="preserve"><value>{0} (plonas popierius)</value></data>
+  <data name="ResamplingHelp.nearest"><value>Kopijuoja artimiausią pradinį pikselį be glodinimo; tinka pikselių grafikai ir bandymo vaizdams, kuriuose reikia išsaugoti pikselių reikšmes. Veikia greitai, bet didinant nuotraukas gali atsirasti laiptuotų kraštų ir grubių perėjimų.</value></data>
+  <data name="ResamplingHelp.bilinear"><value>Maišo gretimus pikselius, kad perėjimai būtų tolygūs, o apdorojimas greitas. Tinka, kai svarbus greitis, tačiau smulkios detalės ir plonos linijos tampa švelnesnės.</value></data>
+  <data name="ResamplingHelp.bicubic"><value>Naudoja kubinį filtrą, kad suderintų nuotraukų ryškumą ir tolygius tonų perėjimus. Išsaugo daugiau detalių nei dvilinijinis metodas, bet ties didelio kontrasto kraštais gali atsirasti nežymių šviesių ar tamsių apvadų.</value></data>
+  <data name="ResamplingHelp.lanczos"><value>Gerai išsaugo smulkias detales keičiant nuotraukas pagal rastravimo tinklelį, ypač mažinant. Rinkitės ryškesniam rezultatui, bet stebėkite, ar ties didelio kontrasto kraštais neatsiranda šviesių ar tamsių apvadų.</value></data>
+  <data name="ResamplingHelp.mitchell"><value>Derina detales ir tolygius perėjimus, sukeldamas mažiau kraštų apvadų nei Lanczos. Tinka nuotraukoms, kuriose apvadai trukdo, tačiau smulkios detalės tampa kiek švelnesnės, o apdorojimas lėtesnis.</value></data>
 </root>

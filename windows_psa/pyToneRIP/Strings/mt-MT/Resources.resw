@@ -114,6 +114,7 @@
   <data name="Choice.dimensions"><value>dimensjonijiet</value></data>
   <data name="Choice.fit"><value>tajbin</value></data>
   <data name="Choice.lanczos"><value>lanczos</value></data>
+  <data name="Choice.mitchell"><value>Mitchell–Netravali</value></data>
   <data name="Choice.landscape"><value>Orizzontali</value></data>
   <data name="Choice.native"><value>Daqs oriġinali</value></data>
   <data name="Choice.nearest"><value>L-eqreb ġar</value></data>
@@ -209,6 +210,17 @@
   <data name="Code.WindowsPrinterRenamedToConfigurationRemainsLinkedByPrinterUri"><value>Printer tal-Windows ssemmiet mill-ġdid għal {0}. Il-konfigurazzjoni tibqa&#x27; konnessa minn PrinterUri.</value></data>
   <data name="Code.WindowsWillRemoveTheVirtualQueueAndItsSavedPyToneRIPConfigurationTheSign"><value>Windows se jneħħi l-kju virtwali {0} u l-konfigurazzjoni pyToneRIP salvata tiegħu. Il-modulu {1} iffirmat jibqa&#x27; disponibbli għal kju ieħor.</value></data>
   <data name="Language.Automatic.Text"><value>Awtomatiku (Windows)</value></data>
+  <data name="DitherHelp.AdaptiveHybrid"><value>Fir-RIP attwali din l-għażla ta’ kompatibbiltà tuża Ordered għal qtar ta’ daqs varjabbli. Agħżel Ordered direttament: din l-għażla bħalissa ma tagħtix vantaġġ adattiv separat fil-kwalità.</value></data>
+  <data name="DitherHelp.BlueNoiseFM"><value>Juża maskra ta’ limiti b’ħoss blu biex inaqqas ir-regolarità tar-raster. Adattat għal ritratti u gradjenti lixxi tas-sema; granularità fina jew struttura residwa tal-maskra jistgħu jibqgħu jidhru.</value></data>
+  <data name="DitherHelp.CoupledED"><value>Jikkoordina t-tikek fil-pari C/M u LC/LM permezz ta’ diffużjoni tal-iżball u ħoss tal-limitu skont it-ton. Adattat għal printers biż-żewġ pari; il-koinċidenza tat-tikek u l-bilanċ tal-linka fil-pari jistgħu jinbidlu. Iċċekkja stampa tat-test bil-kurvi tonali tiegħek.</value></data>
+  <data name="DitherHelp.CoupledEDCM"><value>Jikkoordina t-tikek fil-par C/M; il-linka ċara u l-kanali l-oħra jibqgħu indipendenti. Adattat għal printers b’erba’ kuluri jew meta ma tridx tqabbad LC/LM; ibiddel il-koinċidenza u n-nisġa ta’ C/M mingħajr tqabbid tal-linka ċara.</value></data>
+  <data name="DitherHelp.EntropyZhouFang"><value>Jaġġusta l-modulazzjoni tal-limitu ta’ Zhou-Fang skont it-ton u l-istruttura lokali tal-immaġni. Adattat għal ritratti dettaljati b’żoni lixxi; jeħtieġ kalkoli addizzjonali u jista’ jibdel ir-riproduzzjoni ta’ nisġa fina.</value></data>
+  <data name="DitherHelp.Fast"><value>Juża matriċi żgħira ordnata ta’ limiti u qtar ta’ daqs varjabbli. Adattat għal grafika sempliċi u stampi tat-test; il-mudell jista’ jidher aktar fil-gradjenti. L-isem ma jiggarantix ipproċessar aktar mgħaġġel.</value></data>
+  <data name="DitherHelp.Ordered"><value>Iqiegħed qtar tal-linka ta’ daqsijiet differenti skont matriċi fissa ta’ limiti. Adattat għal skali tat-test u grafika; fil-gradjenti tonali lixxi jista’ jidher mudell ripetut tar-raster.</value></data>
+  <data name="DitherHelp.Ostromoukhov"><value>Iqassam l-iżball tal-kwantizzazzjoni bejn pixels ġirien b’piżijiet li jiddependu mit-ton. Adattat għal ritratti dettaljati u transizzjonijiet tonali; f’xi toni jistgħu jidhru ktajjen ta’ tikek orjentati f’direzzjoni waħda.</value></data>
+  <data name="DitherHelp.VeryFast"><value>Juża biss l-akbar qatra disponibbli f’kull pożizzjoni magħżula. Adattat għal stampi tat-test approssimattivi; il-granularità tkun aktar oħxon u l-gradazzjoni fit-toni ċari tista’ tmur għall-agħar. Veloċità ogħla mhix garantita.</value></data>
+  <data name="DitherHelp.X2Y1"><value>Juża diffużjoni tal-iżball b’direzzjoni alternata għal kull ringiela, piżijiet għal erba’ ġirien u modulazzjoni tal-ħoss skont it-ton. Adattat għas-sema, inżul ix-xemx u gradjenti wesgħin; granularità fina jew nisġa direzzjonali jistgħu jibqgħu jidhru.</value></data>
+  <data name="DitherHelp.ZhouFang"><value>Iżid modulazzjoni tal-limitu tal-kwantizzazzjoni skont it-ton mad-diffużjoni tal-iżball biex inaqqas strutturi regolari fit-toni medji. Adattat għal gradjenti fejn Ostromoukhov joħloq mudelli viżibbli; il-granularità tista’ tidher aktar.</value></data>
   <data name="MainPage.About.Label"><value>Dwar...</value></data>
   <data name="MainPage.Add.Label"><value>Żid printer</value></data>
   <data name="MainPage.Empty.Add.Content"><value>Żid printer</value></data>
@@ -244,6 +256,8 @@
   <data name="Maintenance.nozzle_check.Title"><value>Istampa żennuna kontroll</value></data>
   <data name="Maintenance.test_page.Description"><value>Stampa mudell żgħir mhux maħdum għal kull kanal billi tuża s-settings tal-mudell magħżul.</value></data>
   <data name="Maintenance.test_page.Title"><value>Stampa l-paġna tat-test pyToneRIP</value></data>
+  <data name="Processing16Bit.Content"><value>Ipproċessar b’16-il bit</value></data>
+  <data name="Processing16BitExperimental.Text"><value>(modalità sperimentali)</value></data>
   <data name="Splash.Continue.Content"><value>Kompli</value></data>
   <data name="Splash.Description.Text"><value>Nipprepara l-magna tar-raster u t-tagħbija tal-printers installati...</value></data>
   <data name="Splash.Title.Text"><value>Jibda pyToneRIP</value></data>
@@ -289,4 +303,9 @@
   <data name="DeviceChoice.Model_B" xml:space="preserve"><value>Mudell B</value></data>
   <data name="DeviceChoice.Code" xml:space="preserve"><value>Kodiċi {0}</value></data>
   <data name="DeviceChoice.ThinPaper" xml:space="preserve"><value>{0} (karta rqiqa)</value></data>
+  <data name="ResamplingHelp.nearest"><value>Jikkopja l-eqreb pixel tas-sors mingħajr twittija; adattat għall-arti bil-pixels u mudelli ta’ prova li jeħtieġu li jinżammu l-valuri tal-pixels. Huwa veloċi, iżda t-tkabbir tar-ritratti jista’ joħloq truf imtarġin u tranżizzjonijiet mhux lixxi.</value></data>
+  <data name="ResamplingHelp.bilinear"><value>Iħallat pixels fil-qrib għal tranżizzjonijiet lixxi u pproċessar veloċi. Adattat meta l-veloċità hija importanti, iżda jrattab id-dettalji fini u l-linji rqaq.</value></data>
+  <data name="ResamplingHelp.bicubic"><value>Juża filtru kubiku biex jibbilanċja ċ-ċarezza u tranżizzjonijiet lixxi tat-toni fir-ritratti. Iżomm aktar dettall mill-metodu bilineari, iżda jista’ joħloq kontorni ċari jew skuri ħfief madwar truf b’kuntrast qawwi.</value></data>
+  <data name="ResamplingHelp.lanczos"><value>Iżomm tajjeb id-dettalji fini meta jadatta r-ritratti għall-gradilja tad-dithering, speċjalment meta jnaqqas id-daqs. Agħżlu għal riżultat aktar ċar, iżda oqgħod attent għal kontorni ċari jew skuri madwar truf b’kuntrast qawwi.</value></data>
+  <data name="ResamplingHelp.mitchell"><value>Jibbilanċja d-dettalji u tranżizzjonijiet lixxi b’inqas kontorni mhux mixtieqa madwar it-truf minn Lanczos. Adattat għal ritratti fejn dawn il-kontorni jdejqu, iżda d-dettalji fini jkunu kemxejn aktar rotob u l-ipproċessar aktar bil-mod.</value></data>
 </root>

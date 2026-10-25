@@ -50,6 +50,20 @@ namespace pyToneRIP.Services
         private static readonly Dictionary<string, int> HistoryLineCounts =
             new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
 
+        private static async Task<T> ReadJsonAsync<T>(StorageFile file)
+        {
+            // The JSON reader uses small synchronous reads. Running those on
+            // a WinRT stream causes repeated cross-apartment waits on the UI
+            // thread, even when every print job has already finished.
+            using (var stream = await file.OpenStreamForReadAsync().ConfigureAwait(false))
+            using (var buffer = new MemoryStream())
+            {
+                await stream.CopyToAsync(buffer).ConfigureAwait(false);
+                buffer.Position = 0;
+                return (T)new DataContractJsonSerializer(typeof(T)).ReadObject(buffer);
+            }
+        }
+
         public static async Task<JobProgressSnapshot> ReadLatestAsync()
         {
             StorageFolder jobs;
@@ -69,10 +83,7 @@ namespace pyToneRIP.Services
                 try
                 {
                     var file = await folder.GetFileAsync("progress.json");
-                    JobProgressSnapshot value;
-                    using (var stream = await file.OpenStreamForReadAsync())
-                        value = (JobProgressSnapshot)new DataContractJsonSerializer(
-                            typeof(JobProgressSnapshot)).ReadObject(stream);
+                    var value = await ReadJsonAsync<JobProgressSnapshot>(file);
                     DateTimeOffset updated;
                     if (value == null ||
                         value.Schema != "pytone-rip.job-progress" ||
@@ -107,10 +118,7 @@ namespace pyToneRIP.Services
                 try
                 {
                     var file = await folder.GetFileAsync("transport-activity.json");
-                    TransportActivity value;
-                    using (var stream = await file.OpenStreamForReadAsync())
-                        value = (TransportActivity)new DataContractJsonSerializer(
-                            typeof(TransportActivity)).ReadObject(stream);
+                    var value = await ReadJsonAsync<TransportActivity>(file);
                     DateTimeOffset updated;
                     if (value?.Schema != "pytone-rip.transport-activity" ||
                         value.Version != 1 || !value.Active ||
@@ -145,10 +153,7 @@ namespace pyToneRIP.Services
                 try
                 {
                     var progressFile = await folder.GetFileAsync("progress.json");
-                    JobProgressSnapshot progress;
-                    using (var stream = await progressFile.OpenStreamForReadAsync())
-                        progress = (JobProgressSnapshot)new DataContractJsonSerializer(
-                            typeof(JobProgressSnapshot)).ReadObject(stream);
+                    var progress = await ReadJsonAsync<JobProgressSnapshot>(progressFile);
                     DateTimeOffset updated;
                     var queued = string.Equals(progress?.Stage, "RUNTIME_QUEUED",
                         StringComparison.OrdinalIgnoreCase);
@@ -176,10 +181,7 @@ namespace pyToneRIP.Services
                     try
                     {
                         var transportFile = await folder.GetFileAsync("transport-activity.json");
-                        TransportActivity transport;
-                        using (var stream = await transportFile.OpenStreamForReadAsync())
-                            transport = (TransportActivity)new DataContractJsonSerializer(
-                                typeof(TransportActivity)).ReadObject(stream);
+                        var transport = await ReadJsonAsync<TransportActivity>(transportFile);
                         DateTimeOffset transportUpdated;
                         if (!queued && transport?.Schema == "pytone-rip.transport-activity"
                             && transport.Version == 1 && transport.Active
@@ -205,10 +207,7 @@ namespace pyToneRIP.Services
                     try
                     {
                         var configurationFile = await folder.GetFileAsync("configuration.json");
-                        JobConfiguration configuration;
-                        using (var stream = await configurationFile.OpenStreamForReadAsync())
-                            configuration = (JobConfiguration)new DataContractJsonSerializer(
-                                typeof(JobConfiguration)).ReadObject(stream);
+                        var configuration = await ReadJsonAsync<JobConfiguration>(configurationFile);
                         if (configuration?.Schema == "pytone-rip.configuration"
                             && configuration.Version == 1
                             && string.Equals(configuration.Connection?.Kind, "network",

@@ -12,13 +12,287 @@
 import numpy as np
 cimport numpy as cnp
 from cython.parallel cimport prange
+from libc.math cimport pow, log, floor, isfinite
 
 ctypedef cnp.uint8_t u8
 ctypedef cnp.uint16_t u16
+
+ctypedef fused source_code_t:
+    u8
+    u16
 ctypedef cnp.uint32_t u32
 ctypedef cnp.int64_t i64
 
 cnp.import_array()
+
+
+def compile_mono16_luts_kernel(
+    const u16[:, :, ::1] curves, const cnp.float64_t[:, ::1] weights,
+    int gamma, int ink_limit, double density, bint split_tone, bint raw=False,
+):
+    """Compose continuous gamma, QUAD interpolation and blending once per job."""
+    cdef Py_ssize_t profiles=curves.shape[0], channels=curves.shape[1]
+    if (profiles < 1 or profiles > 3 or channels < 1 or curves.shape[2] != 256
+            or weights.shape[0] != 3 or weights.shape[1] != profiles
+            or gamma < -15 or gamma > 15 or ink_limit < -50 or ink_limit > 50
+            or density < 0 or not isfinite(density)):
+        raise ValueError("invalid mono16 curve parameters")
+    cdef cnp.ndarray[u16, ndim=2] result=np.empty((channels,65536),dtype=np.uint16)
+    cdef u16[:, ::1] output=result
+    cdef Py_ssize_t x,c,p,index
+    cdef double tone, adjusted, position, fraction, amount, value, weight, f
+    cdef double exponent=log(0.5+gamma/100.0)/log(0.5)
+    cdef double midpoint=128.0/255.0
+    with nogil:
+        for x in range(65536):
+            tone=x/65535.0
+            adjusted=pow(tone,exponent) if gamma != 0 else tone
+            position=adjusted*255.0
+            index=<Py_ssize_t>position
+            if index > 254:
+                index=254
+            fraction=position-index
+            for c in range(channels):
+                amount=0.0
+                for p in range(profiles):
+                    if raw:
+                        value=adjusted*65535.0
+                    else:
+                        value=curves[p,c,index]*(1.0-fraction)+curves[p,c,index+1]*fraction
+                    if not split_tone:
+                        weight=weights[0,p]
+                    elif tone <= midpoint:
+                        f=tone/midpoint
+                        weight=weights[0,p]*(1.0-f)+weights[1,p]*f
+                    else:
+                        f=(tone-midpoint)/(1.0-midpoint)
+                        weight=weights[1,p]*(1.0-f)+weights[2,p]*f
+                    amount+=value*weight/100.0
+                amount*=1.0+ink_limit/100.0
+                if amount > 65535.0:
+                    amount=65535.0
+                amount*=density
+                if amount > 65535.0:
+                    amount=65535.0
+                if amount < 0.0:
+                    amount=0.0
+                output[c,x]=<u16>floor(amount+0.5)
+    return result
+
+
+def invert_gray16_kernel(const u16[::1] row):
+    cdef Py_ssize_t x,n=row.shape[0]
+    cdef cnp.ndarray[u16,ndim=1] result=np.empty(n,dtype=np.uint16)
+    cdef u16[::1] output=result
+    with nogil:
+        for x in range(n):
+            output[x]=65535-row[x]
+    return result
+
+
+def calibration_channels16_kernel(const u16[:, ::1] gray, int first, int last,
+                                  int channels, int ink_limit):
+    """Split a calibration chart into physical rows without narrowing its tone."""
+    cdef Py_ssize_t y,x,c,start,end,h=gray.shape[0],w=gray.shape[1]
+    if first < 0 or last > h or last-first < channels or channels < 1 or not 0 <= ink_limit <= 100:
+        raise ValueError("invalid 16-bit calibration geometry or ink limit")
+    cdef cnp.ndarray[u16,ndim=3] result=np.zeros((channels,h,w),dtype=np.uint16)
+    cdef u16[:,:,::1] output=result
+    with nogil:
+        for c in range(channels):
+            start=first+(last-first)*c//channels
+            end=first+(last-first)*(c+1)//channels
+            for y in range(start,end):
+                for x in range(w):
+                    output[c,y,x]=<u16>(((65535-<int>gray[y,x])*ink_limit+50)//100)
+    return result
+
+
+def calibration_selectors16_kernel(const source_code_t[:, :, ::1] rgb,
+                                   const cnp.int16_t[:, ::1] selectors,
+                                   int channels, int ink_limit):
+    """Exact RGB selectors, with 16-bit coverage and no Python pixel loops."""
+    cdef Py_ssize_t y,x,h=rgb.shape[0],w=rgb.shape[1]
+    cdef int r,b,channel,value
+    cdef int scale=1 if sizeof(source_code_t) == 1 else 257
+    if rgb.shape[2] != 3 or selectors.shape[0] != 256 or selectors.shape[1] != 256 or channels < 1 or not 0 <= ink_limit <= 100:
+        raise ValueError("invalid 16-bit selector raster")
+    if np.any(np.asarray(selectors) >= channels):
+        raise ValueError("selector references an unavailable channel")
+    cdef cnp.ndarray[u16,ndim=3] result=np.zeros((channels,h,w),dtype=np.uint16)
+    cdef u16[:,:,::1] output=result
+    with nogil:
+        for y in range(h):
+            for x in range(w):
+                r=rgb[y,x,0]
+                b=rgb[y,x,2]
+                if r % scale or b % scale:
+                    continue
+                channel=selectors[r//scale,b//scale]
+                if channel >= 0:
+                    value=(255*scale-<int>rgb[y,x,1])*(257//scale)
+                    output[channel,y,x]=<u16>((value*ink_limit+50)//100)
+    return result
+
+
+def gray16_from_rgb_kernel(const source_code_t[:, :, ::1] pixels,
+                          bint premultiplied=False, bint cmyk=False):
+    """Gamma-coded grayscale with white alpha compositing, no u8 intermediate."""
+    cdef Py_ssize_t y,x,h=pixels.shape[0],w=pixels.shape[1],channels=pixels.shape[2]
+    if (cmyk and channels not in (4,5)) or (not cmyk and channels not in (1,2,3,4)):
+        raise ValueError("expected gray, gray-alpha, RGB or RGBA")
+    cdef double maximum=255.0 if sizeof(source_code_t) == 1 else 65535.0
+    cdef double value,alpha
+    cdef cnp.ndarray[u16,ndim=2] result=np.empty((h,w),dtype=np.uint16)
+    cdef u16[:,::1] output=result
+    with nogil:
+        for y in range(h):
+            for x in range(w):
+                if cmyk:
+                    value=(299.0*(maximum-pixels[y,x,0])+587.0*(maximum-pixels[y,x,1])
+                           +114.0*(maximum-pixels[y,x,2]))/(1000.0*maximum)
+                    value*=1.0-pixels[y,x,3]/maximum
+                elif channels <= 2:
+                    value=pixels[y,x,0]/maximum
+                else:
+                    value=(299.0*pixels[y,x,0]+587.0*pixels[y,x,1]+114.0*pixels[y,x,2])/(1000.0*maximum)
+                if (cmyk and channels == 5) or (not cmyk and channels in (2,4)):
+                    alpha=pixels[y,x,channels-1]/maximum
+                    value=(value if premultiplied else value*alpha)+1.0-alpha
+                if value > 1.0:
+                    value=1.0
+                output[y,x]=<u16>floor(value*65535.0+0.5)
+    return result
+
+
+cdef inline double _scrgb_encode(double value) noexcept nogil:
+    return 12.92*value if value <= 0.0031308 else 1.055*pow(value,1.0/2.4)-0.055
+
+
+def scrgb_to_uint16_kernel(const cnp.float32_t[:,:,::1] pixels, bint rgb=False):
+    """White-paper composition in linear light, then QUAD's encoded gray domain.
+
+    Input is premultiplied scRGB. Compose before transfer encoding, without
+    unpremultiplication/division near zero alpha. SDR white is 1.0; no adaptive
+    tone mapping. Count final out-of-range components before device clipping.
+    """
+    cdef Py_ssize_t h=pixels.shape[0],w=pixels.shape[1],channels=3 if rgb else 1
+    if pixels.shape[2]!=4:
+        raise ValueError("expected premultiplied float32 RGBA")
+    cdef cnp.ndarray[u16,ndim=3] result=np.empty((h,w,channels),dtype=np.uint16)
+    cdef u16[:,:,::1] output=result
+    cdef Py_ssize_t x,y,k
+    cdef double a,r,g,b,value
+    cdef unsigned long long below=0,above=0
+    cdef bint invalid=False
+    with nogil:
+        for y in range(h):
+            for x in range(w):
+                a=pixels[y,x,3]
+                if not isfinite(a) or a<0.0 or a>1.0:
+                    invalid=True
+                    continue
+                r=pixels[y,x,0];g=pixels[y,x,1];b=pixels[y,x,2]
+                if not isfinite(r) or not isfinite(g) or not isfinite(b):
+                    invalid=True
+                    continue
+                if r==g and r==b:
+                    # Neutral photographs share their transfer result. Keep
+                    # double precision while avoiding two identical powers.
+                    r=_scrgb_encode(r+1.0-a);g=r;b=r
+                else:
+                    r=_scrgb_encode(r+1.0-a)
+                    g=_scrgb_encode(g+1.0-a)
+                    b=_scrgb_encode(b+1.0-a)
+                for k in range(channels):
+                    value=(r if k==0 else g if k==1 else b) if rgb else (299*r+587*g+114*b)/1000.0
+                    if value<0.0:
+                        below+=1;value=0.0
+                    elif value>1.0:
+                        above+=1;value=1.0
+                    output[y,x,k]=<u16>floor(value*65535.0+0.5)
+    if invalid:
+        raise ValueError("XPS raster contains non-finite samples or invalid alpha")
+    return result,below,above
+
+
+def resample_horizontal16_kernel(const source_code_t[::1] source,
+    const cnp.int64_t[:,::1] indices, const cnp.float64_t[:,::1] weights):
+    cdef Py_ssize_t x,k,width=indices.shape[0],taps=indices.shape[1]
+    if weights.shape[0]!=width or weights.shape[1]!=taps or source.shape[0]<1:
+        raise ValueError("invalid horizontal filter geometry")
+    cdef cnp.ndarray[cnp.float64_t,ndim=1] result=np.empty(width,dtype=np.float64)
+    cdef double[::1] output=result
+    cdef double value
+    with nogil:
+        for x in range(width):
+            value=0.0
+            for k in range(taps):
+                value+=source[indices[x,k]]*weights[x,k]
+            output[x]=value
+    return result
+
+
+def resample_accumulate_row_kernel(double[::1] accumulator,
+    const double[::1] source, double weight):
+    """Accumulate a large vertical footprint without retaining its rows."""
+    cdef Py_ssize_t x, width=accumulator.shape[0]
+    if source.shape[0] != width:
+        raise ValueError("incompatible filter row widths")
+    with nogil:
+        for x in range(width):
+            accumulator[x] += source[x]*weight
+
+
+def resample_vertical16_kernel(const cnp.float64_t[:,::1] source,
+    const cnp.int64_t[:,::1] indices,const cnp.float64_t[:,::1] weights,
+    int maximum=65535):
+    cdef Py_ssize_t y,x,k,height=indices.shape[0],width=source.shape[1],taps=indices.shape[1]
+    if weights.shape[0]!=height or weights.shape[1]!=taps:
+        raise ValueError("invalid vertical filter geometry")
+    cdef cnp.ndarray[u16,ndim=2] result=np.empty((height,width),dtype=np.uint16)
+    cdef u16[:,::1] output=result
+    cdef double value
+    with nogil:
+        for y in range(height):
+            for x in range(width):
+                value=0.0
+                for k in range(taps):
+                    value+=source[indices[y,k],x]*weights[y,k]
+                if value<0.0:
+                    value=0.0
+                elif value>maximum:
+                    value=maximum
+                output[y,x]=<u16>floor(value+0.5)
+    return result
+
+
+def gray8_from_rgb_kernel(const u8[:, :, ::1] pixels, bint premultiplied=False):
+    """Match Pillow's integer luminance and white alpha composition per band."""
+    cdef Py_ssize_t y,x,h=pixels.shape[0],w=pixels.shape[1],channels=pixels.shape[2]
+    if channels not in (1,2,3,4):
+        raise ValueError("expected gray, gray-alpha, RGB or RGBA")
+    cdef int r,g,b,a
+    cdef cnp.ndarray[u8,ndim=2] result=np.empty((h,w),dtype=np.uint8)
+    cdef u8[:,::1] output=result
+    with nogil:
+        for y in range(h):
+            for x in range(w):
+                r=pixels[y,x,0]
+                g=pixels[y,x,1] if channels >= 3 else r
+                b=pixels[y,x,2] if channels >= 3 else r
+                if channels in (2,4):
+                    a=pixels[y,x,channels-1]
+                    if premultiplied:
+                        r=min(255,r+255-a)
+                        g=min(255,g+255-a)
+                        b=min(255,b+255-a)
+                    else:
+                        r=(r*a+255*(255-a)+127)//255
+                        g=(g*a+255*(255-a)+127)//255
+                        b=(b*a+255*(255-a)+127)//255
+                output[y,x]=<u8>((r*19595+g*38470+b*7471+32768)>>16)
+    return result
 
 
 cdef struct SingleAdaptiveEDPolicy:
@@ -34,7 +308,7 @@ ctypedef fused AdaptiveEDPolicy:
 
 cdef u32 _adaptive_ed_scan(
     AdaptiveEDPolicy policy,
-    const u8[:, :, ::1] codes,
+    const source_code_t[:, :, ::1] codes,
     const u16[:, ::1] luts,
     const i64[:, ::1] levels,
     i64[:, :, ::1] errors,
@@ -79,7 +353,9 @@ cdef u32 _adaptive_ed_scan(
                 adjusted[c] = original[c] - errors[current, c, index]
                 if original[c] != 0:
                     random_state = random_state * <u32>0x343fd + <u32>0x269ec3
-                    entry = levels[original[c] >> 8, 0]
+                    # Dispatch passes the level table after its 256-entry guard.
+                    # Noise/strength and output levels share that biased base.
+                    entry = levels[256 + (original[c] >> 8), 0]
                     noise[c] = ((random_state >> 16) & 255) * ((entry >> 16) & 255)
                     pair_strength[c] = (entry >> 24) & 255
                 else:
@@ -107,7 +383,9 @@ cdef u32 _adaptive_ed_scan(
                     entry = levels[table_index, 0]
                     quantum[0] = ((entry >> 8) & 255) * 257
                     output_code[0] = entry & 255
-                    gate -= quantum[0]
+                    # Undo the first noise term once its drop is selected.
+                    # It must not remain as a penalty in the second ink's gate.
+                    gate += noise[0] - quantum[0]
                 if candidate[1] > 0 and gate > 0:
                     table_index = <int>(256 + ((candidate[1] - 1) >> 8))
                     table_index = max(0, min(2047, table_index))
@@ -124,7 +402,7 @@ cdef u32 _adaptive_ed_scan(
             mask = <u8>(0x80 >> ((x_offset + x) & 7))
             for c in range(channels):
                 for b in range(packed.shape[1]):
-                    if output_code[c] & (1 << b):
+                    if output_code[c] & (<i64>1 << b):
                         packed[c, b, y, (x_offset + x) >> 3] |= mask
                 residual = quantum[c] - adjusted[c]
                 half = residual >> 1
@@ -145,7 +423,7 @@ cdef u32 _adaptive_ed_scan(
 
 
 def adaptive_ed_band_kernel(
-    const u8[:, :, ::1] codes,
+    const source_code_t[:, :, ::1] codes,
     const u16[:, ::1] luts,
     const i64[:, ::1] levels,
     const i64[:, ::1] initial_error,
@@ -161,7 +439,7 @@ def adaptive_ed_band_kernel(
     cdef Py_ssize_t channels = 2 if coupled else 1
     cdef Py_ssize_t height = codes.shape[1], width = codes.shape[2]
     if (codes.shape[0] != channels or height <= 0 or width <= 0
-            or luts.shape[0] != channels or luts.shape[1] != 256
+            or luts.shape[0] != channels or luts.shape[1] != (1 << (8 * sizeof(source_code_t)))
             or levels.shape[0] != 2048 or levels.shape[1] != 1
             or initial_error.shape[0] != channels or initial_error.shape[1] != width + 2
             or canvas_width <= 0 or canvas_width % 8 or x_offset < 0
@@ -246,7 +524,7 @@ cdef inline double _interpolated_binary_entropy(
 
 
 cdef inline double _gaussian_horizontal_pixel(
-    const u8[:, ::1] codes,
+    const source_code_t[:, ::1] codes,
     const u16[::1] qtr_lut,
     const double[::1] weights,
     Py_ssize_t y,
@@ -307,7 +585,7 @@ cdef inline void _accumulate_clipped_error(
 
 
 def gaussian_highpass_qtr_kernel(
-    const u8[:, ::1] codes,
+    const source_code_t[:, ::1] codes,
     const u16[::1] qtr_lut,
     const double[::1] weights,
 ):
@@ -324,8 +602,8 @@ def gaussian_highpass_qtr_kernel(
     cdef Py_ssize_t local_y, local_x
     if height <= 0 or width <= 0:
         raise ValueError("QTR code raster must not be empty")
-    if qtr_lut.shape[0] != 256:
-        raise ValueError("QTR lookup table must have exactly 256 entries")
+    if qtr_lut.shape[0] != (1 << (8 * sizeof(source_code_t))):
+        raise ValueError("QTR lookup table size must match source sample precision")
     if weights.shape[0] != 5:
         raise ValueError("symmetric sigma=1 Gaussian kernel must contain five weights")
 
@@ -381,7 +659,7 @@ ctypedef fused ErrorDiffusionThresholdPolicy:
 
 cdef void _error_diffusion_qtr_scan(
     ErrorDiffusionThresholdPolicy policy,
-    const u8[:, ::1] codes,
+    const source_code_t[:, ::1] codes,
     const double* normalized_lut,
     const double[:, ::1] coefficients,
     const double[::1] modulation,
@@ -592,7 +870,7 @@ cdef void _error_diffusion_qtr_scan(
 
 
 def error_diffusion_qtr_kernel(
-    const u8[:, ::1] codes,
+    const source_code_t[:, ::1] codes,
     const u16[::1] qtr_lut,
     const double[:, ::1] coefficients,
     const double[::1] modulation,
@@ -630,7 +908,9 @@ def error_diffusion_qtr_kernel(
     cdef Py_ssize_t endpoint_count = endpoint_values.shape[0]
     cdef Py_ssize_t row_bytes
     cdef Py_ssize_t lut_index
-    cdef double normalized_lut[256]
+    cdef cnp.ndarray[cnp.float64_t, ndim=1] normalized_storage = np.empty(qtr_lut.shape[0], dtype=np.float64)
+    cdef double[::1] normalized_view = normalized_storage
+    cdef double* normalized_lut = &normalized_view[0]
     cdef double* current_error
     cdef double* next_error
     cdef OstromoukhovThresholdPolicy ostromoukhov_policy
@@ -642,8 +922,8 @@ def error_diffusion_qtr_kernel(
 
     if height <= 0 or width <= 0:
         raise ValueError("QTR code raster must not be empty")
-    if qtr_lut.shape[0] != 256:
-        raise ValueError("QTR lookup table must have exactly 256 entries")
+    if qtr_lut.shape[0] != (1 << (8 * sizeof(source_code_t))):
+        raise ValueError("QTR lookup table size must match source sample precision")
     if coefficients.shape[0] != 256 or coefficients.shape[1] != 3:
         raise ValueError("diffusion coefficients must have shape (256, 3)")
     if modulation.shape[0] != (65 if algorithm == 3 else 256):
@@ -663,7 +943,7 @@ def error_diffusion_qtr_kernel(
     if entropy_table.shape[0] != 65537:
         raise ValueError("binary entropy table must have 65537 entries")
 
-    for lut_index in range(256):
+    for lut_index in range(qtr_lut.shape[0]):
         normalized_lut[lut_index] = qtr_lut[lut_index] / 65535.0
 
     row_bytes = canvas_width // 8
@@ -729,7 +1009,7 @@ def error_diffusion_qtr_kernel(
 
 cdef object _error_diffusion_qtr_band_kernel(
     ErrorDiffusionThresholdPolicy policy,
-    const u8[:, ::1] codes,
+    const source_code_t[:, ::1] codes,
     const u16[::1] qtr_lut,
     const double[:, ::1] coefficients,
     const double[::1] modulation,
@@ -763,7 +1043,9 @@ cdef object _error_diffusion_qtr_band_kernel(
     cdef Py_ssize_t endpoint_count = endpoint_values.shape[0]
     cdef Py_ssize_t row_bytes = canvas_width // 8
     cdef Py_ssize_t lut_index
-    cdef double normalized_lut[256]
+    cdef cnp.ndarray[cnp.float64_t, ndim=1] normalized_storage = np.empty(qtr_lut.shape[0], dtype=np.float64)
+    cdef double[::1] normalized_view = normalized_storage
+    cdef double* normalized_lut = &normalized_view[0]
     cdef double* current_error
     cdef double* next_error
 
@@ -773,8 +1055,8 @@ cdef object _error_diffusion_qtr_band_kernel(
         raise ValueError("error-diffusion band exceeds the source raster")
     if row_offset + output_height < total_height and codes.shape[0] < output_height + 1:
         raise ValueError("non-final error-diffusion band requires one look-ahead row")
-    if qtr_lut.shape[0] != 256:
-        raise ValueError("QTR lookup table must have exactly 256 entries")
+    if qtr_lut.shape[0] != (1 << (8 * sizeof(source_code_t))):
+        raise ValueError("QTR lookup table size must match source sample precision")
     if coefficients.shape[0] != 256 or coefficients.shape[1] != 3:
         raise ValueError("diffusion coefficients must have shape (256, 3)")
     if ErrorDiffusionThresholdPolicy is X2Y1ThresholdPolicy:
@@ -797,7 +1079,7 @@ cdef object _error_diffusion_qtr_band_kernel(
     ):
         raise ValueError("entropy high-pass band does not match the output band")
 
-    for lut_index in range(256):
+    for lut_index in range(qtr_lut.shape[0]):
         normalized_lut[lut_index] = qtr_lut[lut_index] / 65535.0
 
     cdef cnp.ndarray[u8, ndim=3] packed = np.zeros(
@@ -834,7 +1116,7 @@ cdef object _error_diffusion_qtr_band_kernel(
 
 
 def ostromoukhov_qtr_band_kernel(
-    const u8[:, ::1] codes,
+    const source_code_t[:, ::1] codes,
     const u16[::1] qtr_lut,
     const double[:, ::1] coefficients,
     const double[::1] modulation,
@@ -867,7 +1149,7 @@ def ostromoukhov_qtr_band_kernel(
 
 
 def zhou_fang_qtr_band_kernel(
-    const u8[:, ::1] codes,
+    const source_code_t[:, ::1] codes,
     const u16[::1] qtr_lut,
     const double[:, ::1] coefficients,
     const double[::1] modulation,
@@ -900,7 +1182,7 @@ def zhou_fang_qtr_band_kernel(
 
 
 def entropy_zhou_fang_qtr_band_kernel(
-    const u8[:, ::1] codes,
+    const source_code_t[:, ::1] codes,
     const u16[::1] qtr_lut,
     const double[:, ::1] coefficients,
     const double[::1] modulation,
@@ -933,7 +1215,7 @@ def entropy_zhou_fang_qtr_band_kernel(
 
 
 def x2y1_qtr_band_kernel(
-    const u8[:, ::1] codes,
+    const source_code_t[:, ::1] codes,
     const u16[::1] qtr_lut,
     const double[:, ::1] coefficients,
     const double[::1] modulation,
@@ -979,7 +1261,7 @@ def x2y1_qtr_band_kernel(
 
 
 def error_diffusion_qtr_band_kernel(
-    const u8[:, ::1] codes,
+    const source_code_t[:, ::1] codes,
     const u16[::1] qtr_lut,
     const double[:, ::1] coefficients,
     const double[::1] modulation,
@@ -1035,7 +1317,7 @@ def error_diffusion_qtr_band_kernel(
 
 
 cdef bint _qtr_row_is_zero(
-    const u8[:, ::1] codes,
+    const source_code_t[:, ::1] codes,
     const u16[::1] qtr_lut,
     Py_ssize_t row,
     Py_ssize_t width,
@@ -1047,15 +1329,15 @@ cdef bint _qtr_row_is_zero(
     return True
 
 
-def qtr_active_rows_kernel(const u8[:, ::1] codes, const u16[::1] qtr_lut):
+def qtr_active_rows_kernel(const source_code_t[:, ::1] codes, const u16[::1] qtr_lut):
     """Classify ink demand without allocating a full uint16 contone band."""
-    if qtr_lut.shape[0] != 256:
-        raise ValueError("QTR lookup table must have exactly 256 entries")
+    if qtr_lut.shape[0] != (1 << (8 * sizeof(source_code_t))):
+        raise ValueError("QTR lookup table size must match source sample precision")
     cdef Py_ssize_t row, col
     cdef bint has_ink = False
     cdef cnp.ndarray[u8, ndim=1] active = np.zeros(codes.shape[0], dtype=np.uint8)
     cdef u8[::1] result = active
-    for col in range(256):
+    for col in range(qtr_lut.shape[0]):
         if qtr_lut[col] != 0:
             has_ink = True
             break
@@ -1136,7 +1418,7 @@ def ordered_band_kernel(
 
 
 cdef void _ordered_qtr_1bit_row(
-    const u8[:, ::1] codes,
+    const source_code_t[:, ::1] codes,
     const u16[::1] qtr_lut,
     const u16[:, ::1] matrix,
     const u16[::1] lower_bits,
@@ -1188,7 +1470,7 @@ cdef void _ordered_qtr_1bit_row(
 
 
 def ordered_qtr_band_kernel(
-    const u8[:, ::1] codes,
+    const source_code_t[:, ::1] codes,
     const u16[::1] qtr_lut,
     const u16[:, ::1] matrix,
     const u16[::1] lower_bits,
@@ -1214,8 +1496,8 @@ def ordered_qtr_band_kernel(
     cdef u16 value, threshold, dot_code
     cdef u8 bit_mask
 
-    if qtr_lut.shape[0] != 256:
-        raise ValueError("QTR lookup table must have exactly 256 entries")
+    if qtr_lut.shape[0] != (1 << (8 * sizeof(source_code_t))):
+        raise ValueError("QTR lookup table size must match source sample precision")
     if canvas_width <= 0 or canvas_width % 8:
         raise ValueError("canvas_width must be a positive multiple of eight")
     if x < 0 or x + width > canvas_width:
@@ -1296,7 +1578,7 @@ def ordered_qtr_band_kernel(
 
 
 def blue_noise_qtr_band_kernel(
-    const u8[:, ::1] codes,
+    const source_code_t[:, ::1] codes,
     const u16[::1] qtr_lut,
     const u16[:, ::1] matrix,
     const u16[::1] lower_bits,
@@ -1343,8 +1625,8 @@ def blue_noise_qtr_band_kernel(
     cdef u32 transform_x, transform_y
     cdef bint flip_x, flip_y
 
-    if qtr_lut.shape[0] != 256:
-        raise ValueError("QTR lookup table must have exactly 256 entries")
+    if qtr_lut.shape[0] != (1 << (8 * sizeof(source_code_t))):
+        raise ValueError("QTR lookup table size must match source sample precision")
     if canvas_width <= 0 or canvas_width % 8:
         raise ValueError("canvas_width must be a positive multiple of eight")
     if x < 0 or x + width > canvas_width:
@@ -1431,7 +1713,7 @@ def blue_noise_qtr_band_kernel(
 
 
 def very_fast_qtr_band_kernel(
-    const u8[:, ::1] codes,
+    const source_code_t[:, ::1] codes,
     const u16[::1] qtr_lut,
     const u16[:, ::1] matrix,
     Py_ssize_t canvas_width,
@@ -1469,8 +1751,8 @@ def very_fast_qtr_band_kernel(
     cdef u16 value, threshold
     cdef u8 bit_mask
 
-    if qtr_lut.shape[0] != 256:
-        raise ValueError("QTR lookup table must have exactly 256 entries")
+    if qtr_lut.shape[0] != (1 << (8 * sizeof(source_code_t))):
+        raise ValueError("QTR lookup table size must match source sample precision")
     if canvas_width <= 0 or canvas_width % 8 or x < 0 or x + width > canvas_width:
         raise ValueError("VeryFast QTR band exceeds the canvas")
     if matrix_height <= 0 or matrix_width <= 0:

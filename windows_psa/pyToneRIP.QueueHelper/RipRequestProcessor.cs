@@ -320,6 +320,16 @@ namespace pyToneRIP.QueueHelper
                                 candidate.Request,
                                 printerMutex);
                         }
+                        catch (IOException error) when (IsClaimContention(error))
+                        {
+                            // The cancellation sweep or another helper can still
+                            // be reading this request, or may have claimed it
+                            // since enumeration. Keep it queued and retry after
+                            // releasing both locks; never terminate the worker.
+                            if (ownsPrinter)
+                                printerMutex.ReleaseMutex();
+                            printerMutex.Dispose();
+                        }
                         catch
                         {
                             if (ownsPrinter)
@@ -676,9 +686,20 @@ namespace pyToneRIP.QueueHelper
 
         private static string Quote(string value) => "\"" + value + "\"";
 
+        private static bool IsClaimContention(IOException error)
+        {
+            var code = error.HResult & 0xffff;
+            return code == 2 || code == 3 || code == 32 || code == 33
+                || code == 80 || code == 183;
+        }
+
         private static T ReadJson<T>(string path)
         {
-            using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
+            // Requests are immutable after their atomic publication. Readers
+            // must permit the scheduler to rename a request to .processing
+            // while the independent cancellation sweep deserializes it.
+            using (var stream = new FileStream(
+                path, FileMode.Open, FileAccess.Read, FileShare.Read | FileShare.Delete))
                 return (T)new DataContractJsonSerializer(typeof(T)).ReadObject(stream);
         }
 

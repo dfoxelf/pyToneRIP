@@ -114,6 +114,7 @@
   <data name="Choice.dimensions"><value>dimensões</value></data>
   <data name="Choice.fit"><value>ajustar</value></data>
   <data name="Choice.lanczos"><value>Lanços</value></data>
+  <data name="Choice.mitchell"><value>Mitchell–Netravali</value></data>
   <data name="Choice.landscape"><value>Horizontal</value></data>
   <data name="Choice.native"><value>Tamanho original</value></data>
   <data name="Choice.nearest"><value>Vizinho mais próximo</value></data>
@@ -209,6 +210,17 @@
   <data name="Code.WindowsPrinterRenamedToConfigurationRemainsLinkedByPrinterUri"><value>Impressora do Windows renomeada para {0}. A configuração permanece vinculada pelo PrinterUri.</value></data>
   <data name="Code.WindowsWillRemoveTheVirtualQueueAndItsSavedPyToneRIPConfigurationTheSign"><value>O Windows removerá a fila virtual {0} e sua configuração pyToneRIP salva. O módulo {1} assinado permanece disponível para outra fila.</value></data>
   <data name="Language.Automatic.Text"><value>Automático (Windows)</value></data>
+  <data name="DitherHelp.AdaptiveHybrid"><value>No RIP atual, esta opção de compatibilidade utiliza Ordered para gotas de tamanho variável. Escolha diretamente Ordered: esta opção não oferece atualmente uma vantagem adaptativa de qualidade distinta.</value></data>
+  <data name="DitherHelp.BlueNoiseFM"><value>Utiliza uma máscara de limiares de ruído azul para reduzir a regularidade da trama. Adequado para fotografias e degradés suaves do céu; a granulação fina ou a estrutura residual da máscara podem continuar visíveis.</value></data>
+  <data name="DitherHelp.CoupledED"><value>Coordena os pontos nos pares C/M e LC/LM através de difusão de erro e ruído de limiar dependente do tom. Adequado para impressoras com ambos os pares; a sobreposição e o equilíbrio das tintas emparelhadas podem mudar. Verifique uma impressão de teste com as suas curvas tonais.</value></data>
+  <data name="DitherHelp.CoupledEDCM"><value>Coordena os pontos no par C/M; as tintas claras e os outros canais permanecem independentes. Adequado para impressoras de quatro cores ou quando não se pretende acoplar LC/LM; altera a sobreposição e a textura de C/M sem acoplar as tintas claras.</value></data>
+  <data name="DitherHelp.EntropyZhouFang"><value>Ajusta a modulação do limiar de Zhou-Fang ao tom e à estrutura local da imagem. Adequado para fotografias detalhadas com áreas suaves; requer cálculos adicionais e pode alterar a reprodução de texturas finas.</value></data>
+  <data name="DitherHelp.Fast"><value>Utiliza uma pequena matriz ordenada de limiares com tamanhos de gota variáveis. Adequado para gráficos simples e impressões de teste; o padrão pode ser mais visível nos degradés. O nome não garante processamento mais rápido.</value></data>
+  <data name="DitherHelp.Ordered"><value>Posiciona gotas de tinta de tamanhos diferentes através de uma matriz fixa de limiares. Adequado para escalas de teste e gráficos; os degradés suaves podem revelar um padrão de trama repetitivo.</value></data>
+  <data name="DitherHelp.Ostromoukhov"><value>Distribui o erro de quantização pelos píxeis vizinhos com pesos dependentes do tom. Adequado para fotografias detalhadas e transições tonais; alguns tons podem apresentar cadeias de pontos orientadas.</value></data>
+  <data name="DitherHelp.VeryFast"><value>Utiliza apenas a maior gota disponível em cada posição selecionada. Adequado para impressões de teste aproximadas; a granulação é mais grosseira e a gradação das altas luzes pode piorar. Uma maior velocidade não é garantida.</value></data>
+  <data name="DitherHelp.X2Y1"><value>Utiliza difusão de erro com sentido alternado por linha, pesos para quatro vizinhos e modulação de ruído dependente do tom. Adequado para céus, pores do sol e degradés amplos; a granulação fina ou uma textura orientada podem continuar visíveis.</value></data>
+  <data name="DitherHelp.ZhouFang"><value>Acrescenta à difusão de erro uma modulação do limiar de quantização dependente do tom para reduzir estruturas regulares nos tons médios. Adequado para degradés onde Ostromoukhov produz padrões; a granulação pode tornar-se mais evidente.</value></data>
   <data name="MainPage.About.Label"><value>Acerca de…</value></data>
   <data name="MainPage.Add.Label"><value>Adicionar impressora</value></data>
   <data name="MainPage.Empty.Add.Content"><value>Adicionar impressora</value></data>
@@ -244,6 +256,8 @@
   <data name="Maintenance.nozzle_check.Title"><value>Verificação dos jatos de impressão</value></data>
   <data name="Maintenance.test_page.Description"><value>Imprima um pequeno padrão bruto por canal usando as configurações do modelo selecionado.</value></data>
   <data name="Maintenance.test_page.Title"><value>Imprimir página de teste pyToneRIP</value></data>
+  <data name="Processing16Bit.Content"><value>Processamento de 16 bits</value></data>
+  <data name="Processing16BitExperimental.Text"><value>(modo experimental)</value></data>
   <data name="Splash.Continue.Content"><value>Continuar</value></data>
   <data name="Splash.Description.Text"><value>A preparar o motor de rasterização e a carregar impressoras instaladas…</value></data>
   <data name="Splash.Title.Text"><value>A iniciar o pyToneRIP</value></data>
@@ -289,4 +303,9 @@
   <data name="DeviceChoice.Model_B" xml:space="preserve"><value>Modelo B</value></data>
   <data name="DeviceChoice.Code" xml:space="preserve"><value>Código {0}</value></data>
   <data name="DeviceChoice.ThinPaper" xml:space="preserve"><value>{0} (papel fino)</value></data>
+  <data name="ResamplingHelp.nearest"><value>Copia o píxel de origem mais próximo sem suavização; útil para arte de píxeis e padrões de teste que exigem preservar os valores dos píxeis. É rápido, mas a ampliação de fotografias pode produzir contornos em degraus e transições irregulares.</value></data>
+  <data name="ResamplingHelp.bilinear"><value>Combina píxeis vizinhos para obter transições suaves com processamento rápido. Adequado quando a velocidade é importante, mas suaviza os detalhes finos e as linhas estreitas.</value></data>
+  <data name="ResamplingHelp.bicubic"><value>Utiliza um filtro cúbico para equilibrar a nitidez e as transições tonais suaves das fotografias. Preserva mais detalhe do que o método bilinear, mas pode criar ligeiros halos em contornos de elevado contraste.</value></data>
+  <data name="ResamplingHelp.lanczos"><value>Preserva bem os detalhes finos ao adaptar fotografias à grelha de dithering, sobretudo na redução. Escolha-o para resultados mais nítidos, mas tenha atenção a halos claros ou escuros em contornos de elevado contraste.</value></data>
+  <data name="ResamplingHelp.mitchell"><value>Equilibra o detalhe e as transições suaves com menos halos nos contornos do que Lanczos. Adequado para fotografias em que os halos incomodam, à custa de detalhes finos ligeiramente mais suaves e de um processamento mais lento.</value></data>
 </root>

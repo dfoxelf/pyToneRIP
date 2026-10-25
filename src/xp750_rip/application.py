@@ -10,6 +10,7 @@ import math
 import os
 from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor
+from contextlib import ExitStack
 from dataclasses import dataclass, field, replace
 from hashlib import sha256
 from pathlib import Path
@@ -134,6 +135,10 @@ class PrintJobConfiguration:
     calibration: CalibrationConfiguration | None = None
     device_settings: tuple[tuple[str, str], ...] = ()
     ink_configuration: str | None = None
+    processing_bits: int = 8
+    source_page: int = 0
+    source_is_adapter: bool = False
+    source_dpi_override: tuple[float, float] | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -203,7 +208,23 @@ class MonoRipService:
         write_chunk: Callable[[bytes], None] | None = None,
         cancel_check: Callable[[], None] | None = None,
     ) -> RenderedJob | LiveRenderSummary:
+        with ExitStack() as resources:
+            return self._render(configuration, write_chunk=write_chunk,
+                                cancel_check=cancel_check, resources=resources)
+
+    def _render(
+        self,
+        configuration: PrintJobConfiguration,
+        *,
+        resources: ExitStack,
+        write_chunk: Callable[[bytes], None] | None = None,
+        cancel_check: Callable[[], None] | None = None,
+    ) -> RenderedJob | LiveRenderSummary:
+        if isinstance(configuration.processing_bits, bool) or configuration.processing_bits not in (8, 16):
+            raise ValueError("processing_bits must be 8 or 16")
         trace = configuration.performance_trace
+        if trace is not None:
+            trace.event("Processing precision DATA", processing_bits=configuration.processing_bits)
         model = configuration.target.model
         mode = configuration.mode
         medium = model.medium(configuration.media_id)
@@ -261,28 +282,39 @@ class MonoRipService:
             unknown_inks = tuple(item for item in selected if item.value not in profile_inks)
             if unknown_inks:
                 raise ValueError("QUAD не содержит logical inks: " + ", ".join(item.value for item in unknown_inks))
-            decoded = decode_grayscale_tiff(configuration.source_image, trace=trace)
-            layout = calculate_page_layout(decoded.raster, source_dpi=decoded.dpi, page=page.ppd, mode=mode, request=configuration.image_size, trace=trace)
+            decoded = decode_grayscale_tiff(
+                configuration.source_image, trace=trace, processing_bits=configuration.processing_bits,
+                page_index=configuration.source_page, allow_color=configuration.source_is_adapter,
+            )
+            resources.callback(decoded.close)
+            layout = calculate_page_layout(decoded.raster, source_dpi=configuration.source_dpi_override or decoded.dpi, page=page.ppd, mode=mode, request=configuration.image_size, trace=trace)
             calibration_codes = None
         else:
             decoder = decode_rgb_selectors if calibration.mode == "rgb_selectors" else decode_per_channel
-            target = decoder(configuration.source_image, tuple(item.value for item in selected), calibration.ink_limit_percent)
+            target = decoder(
+                configuration.source_image, tuple(item.value for item in selected),
+                calibration.ink_limit_percent,
+                processing_bits=configuration.processing_bits,
+                page_index=configuration.source_page if configuration.source_is_adapter else None,
+            )
+            resources.callback(target.close)
             # Reuse the ordinary page mapper for every plane.  This preserves
             # Windows page cropping/resampling while keeping raw code values.
-            from xp750_rip.input.tiff import Grayscale8Raster
-            proxy = Grayscale8Raster(
-                target.width,
-                tuple(
-                    bytes(255 - max(rows[y][x] for rows in target.rows_by_ink.values()) for x in range(target.width))
-                    for y in range(target.height)
-                ),
-            )
-            layout = calculate_page_layout(proxy, source_dpi=target.dpi, page=page.ppd, mode=mode, request=configuration.image_size, trace=trace)
+            from xp750_rip.calibration import CalibrationGrayRows
+            from xp750_rip.input.tiff import Grayscale8Raster, Grayscale16Raster
+            raster_type = Grayscale16Raster if configuration.processing_bits == 16 else Grayscale8Raster
+            proxy = raster_type(target.width, CalibrationGrayRows(target))
+            layout = calculate_page_layout(proxy, source_dpi=configuration.source_dpi_override or target.dpi,
+                                           page=page.ppd,mode=mode,request=configuration.image_size,trace=trace)
             calibration_codes = {}
-            for ink, rows in target.rows_by_ink.items():
-                raw = Grayscale8Raster(target.width, tuple(bytes(255 - value for value in row) for row in rows))
-                mapped = calculate_page_layout(raw, source_dpi=target.dpi, page=page.ppd, mode=mode, request=configuration.image_size, trace=None)
-                calibration_codes[ink] = black_is_zero_raster_to_qtr_codes(mapped.rendered)
+            for ink in target.rows_by_ink:
+                raw = raster_type(target.width,CalibrationGrayRows(target,ink))
+                mapped = calculate_page_layout(raw,source_dpi=configuration.source_dpi_override or target.dpi,
+                                              page=page.ppd,mode=mode,request=configuration.image_size,trace=None)
+                if hasattr(mapped.rendered.rows,"cache_rows"):
+                    mapped.rendered.rows.cache_rows = max(1,(32*1024*1024)//(len(selected)*mapped.rendered.width*8))
+                from xp750_rip.streaming_raster import InvertedQtrRows
+                calibration_codes[ink] = InvertedQtrRows(mapped.rendered.rows, configuration.processing_bits)
             decoded = None
 
         legacy_canvas = (
@@ -292,7 +324,6 @@ class MonoRipService:
         )
         streaming_pipeline = (
             self.streaming_raster_enabled
-            and calibration is None
             and not legacy_canvas
         )
         if trace is None:
@@ -448,34 +479,46 @@ class MonoRipService:
         dither_stage_name = f"{halftone_algorithm.value} dither"
         if effective_dither != halftone_algorithm.value:
             dither_stage_name += f" ({effective_dither} fallback)"
-        if calibration is not None:
-            raw_lut = compile_raw_calibration_lut(calibration.adjustments)
-            runtime_luts = {
-                logical.value: raw_lut
-                for logical in selected
-            }
-        elif runtime.is_neutral_single_profile:
-            runtime_luts = {
-                logical.value: tuple(runtime.profiles[0].curve(logical.value).samples)
-                for logical in selected
-            }
-        else:
-            runtime_luts = compile_runtime_luts(runtime)
-        # Normal and calibration printing share the mode's coverage factor.
-        # Paper selection must not add another reduction to the curve values.
+        # Mode coverage is applied after the ink limit at both precisions.
         resolution_density_factor = _resolution_density_factor(mode)
-        runtime_luts = _scale_qtr_luts_for_mode(
-            runtime_luts, resolution_density_factor
+        if configuration.processing_bits == 16:
+            from xp750_rip.precision import compile_mono16_luts
+            runtime_luts = compile_mono16_luts(
+                runtime, tuple(ink.value for ink in selected),
+                adjustments=calibration.adjustments if calibration else None,
+                density=resolution_density_factor,
+            )
+        else:
+            if calibration is not None:
+                raw_lut = compile_raw_calibration_lut(calibration.adjustments)
+                runtime_luts = {
+                    logical.value: raw_lut
+                    for logical in selected
+                }
+            elif runtime.is_neutral_single_profile:
+                runtime_luts = {
+                    logical.value: tuple(runtime.profiles[0].curve(logical.value).samples)
+                    for logical in selected
+                }
+            else:
+                runtime_luts = compile_runtime_luts(runtime)
+            runtime_luts = _scale_qtr_luts_for_mode(runtime_luts, resolution_density_factor)
+        streaming_started = None
+        streaming_label = (
+            f"Streaming raster processing (resample={layout.resampling.value}, "
+            f"QTR, dither={effective_dither}, weave)"
         )
         if streaming_pipeline:
             def report_dither_start() -> None:
+                nonlocal streaming_started
                 assert trace is not None
-                trace.event(
-                    f"Streaming Cython QTR + {dither_stage_name} START"
-                )
+                streaming_started = perf_counter()
+                trace.event(f"{streaming_label} START")
 
             physical = streaming_qtr_rasters(
                 source_rows=layout.rendered.rows,
+                code_sources=calibration_codes,
+                sample_bits=configuration.processing_bits,
                 logical_inks=selected,
                 routing=configuration.router.mapping,
                 qtr_luts=runtime_luts,
@@ -495,7 +538,8 @@ class MonoRipService:
                     "Streaming QTR raster DATA",
                     algorithm=halftone_algorithm.value,
                     effective_algorithm=effective_dither,
-                    band_rows=256,
+                    band_rows_max=256,
+                    band_working_budget_bytes=32*1024*1024,
                     logical_ink_count=len(selected),
                     full_code_raster_materialized=False,
                     full_dot_planes_materialized=False,
@@ -632,6 +676,8 @@ class MonoRipService:
             ink_configuration=configuration.ink_configuration,
             trace=trace,
             )
+        if trace is not None and streaming_started is not None:
+            trace.record_duration(streaming_label, perf_counter() - streaming_started)
         validator = (
             validate_escp2_native
             if model.escp2_profile is not None
@@ -661,11 +707,11 @@ class MonoRipService:
             image_digest = image_hash.hexdigest()
         elif trace is None:
             digest = sha256(backend_result.data).hexdigest()
-            image_digest = sha256(configuration.source_image.read_bytes()).hexdigest()
+            image_digest = _source_file_digest(configuration.source_image)
         else:
             with trace.stage("SHA-256 computation"):
                 digest = sha256(backend_result.data).hexdigest()
-                image_digest = sha256(configuration.source_image.read_bytes()).hexdigest()
+                image_digest = _source_file_digest(configuration.source_image)
         mapping = {
             logical.value: configuration.router.mapping[logical].value for logical in selected
         }
@@ -696,6 +742,14 @@ class MonoRipService:
         )
         manifest: dict[str, object] = {
             "schema": "epson-rip-job-manifest-v2-lightweight",
+            "processing_bits": configuration.processing_bits,
+            "source_page_index": configuration.source_page,
+            "source_bits_per_sample": decoded.bits_per_sample if decoded else target.source_bits_per_sample,
+            "upstream_bits_per_sample": (
+                (decoded.upstream_bits_per_sample or decoded.bits_per_sample)
+                if decoded and configuration.source_is_adapter else
+                decoded.upstream_bits_per_sample if decoded else None),
+            "tone_lut_entries": 1 << configuration.processing_bits,
             "source_image": _relative_or_absolute(configuration.source_image),
             "source_image_sha256": image_digest,
             "source_dimensions_pixels": [layout.source_width_pixels, layout.source_height_pixels],
@@ -708,14 +762,14 @@ class MonoRipService:
                 layout.rendered_height_mm,
             ],
             "tiff": {
-                "bits_per_sample": decoded.bits_per_sample if decoded else 8,
+                "bits_per_sample": decoded.bits_per_sample if decoded else target.source_bits_per_sample,
                 "photometric_interpretation": decoded.photometric_interpretation if decoded else None,
                 "orientation": decoded.orientation if decoded else 1,
                 "compression": decoded.compression if decoded else None,
                 "icc_present": decoded.has_icc_profile if decoded else False,
                 "dpi": list(decoded.dpi) if decoded and decoded.dpi else None,
             },
-            "qtr_polarity_rule": "qtr_code = 255 - TIFF_sample",
+            "qtr_polarity_rule": f"qtr_code = {(1 << configuration.processing_bits) - 1} - TIFF_sample",
             "print_direction": configuration.direction.value,
             "quad_path": str(configuration.profile_bundle.quad_path) if configuration.profile_bundle else None,
             "quad_sha256": configuration.profile_bundle.quad_sha256 if configuration.profile_bundle else None,
@@ -1139,3 +1193,11 @@ class MonoRipService:
             manifest_path=configuration.output.manifest_path,
             diagnostics_path=diagnostics_path,
         )
+
+
+def _source_file_digest(path: Path) -> str:
+    digest = sha256()
+    with path.open("rb") as stream:
+        for chunk in iter(lambda: stream.read(1024*1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()

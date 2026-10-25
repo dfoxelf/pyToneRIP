@@ -121,10 +121,12 @@ class JobProgress:
 class RenderProgressAdapter:
     """Turn real PerformanceTrace boundaries into monotonic coarse UI progress."""
 
-    def __init__(self, progress: JobProgress, job_dir: Path) -> None:
+    def __init__(self, progress: JobProgress, job_dir: Path, *, online: bool = False) -> None:
         self.progress = progress
         self.job_dir = job_dir
         self.next_percent = 46
+        self.online = online
+        self.streaming = False
 
     def __call__(self, label: str) -> None:
         if label == "TOTAL":
@@ -132,13 +134,29 @@ class RenderProgressAdapter:
             # A late cancellation marker cannot undo completed transmission.
             return
         _raise_if_cancelled(self.job_dir)
+        if label.startswith("Streaming raster processing ("):
+            if label.endswith(" START"):
+                self.streaming = True
+                self.progress.write(60, "RIP_PROCESSING", label.removesuffix(" START"))
+            elif label.endswith(" END"):
+                self.progress.record_stage(
+                    "RIP_RENDERED",
+                    "Page raster generation complete; buffered transmission may still be in progress",
+                )
+            return
         if not (label.endswith(" START") or "logical contone plane" in label):
             # Full START/END/DATA details already live in performance.log.
             # Keep the Manager history to actual progress transitions.
             return
-        percent = min(self.next_percent, 88)
-        self.next_percent = min(self.next_percent + 2, 88)
         stage = label.removesuffix(" START")
+        if self.online and (self.streaming or self.progress.percent >= 60):
+            # Hashing, manifests and the next page's setup must not replace
+            # the transport's live byte counter or inflate its percentage.
+            self.progress.record_stage("PYTHON_RIP", stage)
+            return
+        ceiling = 58 if self.online else 88
+        percent = min(self.next_percent, ceiling)
+        self.next_percent = min(self.next_percent + 2, ceiling)
         self.progress.write(percent, "PYTHON_RIP", stage)
 
 
@@ -317,7 +335,13 @@ def _output_transport(configuration, connection_state=None, job_dir: Path | None
     device_id = connection.get("usb_device_id")
     if not isinstance(device_id, str) or not device_id.strip():
         raise ValueError("USB destination is missing usb_device_id")
-    return WindowsUsbInterfaceTransport(device_id, connection_state=connection_state)
+    def statistics(value: dict) -> None:
+        if job_dir is not None:
+            _atomic_json(job_dir / "usb-streaming.json", value)
+
+    return WindowsUsbInterfaceTransport(
+        device_id, connection_state=connection_state, statistics=statistics,
+    )
 
 
 def _transport_destination(transport: StreamingTransport) -> str:
@@ -392,14 +416,18 @@ def run_request(request_path: Path) -> dict[str, object]:
         progress.write(35, "VALIDATION", "Job request and external curves validated")
         trace = PerformanceTrace(
             job_dir / "performance.log",
-            event_callback=RenderProgressAdapter(progress, job_dir),
+            event_callback=RenderProgressAdapter(progress, job_dir, online=delivery_mode == "online"),
         )
         status = "ERROR"
         try:
-            progress.write(40, "TIFF_NORMALIZE", "Preparing Windows raster for RIP")
+            progress.write(40, "RIP_PREPARE", "Preparing streamed TIFF rows and page processing plan")
             if delivery_mode == "online":
                 transport = _output_transport(
                     configuration, record_transport_connection, job_dir
+                )
+                delivery_verb = (
+                    "spooled" if getattr(transport, "destination", "").startswith("windows_queue://")
+                    else "sent"
                 )
                 started = perf_counter()
                 last_reported = 0
@@ -408,10 +436,14 @@ def run_request(request_path: Path) -> dict[str, object]:
 
                 def write_live_progress() -> None:
                     total = str(live_total) if live_total is not None else "…"
+                    # Unknown-length streams have a byte counter, not a
+                    # percentage inferred from the number of notifications.
+                    percent = (60 + min(35, last_sent * 35 // live_total)
+                               if live_total is not None and live_total > 0 else 60)
                     progress.write(
-                        min(95, progress.percent + 1),
+                        percent,
                         "RIP_STREAMING",
-                        f"Rendered and {'sent' if isinstance(transport, RawTcpTransport) else 'spooled'} {last_sent} / {total} PRN bytes",
+                        f"Rendered and {delivery_verb} {last_sent} / {total} PRN bytes",
                     )
 
                 def report_live(bytes_sent: int) -> None:
@@ -436,6 +468,7 @@ def run_request(request_path: Path) -> dict[str, object]:
                         result_path=job_dir / "render-result.json",
                         performance_trace=trace,
                         live_transport=transport,
+                        retain_prn=False,
                         cancel_check=lambda: _raise_if_cancelled(job_dir),
                         send_progress=report_live,
                         send_total_bytes=report_live_total,
@@ -471,7 +504,7 @@ def run_request(request_path: Path) -> dict[str, object]:
                     duration_seconds=perf_counter() - started,
                 )
                 progress.write(
-                    100, "SENT", f"Rendered and {'sent' if isinstance(transport, RawTcpTransport) else 'spooled'} {sent} / {sent} PRN bytes",
+                    100, "SENT", f"Rendered and {delivery_verb} {sent} / {sent} PRN bytes",
                     status="SENT", terminal=True,
                 )
                 status = "PASS"

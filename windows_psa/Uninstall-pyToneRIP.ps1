@@ -11,9 +11,10 @@ $uninstallSucceeded = $false
 try {
 
 function Get-PyToneRipQueue {
-    @(Get-Printer -ErrorAction SilentlyContinue | Where-Object {
-        $_.PortName -match '(?i)pytone-rip:' -or
-        $_.Name -like 'pyToneRIP:*'
+    @(Get-Printer -ErrorAction Stop | Where-Object {
+        $_.PortName -match '(?i)^(pytone-rip:|pyToneRIP\.(Manager|PSA|Printer\.[^_]+)_)' -or
+        ($_.Name -like 'pyToneRIP:*' -and
+            ($_.DriverName -eq 'Microsoft Virtual Print Class Driver' -or $_.DriverName -like 'pyToneRIP*'))
     })
 }
 
@@ -23,12 +24,17 @@ if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administra
     throw 'Run this script from PowerShell opened with Run as administrator.'
 }
 $printStateCleanup = Join-Path $PSScriptRoot 'Clear-PyToneRipPrintState.ps1'
+$registryStateCleanup = Join-Path $PSScriptRoot 'Clear-PyToneRipRegistryState.ps1'
 if (-not (Test-Path -LiteralPath $printStateCleanup -PathType Leaf)) {
     throw 'The print-state cleanup script is missing; uninstall stopped before removing packages.'
+}
+if (-not (Test-Path -LiteralPath $registryStateCleanup -PathType Leaf)) {
+    throw 'The registry cleanup script is missing; uninstall stopped before removing packages.'
 }
 $formPlanPath = Join-Path $PSScriptRoot 'pyToneRIP-print-form-cleanup.json'
 
 $queues = @(Get-PyToneRipQueue)
+$ownedQueueNames = @($queues | ForEach-Object Name)
 foreach ($queue in $queues) {
     Write-Host "Purging pyToneRIP jobs: $($queue.Name)"
     @(Get-PrintJob -PrinterName $queue.Name -ErrorAction SilentlyContinue) |
@@ -164,6 +170,8 @@ if ($remaining.Count) {
     throw "Windows still holds pyToneRIP queues: $names. Restart Windows before installing another clean copy."
 }
 $cleanup = & $printStateCleanup -Forms $formCleanupPlan
+$registryCleanup = & $registryStateCleanup -QueueNames $ownedQueueNames
+Write-Host "Removed print registry cache keys: $($registryCleanup.RemovedRegistryKeys); values: $($registryCleanup.RemovedRegistryValues)."
 if (Test-Path -LiteralPath $formPlanPath -PathType Leaf) {
     Remove-Item -LiteralPath $formPlanPath -Force
 }

@@ -412,6 +412,9 @@ function Format-ProbeError($failure) {
         $parts.Add(('{0}; HRESULT=0x{1:X8}; message={2}; stack={3}' -f
             $errorObject.GetType().FullName, $errorObject.HResult,
             (Protect-DiagnosticText $errorObject.Message), (Protect-DiagnosticText $errorObject.StackTrace)))
+        if ($errorObject -is [System.ComponentModel.Win32Exception]) {
+            $parts.Add('NativeErrorCode=' + $errorObject.NativeErrorCode)
+        }
         $errorObject = $errorObject.InnerException
     }
     return $parts -join [Environment]::NewLine
@@ -420,12 +423,32 @@ function Format-ProbeError($failure) {
 function Get-PrintQueueProbe([string]$queueName) {
     $results = [ordered]@{}
     $results['context'] = 'Read-only Windows PowerShell probe; not the PSA package identity. CanModify=false here does not prove that the Manager lacks permission. XML is queue configuration, never job/document data.'
+    $probeClock = [Diagnostics.Stopwatch]::StartNew()
+    function Save-ProbeStage([string]$stage) {
+        $results['trace.txt'] += (Get-Date).ToString('o') + '; elapsedMs=' + $probeClock.ElapsedMilliseconds + '; ' + $stage + [Environment]::NewLine
+        if (-not [string]::IsNullOrWhiteSpace($PrintProbeOutputPath)) {
+            $pending = $PrintProbeOutputPath + '.pending'
+            [IO.File]::WriteAllText($pending, ($results | ConvertTo-Json -Depth 8), [Text.UTF8Encoding]::new($false))
+            if ([IO.File]::Exists($PrintProbeOutputPath)) { [IO.File]::Replace($pending, $PrintProbeOutputPath, [NullString]::Value) }
+            else { [IO.File]::Move($pending, $PrintProbeOutputPath) }
+        }
+    }
+    Save-ProbeStage 'probe begin'
     if (-not ('SupportReportDevModeProbe' -as [type])) {
         Add-Type -TypeDefinition @'
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 public static class SupportReportDevModeProbe {
+    public static string TracePath;
+    static void Trace(string text) {
+        if(String.IsNullOrEmpty(TracePath)) return;
+        try {
+            using(var stream=new System.IO.FileStream(TracePath,System.IO.FileMode.Append,System.IO.FileAccess.Write,System.IO.FileShare.ReadWrite))
+            using(var writer=new System.IO.StreamWriter(stream,new System.Text.UTF8Encoding(false)))
+                writer.WriteLine(DateTimeOffset.Now.ToString("o")+"; "+text);
+        } catch { }
+    }
     public static void DisposeObject(object value) {
         IDisposable disposable=value as IDisposable;
         if(disposable!=null) disposable.Dispose();
@@ -436,7 +459,58 @@ public static class SupportReportDevModeProbe {
     static extern bool GetPrinterW(IntPtr printer,uint level,IntPtr buffer,uint size,ref uint needed);
     [DllImport("winspool.drv", CharSet=CharSet.Unicode, SetLastError=true)]
     static extern int DocumentPropertiesW(IntPtr window,IntPtr printer,string name,IntPtr output,IntPtr input,uint flags);
+    [DllImport("winspool.drv",EntryPoint="EnumFormsW",SetLastError=true)]
+    static extern bool EnumForms(IntPtr printer,uint level,IntPtr buffer,uint size,out uint needed,out uint count);
+    [StructLayout(LayoutKind.Sequential)] struct ServerDefaults { public IntPtr DataType,Mode; public uint Access; }
+    [DllImport("winspool.drv",EntryPoint="OpenPrinterW",CharSet=CharSet.Unicode,SetLastError=true)]
+    static extern bool OpenServer(string name,out IntPtr printer,ref ServerDefaults defaults);
     [DllImport("winspool.drv")] static extern bool ClosePrinter(IntPtr printer);
+    [StructLayout(LayoutKind.Sequential)] struct Size { public int W,H; }
+    [StructLayout(LayoutKind.Sequential)] struct Rect { public int L,T,R,B; }
+    [StructLayout(LayoutKind.Sequential)] struct FormInfo {
+        public uint Flags; public IntPtr Name; public Size Size; public Rect Area;
+        public IntPtr Keyword; public uint StringType; public IntPtr Mui;
+        public uint ResourceId; public IntPtr Display; public ushort Language;
+    }
+    public sealed class Form {
+        public string Name,Keyword,MuiFile,DisplayName; public uint Flags,StringType,ResourceId;
+        public int WidthMicrons,HeightMicrons; public ushort Language;
+    }
+    public static Form[] Forms(string name) {
+        IntPtr printer;
+        bool opened;
+        if(name==null) {var defaults=new ServerDefaults {Access=2};opened=OpenServer(null,out printer,ref defaults);}
+        else opened=OpenPrinterW(name,out printer,IntPtr.Zero);
+        if(!opened) throw new Win32Exception(Marshal.GetLastWin32Error(),"OpenPrinter for EnumForms");
+        try {
+            uint needed,count; Trace("EnumForms(size) begin");
+            var clock=System.Diagnostics.Stopwatch.StartNew();
+            bool ok=EnumForms(printer,2,IntPtr.Zero,0,out needed,out count);
+            int error=Marshal.GetLastWin32Error();
+            Trace("EnumForms(size) return="+ok+"; needed="+needed+"; lastError="+error+"; elapsedMs="+clock.ElapsedMilliseconds);
+            if(!ok && error!=122) throw new Win32Exception(error,"EnumForms size");
+            if(needed==0) return new Form[0];
+            if(needed>16*1024*1024) throw new InvalidOperationException("EnumForms buffer exceeds diagnostic limit");
+            IntPtr buffer=Marshal.AllocHGlobal((int)needed);
+            try {
+                Trace("EnumForms(data) begin");clock.Restart();
+                ok=EnumForms(printer,2,buffer,needed,out needed,out count);error=Marshal.GetLastWin32Error();
+                Trace("EnumForms(data) return="+ok+"; count="+count+"; lastError="+error+"; elapsedMs="+clock.ElapsedMilliseconds);
+                if(!ok) throw new Win32Exception(error,"EnumForms data");
+                int stride=Marshal.SizeOf(typeof(FormInfo));
+                if((ulong)stride*count>needed) throw new InvalidOperationException("EnumForms count outside buffer");
+                var forms=new Form[count];
+                for(int i=0;i<count;i++) {
+                    var f=(FormInfo)Marshal.PtrToStructure(IntPtr.Add(buffer,i*stride),typeof(FormInfo));
+                    forms[i]=new Form {Name=Marshal.PtrToStringUni(f.Name),Keyword=Marshal.PtrToStringAnsi(f.Keyword),
+                        MuiFile=f.Mui==IntPtr.Zero?null:System.IO.Path.GetFileName(Marshal.PtrToStringUni(f.Mui)),
+                        DisplayName=Marshal.PtrToStringUni(f.Display),Flags=f.Flags,StringType=f.StringType,
+                        ResourceId=f.ResourceId,Language=f.Language,WidthMicrons=f.Size.W,HeightMicrons=f.Size.H};
+                }
+                return forms;
+            } finally {Marshal.FreeHGlobal(buffer);}
+        } finally {ClosePrinter(printer);}
+    }
     static byte[] Copy(IntPtr mode,int available) {
         if(mode==IntPtr.Zero) return null;
         if(available<72) throw new InvalidOperationException("DEVMODE buffer is too short");
@@ -465,12 +539,19 @@ public static class SupportReportDevModeProbe {
         IntPtr printer;
         if(!OpenPrinterW(name,out printer,IntPtr.Zero)) throw new Win32Exception(Marshal.GetLastWin32Error(),"OpenPrinter");
         try {
+            Trace("DocumentProperties(size, flags=0) begin");
+            var clock=System.Diagnostics.Stopwatch.StartNew();
             int size=DocumentPropertiesW(IntPtr.Zero,printer,name,IntPtr.Zero,IntPtr.Zero,0);
-            if(size<72) throw new Win32Exception(Marshal.GetLastWin32Error(),"DocumentProperties size");
+            int error=Marshal.GetLastWin32Error();
+            Trace("DocumentProperties(size) rawReturn="+size+"; lastError="+error+"; elapsedMs="+clock.ElapsedMilliseconds);
+            if(size<72) throw new Win32Exception(error,"DocumentProperties size; rawReturn="+size);
             IntPtr mode=Marshal.AllocHGlobal(size);
             try {
+                Trace("DocumentProperties(data, flags=DM_OUT_BUFFER) begin");clock.Restart();
                 int result=DocumentPropertiesW(IntPtr.Zero,printer,name,mode,IntPtr.Zero,2);
-                if(result!=1) throw new InvalidOperationException("DocumentProperties DM_OUT_BUFFER returned "+result);
+                error=Marshal.GetLastWin32Error();
+                Trace("DocumentProperties(data) rawReturn="+result+"; lastError="+error+"; elapsedMs="+clock.ElapsedMilliseconds);
+                if(result!=1) throw new Win32Exception(error,"DocumentProperties DM_OUT_BUFFER; rawReturn="+result);
                 return Copy(mode,size);
             } finally {Marshal.FreeHGlobal(mode);}
         } finally {ClosePrinter(printer);}
@@ -478,19 +559,24 @@ public static class SupportReportDevModeProbe {
 }
 '@
     }
+    $traceField = [SupportReportDevModeProbe].GetField('TracePath')
+    if ($null -ne $traceField -and -not [string]::IsNullOrWhiteSpace($PrintProbeOutputPath)) {
+        $traceField.SetValue($null, $PrintProbeOutputPath + '.native.txt')
+    }
     $printingReady = $false
     try { Add-Type -AssemblyName System.Printing, ReachFramework; $printingReady = $true }
     catch { $results['system-printing-load.error.txt'] = Format-ProbeError $_ }
     # Keep global, per-user and application defaults independent: one broken
     # provider path must not prevent collecting the remaining sources.
     foreach ($source in @('global', 'user', 'effective')) {
+        Save-ProbeStage "$source DEVMODE begin"
         try {
             $data = switch ($source) {
                 'global' { [SupportReportDevModeProbe]::Read($queueName,8) }
                 'user' { [SupportReportDevModeProbe]::Read($queueName,9) }
                 'effective' { [SupportReportDevModeProbe]::Effective($queueName) }
             }
-            if ($null -eq $data) { $results["$source-devmode.txt"] = 'DEVMODE absent'; continue }
+            if ($null -eq $data) { $results["$source-devmode.txt"] = 'DEVMODE absent'; Save-ProbeStage "$source DEVMODE absent"; continue }
             $data = [byte[]]$data
             $hash = [System.Security.Cryptography.SHA256]::Create()
             try { $digest = [BitConverter]::ToString($hash.ComputeHash($data)).Replace('-','') }
@@ -499,6 +585,8 @@ public static class SupportReportDevModeProbe {
                 [BitConverter]::ToUInt16($data,68) + '; privateBytes=' + [BitConverter]::ToUInt16($data,70) +
                 '; specVersion=' + [BitConverter]::ToUInt16($data,64) + '; driverVersion=' +
                 [BitConverter]::ToUInt16($data,66) + '; sha256=' + $digest
+            $results["$source-devmode.base64.txt"] = [Convert]::ToBase64String($data)
+            Save-ProbeStage "$source DEVMODE captured; ConvertDevModeToPrintTicket begin"
             if ($printingReady) {
                 $converter = [System.Printing.Interop.PrintTicketConverter]::new($queueName,1)
                 try {
@@ -512,6 +600,7 @@ public static class SupportReportDevModeProbe {
                 } finally { $converter.Dispose() }
             }
         } catch { $results["$source-devmode.error.txt"] = Format-ProbeError $_ }
+        Save-ProbeStage "$source DEVMODE completed"
     }
     if ($printingReady) {
         $server = $null; $queue = $null
@@ -519,16 +608,19 @@ public static class SupportReportDevModeProbe {
             $server = [System.Printing.LocalPrintServer]::new()
             $queue = $server.GetPrintQueue($queueName)
             foreach ($property in @('DefaultPrintTicket','UserPrintTicket')) {
+                Save-ProbeStage "System.Printing $property begin"
                 try {
                     $ticket = $queue.$property
-                    if ($null -eq $ticket) { $results["$property.txt"] = 'Ticket absent'; continue }
+                    if ($null -eq $ticket) { $results["$property.txt"] = 'Ticket absent'; Save-ProbeStage "$property absent"; continue }
                     try {
                         $reader = [System.IO.StreamReader]::new($ticket.GetXmlStream())
                         try { $results["$property.xml"] = $reader.ReadToEnd() }
                         finally { $reader.Dispose() }
                     } finally { [SupportReportDevModeProbe]::DisposeObject($ticket) }
                 } catch { $results["$property.error.txt"] = Format-ProbeError $_ }
+                Save-ProbeStage "System.Printing $property completed"
             }
+            Save-ProbeStage 'System.Printing PrintCapabilities begin'
             try {
                 $reader = [System.IO.StreamReader]::new($queue.GetPrintCapabilitiesAsXml())
                 try { $results['PrintCapabilities.xml'] = $reader.ReadToEnd() }
@@ -537,11 +629,13 @@ public static class SupportReportDevModeProbe {
         } catch { $results['PrintQueue.error.txt'] = Format-ProbeError $_ }
         finally { if ($null -ne $queue) { $queue.Dispose() }; if ($null -ne $server) { $server.Dispose() } }
     }
+    Save-ProbeStage 'Get-PrintConfiguration begin'
     try {
         $configuration = Get-PrintConfiguration -PrinterName $queueName -ErrorAction Stop
         if ([string]::IsNullOrWhiteSpace($configuration.PrintTicketXML)) { throw 'Get-PrintConfiguration returned no PrintTicketXML' }
         $results['Get-PrintConfiguration.xml'] = [string]$configuration.PrintTicketXML
     } catch { $results['Get-PrintConfiguration.error.txt'] = Format-ProbeError $_ }
+    Save-ProbeStage 'IppPrintDevice.FromPrinterName begin'
     try {
         $device = [Windows.Devices.Printers.IppPrintDevice, Windows.Devices.Printers, ContentType=WindowsRuntime]::FromPrinterName($queueName)
         if ($null -eq $device) { throw 'IppPrintDevice.FromPrinterName returned null' }
@@ -550,13 +644,26 @@ public static class SupportReportDevModeProbe {
             catch { $results["IppPrintDevice-$property.error.txt"] = Format-ProbeError $_ }
         }
         try {
+            Save-ProbeStage 'IppPrintDevice.UserDefaultPrintTicket begin'
             $ticket = $device.UserDefaultPrintTicket
             if ($null -eq $ticket) { throw 'UserDefaultPrintTicket returned null' }
             $results['IppPrintDevice-UserDefaultPrintTicket.xml'] = $ticket.XmlNode.GetXml()
+            Save-ProbeStage 'IppPrintDevice.UserDefaultPrintTicket captured; GetCapabilities begin'
             try { $results['IppPrintDevice-PrintCapabilities.xml'] = $ticket.GetCapabilities().XmlNode.GetXml() }
             catch { $results['IppPrintDevice-PrintCapabilities.error.txt'] = Format-ProbeError $_ }
         } catch { $results['IppPrintDevice-UserDefaultPrintTicket.error.txt'] = Format-ProbeError $_ }
     } catch { $results['IppPrintDevice-resolve.error.txt'] = Format-ProbeError $_ }
+    Save-ProbeStage 'IppPrintDevice completed; EnumForms begin'
+    if ($null -ne [SupportReportDevModeProbe].GetMethod('Forms')) {
+        try { $results['forms.json'] = ConvertTo-Json -InputObject @([SupportReportDevModeProbe]::Forms($queueName)) -Depth 5 }
+        catch { $results['forms.error.txt'] = Format-ProbeError $_ }
+        Save-ProbeStage 'queue EnumForms completed'
+        if ($queueName -match '^pyToneRIP(?::| TEST )') {
+            try { $results['server-forms.json'] = ConvertTo-Json -InputObject @([SupportReportDevModeProbe]::Forms([NullString]::Value)) -Depth 5 }
+            catch { $results['server-forms.error.txt'] = Format-ProbeError $_ }
+        }
+    }
+    Save-ProbeStage 'probe completed'
     return $results
 }
 
@@ -574,6 +681,49 @@ function Add-ReportText($archive, $included, [string]$name, [string]$value) {
     $writer = [System.IO.StreamWriter]::new($entry.Open(), [System.Text.UTF8Encoding]::new($false))
     try { $writer.Write($value) } finally { $writer.Dispose() }
     $included.Add($name)
+}
+
+function Get-UsbStreamingSummary {
+    $lines = [System.Collections.Generic.List[string]]::new()
+    $lines.Add('USB transport counters only; no document contents, job names or device identifiers.')
+    $lines.Add('At most 100 recent job folders are inspected. Queue empty time is host-side waiting, not measured print-head stopping.')
+    $jobs = Join-ExistingRoot $LocalStatePath 'jobs'
+    if ([string]::IsNullOrWhiteSpace($jobs) -or -not [System.IO.Directory]::Exists($jobs)) {
+        $lines.Add('USB streaming counters are not present.')
+        return ($lines -join "`r`n")
+    }
+    $fields = @('queue_capacity_bytes','prefill_target_bytes','block_bytes','produced_bytes',
+        'bytes_sent','queue_peak_bytes','prefill_seconds','producer_wait_seconds',
+        'queue_empty_waits','queue_empty_seconds','native_write_calls','native_write_seconds',
+        'max_native_write_seconds','native_cancel_requests','elapsed_seconds')
+    $count = 0
+    foreach ($folder in @(Get-ChildItem -LiteralPath $jobs -Directory -ErrorAction SilentlyContinue |
+        Where-Object { -not ($_.Attributes -band [System.IO.FileAttributes]::ReparsePoint) } |
+        Sort-Object LastWriteTimeUtc -Descending | Select-Object -First 100)) {
+        $path = Join-Path $folder.FullName 'usb-streaming.json'
+        if (-not [System.IO.File]::Exists($path)) { continue }
+        try {
+            $info = Get-Item -LiteralPath $path -ErrorAction Stop
+            if (($info.Attributes -band [System.IO.FileAttributes]::ReparsePoint) -or
+                $info.Length -gt 16384 -or $info.LastWriteTimeUtc -lt $reportStartTime.ToUniversalTime()) { continue }
+            $record = Get-Content -LiteralPath $path -Raw -Encoding UTF8 | ConvertFrom-Json
+            if ($record.schema -ne 'pytone-rip.usb-streaming' -or $record.version -ne 1) { continue }
+            $count++
+            $parts = [System.Collections.Generic.List[string]]::new()
+            $parts.Add('USB stream ' + $count + '; updated_utc=' + $info.LastWriteTimeUtc.ToString('O'))
+            if ($record.completed -is [bool]) { $parts.Add('completed=' + $record.completed) }
+            foreach ($name in $fields) {
+                $value = $record.$name
+                if (($value -is [int] -or $value -is [long] -or $value -is [double] -or $value -is [decimal]) -and
+                    $value -ge 0 -and -not [double]::IsInfinity([double]$value) -and -not [double]::IsNaN([double]$value)) {
+                    $parts.Add($name + '=' + [Convert]::ToString($value, [Globalization.CultureInfo]::InvariantCulture))
+                }
+            }
+            $lines.Add(($parts -join '; '))
+        } catch { $lines.Add('USB counter record unavailable; exception=' + $_.Exception.GetBaseException().GetType().Name) }
+    }
+    $lines.Add('USB counter records included: ' + $count)
+    return ($lines -join "`r`n")
 }
 
 function Get-PrintSecuritySnapshot {
@@ -641,6 +791,107 @@ function Get-PrintSecuritySnapshot {
     return $lines -join [Environment]::NewLine
 }
 
+function Add-PsaPackageDiagnostics($archive, $included, $printers) {
+    $text = [Text.StringBuilder]::new()
+    [void]$text.AppendLine('Current-user package registration and installed source assets. This does not prove background task activation. No registration, services or preferences are modified.')
+    $models = @($printers | ForEach-Object {
+        $match = [regex]::Match([string]$_.PortName, '(?i)(?:^|_)pytone-rip:([a-z0-9]+)/')
+        if ($match.Success) { $match.Groups[1].Value }
+    } | Select-Object -Unique)
+    $packageNumber = 0
+    try {
+        $packages = @(Get-AppxPackage -ErrorAction Stop | Where-Object {
+            $_.Name -in @('pyToneRIP.Manager','pyToneRIP.PSA') -or $_.Name -like 'pyToneRIP.Printer.*'
+        })
+        foreach ($package in $packages) {
+            $packageNumber++
+            $prefix = "printing/psa-package-$packageNumber"
+            [void]$text.AppendLine("Package $packageNumber; name=$($package.Name); version=$($package.Version); status=$($package.Status); family=$($package.PackageFamilyName)")
+            foreach ($contract in @('Windows.PrintSupportExtension','Windows.PrintSupportSettingsUI',
+                'Windows.PrintSupportVirtualPrinterWorkflow','Windows.BackgroundTasks')) {
+                $key = $null
+                try {
+                    $key = [Microsoft.Win32.Registry]::CurrentUser.OpenSubKey(
+                        'Software\Classes\Extensions\ContractId\' + $contract + '\PackageId\' + $package.PackageFullName)
+                    [void]$text.AppendLine("Package $packageNumber; registryContract=$contract; present=$($null -ne $key)")
+                } catch { [void]$text.AppendLine((Format-ProbeError $_)) }
+                finally { if ($null -ne $key) { $key.Dispose() } }
+            }
+            foreach ($logName in @('pyToneRIP-pdc.log','pyToneRIP-workflow.log','pyToneRIP-system-defaults.log')) {
+                $log = Join-Path $env:LOCALAPPDATA ('Packages\' + $package.PackageFamilyName + '\LocalState\' + $logName)
+                if (Test-Path -LiteralPath $log -PathType Leaf) {
+                    $info = Get-Item -LiteralPath $log
+                    [void]$text.AppendLine("Package $packageNumber; log=$logName; bytes=$($info.Length); modifiedUtc=$($info.LastWriteTimeUtc.ToString('o'))")
+                } else { [void]$text.AppendLine("Package $packageNumber; log=$logName; absent") }
+            }
+            if ([string]::IsNullOrWhiteSpace($package.InstallLocation)) { continue }
+            $root = [IO.Path]::GetFullPath($package.InstallLocation).TrimEnd('\')
+            $files = @()
+            $manifest = Join-Path $root 'AppxManifest.xml'
+            if (Test-Path -LiteralPath $manifest -PathType Leaf) { $files += Get-Item -LiteralPath $manifest }
+            $assets = Join-Path $root 'Assets'
+            if (Test-Path -LiteralPath $assets -PathType Container) {
+                $files += @(Get-ChildItem -LiteralPath $assets -File -Recurse -ErrorAction Stop | Where-Object {
+                    $fileName = $_.Name
+                    $isModel = @($models | Where-Object { $fileName.IndexOf($_, [StringComparison]::OrdinalIgnoreCase) -ge 0 }).Count -gt 0
+                    ($fileName -match '(?i)\.(pdc|pdr)\.xml$' -and
+                        ($isModel -or $fileName -match '^pyToneRIP\.(pdc|pdr)\.xml$'))
+                })
+            }
+            $total = 0
+            foreach ($fileInfo in @($files | Sort-Object FullName | Select-Object -First 256)) {
+                try {
+                    $path = [IO.Path]::GetFullPath($fileInfo.FullName)
+                    if (-not $path.StartsWith($root + '\', [StringComparison]::OrdinalIgnoreCase)) { throw 'Package asset outside installed package root' }
+                    $relative = $path.Substring($root.Length + 1).Replace('\','/')
+                    if ($relative -notmatch '^[A-Za-z0-9_./-]+$') { continue }
+                    if ($fileInfo.Length -gt 8MB -or $total + $fileInfo.Length -gt 16MB) {
+                        [void]$text.AppendLine("Package $packageNumber; asset=$relative; skipped: diagnostic size limit")
+                        continue
+                    }
+                    $bytes = [IO.File]::ReadAllBytes($path)
+                    $hash = [Security.Cryptography.SHA256]::Create()
+                    try { $digest = [BitConverter]::ToString($hash.ComputeHash($bytes)).Replace('-','') }
+                    finally { $hash.Dispose() }
+                    $entryName = "$prefix/$relative"
+                    $entry = $archive.CreateEntry($entryName, [IO.Compression.CompressionLevel]::Optimal)
+                    $stream = $entry.Open()
+                    try { $stream.Write($bytes,0,$bytes.Length) } finally { $stream.Dispose() }
+                    $included.Add($entryName)
+                    $total += $bytes.Length
+                    [void]$text.AppendLine("Package $packageNumber; asset=$relative; bytes=$($bytes.Length); sha256=$digest")
+                } catch { [void]$text.AppendLine((Format-ProbeError $_)) }
+            }
+        }
+        [void]$text.AppendLine("Packages found: $packageNumber; queue model IDs: $($models -join ',')")
+    } catch { [void]$text.AppendLine((Format-ProbeError $_)) }
+    Add-ReportText $archive $included 'printing/psa-registration.txt' $text.ToString()
+}
+
+function Get-PrintActivationEventDetails($record) {
+    $channel = [string]$record.LogName
+    $provider = [string]$record.ProviderName
+    $id = [int]$record.Id
+    $isPrintFailure = $provider -eq 'Microsoft-Windows-PrintService' -and $id -in @(215,370)
+    $isServiceFailure = $provider -eq 'Service Control Manager' -and $id -in @(7000,7001,7009,7011,7023,7024,7031,7034)
+    $isActivation = $channel -match '(?i)AppModel-Runtime|TWinUI|BackgroundTaskInfrastructure'
+    if (-not ($isPrintFailure -or $isServiceFailure -or $isActivation)) { return $null }
+    [xml]$document = $record.ToXml()
+    if ($isActivation -and $document.DocumentElement.InnerText -notmatch '(?i)pyToneRIP|PrintSupport|PrintWorkflow') { return $null }
+    $lines = [Collections.Generic.List[string]]::new()
+    $lines.Add(('time={0}; channel={1}; provider={2}; event_id={3}' -f $record.TimeCreated.ToString('o'),$channel,$provider,$id))
+    foreach ($node in @($document.SelectNodes('//*[local-name()="EventData"]/*|//*[local-name()="UserData"]//*[not(*)]'))) {
+        $name = if ($node.HasAttribute('Name')) { $node.GetAttribute('Name') } else { $node.LocalName }
+        # Driver-install and service-failure fields have no job contents.
+        # For activation export only technical fields, never command lines.
+        if ($isActivation -and $name -notmatch '(?i)^(Package.*|AppUserModelId|ApplicationId|Contract.*|EntryPoint|Task.*|Error.*|HResult|Status.*|Result.*|ProcessId|Service.*|ServerName|Phase)$') { continue }
+        $value = Protect-DiagnosticText $node.InnerText
+        $value = [regex]::Replace($value, '\bS-1-\d+(?:-\d+)+\b', '<sid>')
+        $lines.Add($name + '=' + $value)
+    }
+    return $lines -join [Environment]::NewLine
+}
+
 function Add-PrintProviderDiagnostics($archive, $included) {
     $inventory = [System.Text.StringBuilder]::new()
     [void]$inventory.AppendLine('Read-only diagnostics. No preferences, registry values, media or queues are changed. Queue numbers are local to this report.')
@@ -652,7 +903,7 @@ function Add-PrintProviderDiagnostics($archive, $included) {
             $_.DriverName -match '(?i)EPSON' -or $_.Name -match '(?i)\bP900\b'
         } | Sort-Object @{Expression={if ($_.Name -like 'pyToneRIP*') {0} else {1}}}, DriverName, Name)
     } catch { [void]$inventory.AppendLine((Format-ProbeError $_)) }
-    [void]$inventory.AppendLine('Relevant queues=' + $printers.Count + '; detailed provider probes limited to first 6 queues, 15 seconds each.')
+    [void]$inventory.AppendLine('Relevant queues=' + $printers.Count + '; detailed provider probes limited to first 6 queues: 45 seconds for pyToneRIP, 15 seconds for other queues. Partial snapshots survive a timeout.')
     $number = 0
     foreach ($printer in $printers) {
         $number++
@@ -660,31 +911,42 @@ function Add-PrintProviderDiagnostics($archive, $included) {
         if ($number -gt 6) { continue }
         $probePath = Join-Path ([System.IO.Path]::GetTempPath()) ('pyToneRIP-print-probe-' + [guid]::NewGuid().ToString('N') + '.json')
         $process = $null
+        $timeoutMs = if ($printer.PortName -like 'pyToneRIP.Manager_*' -or $printer.Name -like 'pyToneRIP*') { 45000 } else { 15000 }
+        $timedOut = $false
         try {
             $command = "& '" + $PSCommandPath.Replace("'","''") + "' -PrintProbeQueueName '" +
                 ([string]$printer.Name).Replace("'","''") + "' -PrintProbeOutputPath '" + $probePath.Replace("'","''") + "'"
             $encoded = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($command))
             $process = Start-Process -FilePath (Join-Path $PSHOME 'powershell.exe') -WindowStyle Hidden -PassThru -ArgumentList @(
                 '-NoProfile','-NonInteractive','-Sta','-ExecutionPolicy','Bypass','-EncodedCommand',$encoded)
-            if (-not $process.WaitForExit(15000)) {
+            if (-not $process.WaitForExit($timeoutMs)) {
+                $timedOut = $true
                 $process.Kill()
-                Add-ReportText $archive $included "printing/queue-$number/probe.error.txt" 'Provider probe exceeded 15 seconds; only the diagnostic child process was terminated. Other report sources remain available.'
-            } elseif (-not (Test-Path -LiteralPath $probePath)) {
+                [void]$process.WaitForExit(2000)
+                Add-ReportText $archive $included "printing/queue-$number/probe.error.txt" ('Provider probe exceeded ' + ($timeoutMs / 1000) + ' seconds; only the diagnostic child process was terminated. Partial results and native call trace follow when available.')
+            }
+            if (-not (Test-Path -LiteralPath $probePath) -and -not $timedOut) {
                 Add-ReportText $archive $included "printing/queue-$number/probe.error.txt" ('Provider child returned no result; exitCode=' + $process.ExitCode)
-            } else {
+            } elseif (Test-Path -LiteralPath $probePath) {
                 $result = Get-Content -LiteralPath $probePath -Encoding UTF8 -Raw | ConvertFrom-Json
                 foreach ($item in $result.PSObject.Properties) {
                     if ($item.Name -notmatch '^[A-Za-z0-9_.-]+$') { continue }
                     Add-ReportText $archive $included "printing/queue-$number/$($item.Name)" ([string]$item.Value)
                 }
             }
-        } catch { Add-ReportText $archive $included "printing/queue-$number/probe.error.txt" (Format-ProbeError $_) }
+        } catch { Add-ReportText $archive $included "printing/queue-$number/probe-export.error.txt" (Format-ProbeError $_) }
         finally {
             if ($null -ne $process) {
                 if (-not $process.HasExited) { $process.Kill(); [void]$process.WaitForExit(2000) }
                 $process.Dispose()
             }
-            if (Test-Path -LiteralPath $probePath) { Remove-Item -LiteralPath $probePath -ErrorAction SilentlyContinue }
+            $nativeTrace = $probePath + '.native.txt'
+            if (Test-Path -LiteralPath $nativeTrace) {
+                Add-ReportText $archive $included "printing/queue-$number/native-calls.txt" ([IO.File]::ReadAllText($nativeTrace))
+            }
+            foreach ($temporary in @($probePath, ($probePath + '.pending'), $nativeTrace)) {
+                if (Test-Path -LiteralPath $temporary) { Remove-Item -LiteralPath $temporary -ErrorAction SilentlyContinue }
+            }
         }
     }
     try {
@@ -714,6 +976,7 @@ function Add-PrintProviderDiagnostics($archive, $included) {
             }
         } catch { [void]$inventory.AppendLine('Software inventory: ' + (Format-ProbeError $_)) }
     }
+    Add-PsaPackageDiagnostics $archive $included $printers
     Add-ReportText $archive $included 'printing/inventory.txt' $inventory.ToString()
 }
 
@@ -826,6 +1089,8 @@ try {
       }
     }
     $eventText = [System.Text.StringBuilder]::new()
+    $activationEvents = [System.Text.StringBuilder]::new()
+    [void]$activationEvents.AppendLine('Selected sanitized EventData for print-driver installation, service failures and PSA activation. Missing events do not prove that a task was never activated. Original rendered messages and print job contents are excluded.')
     [void]$eventText.AppendLine("Windows application crashes, hangs and errors, printing and system diagnostics from the last $LookbackDays days. Original event messages are excluded.")
     [void]$eventText.AppendLine('Applications are not restricted to a fixed list. At most 1000 recent records are queried and 100 exported per query.')
     $startTime = $reportStartTime
@@ -837,6 +1102,8 @@ try {
     foreach ($channel in @(
         'Microsoft-Windows-AppXDeploymentServer/Operational',
         'Microsoft-Windows-AppModel-Runtime/Admin',
+        'Microsoft-Windows-AppModel-Runtime/Operational',
+        'Microsoft-Windows-BackgroundTaskInfrastructure/Operational',
         'Microsoft-Windows-TWinUI/Operational',
         'Microsoft-Windows-PrintService/Admin',
         'Microsoft-Windows-PrintService/Operational',
@@ -869,6 +1136,10 @@ try {
                     [void]$eventText.AppendLine(('time={0}; channel={1}; provider={2}; event_id={3}; level={4}; kind={5}; {6}' -f
                         $eventRecord.TimeCreated.ToString('O'), $channel, $eventRecord.ProviderName,
                         [int]$eventRecord.Id, [int]$eventRecord.Level, $eventKind, $details))
+                    try {
+                        $activation = Get-PrintActivationEventDetails $eventRecord
+                        if ($activation) { [void]$activationEvents.AppendLine($activation + [Environment]::NewLine) }
+                    } catch { [void]$activationEvents.AppendLine((Format-ProbeError $_)) }
                     $matchedEventCount++
                     if ($matchedEventCount -ge 100) { break }
                 }
@@ -893,6 +1164,7 @@ try {
     try { $eventWriter.Write($eventText.ToString()) }
     finally { $eventWriter.Dispose() }
     $included.Add('windows-events.txt')
+    Add-ReportText $archive $included 'windows-print-activation-events.txt' $activationEvents.ToString()
     $defaultsEntry = $archive.CreateEntry('printer-defaults.txt', [System.IO.Compression.CompressionLevel]::Optimal)
     $defaultsWriter = [System.IO.StreamWriter]::new($defaultsEntry.Open(), [System.Text.UTF8Encoding]::new($false))
     try { $defaultsWriter.Write((Get-PrinterDefaultsSummary)) }
@@ -904,6 +1176,7 @@ try {
     finally { $environmentWriter.Dispose() }
     $included.Add('print-api-environment.txt')
     Add-PrintProviderDiagnostics $archive $included
+    Add-ReportText $archive $included 'printing/usb-streaming.txt' (Get-UsbStreamingSummary)
     Add-ReportText $archive $included 'printing/security-policy.txt' (Get-PrintSecuritySnapshot)
     $manifest = $archive.CreateEntry('README.txt')
     $writer = [System.IO.StreamWriter]::new($manifest.Open(), [System.Text.UTF8Encoding]::new($false))
@@ -913,7 +1186,9 @@ try {
         $writer.WriteLine('*.diagnostics.txt contain compact technical summaries and a settings timeline. Missing or unreadable logs are reported explicitly in both formats.')
         $writer.WriteLine('Windows reports cover crashes and hangs of any application, plus printing and system events. Look in windows-events.txt for the time, application, fault module and exception code.')
         $writer.WriteLine('Document contents and full raw log files are not collected. Original Windows event messages are excluded; their structured technical fields are in windows-events.txt.')
-        $writer.WriteLine('printing/ contains original queue-level PrintTicket/PrintCapabilities XML, which may include vendor private DEVMODE and printer identifiers, plus driver/software versions and hashes. No print jobs or document tickets are read. Provider probes run read-only outside the PSA package; compare their results with the packaged Manager error logs.')
+        $writer.WriteLine('printing/ contains original queue-level PrintTicket/PrintCapabilities XML, which may include vendor private DEVMODE and printer identifiers, plus driver/software versions and hashes. No print contents or document tickets are read. USB counters include only selected numeric transport fields. Provider probes run read-only outside the PSA package; compare their results with the packaged Manager error logs.')
+        $writer.WriteLine('Provider diagnostics include exact queue DEVMODE in base64, per-stage timing, native DocumentProperties results/last-error values and EnumForms metadata. Last-error is only meaningful when the API documents it for the returned result. Partial results survive a provider timeout (45 seconds for pyToneRIP, 15 seconds for other queues).')
+        $writer.WriteLine('printing/psa-registration.txt lists current-user package/contract registration and log presence. Installed manifests and PDC/PDR assets for queue models are copied byte-for-byte with SHA-256. Presence does not prove successful activation. windows-print-activation-events.txt retains selected sanitized EventData, including PrintService 215/370 and Service Control Manager failures; paths, document filenames, endpoints and SIDs are masked.')
         $writer.WriteLine('Created: ' + (Get-Date).ToString('O'))
         $writer.WriteLine('Windows version: ' + [Environment]::OSVersion.Version.ToString())
         $writer.WriteLine('Full OS build, installed print component versions and runtime APIs: print-api-environment.txt')

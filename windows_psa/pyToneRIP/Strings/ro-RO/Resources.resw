@@ -114,6 +114,7 @@
   <data name="Choice.dimensions"><value>dimensiuni</value></data>
   <data name="Choice.fit"><value>potrivi</value></data>
   <data name="Choice.lanczos"><value>lanczos</value></data>
+  <data name="Choice.mitchell"><value>Mitchell–Netravali</value></data>
   <data name="Choice.landscape"><value>peisaj</value></data>
   <data name="Choice.native"><value>Dimensiune originală</value></data>
   <data name="Choice.nearest"><value>Cel mai apropiat vecin</value></data>
@@ -209,6 +210,17 @@
   <data name="Code.WindowsPrinterRenamedToConfigurationRemainsLinkedByPrinterUri"><value>Imprimanta Windows a fost redenumită în {0}. Configurația rămâne legată de PrinterUri.</value></data>
   <data name="Code.WindowsWillRemoveTheVirtualQueueAndItsSavedPyToneRIPConfigurationTheSign"><value>Windows va elimina coada virtuală {0} și configurația sa salvată pyToneRIP. Modulul {1} ​​semnat rămâne disponibil pentru o altă coadă.</value></data>
   <data name="Language.Automatic.Text"><value>automat (Windows)</value></data>
+  <data name="DitherHelp.AdaptiveHybrid"><value>În RIP-ul actual, această opțiune de compatibilitate folosește Ordered pentru picături de mărime variabilă. Alegeți direct Ordered: opțiunea nu oferă în prezent un avantaj adaptiv distinct de calitate.</value></data>
+  <data name="DitherHelp.BlueNoiseFM"><value>Folosește o mască de praguri cu zgomot albastru pentru a reduce regularitatea rasterului. Potrivit pentru fotografii și degradeuri fine ale cerului; granulația fină sau structura reziduală a măștii pot rămâne vizibile.</value></data>
+  <data name="DitherHelp.CoupledED"><value>Coordonează punctele în perechile C/M și LC/LM prin difuzia erorii și zgomot de prag dependent de ton. Potrivit pentru imprimante cu ambele perechi; suprapunerea punctelor și echilibrul cernelurilor asociate se pot schimba. Verificați o imprimare de probă cu propriile curbe tonale.</value></data>
+  <data name="DitherHelp.CoupledEDCM"><value>Coordonează punctele în perechea C/M; cernelurile deschise și celelalte canale rămân independente. Potrivit pentru imprimante cu patru culori sau fără cuplarea LC/LM; modifică suprapunerea și textura C/M fără cuplarea cernelurilor deschise.</value></data>
+  <data name="DitherHelp.EntropyZhouFang"><value>Adaptează modularea pragului Zhou-Fang la ton și la structura locală a imaginii. Potrivit pentru fotografii detaliate cu zone uniforme; necesită calcule suplimentare și poate schimba redarea texturilor fine.</value></data>
+  <data name="DitherHelp.Fast"><value>Folosește o matrice ordonată mică de praguri și mărimi variabile ale picăturilor. Potrivit pentru grafică simplă și imprimări de probă; modelul poate fi mai vizibil în degradeuri. Numele nu garantează procesare mai rapidă.</value></data>
+  <data name="DitherHelp.Ordered"><value>Plasează picături de cerneală de mărimi diferite folosind o matrice fixă de praguri. Potrivit pentru scale de test și grafică; degradeurile fine pot prezenta un model de raster repetitiv.</value></data>
+  <data name="DitherHelp.Ostromoukhov"><value>Distribuie eroarea de cuantizare către pixelii vecini cu ponderi dependente de ton. Potrivit pentru fotografii detaliate și tranziții tonale; unele tonuri pot prezenta lanțuri de puncte orientate.</value></data>
+  <data name="DitherHelp.VeryFast"><value>Folosește doar cea mai mare picătură disponibilă în fiecare poziție selectată. Potrivit pentru imprimări de probă aproximative; granulația este mai grosieră, iar gradațiile din zonele luminoase pot suferi. Viteza mai mare nu este garantată.</value></data>
+  <data name="DitherHelp.X2Y1"><value>Folosește difuzia erorii cu sens alternant al rândurilor, ponderi pentru patru vecini și modulare a zgomotului dependentă de ton. Potrivit pentru cer, apusuri și degradeuri ample; granulația fină sau textura orientată pot rămâne vizibile.</value></data>
+  <data name="DitherHelp.ZhouFang"><value>Adaugă difuziei erorii o modulare a pragului de cuantizare dependentă de ton pentru a reduce structurile regulate în tonurile medii. Potrivit pentru degradeuri unde Ostromoukhov produce modele vizibile; granulația poate deveni mai evidentă.</value></data>
   <data name="MainPage.About.Label"><value>Despre...</value></data>
   <data name="MainPage.Add.Label"><value>Adăugați o imprimantă</value></data>
   <data name="MainPage.Empty.Add.Content"><value>Adăugați o imprimantă</value></data>
@@ -244,6 +256,8 @@
   <data name="Maintenance.nozzle_check.Title"><value>Imprimați verificarea duzelor</value></data>
   <data name="Maintenance.test_page.Description"><value>Imprimați un mic model brut pe canal folosind setările modelului selectat.</value></data>
   <data name="Maintenance.test_page.Title"><value>Imprimați pagina de test pyToneRIP</value></data>
+  <data name="Processing16Bit.Content"><value>Procesare pe 16 biți</value></data>
+  <data name="Processing16BitExperimental.Text"><value>(mod experimental)</value></data>
   <data name="Splash.Continue.Content"><value>Continua</value></data>
   <data name="Splash.Description.Text"><value>Se pregătește motorul raster și se încarcă imprimantele instalate...</value></data>
   <data name="Splash.Title.Text"><value>Se pornește pyToneRIP</value></data>
@@ -289,4 +303,9 @@
   <data name="DeviceChoice.Model_B" xml:space="preserve"><value>Model B</value></data>
   <data name="DeviceChoice.Code" xml:space="preserve"><value>Cod {0}</value></data>
   <data name="DeviceChoice.ThinPaper" xml:space="preserve"><value>{0} (hârtie subțire)</value></data>
+  <data name="ResamplingHelp.nearest"><value>Copiază cel mai apropiat pixel sursă fără netezire; util pentru grafică pixelată și modele de test care necesită păstrarea valorilor pixelilor. Este rapid, dar mărirea fotografiilor poate produce margini în trepte și tranziții grosiere.</value></data>
+  <data name="ResamplingHelp.bilinear"><value>Combină pixelii învecinați pentru tranziții line și procesare rapidă. Potrivit când viteza contează, dar estompează detaliile fine și liniile subțiri.</value></data>
+  <data name="ResamplingHelp.bicubic"><value>Folosește un filtru cubic pentru a echilibra claritatea și tranzițiile tonale line din fotografii. Păstrează mai multe detalii decât metoda biliniară, dar poate crea halouri ușoare în jurul marginilor cu contrast ridicat.</value></data>
+  <data name="ResamplingHelp.lanczos"><value>Păstrează bine detaliile fine la adaptarea fotografiilor la grila de dithering, mai ales la micșorare. Alegeți-l pentru rezultate mai clare, dar urmăriți halourile luminoase sau întunecate din jurul marginilor cu contrast ridicat.</value></data>
+  <data name="ResamplingHelp.mitchell"><value>Echilibrează detaliile și tranzițiile line, producând mai puține halouri la margini decât Lanczos. Potrivit pentru fotografii în care halourile deranjează, cu prețul unor detalii fine puțin mai moi și al unei procesări mai lente.</value></data>
 </root>

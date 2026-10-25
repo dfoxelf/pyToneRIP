@@ -20,12 +20,13 @@ from xp750_rip.printers.capabilities import (
     PrinterModel,
     PrinterRegistry,
 )
+from xp750_rip.printers.catalog import CATALOG_ROOT
 from xp750_rip.printers.catalog_models import (
     _canonical_media,
+    _feature_setting,
     _flatten_aliases,
     load_visible_catalog_models,
 )
-from xp750_rip.printers.catalog import CATALOG_ROOT
 from xp750_rip.printers.media_mappings import (
     MEDIA_MAPPINGS,
     canonical_media_choices,
@@ -198,6 +199,7 @@ def load_xp750_model(
         media=unique_media,
         pages=pages,
         input_sources=input_sources,
+        device_settings=(_feature_setting("scan_drying_time"),),
         ppd=ppd,
         source_summary=(
             ppd_source,

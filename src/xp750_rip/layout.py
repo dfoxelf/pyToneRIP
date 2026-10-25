@@ -15,6 +15,7 @@ from PIL import Image
 from xp750_rip.capabilities.ppd import PpdPage
 from xp750_rip.input.tiff import Grayscale8Raster
 from xp750_rip.printers.capabilities import PrinterMode
+from xp750_rip.resampling import resize_mitchell
 
 if TYPE_CHECKING:
     from xp750_rip.performance import PerformanceTrace
@@ -25,6 +26,7 @@ class ResamplingMethod(StrEnum):
     BILINEAR = "bilinear"
     BICUBIC = "bicubic"
     LANCZOS = "lanczos"
+    MITCHELL = "mitchell"
 
 
 class LayoutOrientation(StrEnum):
@@ -39,6 +41,19 @@ _PIL_RESAMPLING = {
     ResamplingMethod.BICUBIC: Image.Resampling.BICUBIC,
     ResamplingMethod.LANCZOS: Image.Resampling.LANCZOS,
 }
+
+
+def _resize_image(
+    image: Image.Image, size: tuple[int, int], method: ResamplingMethod,
+) -> Image.Image:
+    if isinstance(image, Grayscale8Raster):
+        from xp750_rip.precision import resize_grayscale_rows
+        return resize_grayscale_rows(image, size[0], size[1], method)
+    if image.size == size:
+        return image
+    if method is ResamplingMethod.MITCHELL:
+        return resize_mitchell(image, size)
+    return image.resize(size, resample=_PIL_RESAMPLING[method])
 
 
 @dataclass(frozen=True, slots=True)
@@ -89,12 +104,8 @@ def _rotate_for_orientation(
     )
     if not rotate:
         return raster, dpi
-    image = Image.frombytes("L", (raster.width, raster.height), b"".join(raster.rows))
-    rotated = image.transpose(Image.Transpose.ROTATE_90)
-    width, height = rotated.size
-    raw = rotated.tobytes()
-    rows = tuple(raw[y * width : (y + 1) * width] for y in range(height))
-    return Grayscale8Raster(width, rows), ((dpi[1], dpi[0]) if dpi else None)
+    from xp750_rip.input.tiff_rows import RotatedRows
+    return type(raster)(raster.height, RotatedRows(raster)), ((dpi[1], dpi[0]) if dpi else None)
 
 
 def resize_grayscale(
@@ -108,13 +119,8 @@ def resize_grayscale(
         raise ValueError("Размер resampled raster должен быть положительным")
     if (width, height) == (raster.width, raster.height):
         return raster
-    source = Image.frombytes("L", (raster.width, raster.height), b"".join(raster.rows))
-    resized = source.resize((width, height), resample=_PIL_RESAMPLING[method])
-    raw = resized.tobytes()
-    return Grayscale8Raster(
-        width=width,
-        rows=tuple(raw[y * width : (y + 1) * width] for y in range(height)),
-    )
+    from xp750_rip.precision import resize_grayscale_rows
+    return resize_grayscale_rows(raster, width, height, method)
 
 
 def _validate_request(request: ImageSizeRequest) -> None:
@@ -184,9 +190,8 @@ def _calculate_windows_page_layout(
     if canvas_width <= 0 or canvas_height <= 0:
         raise ValueError("PPD printable region не даёт положительного raster canvas")
 
-    image = Image.frombytes("L", (raster.width, raster.height), b"".join(raster.rows))
-    cropped_image = image.crop((left, top, right, bottom))
-    crop_width, crop_height = cropped_image.size
+    from xp750_rip.input.tiff_rows import CroppedRows
+    cropped_image = type(raster)(right-left, CroppedRows(raster, left, top, right, bottom))
     if trace is not None:
         trace.event(
             "Windows composed page DATA",
@@ -198,31 +203,17 @@ def _calculate_windows_page_layout(
             crop_bottom=bottom,
             target_width=canvas_width,
             target_height=canvas_height,
+            method=request.resampling.value,
         )
-        with trace.stage("Windows page crop/resample"):
-            resized_image = (
-                cropped_image if (crop_width, crop_height) == (canvas_width, canvas_height)
-                else cropped_image.resize(
-                    (canvas_width, canvas_height),
-                    resample=_PIL_RESAMPLING[request.resampling],
-                )
+        with trace.stage(f"Windows page processing plan ({request.resampling.value})"):
+            resized_image = _resize_image(
+                cropped_image, (canvas_width, canvas_height), request.resampling,
             )
     else:
-        resized_image = (
-            cropped_image if (crop_width, crop_height) == (canvas_width, canvas_height)
-            else cropped_image.resize(
-                (canvas_width, canvas_height),
-                resample=_PIL_RESAMPLING[request.resampling],
-            )
+        resized_image = _resize_image(
+            cropped_image, (canvas_width, canvas_height), request.resampling,
         )
-    raw = resized_image.tobytes()
-    rendered = Grayscale8Raster(
-        canvas_width,
-        tuple(
-            raw[y * canvas_width : (y + 1) * canvas_width]
-            for y in range(canvas_height)
-        ),
-    )
+    rendered = resized_image
 
     return PageLayout(
         page_name=page.name,
@@ -353,7 +344,7 @@ def calculate_page_layout(
             target_pixels=target_width * target_height,
             method=request.resampling.value,
         )
-        with trace.stage("scaling/resampling"):
+        with trace.stage(f"Image processing plan ({request.resampling.value})"):
             rendered = resize_grayscale(
                 oriented,
                 width=target_width,

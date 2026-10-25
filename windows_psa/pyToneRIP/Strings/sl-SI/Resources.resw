@@ -114,6 +114,7 @@
   <data name="Choice.dimensions"><value>dimenzije</value></data>
   <data name="Choice.fit"><value>fit</value></data>
   <data name="Choice.lanczos"><value>lanczos</value></data>
+  <data name="Choice.mitchell"><value>Mitchell–Netravali</value></data>
   <data name="Choice.landscape"><value>Ležeče</value></data>
   <data name="Choice.native"><value>Izvorna velikost</value></data>
   <data name="Choice.nearest"><value>Najbližji sosed</value></data>
@@ -209,6 +210,17 @@
   <data name="Code.WindowsPrinterRenamedToConfigurationRemainsLinkedByPrinterUri"><value>Tiskalnik Windows preimenovan v {0}. Konfiguracija ostane povezana s PrinterUri.</value></data>
   <data name="Code.WindowsWillRemoveTheVirtualQueueAndItsSavedPyToneRIPConfigurationTheSign"><value>Windows bo odstranil navidezno čakalno vrsto {0} in njeno shranjeno konfiguracijo pyToneRIP. Podpisani modul {1} ​​ostane na voljo za drugo čakalno vrsto.</value></data>
   <data name="Language.Automatic.Text"><value>Samodejno (Windows)</value></data>
+  <data name="DitherHelp.AdaptiveHybrid"><value>V trenutnem RIP ta možnost združljivosti uporablja Ordered za spremenljive velikosti kapljic. Izberite neposredno Ordered: možnost trenutno ne prinaša ločene prilagodljive izboljšave kakovosti.</value></data>
+  <data name="DitherHelp.BlueNoiseFM"><value>Uporablja pragovno masko modrega šuma za zmanjšanje pravilnosti rastra. Primerno za fotografije in gladke prehode neba; drobna zrnatost ali preostala struktura maske lahko ostaneta vidni.</value></data>
+  <data name="DitherHelp.CoupledED"><value>Usklajuje pike v parih C/M in LC/LM z difuzijo napake in od tona odvisnim pragovnim šumom. Primerno za tiskalnike z obema paroma; prekrivanje pik in ravnovesje črnil v paru se lahko spremenita. Preverite poskusni odtis s svojimi tonskimi krivuljami.</value></data>
+  <data name="DitherHelp.CoupledEDCM"><value>Usklajuje pike v paru C/M; svetla črnila in drugi kanali ostanejo neodvisni. Primerno za štiribarvne tiskalnike ali kadar povezovanje LC/LM ni zaželeno; spremeni prekrivanje in teksturo C/M brez povezovanja svetlih črnil.</value></data>
+  <data name="DitherHelp.EntropyZhouFang"><value>Prilagaja modulacijo praga Zhou-Fang tonu in lokalni strukturi slike. Primerno za podrobne fotografije z gladkimi območji; zahteva dodatne izračune in lahko spremeni prikaz drobnih tekstur.</value></data>
+  <data name="DitherHelp.Fast"><value>Uporablja majhno urejeno matriko pragov in spremenljive velikosti kapljic. Primerno za preprosto grafiko in poskusne odtise; v prehodih je lahko vzorec izrazitejši. Ime ne zagotavlja hitrejše obdelave.</value></data>
+  <data name="DitherHelp.Ordered"><value>Razporeja različno velike kapljice črnila s fiksno matriko pragov. Primerno za testne lestvice in grafiko; v gladkih tonskih prehodih se lahko pojavi ponavljajoč se rastrski vzorec.</value></data>
+  <data name="DitherHelp.Ostromoukhov"><value>Razporeja kvantizacijsko napako med sosednje piksle z utežmi, odvisnimi od tona. Primerno za podrobne fotografije in tonske prehode; pri nekaterih tonih se lahko pojavijo usmerjene verige pik.</value></data>
+  <data name="DitherHelp.VeryFast"><value>Na vsakem izbranem mestu uporabi samo največjo razpoložljivo kapljico. Primerno za grobe poskusne odtise; zrnatost je bolj groba, stopnjevanje svetlih tonov pa se lahko poslabša. Večja hitrost ni zagotovljena.</value></data>
+  <data name="DitherHelp.X2Y1"><value>Uporablja difuzijo napake z izmenično smerjo vrstic, utežmi za štiri sosede in od tona odvisno modulacijo šuma. Primerno za nebo, sončne zahode in obsežne prehode; drobna zrnatost ali usmerjena tekstura lahko ostaneta vidni.</value></data>
+  <data name="DitherHelp.ZhouFang"><value>Difuziji napake doda od tona odvisno modulacijo kvantizacijskega praga za zmanjšanje pravilnih struktur v srednjih tonih. Primerno za prehode, kjer Ostromoukhov ustvarja vzorce; zrnatost lahko postane opaznejša.</value></data>
   <data name="MainPage.About.Label"><value>O ...</value></data>
   <data name="MainPage.Add.Label"><value>Dodaj tiskalnik</value></data>
   <data name="MainPage.Empty.Add.Content"><value>Dodaj tiskalnik</value></data>
@@ -244,6 +256,8 @@
   <data name="Maintenance.nozzle_check.Title"><value>Preverjanje tiskalnih šob</value></data>
   <data name="Maintenance.test_page.Description"><value>Natisnite majhen surovi vzorec na kanal z uporabo izbranih nastavitev modela.</value></data>
   <data name="Maintenance.test_page.Title"><value>Natisnite preskusno stran pyToneRIP</value></data>
+  <data name="Processing16Bit.Content"><value>16-bitna obdelava</value></data>
+  <data name="Processing16BitExperimental.Text"><value>(poskusni način)</value></data>
   <data name="Splash.Continue.Content"><value>Nadaljuj</value></data>
   <data name="Splash.Description.Text"><value>Priprava rastrskega motorja in nalaganje nameščenih tiskalnikov ...</value></data>
   <data name="Splash.Title.Text"><value>Zagon pyToneRIP</value></data>
@@ -289,4 +303,9 @@
   <data name="DeviceChoice.Model_B" xml:space="preserve"><value>Model B</value></data>
   <data name="DeviceChoice.Code" xml:space="preserve"><value>Koda {0}</value></data>
   <data name="DeviceChoice.ThinPaper" xml:space="preserve"><value>{0} (tanek papir)</value></data>
+  <data name="ResamplingHelp.nearest"><value>Kopira najbližjo izvorno slikovno piko brez glajenja; primerno za slikovno grafiko po pikah in testne vzorce, pri katerih je treba ohraniti vrednosti slikovnih pik. Je hitro, vendar lahko povečanje fotografij ustvari stopničaste robove in grobe prehode.</value></data>
+  <data name="ResamplingHelp.bilinear"><value>Meša sosednje slikovne pike za gladke prehode in hitro obdelavo. Primerno, kadar je pomembna hitrost, vendar zmehča drobne podrobnosti in tanke črte.</value></data>
+  <data name="ResamplingHelp.bicubic"><value>Uporablja kubični filter za ravnotežje med ostrino in gladkimi tonskimi prehodi na fotografijah. Ohrani več podrobnosti kot bilinearna metoda, vendar lahko ob zelo kontrastnih robovih ustvari rahle svetle ali temne obrobe.</value></data>
+  <data name="ResamplingHelp.lanczos"><value>Dobro ohranja drobne podrobnosti pri pretvorbi fotografij na mrežo za rastriranje, zlasti pri pomanjšanju. Izberite ga za ostrejši rezultat, vendar bodite pozorni na svetle ali temne obrobe ob zelo kontrastnih robovih.</value></data>
+  <data name="ResamplingHelp.mitchell"><value>Uravnoteži podrobnosti in gladke prehode z manj obrobami okoli robov kot Lanczos. Primerno za fotografije, kjer obrobe motijo, na račun nekoliko mehkejših drobnih podrobnosti in počasnejše obdelave.</value></data>
 </root>

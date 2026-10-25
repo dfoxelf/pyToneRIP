@@ -251,6 +251,7 @@ def _encode_fixed_model96_stream(
     direction: PrintDirection = PrintDirection.BIDIRECTIONAL,
     paper_path_type: int = 1,
     paper_path_number: int = 1,
+    remote_setup_commands: tuple[bytes, ...] = (),
     split_parts: bool = False,
 ) -> bytes | tuple[bytes, bytes]:
     """Frame fixed-profile pass bytes with the model-96 job.
@@ -272,6 +273,8 @@ def _encode_fixed_model96_stream(
         )
     )
     output.extend(commands.remote_media_info(media_format=1, media_type=0, media_size=1))
+    for device_command in remote_setup_commands:
+        output.extend(device_command)
     output.extend(commands.remote_mode_exit())
 
     output.extend(commands.graphics_mode())

@@ -62,6 +62,14 @@ namespace pyToneRIP.Models
         [DataMember(Name = "gamma", Order = 1)] public int Gamma { get; set; }
         [DataMember(Name = "ink_limit", Order = 2)] public int InkLimit { get; set; }
         [DataMember(Name = "dither", Order = 3)] public string Dither { get; set; }
+        [DataMember(Name = "processing_bits", Order = 4)] public int ProcessingBits { get; set; } = 8;
+
+        [OnDeserializing]
+        private void InitializePrecision(StreamingContext context)
+        {
+            // DataContract deserialization does not run field initializers.
+            ProcessingBits = 8;
+        }
     }
 
     [DataContract]

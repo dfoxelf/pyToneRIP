@@ -31,11 +31,20 @@ extension = Extension(
     extra_link_args=link_args,
 )
 
+extensions = [extension]
+if sys.platform == "win32":
+    extensions.append(Extension(
+        "xp750_rip._windows_xps_native",
+        [str(ROOT / "src" / "xp750_rip" / "_windows_xps_native.cpp")],
+        language="c++", libraries=["ole32", "uuid", "windowscodecs"],
+        extra_compile_args=["/O2", "/std:c++17", "/EHsc"],
+    ))
+
 setup(
     name="xp750-rip-cython-kernels",
     package_dir={"": "src"},
     ext_modules=cythonize(
-        [extension],
+        extensions,
         compiler_directives={
             "language_level": 3,
             "boundscheck": False,

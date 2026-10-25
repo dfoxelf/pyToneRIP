@@ -25,9 +25,10 @@ namespace pyToneRIP.QueueHelper
 
         private static int Main(string[] args)
         {
+            string localState = null;
             try
             {
-                var localState = GetPackageLocalStatePath();
+                localState = GetPackageLocalStatePath();
                 if (args.Any(value => string.Equals(
                     value, "--process-rip-requests", StringComparison.OrdinalIgnoreCase)))
                 {
@@ -74,7 +75,7 @@ namespace pyToneRIP.QueueHelper
             }
             catch (Exception error)
             {
-                TryLog(null, "Queue helper failed before processing requests: " + error);
+                TryLog(localState, "Queue helper failed before processing requests: " + error);
                 return 1;
             }
         }

@@ -639,6 +639,8 @@ Copy-Item -LiteralPath (Join-Path $scriptRoot "Uninstall-pyToneRIP.ps1") `
     -Destination $artifactRoot -Force
 Copy-Item -LiteralPath (Join-Path $scriptRoot "Clear-PyToneRipPrintState.ps1") `
     -Destination $artifactRoot -Force
+Copy-Item -LiteralPath (Join-Path $scriptRoot "Clear-PyToneRipRegistryState.ps1") `
+    -Destination $artifactRoot -Force
 Copy-Item -LiteralPath (Join-Path $scriptRoot "Test-ModulePackageSet.ps1") `
     -Destination $artifactRoot -Force
 # Если для этой версии подготовлена точная VM-инструкция, кладём её рядом с

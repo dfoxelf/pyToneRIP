@@ -1,15 +1,14 @@
 # Copyright (C) 2026 Alexander Eichhorn
 # SPDX-License-Identifier: GPL-3.0-only
 
-"""Strict Phase 7 decoder for validated 8-bit BlackIsZero grayscale TIFF."""
+"""Validated TIFF decoding for 8-bit and high-precision monochrome processing."""
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING
-
-from PIL import Image
+from typing import TYPE_CHECKING, ClassVar
 
 if TYPE_CHECKING:
     from xp750_rip.performance import PerformanceTrace
@@ -22,12 +21,15 @@ class UnsupportedTiffError(ValueError):
 @dataclass(frozen=True, slots=True)
 class Grayscale8Raster:
     width: int
-    rows: tuple[bytes, ...]
+    rows: Sequence[bytes]
+    bits_per_sample: ClassVar[int] = 8
 
     def __post_init__(self) -> None:
         if self.width <= 0 or not self.rows:
             raise ValueError("grayscale raster dimensions must be positive")
-        if any(len(row) != self.width for row in self.rows):
+        if getattr(self.rows, "width", None) == self.width:
+            return
+        if any(len(row) != self.width * (self.bits_per_sample // 8) for row in self.rows):
             raise ValueError("every grayscale row must match the declared width")
 
     @property
@@ -39,8 +41,18 @@ class Grayscale8Raster:
 
         if isinstance(factor, bool) or not isinstance(factor, int) or factor <= 0:
             raise ValueError("integer decimation factor must be positive")
+        if self.bits_per_sample == 16:
+            import numpy as np
+            rows = tuple(np.frombuffer(row, dtype="<u2")[::factor].tobytes() for row in self.rows[::factor])
+            return Grayscale16Raster(width=len(rows[0]) // 2, rows=rows)
         rows = tuple(bytes(row[::factor]) for row in self.rows[::factor])
         return Grayscale8Raster(width=len(rows[0]), rows=rows)
+
+
+class Grayscale16Raster(Grayscale8Raster):
+    """Little-endian uint16 grayscale; rows may be a bounded lazy producer."""
+
+    bits_per_sample: ClassVar[int] = 16
 
 
 @dataclass(frozen=True, slots=True)
@@ -53,6 +65,12 @@ class DecodedGrayscaleTiff:
     compression: int
     dpi: tuple[float, float] | None
     has_icc_profile: bool
+    upstream_bits_per_sample: int | None = None
+    row_source: object | None = None
+
+    def close(self):
+        if self.row_source is not None:
+            self.row_source.close()
 
 
 def _single_tag_int(value: object, name: str) -> int:
@@ -66,77 +84,53 @@ def _single_tag_int(value: object, name: str) -> int:
 
 
 def decode_grayscale_tiff(
-    path: Path, *, trace: PerformanceTrace | None = None
+    path: Path, *, trace: PerformanceTrace | None = None, processing_bits: int = 8,
+    page_index: int = 0, allow_color: bool = False,
 ) -> DecodedGrayscaleTiff:
-    """Decode only the explicitly proven Phase 7 TIFF representation."""
+    """Prepare a bounded row source; decoding happens only when rows are consumed."""
+    import json
 
-    if trace is None:
-        image = Image.open(path)
-    else:
-        with trace.stage("TIFF file open", path=path):
-            image = Image.open(path)
-    with image:
-        if image.format != "TIFF":
-            raise UnsupportedTiffError("input must be a TIFF file")
-        if image.mode != "L":
-            raise UnsupportedTiffError(
-                "Phase 7 supports only single-channel 8-bit grayscale TIFF (Pillow mode L)"
-            )
-        bits = _single_tag_int(image.tag_v2.get(258), "BitsPerSample")
-        photometric = _single_tag_int(
-            image.tag_v2.get(262), "PhotometricInterpretation"
-        )
-        orientation = _single_tag_int(image.tag_v2.get(274, 1), "Orientation")
-        compression = _single_tag_int(image.tag_v2.get(259, 1), "Compression")
-        if bits != 8:
-            raise UnsupportedTiffError(
-                "Phase 7 supports only single-channel 8-bit grayscale TIFF (Pillow mode L)"
-            )
-        if photometric != 1:
-            raise UnsupportedTiffError(
-                "Phase 7 supports only TIFF PhotometricInterpretation=1 (BlackIsZero)"
-            )
-        if orientation != 1:
-            raise UnsupportedTiffError("Phase 7 supports only TIFF Orientation=1")
-        if compression not in {1, 5}:
-            raise UnsupportedTiffError("Phase 7 supports only uncompressed or LZW TIFF")
-        if trace is None:
-            has_icc = bool(image.info.get("icc_profile"))
-        else:
-            with trace.stage("ICC metadata handling"):
-                has_icc = bool(image.info.get("icc_profile"))
-        # The monochrome QTR path intentionally ignores embedded ICC for
-        # color conversion; the presence is retained as metadata only.
-        width, height = image.size
-        if trace is None:
-            decoded = image.tobytes()
-            rows = tuple(decoded[y * width : (y + 1) * width] for y in range(height))
-        else:
-            trace.event(
-                "TIFF source DATA",
-                width=width,
-                height=height,
-                pixels=width * height,
-            )
-            with trace.stage("TIFF decode"):
-                decoded = image.tobytes()
-                rows = tuple(decoded[y * width : (y + 1) * width] for y in range(height))
-        dpi_value = image.info.get("dpi")
-        dpi = (
-            (float(dpi_value[0]), float(dpi_value[1]))
-            if isinstance(dpi_value, tuple) and len(dpi_value) == 2
-            else None
-        )
-    return DecodedGrayscaleTiff(
-        source_path=path,
-        raster=Grayscale8Raster(width, rows),
-        bits_per_sample=bits,
-        photometric_interpretation=photometric,
-        orientation=orientation,
-        compression=compression,
-        dpi=dpi,
-        has_icc_profile=has_icc,
-    )
+    from xp750_rip.input.tiff_rows import TiffRows, orient_raster
+
+    rows = TiffRows(path, processing_bits, page_index=page_index)
+    try:
+        page = rows.page
+        orientation = int(page.tags[274].value) if 274 in page.tags else 1
+        compression = int(page.compression)
+        if processing_bits == 8 and not allow_color:
+            if rows.bits != 8 or rows.samples != 1 or rows.photo != 1:
+                raise UnsupportedTiffError("only single-channel 8-bit BlackIsZero TIFF is accepted")
+            if orientation != 1 or compression not in (1, 5):
+                raise UnsupportedTiffError("8-bit input requires Orientation=1 and uncompressed or LZW TIFF")
+        kind = Grayscale16Raster if processing_bits == 16 else Grayscale8Raster
+        raster = orient_raster(kind(rows.width, rows), orientation)
+        unit = int(page.tags[296].value) if 296 in page.tags else 1
+        dpi = None
+        if 282 in page.tags and 283 in page.tags and unit in (2, 3):
+            def resolution(tag):
+                value = page.tags[tag].value
+                return value[0]/value[1] if isinstance(value, tuple) else float(value)
+            multiplier = 2.54 if unit == 3 else 1.0
+            dpi = (resolution(282)*multiplier, resolution(283)*multiplier)
+            if orientation >= 5:
+                dpi = dpi[::-1]
+        upstream_bits = None
+        try:
+            metadata = json.loads(page.description or "{}")
+            upstream = metadata.get("pytone_rip_upstream_bits")
+            if isinstance(upstream, list) and upstream and all(type(v) is int and v in (1, 8, 16) for v in upstream):
+                upstream_bits = max(upstream)
+        except (ValueError, TypeError, AttributeError):
+            pass
+        if trace is not None:
+            trace.event(f"TIFF row source (source={rows.bits}, processing={processing_bits})",
+                        width=raster.width, height=raster.height, lazy=True,
+                        source_segment_rows=rows.tile_height, cache_bytes=rows.cache_bytes)
+        return DecodedGrayscaleTiff(path, raster, rows.bits, rows.photo, orientation,
+                                    compression, dpi, 34675 in page.tags, upstream_bits, rows)
+    except BaseException:
+        rows.close()
+        raise
 
 
 def tiff_black_is_zero_to_qtr_code(sample: int) -> int:

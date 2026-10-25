@@ -17,6 +17,9 @@ _POLARITY_TABLE = bytes(255 - value for value in range(256))
 def black_is_zero_raster_to_qtr_codes(raster: Grayscale8Raster) -> tuple[bytes, ...]:
     """Apply the explicit Phase 7 polarity conversion to every decoded sample."""
 
+    if raster.bits_per_sample == 16:
+        from xp750_rip.streaming_raster import InvertedQtrRows
+        return InvertedQtrRows(raster.rows, 16)
     return tuple(row.translate(_POLARITY_TABLE) for row in raster.rows)
 
 

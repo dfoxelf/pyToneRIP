@@ -65,3 +65,15 @@ if ($machine -ne 0x8664) {
     throw ("Cython extension is not x64 (PE machine 0x{0:X4})." -f $machine)
 }
 Write-Host "Cython x64 extension: $($extensions[0].FullName)"
+
+$xpsExtensions = @(Get-ChildItem -LiteralPath (Join-Path $projectRoot "src\xp750_rip") `
+    -Filter "_windows_xps_native*.pyd" -File)
+if ($xpsExtensions.Count -ne 1) {
+    throw "Expected exactly one native Windows XPS adapter."
+}
+$xpsBytes = [System.IO.File]::ReadAllBytes($xpsExtensions[0].FullName)
+$xpsPeOffset = [BitConverter]::ToInt32($xpsBytes, 0x3c)
+if ([BitConverter]::ToUInt16($xpsBytes, $xpsPeOffset + 4) -ne 0x8664) {
+    throw "Native Windows XPS adapter is not x64."
+}
+Write-Host "Native XPS x64 extension: $($xpsExtensions[0].FullName)"

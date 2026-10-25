@@ -277,7 +277,7 @@ def _gaussian_highpass_band(
         min(height - 1, max(0, row_index)) for row_index in range(start - 4, end + 4)
     )
     padded = np.frombuffer(
-        b"".join(code_rows[row_index] for row_index in source_indices), dtype=np.uint8
+        b"".join(code_rows[row_index] for row_index in source_indices), dtype=np.uint16 if len(lut) == 65536 else np.uint8
     ).reshape(len(source_indices), width)
     # Every returned row is four samples away from the temporary boundary, so
     # the 9-tap separable convolution is identical to a monolithic full image.
@@ -316,10 +316,10 @@ class VariableCoefficientErrorDiffusion:
         if not code_rows or not code_rows[0]:
             raise ValueError("QTR code raster dimensions must be positive")
         width, height = len(code_rows[0]), len(code_rows)
-        if any(len(row) != width for row in code_rows):
+        if getattr(code_rows, "width", None) != width and any(len(row) != width for row in code_rows):
             raise ValueError("all QTR code rows must share width")
-        if len(qtr_lut) != 256 or any(not 0 <= value <= UINT16_MAX for value in qtr_lut):
-            raise ValueError("QTR lookup table must contain 256 uint16 values")
+        if len(qtr_lut) not in (256, 65536) or any(not 0 <= value <= UINT16_MAX for value in qtr_lut):
+            raise ValueError("QTR lookup table must contain 256 or 65536 uint16 values")
         if canvas_width <= 0 or canvas_width % 8 or canvas_height <= 0:
             raise ValueError("invalid dither canvas dimensions")
         if x < 0 or y < 0 or x + width > canvas_width or y + height > canvas_height:
@@ -373,7 +373,7 @@ class VariableCoefficientErrorDiffusion:
             band_end = min(band_start + band_rows, height)
             source_end = min(band_end + 1, height)
             band_codes = np.frombuffer(
-                b"".join(code_rows[band_start:source_end]), dtype=np.uint8
+                b"".join(code_rows[band_start:source_end]), dtype=np.uint16 if len(qtr_lut) == 65536 else np.uint8
             ).reshape(source_end - band_start, width)
             active = qtr_active_rows_kernel(band_codes[: band_end - band_start], lut)
             spans, empty_run = blank_row_spans(active, empty_run, settle_rows=EMPTY_SETTLE_ROWS)

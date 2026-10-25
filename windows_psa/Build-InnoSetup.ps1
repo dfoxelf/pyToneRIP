@@ -18,7 +18,7 @@ if ([string]::IsNullOrWhiteSpace($ModuleSetRoot)) {
     $ModuleSetRoot = Join-Path $artifactRoot "pyToneRIP-ModuleSet-$Version"
 }
 $moduleRoot = (Resolve-Path -LiteralPath $ModuleSetRoot -ErrorAction Stop).ProviderPath
-foreach ($cleanupFile in @('Uninstall-pyToneRIP.ps1', 'Clear-PyToneRipPrintState.ps1')) {
+foreach ($cleanupFile in @('Uninstall-pyToneRIP.ps1', 'Clear-PyToneRipPrintState.ps1', 'Clear-PyToneRipRegistryState.ps1')) {
     if (-not (Test-Path -LiteralPath (Join-Path $scriptRoot $cleanupFile) -PathType Leaf)) {
         throw "The installer cleanup source is missing: $cleanupFile."
     }

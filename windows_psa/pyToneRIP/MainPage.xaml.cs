@@ -877,7 +877,11 @@ namespace pyToneRIP
                     string.Equals(item.ConnectionKind, "network", StringComparison.OrdinalIgnoreCase)
                     && !string.IsNullOrWhiteSpace(item.Host)
                     && item.Port >= 1 && item.Port <= 65535).ToList();
-                foreach (var item in registry.Instances.Except(available))
+                // USB discovery below owns USB status. Keep its last result
+                // visible while awaiting the next discovery, instead of
+                // briefly replacing Online with Unknown on every poll.
+                foreach (var item in registry.Instances.Except(available).Where(item =>
+                    !string.Equals(item.ConnectionKind, "usb", StringComparison.OrdinalIgnoreCase)))
                     item.NetworkStatus = PrinterNetworkState.Unknown.ToString();
 
                 // Several Windows queues can point to one physical Epson.
@@ -902,7 +906,8 @@ namespace pyToneRIP
                             ?? result.ToString();
                 });
                 await Task.WhenAll(checks);
-                var usbInstances = registry.Instances.Where(item => item.ConnectionKind == "usb").ToList();
+                var usbInstances = registry.Instances.Where(item =>
+                    string.Equals(item.ConnectionKind, "usb", StringComparison.OrdinalIgnoreCase)).ToList();
                 if (usbInstances.Count > 0)
                 {
                     try
@@ -918,6 +923,9 @@ namespace pyToneRIP
                     catch (Exception error)
                     {
                         ManagerLogger.WriteException("Refreshing USB printer state", error);
+                        foreach (var item in usbInstances)
+                            item.NetworkStatus = GetBusyState(item, activeTransmissionHosts,
+                                activeJobActivities) ?? PrinterNetworkState.Unknown.ToString();
                     }
                 }
             }

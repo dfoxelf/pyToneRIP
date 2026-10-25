@@ -114,6 +114,7 @@
   <data name="Choice.dimensions"><value>Abmessungen</value></data>
   <data name="Choice.fit"><value>Einpassen</value></data>
   <data name="Choice.lanczos"><value>Lanczos</value></data>
+  <data name="Choice.mitchell"><value>Mitchell–Netravali</value></data>
   <data name="Choice.landscape"><value>Querformat</value></data>
   <data name="Choice.native"><value>Nativ</value></data>
   <data name="Choice.nearest"><value>Nächster Nachbar</value></data>
@@ -209,6 +210,17 @@
   <data name="Code.WindowsPrinterRenamedToConfigurationRemainsLinkedByPrinterUri"><value>Windows-Drucker in {0} umbenannt. Die Konfiguration bleibt durch PrinterUri verknüpft.</value></data>
   <data name="Code.WindowsWillRemoveTheVirtualQueueAndItsSavedPyToneRIPConfigurationTheSign"><value>Windows entfernt die virtuelle Warteschlange {0} und ihre gespeicherte pyToneRIP-Konfiguration. Das signierte {1}-Modul bleibt für eine andere Warteschlange verfügbar.</value></data>
   <data name="Language.Automatic.Text"><value>Automatisch (Windows)</value></data>
+  <data name="DitherHelp.AdaptiveHybrid"><value>Im aktuellen RIP verwendet diese Kompatibilitätsoption Ordered für variable Tropfengrößen. Wählen Sie direkt Ordered: Diese Option bietet derzeit keinen eigenen adaptiven Qualitätsvorteil.</value></data>
+  <data name="DitherHelp.BlueNoiseFM"><value>Verwendet eine Schwellenwertmaske mit blauem Rauschen, um die Regelmäßigkeit des Punktrasters zu verringern. Geeignet für Fotos und weiche Himmelsverläufe; feine Körnigkeit oder eine verbleibende Maskenstruktur können sichtbar bleiben.</value></data>
+  <data name="DitherHelp.CoupledED"><value>Stimmt die Punktsetzung innerhalb der Paare C/M und LC/LM mittels Fehlerdiffusion und tonwertabhängigem Schwellenwertrauschen ab. Geeignet für Drucker mit beiden Paaren; Punktüberlagerung und Tintenverteilung innerhalb der Paare können sich ändern. Prüfen Sie einen Probedruck mit Ihren Tonwertkurven.</value></data>
+  <data name="DitherHelp.CoupledEDCM"><value>Stimmt die Punktsetzung innerhalb des Paars C/M ab; helle Tinten und andere Kanäle bleiben unabhängig. Geeignet für Vierfarbdrucker oder wenn keine Kopplung von LC/LM gewünscht ist; verändert Überlagerung und Struktur von C/M ohne Kopplung des hellen Tintenpaars.</value></data>
+  <data name="DitherHelp.EntropyZhouFang"><value>Passt die Schwellenwertmodulation von Zhou-Fang an den Tonwert und die lokale Bildstruktur an. Geeignet für detailreiche Fotos mit ruhigen Flächen; benötigt zusätzliche Berechnungen und kann feine Strukturen anders wiedergeben.</value></data>
+  <data name="DitherHelp.Fast"><value>Verwendet eine kleine geordnete Schwellenwertmatrix mit variablen Tropfengrößen. Geeignet für einfache Grafiken und Probedrucke; Verläufe können ein deutlicheres Rastermuster zeigen, und der Name garantiert keine schnellere Verarbeitung.</value></data>
+  <data name="DitherHelp.Ordered"><value>Platziert unterschiedlich große Tintentropfen anhand einer festen Schwellenwertmatrix. Geeignet für Testskalen und Grafiken; in weichen Tonwertverläufen kann ein wiederkehrendes Rastermuster sichtbar werden.</value></data>
+  <data name="DitherHelp.Ostromoukhov"><value>Verteilt den Quantisierungsfehler mit tonwertabhängigen Gewichten auf benachbarte Pixel. Geeignet für detailreiche Fotos und Tonwertübergänge; bei manchen Tonwerten können gerichtete Punktketten auftreten.</value></data>
+  <data name="DitherHelp.VeryFast"><value>Setzt an jeder ausgewählten Punktposition nur den größten verfügbaren Tropfen. Geeignet für grobe Probedrucke; die Körnigkeit ist gröber, und die Tonwertabstufung in den Lichtern kann leiden. Eine schnellere Verarbeitung ist nicht garantiert.</value></data>
+  <data name="DitherHelp.X2Y1"><value>Verwendet Fehlerdiffusion mit wechselnder Zeilenrichtung, Gewichten für vier Nachbarn und tonwertabhängiger Rauschmodulation. Geeignet für Himmel, Sonnenuntergänge und großflächige Tonwertverläufe; feine Körnigkeit oder gerichtete Strukturen können sichtbar bleiben.</value></data>
+  <data name="DitherHelp.ZhouFang"><value>Ergänzt die Fehlerdiffusion um eine tonwertabhängige Modulation der Quantisierungsschwelle, um regelmäßige Strukturen in den Mitteltönen zu verringern. Geeignet für Verläufe, bei denen Ostromoukhov Muster zeigt; die Körnigkeit kann deutlicher werden.</value></data>
   <data name="MainPage.About.Label"><value>Info…</value></data>
   <data name="MainPage.Add.Label"><value>Drucker hinzufügen</value></data>
   <data name="MainPage.Empty.Add.Content"><value>Drucker hinzufügen</value></data>
@@ -244,6 +256,8 @@
   <data name="Maintenance.nozzle_check.Title"><value>Düsentest drucken</value></data>
   <data name="Maintenance.test_page.Description"><value>Druckt mit den ausgewählten Modelleinstellungen ein kleines RAW-Muster pro Kanal.</value></data>
   <data name="Maintenance.test_page.Title"><value>pyToneRIP-Testseite drucken</value></data>
+  <data name="Processing16Bit.Content"><value>16-Bit-Verarbeitung</value></data>
+  <data name="Processing16BitExperimental.Text"><value>(experimenteller Modus)</value></data>
   <data name="Splash.Continue.Content"><value>Weiter</value></data>
   <data name="Splash.Description.Text"><value>Raster-Engine wird vorbereitet und installierte Drucker werden geladen…</value></data>
   <data name="Splash.Title.Text"><value>pyToneRIP wird gestartet</value></data>
@@ -289,4 +303,9 @@
   <data name="DeviceChoice.Model_B" xml:space="preserve"><value>Modell B</value></data>
   <data name="DeviceChoice.Code" xml:space="preserve"><value>Code {0}</value></data>
   <data name="DeviceChoice.ThinPaper" xml:space="preserve"><value>{0} (dünnes Papier)</value></data>
+  <data name="ResamplingHelp.nearest"><value>Übernimmt den jeweils nächsten Quellpixel ohne Glättung; geeignet für Pixelgrafiken und Testmuster, deren Pixelwerte erhalten bleiben sollen. Sehr schnell, kann beim Vergrößern von Fotos aber treppenförmige Kanten und grobe Übergänge erzeugen.</value></data>
+  <data name="ResamplingHelp.bilinear"><value>Mischt benachbarte Pixel für weiche Übergänge bei schneller Verarbeitung. Geeignet, wenn Geschwindigkeit wichtig ist; feine Details und dünne Linien werden jedoch weicher.</value></data>
+  <data name="ResamplingHelp.bicubic"><value>Verwendet einen kubischen Filter für einen ausgewogenen Kompromiss zwischen Schärfe und weichen Tonwertübergängen in Fotos. Erhält mehr Details als bilineare Interpolation, kann an kontrastreichen Kanten aber leichte helle oder dunkle Säume erzeugen.</value></data>
+  <data name="ResamplingHelp.lanczos"><value>Erhält feine Details bei der Umrechnung von Fotos auf das Dithering-Raster gut, besonders beim Verkleinern. Für schärfere Ergebnisse geeignet; an kontrastreichen Kanten können jedoch helle oder dunkle Säume auftreten.</value></data>
+  <data name="ResamplingHelp.mitchell"><value>Verbindet Detailerhalt mit weichen Übergängen und erzeugt weniger Kantensäume als Lanczos. Geeignet für Fotos mit störenden Säumen; sehr feine Details werden etwas weicher, und die Verarbeitung dauert länger.</value></data>
 </root>

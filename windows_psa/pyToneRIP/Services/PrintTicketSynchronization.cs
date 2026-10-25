@@ -72,23 +72,66 @@ namespace pyToneRIP.Shared
         public static StandardPrintTicketSelection Read(WorkflowPrintTicket ticket)
         {
             if (ticket == null) return new StandardPrintTicketSelection();
-            var page = ticket.PageMediaSizeFeature?.GetSelectedOption();
-            var media = ticket.PageMediaTypeFeature?.GetSelectedOption();
-            var input = ticket.GetFeature("JobInputBin", Keywords)?.GetSelectedOption();
-            var orientation = ticket.PageOrientationFeature?.GetSelectedOption();
-            var resolution = ticket.PageResolutionFeature?.GetSelectedOption();
-            var borderless = ticket.PageBorderlessFeature?.GetSelectedOption();
+            // Some application-provided tickets crash inside the native
+            // GetSelectedOption implementation. Read the documented XML DOM
+            // snapshot instead; absent features remain unspecified.
+            return ReadXml(ticket.XmlNode.GetXml());
+        }
+
+        internal static StandardPrintTicketSelection ReadXml(string xml)
+        {
+            var document = System.Xml.Linq.XDocument.Parse(xml);
+            System.Xml.Linq.XNamespace framework =
+                "http://schemas.microsoft.com/windows/2003/08/printing/printschemaframework";
+            var root = document.Root;
+            System.Xml.Linq.XName QName(System.Xml.Linq.XElement node, string name)
+            {
+                if (string.IsNullOrWhiteSpace(name)) return null;
+                var colon = name.IndexOf(':');
+                if (colon < 0) return node.GetDefaultNamespace() + name;
+                var ns = node.GetNamespaceOfPrefix(name.Substring(0, colon));
+                return ns == null ? null : ns + name.Substring(colon + 1);
+            }
+            bool Named(System.Xml.Linq.XElement node, string name) =>
+                QName(node, (string)node.Attribute("name"))
+                    == System.Xml.Linq.XName.Get(name, Keywords);
+            System.Xml.Linq.XElement Option(string feature) => root
+                .Elements(framework + "Feature").FirstOrDefault(node => Named(node, feature))
+                ?.Elements(framework + "Option").FirstOrDefault();
+            string Name(System.Xml.Linq.XElement option) => (string)option?.Attribute("name");
+            int? Value(System.Xml.Linq.XElement option, string property)
+            {
+                var scored = option?.Elements(framework + "ScoredProperty")
+                    .FirstOrDefault(node => Named(node, property));
+                var value = scored?.Element(framework + "Value");
+                var reference = scored?.Element(framework + "ParameterRef");
+                if (value == null && reference != null)
+                {
+                    var parameter = QName(reference, (string)reference.Attribute("name"));
+                    if (parameter != null)
+                        value = root.Elements(framework + "ParameterInit")
+                            .FirstOrDefault(node => QName(node, (string)node.Attribute("name")) == parameter)
+                            ?.Element(framework + "Value");
+                }
+                return int.TryParse(value?.Value, System.Globalization.NumberStyles.Integer,
+                    System.Globalization.CultureInfo.InvariantCulture, out int parsed)
+                    ? parsed : (int?)null;
+            }
+            var page = Option("PageMediaSize");
+            var resolution = Option("PageResolution");
+            var borderless = Option("PageBorderless");
             return new StandardPrintTicketSelection
             {
-                PageOptionName = page?.Name,
-                MediaOptionName = media?.Name,
-                InputOptionName = input?.Name,
-                PageWidthMm = MicronsToMillimeters(Integer(page, "MediaSizeWidth")),
-                PageHeightMm = MicronsToMillimeters(Integer(page, "MediaSizeHeight")),
-                OrientationOptionName = orientation?.Name,
-                ResolutionX = Integer(resolution, "ResolutionX"),
-                ResolutionY = Integer(resolution, "ResolutionY"),
-                Borderless = borderless == null ? (bool?)null : OptionNameIs(borderless, "Borderless"),
+                PageOptionName = Name(page),
+                MediaOptionName = Name(Option("PageMediaType")),
+                InputOptionName = Name(Option("JobInputBin")),
+                PageWidthMm = MicronsToMillimeters(Value(page, "MediaSizeWidth")),
+                PageHeightMm = MicronsToMillimeters(Value(page, "MediaSizeHeight")),
+                OrientationOptionName = Name(Option("PageOrientation")),
+                ResolutionX = Value(resolution, "ResolutionX"),
+                ResolutionY = Value(resolution, "ResolutionY"),
+                Borderless = borderless == null ? (bool?)null
+                    : Named(borderless, "Borderless"),
             };
         }
 

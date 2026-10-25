@@ -114,6 +114,7 @@
   <data name="Choice.dimensions"><value>toisí</value></data>
   <data name="Choice.fit"><value>oiriúnach</value></data>
   <data name="Choice.lanczos"><value>lanczos</value></data>
+  <data name="Choice.mitchell"><value>Mitchell–Netravali</value></data>
   <data name="Choice.landscape"><value>tírdhreach</value></data>
   <data name="Choice.native"><value>Bunmhéid</value></data>
   <data name="Choice.nearest"><value>An chomharsa is gaire</value></data>
@@ -209,6 +210,17 @@
   <data name="Code.WindowsPrinterRenamedToConfigurationRemainsLinkedByPrinterUri"><value>Athainmníodh printéir Windows go {0}. Tá an chumraíocht fós nasctha le PrinterUri.</value></data>
   <data name="Code.WindowsWillRemoveTheVirtualQueueAndItsSavedPyToneRIPConfigurationTheSign"><value>Bainfidh Windows an scuaine fíorúil {0} agus a chumraíocht pyToneRIP sábháilte. Tá an modúl sínithe {1} fós ar fáil le haghaidh scuaine eile.</value></data>
   <data name="Language.Automatic.Text"><value>Uathoibríoch (Windows)</value></data>
+  <data name="DitherHelp.AdaptiveHybrid"><value>Sa RIP reatha, úsáideann an rogha comhoiriúnachta seo Ordered le haghaidh braonta de mhéid athraitheach. Roghnaigh Ordered go díreach: níl buntáiste oiriúnaitheach cáilíochta ar leith ag an rogha seo faoi láthair.</value></data>
+  <data name="DitherHelp.BlueNoiseFM"><value>Úsáideann sé masc tairseach torainn ghoirm chun rialtacht an phatrúin raster a laghdú. Oiriúnach do ghrianghraif agus do ghrádáin réidhe sa spéir; d’fhéadfadh gráinneacht mhín nó struchtúr iarmharach an mhaisc a bheith le feiceáil fós.</value></data>
+  <data name="DitherHelp.CoupledED"><value>Comhordaíonn sé poncanna sna péirí C/M agus LC/LM trí idirleathadh earráide agus torann tairsí a bhraitheann ar an ton. Oiriúnach do phrintéirí leis an dá phéire; d’fhéadfadh forluí poncanna agus cothromaíocht na ndúch péireáilte athrú. Seiceáil prionta tástála le do chuair thonúla.</value></data>
+  <data name="DitherHelp.CoupledEDCM"><value>Comhordaíonn sé poncanna sa phéire C/M; fanann dúigh éadroma agus cainéil eile neamhspleách. Oiriúnach do phrintéirí ceithre dhath nó nuair nach bhfuil cúpláil LC/LM ag teastáil; athraíonn sé forluí agus uigeacht C/M gan na dúigh éadroma a chúpláil.</value></data>
+  <data name="DitherHelp.EntropyZhouFang"><value>Coigeartaíonn sé modhnú tairsí Zhou-Fang de réir an toin agus struchtúr áitiúil na híomhá. Oiriúnach do ghrianghraif mhionsonraithe le limistéir réidhe; teastaíonn ríomhanna breise agus d’fhéadfadh léiriú uigeachtaí míne athrú.</value></data>
+  <data name="DitherHelp.Fast"><value>Úsáideann sé maitrís bheag ordaithe tairseach agus braonta de mhéid athraitheach. Oiriúnach do ghrafaicí simplí agus do phriontaí tástála; d’fhéadfadh an patrún a bheith níos soiléire i ngrádáin. Ní ráthaíonn an t-ainm próiseáil níos tapúla.</value></data>
+  <data name="DitherHelp.Ordered"><value>Cuireann sé braonta dúigh de mhéideanna éagsúla de réir maitrís sheasta tairseach. Oiriúnach do scálaí tástála agus do ghrafaicí; d’fhéadfadh patrún raster athfhillteach a bheith le feiceáil i ngrádáin réidhe.</value></data>
+  <data name="DitherHelp.Ostromoukhov"><value>Dáileann sé an earráid chainníochtaithe ar phicteilíní comharsanacha le meáchain a bhraitheann ar an ton. Oiriúnach do ghrianghraif mhionsonraithe agus d’aistrithe tonúla; d’fhéadfadh slabhraí treoshuite poncanna teacht chun cinn i roinnt ton.</value></data>
+  <data name="DitherHelp.VeryFast"><value>Ní úsáideann sé ach an braon is mó atá ar fáil ag gach suíomh roghnaithe. Oiriúnach do phriontaí tástála garbha; bíonn an ghráinneacht níos gairbhe agus d’fhéadfadh grádú na mbuaicshoilse dul in olcas. Ní ráthaítear luas níos airde.</value></data>
+  <data name="DitherHelp.X2Y1"><value>Úsáideann sé idirleathadh earráide le treo malartach ar gach ró, meáchain do cheithre chomharsa agus modhnú torainn a bhraitheann ar an ton. Oiriúnach don spéir, do luí na gréine agus do ghrádáin leathana; d’fhéadfadh gráinneacht mhín nó uigeacht threoshuite fanacht.</value></data>
+  <data name="DitherHelp.ZhouFang"><value>Cuireann sé modhnú na tairsí cainníochtaithe, ag brath ar an ton, le hidirleathadh earráide chun struchtúir rialta sna meántoin a laghdú. Oiriúnach do ghrádáin ina gcruthaíonn Ostromoukhov patrúin; d’fhéadfadh an ghráinneacht éirí níos soiléire.</value></data>
   <data name="MainPage.About.Label"><value>Maidir le...</value></data>
   <data name="MainPage.Add.Label"><value>Cuir printéir leis</value></data>
   <data name="MainPage.Empty.Add.Content"><value>Cuir printéir leis</value></data>
@@ -244,6 +256,8 @@
   <data name="Maintenance.nozzle_check.Title"><value>Priontáil seiceáil soic</value></data>
   <data name="Maintenance.test_page.Description"><value>Priontáil patrún beag amh in aghaidh an chainéil ag baint úsáide as na socruithe samhla roghnaithe.</value></data>
   <data name="Maintenance.test_page.Title"><value>Priontáil leathanach tástála pyToneRIP</value></data>
+  <data name="Processing16Bit.Content"><value>Próiseáil 16 ghiotán</value></data>
+  <data name="Processing16BitExperimental.Text"><value>(mód turgnamhach)</value></data>
   <data name="Splash.Continue.Content"><value>Lean ort</value></data>
   <data name="Splash.Description.Text"><value>An t-inneall raster a ullmhú agus printéirí suiteáilte a luchtú...</value></data>
   <data name="Splash.Title.Text"><value>Ag tosú pyToneRIP</value></data>
@@ -289,4 +303,9 @@
   <data name="DeviceChoice.Model_B" xml:space="preserve"><value>Samhail B</value></data>
   <data name="DeviceChoice.Code" xml:space="preserve"><value>Cód {0}</value></data>
   <data name="DeviceChoice.ThinPaper" xml:space="preserve"><value>{0} (páipéar tanaí)</value></data>
+  <data name="ResamplingHelp.nearest"><value>Cóipeálann sé an picteilín foinse is gaire gan smúdáil; oiriúnach d’ealaín picteilíní agus do phatrúin tástála ar gá luachanna picteilíní a chaomhnú iontu. Tá sé tapa, ach d’fhéadfadh imill chéimnithe agus trasdulta garbha teacht ar ghrianghraif mhéadaithe.</value></data>
+  <data name="ResamplingHelp.bilinear"><value>Meascann sé picteilíní in aice láimhe chun trasdulta míne a chruthú le próiseáil thapa. Oiriúnach nuair atá luas tábhachtach, ach maolaíonn sé mionsonraí agus línte tanaí.</value></data>
+  <data name="ResamplingHelp.bicubic"><value>Úsáideann sé scagaire ciúbach chun géire agus trasdulta míne toin i ngrianghraif a chothromú. Caomhnaíonn sé níos mó mionsonraí ná an modh délíneach, ach d’fhéadfadh luan éadrom teacht timpeall ar imill ardchodarsnachta.</value></data>
+  <data name="ResamplingHelp.lanczos"><value>Caomhnaíonn sé mionsonraí go maith agus grianghraif á n-athshampláil chuig an eangach díodánaithe, go háirithe agus iad á laghdú. Roghnaigh é le haghaidh toraidh níos géire, ach bí ag faire ar luan geal nó dorcha timpeall ar imill ardchodarsnachta.</value></data>
+  <data name="ResamplingHelp.mitchell"><value>Cothromaíonn sé mionsonraí agus trasdulta míne le níos lú luain timpeall ar imill ná Lanczos. Oiriúnach do ghrianghraif ina gcuireann luan isteach ar an toradh, ach bíonn mionsonraí beagán níos boige agus an phróiseáil níos moille.</value></data>
 </root>

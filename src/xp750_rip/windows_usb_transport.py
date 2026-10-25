@@ -14,6 +14,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from xp750_rip.transport import TransmissionReceipt, TransportTransmissionError
+from xp750_rip.usb_streaming import BufferedUsbSender, UsbBufferPolicy
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -117,6 +118,10 @@ class _WindowsUsbPrintApi:
         self.kernel.WriteFile.restype = wintypes.BOOL
         self.kernel.CloseHandle.argtypes = [wintypes.HANDLE]
         self.kernel.CloseHandle.restype = wintypes.BOOL
+        self.kernel.OpenThread.argtypes = [wintypes.DWORD, wintypes.BOOL, wintypes.DWORD]
+        self.kernel.OpenThread.restype = wintypes.HANDLE
+        self.kernel.CancelSynchronousIo.argtypes = [wintypes.HANDLE]
+        self.kernel.CancelSynchronousIo.restype = wintypes.BOOL
 
     @staticmethod
     def _win_error(operation: str) -> OSError:
@@ -211,12 +216,31 @@ class _WindowsUsbPrintApi:
     def close(self, handle: wintypes.HANDLE) -> None:
         self.kernel.CloseHandle(handle)
 
+    def cancel(self, thread_id: int) -> bool:
+        # CancelSynchronousIo requires THREAD_TERMINATE access to the issuing
+        # thread. This requests I/O cancellation; it never terminates a thread.
+        thread = self.kernel.OpenThread(0x0001, False, thread_id)
+        if not thread:
+            if ctypes.get_last_error() == 87:  # Thread already exited.
+                return False
+            raise self._win_error("Open USB sender thread")
+        try:
+            if self.kernel.CancelSynchronousIo(thread):
+                return True
+            if ctypes.get_last_error() == 1168:  # No pending operation yet.
+                return False
+            raise self._win_error("Cancel USB synchronous I/O")
+        finally:
+            self.kernel.CloseHandle(thread)
+
 
 @dataclass(frozen=True, slots=True)
 class WindowsUsbInterfaceTransport:
     device_id: str
     connection_state: Callable[[bool], None] | None = field(default=None, repr=False, compare=False)
     api_factory: Callable = field(default=_WindowsUsbPrintApi, repr=False, compare=False)
+    buffer_policy: UsbBufferPolicy = field(default_factory=UsbBufferPolicy)
+    statistics: Callable[[dict], None] | None = field(default=None, repr=False, compare=False)
 
     def __post_init__(self) -> None:
         if not self.device_id.strip().casefold().startswith("usbprint\\"):
@@ -227,10 +251,6 @@ class WindowsUsbInterfaceTransport:
         return "usbprint://" + self.device_id
 
     def send_from_producer(self, producer, *, cancel_check=None, progress=None) -> TransmissionReceipt:
-        api = None
-        handle = None
-        sent = 0
-
         def connection(active: bool) -> None:
             if self.connection_state is not None:
                 try:
@@ -238,50 +258,19 @@ class WindowsUsbInterfaceTransport:
                 except Exception:
                     _LOGGER.debug("USB connection status callback failed", exc_info=True)
 
+        session = BufferedUsbSender(
+            device_id=self.device_id, api_factory=self.api_factory, policy=self.buffer_policy,
+            connection=connection, cancel_check=cancel_check, progress=progress,
+            statistics=self.statistics,
+        )
         try:
-            if cancel_check is not None:
-                cancel_check()
-
-            def write(chunk: bytes) -> None:
-                nonlocal api, handle, sent
-                if cancel_check is not None:
-                    cancel_check()
-                if not isinstance(chunk, bytes) or not chunk:
-                    raise ValueError("live PRN producer must yield non-empty bytes")
-                if handle is None:
-                    api = self.api_factory()
-                    handle = api.open(self.device_id)
-                    connection(True)
-                remaining = memoryview(chunk)
-                while remaining:
-                    if cancel_check is not None:
-                        cancel_check()
-                    part = remaining[:65536]
-                    written = api.write(handle, part)
-                    if written <= 0 or written > len(part):
-                        raise OSError("WriteFile returned an invalid byte count")
-                    sent += written
-                    remaining = remaining[written:]
-                    if progress is not None:
-                        progress(sent)
-
-            producer(write)
-            if handle is None or not sent:
-                raise ValueError("live PRN producer emitted no data")
-            if cancel_check is not None:
-                cancel_check()
+            sent = session.run(producer)
             return TransmissionReceipt(sent, self.destination)
         except Exception as error:
             raise TransportTransmissionError(
-                f"Windows USBPRINT write failed after {sent} bytes: {error}",
-                bytes_sent=sent, destination=self.destination,
+                f"Windows USBPRINT write failed after {session.sent} bytes: {error}",
+                bytes_sent=session.sent, destination=self.destination,
             ) from error
-        finally:
-            if handle is not None:
-                try:
-                    api.close(handle)
-                finally:
-                    connection(False)
 
     def send_chunks(self, chunks: Iterable[bytes], *, cancel_check=None, progress=None) -> TransmissionReceipt:
         def produce(write):

@@ -114,6 +114,7 @@
   <data name="Choice.dimensions"><value>méretek</value></data>
   <data name="Choice.fit"><value>illeszkedik</value></data>
   <data name="Choice.lanczos"><value>lanczos</value></data>
+  <data name="Choice.mitchell"><value>Mitchell–Netravali</value></data>
   <data name="Choice.landscape"><value>Fekvő</value></data>
   <data name="Choice.native"><value>Eredeti méret</value></data>
   <data name="Choice.nearest"><value>Legközelebbi szomszéd</value></data>
@@ -209,6 +210,17 @@
   <data name="Code.WindowsPrinterRenamedToConfigurationRemainsLinkedByPrinterUri"><value>A Windows nyomtató átnevezve erre: {0}. A konfigurációt a PrinterUri összekapcsolja.</value></data>
   <data name="Code.WindowsWillRemoveTheVirtualQueueAndItsSavedPyToneRIPConfigurationTheSign"><value>A Windows eltávolítja a virtuális sort ({0}) és a mentett pyToneRIP konfigurációt. Az aláírt {1} modul elérhető marad egy másik sor számára.</value></data>
   <data name="Language.Automatic.Text"><value>Automatikus (Windows)</value></data>
+  <data name="DitherHelp.AdaptiveHybrid"><value>A jelenlegi RIP-ben ez a kompatibilitási lehetőség Ordered eljárást használ változó cseppméretnél. Válassza közvetlenül az Ordered lehetőséget: ez a beállítás jelenleg nem nyújt külön adaptív minőségi előnyt.</value></data>
+  <data name="DitherHelp.BlueNoiseFM"><value>Kékzaj-alapú küszöbmaszkkal csökkenti a raszterminta szabályosságát. Fotókhoz és az égbolt finom tónusátmeneteihez ajánlott; finom szemcsézettség vagy a maszk maradványstruktúrája továbbra is látható lehet.</value></data>
+  <data name="DitherHelp.CoupledED"><value>Hibadiffúzióval és tónusfüggő küszöbzajjal összehangolja a pontokat a C/M és LC/LM párokon belül. Mindkét párral rendelkező nyomtatókhoz ajánlott; a pontátfedés és a párosított tinták egyensúlya változhat. Ellenőrizzen próbanyomatot a saját tónusgörbéivel.</value></data>
+  <data name="DitherHelp.CoupledEDCM"><value>A C/M páron belül hangolja össze a pontokat; a világos tinták és a többi csatorna függetlenek maradnak. Négyszínű nyomtatókhoz vagy LC/LM-összekapcsolás nélkül ajánlott; a C/M átfedését és textúráját módosítja a világos tinták párosítása nélkül.</value></data>
+  <data name="DitherHelp.EntropyZhouFang"><value>A Zhou-Fang küszöbmodulációját a tónushoz és a helyi képszerkezethez igazítja. Részletgazdag, sima felületeket is tartalmazó fotókhoz ajánlott; többletszámítást igényel, és megváltoztathatja a finom textúrák visszaadását.</value></data>
+  <data name="DitherHelp.Fast"><value>Kis rendezett küszöbmátrixot és változó cseppméreteket használ. Egyszerű grafikákhoz és próbanyomatokhoz ajánlott; az átmenetekben feltűnőbb lehet az ismétlődő minta. A név nem garantál gyorsabb feldolgozást.</value></data>
+  <data name="DitherHelp.Ordered"><value>Rögzített küszöbmátrix alapján helyezi el a különböző méretű tintacseppeket. Tesztskálákhoz és grafikákhoz ajánlott; a finom tónusátmenetekben ismétlődő raszterminta jelenhet meg.</value></data>
+  <data name="DitherHelp.Ostromoukhov"><value>Tónusfüggő súlyokkal osztja szét a kvantálási hibát a szomszédos képpontok között. Részletgazdag fotókhoz és tónusátmenetekhez ajánlott; egyes tónusokban irányított pontláncok jelenhetnek meg.</value></data>
+  <data name="DitherHelp.VeryFast"><value>Minden kiválasztott ponthelyen csak a legnagyobb elérhető cseppet használja. Vázlatos próbanyomatokhoz ajánlott; durvább szemcsézettséget és a világos tónusok gyengébb átmeneteit eredményezheti. A gyorsulás nem garantált.</value></data>
+  <data name="DitherHelp.X2Y1"><value>Váltakozó soriránnyal, négy szomszéd súlyaival és tónusfüggő zajmodulációval végzett hibadiffúziót használ. Égbolthoz, naplementéhez és nagy tónusátmenetekhez ajánlott; finom szemcsézettség vagy irányított textúra megmaradhat.</value></data>
+  <data name="DitherHelp.ZhouFang"><value>Tónusfüggő kvantálásiküszöb-modulációval egészíti ki a hibadiffúziót a középtónusok szabályos mintáinak csökkentésére. Olyan átmenetekhez ajánlott, ahol az Ostromoukhov mintázatot hoz létre; a szemcsézettség feltűnőbb lehet.</value></data>
   <data name="MainPage.About.Label"><value>Körülbelül...</value></data>
   <data name="MainPage.Add.Label"><value>Nyomtató hozzáadása</value></data>
   <data name="MainPage.Empty.Add.Content"><value>Nyomtató hozzáadása</value></data>
@@ -244,6 +256,8 @@
   <data name="Maintenance.nozzle_check.Title"><value>Nyomtatási fúvóka ellenőrzése</value></data>
   <data name="Maintenance.test_page.Description"><value>Nyomtasson kis nyers csatornánkénti mintát a kiválasztott modellbeállításokkal.</value></data>
   <data name="Maintenance.test_page.Title"><value>Nyomtasson pyToneRIP tesztoldalt</value></data>
+  <data name="Processing16Bit.Content"><value>16 bites feldolgozás</value></data>
+  <data name="Processing16BitExperimental.Text"><value>(kísérleti mód)</value></data>
   <data name="Splash.Continue.Content"><value>Folytatás</value></data>
   <data name="Splash.Description.Text"><value>A rasztermotor előkészítése és a telepített nyomtatók betöltése...</value></data>
   <data name="Splash.Title.Text"><value>A pyToneRIP indítása</value></data>
@@ -289,4 +303,9 @@
   <data name="DeviceChoice.Model_B" xml:space="preserve"><value>B modell</value></data>
   <data name="DeviceChoice.Code" xml:space="preserve"><value>{0}. kód</value></data>
   <data name="DeviceChoice.ThinPaper" xml:space="preserve"><value>{0} (vékony papír)</value></data>
+  <data name="ResamplingHelp.nearest"><value>Simítás nélkül másolja a legközelebbi forrásképpontot; pixelgrafikákhoz és a képpontértékek megőrzését igénylő tesztábrákhoz használható. Gyors, de fényképek nagyításakor lépcsős éleket és durva átmeneteket okozhat.</value></data>
+  <data name="ResamplingHelp.bilinear"><value>A közeli képpontokat keveri a sima átmenetek és a gyors feldolgozás érdekében. Akkor megfelelő, ha a sebesség fontos, de lágyítja a finom részleteket és a vékony vonalakat.</value></data>
+  <data name="ResamplingHelp.bicubic"><value>Köbös szűrővel egyensúlyozza a fényképek élességét és sima tónusátmeneteit. Több részletet őriz meg a bilineáris módszernél, de a nagy kontrasztú élek körül enyhe világos vagy sötét szegélyt okozhat.</value></data>
+  <data name="ResamplingHelp.lanczos"><value>Jól megőrzi a finom részleteket a fényképek ditheringrácsra alakításakor, különösen kicsinyítéskor. Élesebb eredményhez válassza, de figyeljen a nagy kontrasztú élek körüli világos vagy sötét szegélyekre.</value></data>
+  <data name="ResamplingHelp.mitchell"><value>A részletek és a sima átmenetek egyensúlyát adja, a Lanczosnál kevesebb élszegéllyel. Olyan fényképekhez megfelelő, ahol a szegélyek zavaróak, kissé lágyabb finom részletek és lassabb feldolgozás árán.</value></data>
 </root>

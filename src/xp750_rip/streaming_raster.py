@@ -46,11 +46,15 @@ class InvertedQtrRows(Sequence[bytes]):
 
     _table = bytes(255 - value for value in range(256))
 
-    def __init__(self, rows: Sequence[bytes]) -> None:
+    def __init__(self, rows: Sequence[bytes], sample_bits: int = 8) -> None:
+        if sample_bits not in (8, 16):
+            raise ValueError("sample_bits must be 8 or 16")
         if not rows or not rows[0]:
             raise ValueError("QTR source rows must have positive dimensions")
-        width = len(rows[0])
-        if any(len(row) != width for row in rows):
+        self.sample_bits = sample_bits
+        width = len(rows[0]) // (sample_bits // 8)
+        if len(rows[0]) % (sample_bits // 8) or (not getattr(rows, "width", None)
+                and any(len(row) != width * (sample_bits // 8) for row in rows)):
             raise ValueError("all QTR source rows must share width")
         self._rows = rows
         self.width = width
@@ -60,19 +64,24 @@ class InvertedQtrRows(Sequence[bytes]):
 
     def __getitem__(self, index: int | slice) -> bytes | tuple[bytes, ...]:
         if isinstance(index, slice):
-            return tuple(row.translate(self._table) for row in self._rows[index])
+            return tuple(self[i] for i in range(*index.indices(len(self))))
+        if self.sample_bits == 16:
+            from xp750_rip.precision import code16_row
+            return code16_row(self._rows[index])
         return self._rows[index].translate(self._table)
 
 
 def _code_array(rows: Sequence[bytes], start: int, end: int, width: int) -> np.ndarray:
     return np.frombuffer(
-        b"".join(rows[index] for index in range(start, end)), dtype=np.uint8
+        b"".join(rows[index] for index in range(start, end)), dtype=np.uint16 if getattr(rows, "sample_bits", 8) == 16 else np.uint8
     ).reshape(end - start, width)
 
 
 def streaming_qtr_rasters(
     *,
     source_rows: Sequence[bytes],
+    sample_bits: int = 8,
+    code_sources: dict | None = None,
     logical_inks: tuple[LogicalChannelId, ...],
     routing: dict[LogicalChannelId, PhysicalPathId],
     qtr_luts: dict[str, tuple[int, ...]],
@@ -97,7 +106,7 @@ def streaming_qtr_rasters(
     non-legacy full-page path.
     """
 
-    codes = InvertedQtrRows(source_rows)
+    codes = InvertedQtrRows(source_rows, sample_bits)
     if canvas_width <= 0 or canvas_width % 8 or canvas_width < codes.width:
         raise ValueError("streaming dither canvas width is invalid")
     if band_rows <= 0:
@@ -130,10 +139,17 @@ def streaming_qtr_rasters(
         )
     for logical in logical_inks:
         lut = qtr_luts.get(logical.value)
-        if lut is None or len(lut) != 256 or any(not 0 <= value <= UINT16_MAX for value in lut):
+        if lut is None or len(lut) != (1 << sample_bits) or any(not 0 <= value <= UINT16_MAX for value in lut):
             raise ValueError(f"invalid QTR LUT for {logical.value}")
 
     bit_depth = dither.drops.bit_depth
+    # Bound working bands by bytes as width, precision and channel count grow.
+    # Whole-page height never participates in this allocation budget.
+    working_row_bytes = (codes.width*(sample_bits//8)*3
+                         +canvas_width//8*bit_depth*len(logical_inks)*3)
+    if isinstance(dither, VariableCoefficientErrorDiffusion):
+        working_row_bytes += codes.width*8*len(logical_inks)*3
+    band_rows = min(band_rows, max(1, (32*1024*1024)//max(1, working_row_bytes)))
     height = len(codes)
     width = codes.width
 
@@ -141,7 +157,7 @@ def streaming_qtr_rasters(
         def produce_coupled():
             if on_dither_start is not None:
                 on_dither_start()
-            sources = {ink: codes for ink in logical_inks}
+            sources = {ink: code_sources[ink.value] if code_sources is not None else codes for ink in logical_inks}
             for start, packed in dither.iter_bands(
                 sources, qtr_luts, logical_inks, canvas_width=canvas_width,
                 band_rows=band_rows, cancel_check=cancel_check,
@@ -238,7 +254,7 @@ def streaming_qtr_rasters(
                     cancel_check()
                 end = min(start + band_rows, height)
                 source_end = min(end + 1, height)
-                band_codes = _code_array(codes, start, source_end, width)
+                band_codes = _code_array(codes,start,source_end,width) if code_sources is None else None
 
                 def render_path(
                     item: tuple[LogicalChannelId, PhysicalPathId],
@@ -253,6 +269,9 @@ def streaming_qtr_rasters(
                 ]:
                     logical, path = item
                     lut = luts[logical]
+                    source_codes = codes if code_sources is None else code_sources[logical.value]
+                    if codes_for_band is None:
+                        codes_for_band = _code_array(source_codes,band_start,min(band_end+1,height),width)
                     rows = band_end - band_start
                     current_error = error_states.get(logical)
                     active = qtr_active_rows_kernel(codes_for_band[:rows], lut)
@@ -280,7 +299,7 @@ def streaming_qtr_rasters(
                             assert endpoints is not None and endpoint_codes is not None
                             assert entropy is not None
                             highpass = (
-                                _gaussian_highpass_band(codes, lut, span_start, span_end)
+                                _gaussian_highpass_band(source_codes,lut,span_start,span_end)
                                 if dither.algorithm
                                 is HalftoneAlgorithm.ENTROPY_CONSTRAINED_ZHOU_FANG
                                 else np.empty((0, 0), dtype=np.float64)

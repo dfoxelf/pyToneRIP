@@ -114,6 +114,7 @@
   <data name="Choice.dimensions"><value>dimensioner</value></data>
   <data name="Choice.fit"><value>passe</value></data>
   <data name="Choice.lanczos"><value>lanczos</value></data>
+  <data name="Choice.mitchell"><value>Mitchell–Netravali</value></data>
   <data name="Choice.landscape"><value>Liggende</value></data>
   <data name="Choice.native"><value>Oprindelig størrelse</value></data>
   <data name="Choice.nearest"><value>Nærmeste nabo</value></data>
@@ -209,6 +210,17 @@
   <data name="Code.WindowsPrinterRenamedToConfigurationRemainsLinkedByPrinterUri"><value>Windows-printer omdøbt til {0}. Konfigurationen forbliver forbundet af PrinterUri.</value></data>
   <data name="Code.WindowsWillRemoveTheVirtualQueueAndItsSavedPyToneRIPConfigurationTheSign"><value>Windows fjerner den virtuelle kø {0} og dens gemte pyToneRIP-konfiguration. Det signerede {1}-modul forbliver tilgængeligt for en anden kø.</value></data>
   <data name="Language.Automatic.Text"><value>Automatisk (Windows)</value></data>
+  <data name="DitherHelp.AdaptiveHybrid"><value>Denne kompatibilitetsindstilling bruger i den aktuelle RIP Ordered til variable dråbestørrelser. Vælg Ordered direkte: indstillingen giver i øjeblikket ingen særskilt adaptiv kvalitetsfordel.</value></data>
+  <data name="DitherHelp.BlueNoiseFM"><value>Bruger en tærskelmaske med blå støj for at gøre rastermønstret mindre regelmæssigt. Velegnet til fotos og jævne toneforløb på himlen; fin kornethed eller rester af maskestrukturen kan stadig ses.</value></data>
+  <data name="DitherHelp.CoupledED"><value>Samordner punkterne inden for parrene C/M og LC/LM med fejldiffusion og toneafhængig tærskelstøj. Velegnet til printere med begge par; punktoverlap og balancen mellem de parrede blækfarver kan ændres. Kontroller en prøveudskrift med dine tonekurver.</value></data>
+  <data name="DitherHelp.CoupledEDCM"><value>Samordner punkterne inden for C/M-parret; lyse blækfarver og andre kanaler forbliver uafhængige. Velegnet til firefarveprintere eller når LC/LM-kobling ikke ønskes; ændrer C/M-overlap og tekstur uden at koble de lyse blækfarver.</value></data>
+  <data name="DitherHelp.EntropyZhouFang"><value>Tilpasser tærskelmodulationen i Zhou-Fang efter tone og lokal billedstruktur. Velegnet til detaljerede fotos med jævne flader; kræver ekstra beregninger og kan ændre gengivelsen af fine teksturer.</value></data>
+  <data name="DitherHelp.Fast"><value>Bruger en lille ordnet tærskelmatrix med variable dråbestørrelser. Velegnet til enkel grafik og prøveudskrifter; mønstret kan være tydeligere i toneforløb. Navnet garanterer ikke hurtigere behandling.</value></data>
+  <data name="DitherHelp.Ordered"><value>Placerer blækdråber af forskellig størrelse med en fast tærskelmatrix. Velegnet til testskalaer og grafik; jævne toneforløb kan vise et gentaget rastermønster.</value></data>
+  <data name="DitherHelp.Ostromoukhov"><value>Fordeler kvantiseringsfejlen til nabopixels med toneafhængige vægte. Velegnet til detaljerede fotos og toneovergange; visse toner kan vise retningsbestemte punktkæder.</value></data>
+  <data name="DitherHelp.VeryFast"><value>Bruger kun den største tilgængelige dråbe på hver valgt punktposition. Velegnet til grove prøveudskrifter; kornetheden er grovere, og gradueringen i højlys kan blive dårligere. Hurtigere behandling er ikke garanteret.</value></data>
+  <data name="DitherHelp.X2Y1"><value>Bruger fejldiffusion med skiftende retning for hver række, vægte for fire naboer og toneafhængig støjmodulation. Velegnet til himmel, solnedgange og brede toneforløb; fin kornethed eller retningsbestemt tekstur kan stadig ses.</value></data>
+  <data name="DitherHelp.ZhouFang"><value>Tilføjer toneafhængig modulation af kvantiseringstærsklen til fejldiffusion for at reducere regelmæssige strukturer i mellemtonerne. Velegnet til toneforløb, hvor Ostromoukhov giver mønstre; kornetheden kan blive tydeligere.</value></data>
   <data name="MainPage.About.Label"><value>Om...</value></data>
   <data name="MainPage.Add.Label"><value>Tilføj printer</value></data>
   <data name="MainPage.Empty.Add.Content"><value>Tilføj printer</value></data>
@@ -244,6 +256,8 @@
   <data name="Maintenance.nozzle_check.Title"><value>Udskriv dysekontrol</value></data>
   <data name="Maintenance.test_page.Description"><value>Udskriv et lille råt mønster pr. kanal ved hjælp af de valgte modelindstillinger.</value></data>
   <data name="Maintenance.test_page.Title"><value>Udskriv pyToneRIP-testside</value></data>
+  <data name="Processing16Bit.Content"><value>16-bit-behandling</value></data>
+  <data name="Processing16BitExperimental.Text"><value>(eksperimentel tilstand)</value></data>
   <data name="Splash.Continue.Content"><value>Fortsætte</value></data>
   <data name="Splash.Description.Text"><value>Forbereder rastermotoren og indlæser installerede printere...</value></data>
   <data name="Splash.Title.Text"><value>Starter pyToneRIP</value></data>
@@ -289,4 +303,9 @@
   <data name="DeviceChoice.Model_B" xml:space="preserve"><value>Model B</value></data>
   <data name="DeviceChoice.Code" xml:space="preserve"><value>Kode {0}</value></data>
   <data name="DeviceChoice.ThinPaper" xml:space="preserve"><value>{0} (tyndt papir)</value></data>
+  <data name="ResamplingHelp.nearest"><value>Kopierer den nærmeste kildepixel uden udjævning; velegnet til pixelgrafik og testmønstre, hvor pixelværdierne skal bevares. Metoden er hurtig, men kan give kantede konturer og grove overgange ved forstørrelse af fotos.</value></data>
+  <data name="ResamplingHelp.bilinear"><value>Blander nærliggende pixels for at give jævne overgange og hurtig behandling. Velegnet, når hastigheden er vigtig, men gør fine detaljer og tynde linjer blødere.</value></data>
+  <data name="ResamplingHelp.bicubic"><value>Bruger et kubisk filter til at afbalancere skarphed og jævne toneovergange i fotos. Bevarer flere detaljer end bilineær interpolation, men kan give svage glorier ved kanter med høj kontrast.</value></data>
+  <data name="ResamplingHelp.lanczos"><value>Bevarer fine detaljer godt, når fotos omsamples til ditheringgitteret, især ved formindskelse. Vælg metoden for et skarpere resultat, men hold øje med lyse eller mørke glorier ved kanter med høj kontrast.</value></data>
+  <data name="ResamplingHelp.mitchell"><value>Afbalancerer detaljer og jævne overgange med færre kantglorier end Lanczos. Velegnet til fotos, hvor glorier virker forstyrrende, på bekostning af lidt blødere fine detaljer og langsommere behandling.</value></data>
 </root>

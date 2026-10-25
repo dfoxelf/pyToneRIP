@@ -4,9 +4,15 @@ from importlib.metadata import distribution
 from pathlib import Path
 import sys
 
+from PyInstaller.utils.hooks import collect_data_files, collect_submodules
+
 runtime_dir = Path(SPEC).resolve().parent
 project_root = runtime_dir.parents[1]
 source_root = project_root / "src"
+
+# Omit the optional AVIF and JPEG XL codecs. Standard TIFF compression codecs
+# remain available; TIFF pages compressed with JPEG XL are not supported.
+excluded_codecs = {"imagecodecs._avif", "imagecodecs._jpegxl"}
 
 
 def license_file(distribution_name, suffix):
@@ -23,7 +29,10 @@ datas = [
     (str(Path(sys.base_prefix) / "LICENSE.txt"), "licenses/Python"),
     license_file("numpy", ".dist-info/licenses/LICENSE.txt"),
     license_file("pillow", ".dist-info/licenses/LICENSE"),
+    license_file("tifffile", ".dist-info/licenses/LICENSE"),
+    license_file("imagecodecs", ".dist-info/licenses/LICENSE"),
 ]
+datas += collect_data_files("imagecodecs", includes=["licenses/*"])
 catalog_root = project_root / "printer_catalog"
 if catalog_root.is_dir():
     # Catalog packages are self-contained runtime descriptors. The installed
@@ -35,11 +44,15 @@ a = Analysis(
     pathex=[str(source_root)],
     binaries=[],
     datas=datas,
-    hiddenimports=["xp750_rip._cython_kernels"],
+    # imagecodecs loads its native codecs lazily; static import analysis alone
+    # misses the decoders used by compressed 16-bit TIFF pages.
+    hiddenimports=["xp750_rip._cython_kernels", "xp750_rip._windows_xps_native"] + collect_submodules(
+        "imagecodecs", filter=lambda name: name not in excluded_codecs
+    ),
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
-    excludes=["scipy", "pytest"],
+    excludes=["scipy", "pytest"] + sorted(excluded_codecs),
     noarchive=False,
     optimize=1,
 )

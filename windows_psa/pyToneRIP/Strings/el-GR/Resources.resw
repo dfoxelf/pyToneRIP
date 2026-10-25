@@ -114,6 +114,7 @@
   <data name="Choice.dimensions"><value>διαστάσεις</value></data>
   <data name="Choice.fit"><value>κατάλληλος</value></data>
   <data name="Choice.lanczos"><value>Λάντζος</value></data>
+  <data name="Choice.mitchell"><value>Mitchell–Netravali</value></data>
   <data name="Choice.landscape"><value>Οριζόντιος</value></data>
   <data name="Choice.native"><value>Αρχικό μέγεθος</value></data>
   <data name="Choice.nearest"><value>Πλησιέστερος γείτονας</value></data>
@@ -209,6 +210,17 @@
   <data name="Code.WindowsPrinterRenamedToConfigurationRemainsLinkedByPrinterUri"><value>Ο εκτυπωτής των Windows μετονομάστηκε σε {0}. Η διαμόρφωση παραμένει συνδεδεμένη από το PrinterUri.</value></data>
   <data name="Code.WindowsWillRemoveTheVirtualQueueAndItsSavedPyToneRIPConfigurationTheSign"><value>Τα Windows θα καταργήσουν την εικονική ουρά {0} και την αποθηκευμένη διαμόρφωση του pyToneRIP. Η υπογεγραμμένη λειτουργική μονάδα {1} παραμένει διαθέσιμη για άλλη ουρά.</value></data>
   <data name="Language.Automatic.Text"><value>Αυτόματο (Windows)</value></data>
+  <data name="DitherHelp.AdaptiveHybrid"><value>Στο τρέχον RIP αυτή η επιλογή συμβατότητας χρησιμοποιεί Ordered για μεταβλητά μεγέθη σταγόνας. Επιλέξτε απευθείας Ordered: η επιλογή δεν παρέχει προς το παρόν ξεχωριστό προσαρμοστικό πλεονέκτημα ποιότητας.</value></data>
+  <data name="DitherHelp.BlueNoiseFM"><value>Χρησιμοποιεί μάσκα κατωφλίων μπλε θορύβου για λιγότερο κανονικό μοτίβο ράστερ. Κατάλληλο για φωτογραφίες και ομαλές διαβαθμίσεις ουρανού· λεπτή κοκκώδης υφή ή υπολειπόμενη δομή της μάσκας μπορεί να παραμείνουν ορατές.</value></data>
+  <data name="DitherHelp.CoupledED"><value>Συντονίζει τις κουκκίδες στα ζεύγη C/M και LC/LM με διάχυση σφάλματος και θόρυβο κατωφλίου που εξαρτάται από τον τόνο. Κατάλληλο για εκτυπωτές με τα δύο ζεύγη· μπορεί να αλλάξει η επικάλυψη και η ισορροπία των μελανιών. Ελέγξτε δοκιμαστική εκτύπωση με τις τονικές καμπύλες σας.</value></data>
+  <data name="DitherHelp.CoupledEDCM"><value>Συντονίζει τις κουκκίδες στο ζεύγος C/M· τα ανοιχτόχρωμα μελάνια και τα άλλα κανάλια παραμένουν ανεξάρτητα. Κατάλληλο για τετράχρωμους εκτυπωτές ή χωρίς σύζευξη LC/LM· αλλάζει την επικάλυψη και την υφή C/M χωρίς σύζευξη των ανοιχτόχρωμων μελανιών.</value></data>
+  <data name="DitherHelp.EntropyZhouFang"><value>Προσαρμόζει τη διαμόρφωση κατωφλίου του Zhou-Fang στον τόνο και στην τοπική δομή της εικόνας. Κατάλληλο για λεπτομερείς φωτογραφίες με ομαλές περιοχές· απαιτεί πρόσθετους υπολογισμούς και μπορεί να αλλάξει την απόδοση λεπτής υφής.</value></data>
+  <data name="DitherHelp.Fast"><value>Χρησιμοποιεί μικρό διατεταγμένο πίνακα κατωφλίων με μεταβλητά μεγέθη σταγόνας. Κατάλληλο για απλά γραφικά και δοκιμαστικές εκτυπώσεις· το μοτίβο μπορεί να φαίνεται περισσότερο στις διαβαθμίσεις. Το όνομα δεν εγγυάται ταχύτερη επεξεργασία.</value></data>
+  <data name="DitherHelp.Ordered"><value>Τοποθετεί σταγόνες μελανιού διαφορετικού μεγέθους με σταθερό πίνακα κατωφλίων. Κατάλληλο για δοκιμαστικές κλίμακες και γραφικά· οι ομαλές τονικές διαβαθμίσεις μπορεί να εμφανίσουν επαναλαμβανόμενο μοτίβο ράστερ.</value></data>
+  <data name="DitherHelp.Ostromoukhov"><value>Κατανέμει το σφάλμα κβάντισης σε γειτονικά εικονοστοιχεία με βάρη που εξαρτώνται από τον τόνο. Κατάλληλο για λεπτομερείς φωτογραφίες και τονικές μεταβάσεις· ορισμένοι τόνοι μπορεί να εμφανίσουν αλυσίδες κουκκίδων με συγκεκριμένη κατεύθυνση.</value></data>
+  <data name="DitherHelp.VeryFast"><value>Χρησιμοποιεί μόνο τη μεγαλύτερη διαθέσιμη σταγόνα σε κάθε επιλεγμένη θέση. Κατάλληλο για πρόχειρες δοκιμαστικές εκτυπώσεις· η κοκκώδης υφή είναι εντονότερη και η απόδοση των φωτεινών τόνων μπορεί να υποβαθμιστεί. Δεν εγγυάται μεγαλύτερη ταχύτητα.</value></data>
+  <data name="DitherHelp.X2Y1"><value>Χρησιμοποιεί διάχυση σφάλματος με εναλλασσόμενη κατεύθυνση γραμμών, βάρη για τέσσερις γείτονες και διαμόρφωση θορύβου ανάλογα με τον τόνο. Κατάλληλο για ουρανούς, ηλιοβασιλέματα και εκτεταμένες διαβαθμίσεις· κοκκώδης ή κατευθυντική υφή μπορεί να παραμείνει ορατή.</value></data>
+  <data name="DitherHelp.ZhouFang"><value>Προσθέτει στη διάχυση σφάλματος διαμόρφωση του κατωφλίου κβάντισης ανάλογα με τον τόνο, ώστε να μειώνει τις κανονικές δομές στους μεσαίους τόνους. Κατάλληλο για διαβαθμίσεις όπου το Ostromoukhov εμφανίζει μοτίβα· η κοκκώδης υφή μπορεί να γίνει πιο ορατή.</value></data>
   <data name="MainPage.About.Label"><value>Για...</value></data>
   <data name="MainPage.Add.Label"><value>Προσθήκη εκτυπωτή</value></data>
   <data name="MainPage.Empty.Add.Content"><value>Προσθήκη εκτυπωτή</value></data>
@@ -244,6 +256,8 @@
   <data name="Maintenance.nozzle_check.Title"><value>Έλεγχος ακροφυσίων εκτύπωσης</value></data>
   <data name="Maintenance.test_page.Description"><value>Εκτυπώστε ένα μικρό ακατέργαστο μοτίβο ανά κανάλι χρησιμοποιώντας τις επιλεγμένες ρυθμίσεις μοντέλου.</value></data>
   <data name="Maintenance.test_page.Title"><value>Εκτυπώστε τη δοκιμαστική σελίδα pyToneRIP</value></data>
+  <data name="Processing16Bit.Content"><value>Επεξεργασία 16 bit</value></data>
+  <data name="Processing16BitExperimental.Text"><value>(πειραματική λειτουργία)</value></data>
   <data name="Splash.Continue.Content"><value>Συνεχίζω</value></data>
   <data name="Splash.Description.Text"><value>Προετοιμασία της μηχανής ράστερ και φόρτωση εγκατεστημένων εκτυπωτών...</value></data>
   <data name="Splash.Title.Text"><value>Έναρξη του pyToneRIP</value></data>
@@ -289,4 +303,9 @@
   <data name="DeviceChoice.Model_B" xml:space="preserve"><value>Μοντέλο B</value></data>
   <data name="DeviceChoice.Code" xml:space="preserve"><value>Κωδικός {0}</value></data>
   <data name="DeviceChoice.ThinPaper" xml:space="preserve"><value>{0} (λεπτό χαρτί)</value></data>
+  <data name="ResamplingHelp.nearest"><value>Αντιγράφει το πλησιέστερο εικονοστοιχείο της πηγής χωρίς εξομάλυνση· κατάλληλο για γραφικά pixel art και δοκιμαστικά μοτίβα που απαιτούν διατήρηση των τιμών των εικονοστοιχείων. Είναι γρήγορο, αλλά η μεγέθυνση φωτογραφιών μπορεί να δημιουργήσει οδοντωτές ακμές και απότομες μεταβάσεις.</value></data>
+  <data name="ResamplingHelp.bilinear"><value>Συνδυάζει γειτονικά εικονοστοιχεία για ομαλές μεταβάσεις και γρήγορη επεξεργασία. Κατάλληλο όταν προέχει η ταχύτητα, αλλά μαλακώνει τις λεπτές λεπτομέρειες και γραμμές.</value></data>
+  <data name="ResamplingHelp.bicubic"><value>Χρησιμοποιεί κυβικό φίλτρο για ισορροπία ανάμεσα στην ευκρίνεια και τις ομαλές τονικές μεταβάσεις στις φωτογραφίες. Διατηρεί περισσότερες λεπτομέρειες από τη διγραμμική μέθοδο, αλλά μπορεί να δημιουργήσει ελαφρά φωτεινά ή σκοτεινά περιγράμματα σε ακμές υψηλής αντίθεσης.</value></data>
+  <data name="ResamplingHelp.lanczos"><value>Διατηρεί καλά τις λεπτές λεπτομέρειες κατά τη μετατροπή φωτογραφιών στο πλέγμα dithering, ιδιαίτερα κατά τη σμίκρυνση. Επιλέξτε το για μεγαλύτερη ευκρίνεια, προσέχοντας πιθανά φωτεινά ή σκοτεινά περιγράμματα σε ακμές υψηλής αντίθεσης.</value></data>
+  <data name="ResamplingHelp.mitchell"><value>Ισορροπεί τις λεπτομέρειες και τις ομαλές μεταβάσεις με λιγότερα ανεπιθύμητα περιγράμματα από το Lanczos. Κατάλληλο για φωτογραφίες όπου αυτά ενοχλούν, με αντάλλαγμα ελαφρώς πιο απαλές λεπτομέρειες και πιο αργή επεξεργασία.</value></data>
 </root>

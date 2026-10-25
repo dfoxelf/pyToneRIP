@@ -107,16 +107,20 @@ Source: "{#ModuleSetDir}\Install-ModuleSet-Manager.ps1"; DestDir: "{app}\Payload
 Source: "Set-InstallerLanguage.ps1"; DestDir: "{app}\Payload"; Flags: ignoreversion
 Source: "..\Uninstall-pyToneRIP.ps1"; DestDir: "{app}\Payload"; Flags: ignoreversion
 Source: "..\Clear-PyToneRipPrintState.ps1"; DestDir: "{app}\Payload"; Flags: ignoreversion
+Source: "..\Clear-PyToneRipRegistryState.ps1"; DestDir: "{app}\Payload"; Flags: ignoreversion
 Source: "..\Collect-SupportReport.ps1"; DestDir: "{app}\Payload"; Flags: ignoreversion
 Source: "{#ModuleSetDir}\Manager\*.msix"; DestDir: "{app}\Payload\Manager"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "{#ModuleSetDir}\Manager\*.appx"; DestDir: "{app}\Payload\Manager"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "{#InstallerIcon}"; DestDir: "{app}"; DestName: "pyToneRIP.ico"; Flags: ignoreversion
 Source: "{#InstallerLicense}"; DestDir: "{app}"; DestName: "LICENSE.txt"; Flags: ignoreversion
 
-; Keep MSIX's own Start registration. This optional desktop shortcut launches
-; the packaged application by AUMID, never its versioned WindowsApps path.
+; MSIX supplies the application's Start entry.
+; Remove only the legacy installer shortcut when it still exists.
+[InstallDelete]
+Type: files; Name: "{group}\pyToneRIP.lnk"; Check: FileExists(ExpandConstant('{group}\pyToneRIP.lnk'))
+
+; Optional desktop and Quick Launch shortcuts use the stable packaged AUMID.
 [Icons]
-Name: "{group}\pyToneRIP"; Filename: "{win}\explorer.exe"; Parameters: "shell:AppsFolder\pyToneRIP.Manager_qg4mjaqw0qctt!App"; IconFilename: "{app}\pyToneRIP.ico"
 Name: "{group}\{cm:UninstallProgram,pyToneRIP}"; Filename: "{uninstallexe}"; IconFilename: "{app}\pyToneRIP.ico"
 Name: "{autodesktop}\pyToneRIP"; Filename: "{win}\explorer.exe"; Parameters: "shell:AppsFolder\pyToneRIP.Manager_qg4mjaqw0qctt!App"; IconFilename: "{app}\pyToneRIP.ico"; Tasks: desktopicon
 Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\pyToneRIP"; Filename: "{win}\explorer.exe"; Parameters: "shell:AppsFolder\pyToneRIP.Manager_qg4mjaqw0qctt!App"; IconFilename: "{app}\pyToneRIP.ico"; Tasks: quicklaunchicon

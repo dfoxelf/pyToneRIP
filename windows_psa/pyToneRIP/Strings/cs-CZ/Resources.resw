@@ -114,6 +114,7 @@
   <data name="Choice.dimensions"><value>rozměry</value></data>
   <data name="Choice.fit"><value>fit</value></data>
   <data name="Choice.lanczos"><value>Lanczos</value></data>
+  <data name="Choice.mitchell"><value>Mitchell–Netravali</value></data>
   <data name="Choice.landscape"><value>Na šířku</value></data>
   <data name="Choice.native"><value>Původní velikost</value></data>
   <data name="Choice.nearest"><value>Nejbližší soused</value></data>
@@ -209,6 +210,17 @@
   <data name="Code.WindowsPrinterRenamedToConfigurationRemainsLinkedByPrinterUri"><value>Tiskárna Windows byla přejmenována na {0}. Konfigurace zůstává propojena pomocí PrinterUri.</value></data>
   <data name="Code.WindowsWillRemoveTheVirtualQueueAndItsSavedPyToneRIPConfigurationTheSign"><value>Windows odstraní virtuální frontu {0} a její uloženou konfiguraci pyToneRIP. Podepsaný modul {1} ​​zůstává dostupný pro další frontu.</value></data>
   <data name="Language.Automatic.Text"><value>Automaticky (Windows)</value></data>
+  <data name="DitherHelp.AdaptiveHybrid"><value>V současném RIP tato volba kompatibility používá Ordered pro proměnlivou velikost kapek. Zvolte přímo Ordered: tato volba nyní nepřináší samostatnou adaptivní výhodu v kvalitě.</value></data>
+  <data name="DitherHelp.BlueNoiseFM"><value>Používá prahovou masku modrého šumu ke snížení pravidelnosti rastru. Vhodné pro fotografie a jemné přechody oblohy; jemná zrnitost nebo zbytková struktura masky mohou zůstat viditelné.</value></data>
+  <data name="DitherHelp.CoupledED"><value>Koordinuje umístění bodů v párech C/M a LC/LM pomocí difuze chyby a tónově závislého prahového šumu. Vhodné pro tiskárny s oběma páry; překrytí bodů a poměr inkoustů v páru se mohou změnit. Ověřte zkušební výtisk se svými tónovými křivkami.</value></data>
+  <data name="DitherHelp.CoupledEDCM"><value>Koordinuje body v páru C/M; světlé inkousty a ostatní kanály zůstávají nezávislé. Vhodné pro čtyřbarevné tiskárny nebo pokud nechcete společné zpracování LC/LM; mění překrytí a texturu C/M bez propojení světlých inkoustů.</value></data>
+  <data name="DitherHelp.EntropyZhouFang"><value>Přizpůsobuje modulaci prahu Zhou-Fang tónu a místní struktuře obrazu. Vhodné pro detailní fotografie s hladkými plochami; vyžaduje další výpočty a může změnit podání jemných textur.</value></data>
+  <data name="DitherHelp.Fast"><value>Používá malou uspořádanou matici prahů a proměnlivé velikosti kapek. Vhodné pro jednoduchou grafiku a zkušební výtisky; v přechodech může být vzor výraznější. Název nezaručuje rychlejší zpracování.</value></data>
+  <data name="DitherHelp.Ordered"><value>Rozmisťuje různě velké kapky inkoustu podle pevné matice prahů. Vhodné pro testovací škály a grafiku; v plynulých tónových přechodech se může objevit opakující se rastrový vzor.</value></data>
+  <data name="DitherHelp.Ostromoukhov"><value>Rozděluje kvantizační chybu sousedním pixelům s váhami závislými na tónu. Vhodné pro detailní fotografie a tónové přechody; v některých tónech se mohou objevit směrové řetězce bodů.</value></data>
+  <data name="DitherHelp.VeryFast"><value>Na každé zvolené pozici používá pouze největší dostupnou kapku. Vhodné pro orientační zkušební výtisky; zrnitost je hrubší a odstupňování světel se může zhoršit. Vyšší rychlost není zaručena.</value></data>
+  <data name="DitherHelp.X2Y1"><value>Používá difuzi chyby se střídáním směru řádků, váhami pro čtyři sousedy a tónově závislou modulací šumu. Vhodné pro oblohu, západy slunce a rozsáhlé přechody; jemná zrnitost nebo směrová textura mohou přetrvávat.</value></data>
+  <data name="DitherHelp.ZhouFang"><value>Doplňuje difuzi chyby o tónově závislou modulaci kvantizačního prahu, která omezuje pravidelné struktury ve středních tónech. Vhodné pro přechody, kde Ostromoukhov vytváří vzory; zrnitost může být nápadnější.</value></data>
   <data name="MainPage.About.Label"><value>O...</value></data>
   <data name="MainPage.Add.Label"><value>Přidat tiskárnu</value></data>
   <data name="MainPage.Empty.Add.Content"><value>Přidat tiskárnu</value></data>
@@ -244,6 +256,8 @@
   <data name="Maintenance.nozzle_check.Title"><value>Kontrola trysek tisku</value></data>
   <data name="Maintenance.test_page.Description"><value>Vytiskněte malý nezpracovaný vzor pro každý kanál pomocí vybraných nastavení modelu.</value></data>
   <data name="Maintenance.test_page.Title"><value>Vytiskněte zkušební stránku pyToneRIP</value></data>
+  <data name="Processing16Bit.Content"><value>16bitové zpracování</value></data>
+  <data name="Processing16BitExperimental.Text"><value>(experimentální režim)</value></data>
   <data name="Splash.Continue.Content"><value>Pokračovat</value></data>
   <data name="Splash.Description.Text"><value>Příprava rastrového enginu a načítání nainstalovaných tiskáren...</value></data>
   <data name="Splash.Title.Text"><value>Spuštění pyToneRIP</value></data>
@@ -289,4 +303,9 @@
   <data name="DeviceChoice.Model_B" xml:space="preserve"><value>Model B</value></data>
   <data name="DeviceChoice.Code" xml:space="preserve"><value>Kód {0}</value></data>
   <data name="DeviceChoice.ThinPaper" xml:space="preserve"><value>{0} (tenký papír)</value></data>
+  <data name="ResamplingHelp.nearest"><value>Kopíruje nejbližší zdrojový pixel bez vyhlazování; hodí se pro pixelovou grafiku a testovací obrazce, u nichž je nutné zachovat hodnoty pixelů. Je rychlý, ale při zvětšování fotografií může vytvářet zubaté hrany a hrubé přechody.</value></data>
+  <data name="ResamplingHelp.bilinear"><value>Mísí sousední pixely pro plynulé přechody a rychlé zpracování. Hodí se tam, kde záleží na rychlosti, ale změkčuje jemné detaily a tenké čáry.</value></data>
+  <data name="ResamplingHelp.bicubic"><value>Pomocí kubického filtru vyvažuje ostrost a plynulé tónové přechody ve fotografiích. Zachovává více detailů než bilineární metoda, ale u kontrastních hran může vytvářet mírné světlé či tmavé lemy.</value></data>
+  <data name="ResamplingHelp.lanczos"><value>Dobře zachovává jemné detaily při převodu fotografií na mřížku ditheringu, zejména při zmenšování. Zvolte jej pro ostřejší výsledek, ale sledujte světlé či tmavé lemy u kontrastních hran.</value></data>
+  <data name="ResamplingHelp.mitchell"><value>Vyvažuje detaily a plynulé přechody s menšími lemy u hran než Lanczos. Hodí se pro fotografie, kde lemy ruší, za cenu mírně měkčích jemných detailů a pomalejšího zpracování.</value></data>
 </root>

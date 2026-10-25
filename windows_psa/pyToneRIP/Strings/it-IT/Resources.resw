@@ -114,6 +114,7 @@
   <data name="Choice.dimensions"><value>dimensioni</value></data>
   <data name="Choice.fit"><value>adatto</value></data>
   <data name="Choice.lanczos"><value>lanczos</value></data>
+  <data name="Choice.mitchell"><value>Mitchell–Netravali</value></data>
   <data name="Choice.landscape"><value>Orizzontale</value></data>
   <data name="Choice.native"><value>nativo</value></data>
   <data name="Choice.nearest"><value>Vicino più prossimo</value></data>
@@ -209,6 +210,17 @@
   <data name="Code.WindowsPrinterRenamedToConfigurationRemainsLinkedByPrinterUri"><value>Stampante Windows rinominata in {0}. La configurazione rimane collegata da PrinterUri.</value></data>
   <data name="Code.WindowsWillRemoveTheVirtualQueueAndItsSavedPyToneRIPConfigurationTheSign"><value>Windows rimuoverà la coda virtuale {0} e la relativa configurazione pyToneRIP salvata. Il modulo {1} firmato rimane disponibile per un&#x27;altra coda.</value></data>
   <data name="Language.Automatic.Text"><value>Automatico (Windows)</value></data>
+  <data name="DitherHelp.AdaptiveHybrid"><value>Nel RIP attuale questa opzione di compatibilità usa Ordered per le gocce di dimensione variabile. Selezionare direttamente Ordered: al momento questa opzione non offre un vantaggio adattivo distinto in termini di qualità.</value></data>
+  <data name="DitherHelp.BlueNoiseFM"><value>Usa una maschera di soglie a rumore blu per ridurre la regolarità visiva del retino. Adatto a fotografie e sfumature uniformi del cielo; possono rimanere visibili una grana fine o la struttura residua della maschera.</value></data>
+  <data name="DitherHelp.CoupledED"><value>Coordina i punti nelle coppie C/M e LC/LM mediante diffusione dell’errore e rumore di soglia dipendente dal tono. Adatto a stampanti con entrambe le coppie; sovrapposizione e bilanciamento degli inchiostri abbinati possono cambiare. Verificare una stampa di prova con le proprie curve tonali.</value></data>
+  <data name="DitherHelp.CoupledEDCM"><value>Coordina i punti nella coppia C/M; gli inchiostri chiari e gli altri canali restano indipendenti. Adatto a stampanti a quattro colori o quando non si desidera accoppiare LC/LM; cambia sovrapposizione e texture di C/M senza accoppiare gli inchiostri chiari.</value></data>
+  <data name="DitherHelp.EntropyZhouFang"><value>Regola la modulazione della soglia di Zhou-Fang in base al tono e alla struttura locale dell’immagine. Adatto a fotografie dettagliate con aree uniformi; richiede calcoli aggiuntivi e può modificare la resa delle texture fini.</value></data>
+  <data name="DitherHelp.Fast"><value>Usa una piccola matrice ordinata di soglie con gocce di dimensione variabile. Adatto a grafica semplice e stampe di prova; nelle sfumature il motivo ripetitivo può risultare più evidente e il nome non garantisce maggiore velocità.</value></data>
+  <data name="DitherHelp.Ordered"><value>Dispone gocce d’inchiostro di varie dimensioni mediante una matrice fissa di soglie. Adatto a scale di prova e grafica; nelle sfumature uniformi può apparire una struttura ripetitiva del retino.</value></data>
+  <data name="DitherHelp.Ostromoukhov"><value>Distribuisce l’errore di quantizzazione ai pixel vicini con pesi dipendenti dal tono. Adatto a fotografie dettagliate e transizioni tonali; alcuni toni possono mostrare catene di punti orientate.</value></data>
+  <data name="DitherHelp.VeryFast"><value>Usa soltanto la goccia più grande disponibile in ogni posizione selezionata. Adatto a prove approssimative; la granulosità è più grossolana e la gradazione delle alte luci può peggiorare. Una maggiore velocità non è garantita.</value></data>
+  <data name="DitherHelp.X2Y1"><value>Usa la diffusione dell’errore con direzione alternata per riga, pesi per quattro vicini e modulazione del rumore dipendente dal tono. Adatto a cieli, tramonti e ampie sfumature; possono rimanere visibili una grana fine o una texture orientata.</value></data>
+  <data name="DitherHelp.ZhouFang"><value>Aggiunge alla diffusione dell’errore una modulazione della soglia di quantizzazione dipendente dal tono per ridurre le strutture regolari nei mezzitoni. Adatto alle sfumature in cui Ostromoukhov produce motivi visibili; la granulosità può diventare più evidente.</value></data>
   <data name="MainPage.About.Label"><value>Informazioni…</value></data>
   <data name="MainPage.Add.Label"><value>Aggiungi stampante</value></data>
   <data name="MainPage.Empty.Add.Content"><value>Aggiungi stampante</value></data>
@@ -244,6 +256,8 @@
   <data name="Maintenance.nozzle_check.Title"><value>Controllo degli ugelli di stampa</value></data>
   <data name="Maintenance.test_page.Description"><value>Stampa un piccolo motivo grezzo per canale utilizzando le impostazioni del modello selezionato.</value></data>
   <data name="Maintenance.test_page.Title"><value>Stampa la pagina di prova pyToneRIP</value></data>
+  <data name="Processing16Bit.Content"><value>Elaborazione a 16 bit</value></data>
+  <data name="Processing16BitExperimental.Text"><value>(modalità sperimentale)</value></data>
   <data name="Splash.Continue.Content"><value>Continua</value></data>
   <data name="Splash.Description.Text"><value>Preparazione del motore raster e caricamento delle stampanti installate…</value></data>
   <data name="Splash.Title.Text"><value>Avvio di pyToneRIP</value></data>
@@ -289,4 +303,9 @@
   <data name="DeviceChoice.Model_B" xml:space="preserve"><value>Modello B</value></data>
   <data name="DeviceChoice.Code" xml:space="preserve"><value>Codice {0}</value></data>
   <data name="DeviceChoice.ThinPaper" xml:space="preserve"><value>{0} (carta sottile)</value></data>
+  <data name="ResamplingHelp.nearest"><value>Copia il pixel sorgente più vicino senza levigatura; utile per la pixel art e i motivi di prova che richiedono di mantenere i valori dei pixel. È rapido, ma ingrandendo le foto può produrre bordi a gradini e transizioni grossolane.</value></data>
+  <data name="ResamplingHelp.bilinear"><value>Combina i pixel vicini per ottenere transizioni uniformi con un’elaborazione rapida. Adatto quando conta la velocità, ma ammorbidisce i dettagli fini e le linee sottili.</value></data>
+  <data name="ResamplingHelp.bicubic"><value>Utilizza un filtro cubico per bilanciare nitidezza e transizioni tonali uniformi nelle foto. Conserva più dettagli del metodo bilineare, ma può creare lievi aloni sui bordi ad alto contrasto.</value></data>
+  <data name="ResamplingHelp.lanczos"><value>Conserva bene i dettagli fini quando adatta le foto alla griglia di dithering, soprattutto in riduzione. Sceglierlo per risultati più nitidi, prestando attenzione agli aloni chiari o scuri sui bordi ad alto contrasto.</value></data>
+  <data name="ResamplingHelp.mitchell"><value>Bilancia dettagli e transizioni uniformi con meno aloni sui bordi rispetto a Lanczos. Adatto alle foto in cui gli aloni disturbano, a scapito di dettagli fini leggermente più morbidi e di un’elaborazione più lenta.</value></data>
 </root>

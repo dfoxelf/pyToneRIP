@@ -207,6 +207,7 @@ namespace pyToneRIP
                 InkLimitSlider.Minimum = capabilities.Adjustments.InkLimit.Minimum;
                 InkLimitSlider.Maximum = capabilities.Adjustments.InkLimit.Maximum;
                 WorkflowPrintTicket ticketForUi = session?.SessionPrintTicket;
+                await CaptureSessionPrintTicketAsync(ticketForUi);
                 var rasterChoices = PrintTicketSynchronization.ResolutionChoices(
                     ticketForUi);
                 if (assignedModel.Id == "SureColorP900RIP")
@@ -237,6 +238,7 @@ namespace pyToneRIP
                 SelectString(OrientationBox, originalConfiguration?.Layout?.Orientation);
                 SelectString(PlacementBox, originalConfiguration?.Layout?.Placement);
                 SelectString(ResamplingBox, originalConfiguration?.Layout?.Resampling);
+                Processing16BitBox.IsChecked = originalConfiguration?.Adjustments?.ProcessingBits == 16;
                 LoadConfigurationValues(originalConfiguration);
                 var connection = originalConfiguration?.Connection;
                 var useUsb = (connection?.Kind ?? instance.ConnectionKind) == "usb";
@@ -267,6 +269,26 @@ namespace pyToneRIP
             {
                 App.WriteStartupException("PropertiesPage.LoadAsync failed", error);
                 ValidationSummary.Text = LocalizationService.Format("Code.CapabilityLoadFailed", error.Message);
+            }
+        }
+
+        private static async System.Threading.Tasks.Task CaptureSessionPrintTicketAsync(
+            WorkflowPrintTicket ticket)
+        {
+            if (ticket == null) return;
+            try
+            {
+                // Preserve the original settings ticket before native feature
+                // access or configuration overlay, including missing features.
+                var xml = ticket.XmlNode.GetXml();
+                var file = await Windows.Storage.ApplicationData.Current.LocalFolder.CreateFileAsync(
+                    "pyToneRIP-session-printticket.xml", Windows.Storage.CreationCollisionOption.ReplaceExisting);
+                await Windows.Storage.FileIO.WriteTextAsync(file, xml);
+                App.WriteStartupStage("Original session PrintTicket XML captured");
+            }
+            catch (Exception error)
+            {
+                App.WriteStartupException("Could not capture original session PrintTicket", error);
             }
         }
 
@@ -1986,6 +2008,38 @@ namespace pyToneRIP
         private void RipLayoutModeChanged(object sender, RoutedEventArgs args) =>
             UpdateRipLayoutControls();
 
+        private void ResamplingChanged(object sender, SelectionChangedEventArgs args)
+        {
+            if (ResamplingDescriptionText == null) return;
+            var method = (ResamplingBox.SelectedItem as LocalizedValue)?.Value;
+            ResamplingDescriptionText.Text = string.IsNullOrWhiteSpace(method)
+                ? string.Empty
+                : LocalizationService.Get("ResamplingHelp." + method);
+        }
+
+        private void DitherChanged(object sender, SelectionChangedEventArgs args)
+        {
+            if (DitherDescriptionText == null) return;
+            var algorithm = (DitherBox.SelectedItem as CapabilityOption)?.Id;
+            string key;
+            switch (algorithm)
+            {
+                case "Ordered": key = "Ordered"; break;
+                case "Adaptive Hybrid": key = "AdaptiveHybrid"; break;
+                case "Fast": key = "Fast"; break;
+                case "Very Fast": key = "VeryFast"; break;
+                case "Blue Noise (FM)": key = "BlueNoiseFM"; break;
+                case "Ostromoukhov (2001)": key = "Ostromoukhov"; break;
+                case "Zhou-Fang (2003)": key = "ZhouFang"; break;
+                case "Entropy-Constrained Zhou-Fang": key = "EntropyZhouFang"; break;
+                case "X2Y1": key = "X2Y1"; break;
+                case "Coupled ED": key = "CoupledED"; break;
+                case "Coupled ED (C/M)": key = "CoupledEDCM"; break;
+                default: DitherDescriptionText.Text = string.Empty; return;
+            }
+            DitherDescriptionText.Text = LocalizationService.Get("DitherHelp." + key);
+        }
+
         private void UpdateRipLayoutControls()
         {
             if (RipLayoutPanel == null) return;
@@ -2267,7 +2321,7 @@ namespace pyToneRIP
                     Midtones = GetBlendGroup(2).Take(active).ToList(),
                     Shadows = GetBlendGroup(3).Take(active).ToList(),
                 },
-                Adjustments = new AdjustmentSelection { Gamma = (int)GammaSlider.Value, InkLimit = (int)InkLimitSlider.Value, Dither = dither.Id },
+                Adjustments = new AdjustmentSelection { Gamma = (int)GammaSlider.Value, InkLimit = (int)InkLimitSlider.Value, Dither = dither.Id, ProcessingBits = Processing16BitBox.IsChecked == true ? 16 : 8 },
                 Channels = new ChannelSelection { LogicalInks = inks, Routing = mapping },
                 Layout = new LayoutSelection { Sizing = sizing, WidthMm = OptionalNumber(WidthBox.Text), HeightMm = OptionalNumber(HeightBox.Text), ScalePercent = string.Equals(sizing, "fit", StringComparison.OrdinalIgnoreCase) ? null : OptionalNumber(ScaleBox.Text), Orientation = RequiredString(OrientationBox, "orientation"), Placement = placement, XMm = isOffset ? OptionalNumber(XBox.Text) : null, YMm = isOffset ? OptionalNumber(YBox.Text) : null, Resampling = RequiredString(ResamplingBox, "resampling"), ApplyRipLayout = ApplyRipLayoutBox.IsChecked == true },
                 Connection = new ConnectionSelection

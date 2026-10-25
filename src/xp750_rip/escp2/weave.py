@@ -585,7 +585,7 @@ def _flush_weave_buffers(
         pass_meta: WeaveRow | None = None
         for path in ordered_paths:
             buffer = buffers.pop((pass_index, subpass, path), None)
-            if buffer is None or not any(any(row) for row in buffer.rows.values()):
+            if buffer is None or not any(row != blank_row for row in buffer.rows.values()):
                 continue
             pass_meta = pass_meta or buffer.meta
             max_nozzle = max(buffer.rows)
@@ -999,6 +999,9 @@ def schedule_model96_softweave(
     # leaves every nozzle assignment and subsequent inter-pass advance intact.
     last_pass_offset = -initial_feed_offset_rows
     reduced_width = (rasters.width_pixels + hpasses - 1) // hpasses
+    blank_row = bytes(mode.bit_depth * ((reduced_width + 7) // 8))
+    blank_encoded = packbits_encode(blank_row)
+    blank_subpasses = (blank_row,) * subpass_count
     ordered_paths = sorted(
         rasters.identities,
         key=lambda path: definitions[path].allocation_index,
@@ -1022,10 +1025,15 @@ def schedule_model96_softweave(
         folded_by_path: dict[PhysicalPathId, np.ndarray] = {}
         encoded_by_path: dict[PhysicalPathId, tuple[bytes, ...]] = {}
         assignments: dict[PhysicalPathId, np.ndarray] = {}
+        blank_paths: set[PhysicalPathId] = set()
         for path in rasters.identities:
             bit_planes = planes_by_path[path]
             started = perf_counter()
-            if mode.bit_depth == 2:
+            # Keep every geometric assignment, including blank nozzle rows,
+            # while reusing the identical packed representation for empty bands.
+            if not np.any(bit_planes):
+                blank_paths.add(path)
+            elif mode.bit_depth == 2:
                 folded_by_path[path] = weave_unpack_split_fold_kernel(
                     bit_planes[0],
                     bit_planes[1],
@@ -1043,10 +1051,13 @@ def schedule_model96_softweave(
             if timings is not None:
                 timings.cython_unpack_split_fold += perf_counter() - started
             started = perf_counter()
-            folded = folded_by_path[path]
-            encoded_by_path[path] = packbits_encode_rows(
-                folded.reshape(band_height * subpass_count, folded.shape[2])
-            )
+            if path in blank_paths:
+                encoded_by_path[path] = (blank_encoded,) * (band_height * subpass_count)
+            else:
+                folded = folded_by_path[path]
+                encoded_by_path[path] = packbits_encode_rows(
+                    folded.reshape(band_height * subpass_count, folded.shape[2])
+                )
             if timings is not None:
                 timings.packbits += perf_counter() - started
 
@@ -1081,11 +1092,14 @@ def schedule_model96_softweave(
         for source_index in range(band_start, band_end):
             band_index = source_index - band_start
             for path in rasters.identities:
-                folded = folded_by_path[path]
-                packed_subpasses = tuple(
-                    folded[band_index, index].tobytes()
-                    for index in range(subpass_count)
-                )
+                if path in blank_paths:
+                    packed_subpasses = blank_subpasses
+                else:
+                    folded = folded_by_path[path]
+                    packed_subpasses = tuple(
+                        folded[band_index, index].tobytes()
+                        for index in range(subpass_count)
+                    )
                 encoded_subpasses = encoded_by_path[path][
                     band_index * subpass_count : (band_index + 1) * subpass_count
                 ]

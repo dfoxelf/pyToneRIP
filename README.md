@@ -1,10 +1,10 @@
 # pyToneRIP
 
-[![Release](https://img.shields.io/github/v/release/dfoxelf/pyToneRIP?include_prereleases&style=flat-square&v=219)](https://github.com/dfoxelf/pyToneRIP/releases)
+[![Release](https://img.shields.io/github/v/release/dfoxelf/pyToneRIP?include_prereleases&style=flat-square&v=224)](https://github.com/dfoxelf/pyToneRIP/releases)
 [![Release downloads](https://img.shields.io/github/downloads/dfoxelf/pyToneRIP/total?style=flat-square&label=release%20downloads)](https://github.com/dfoxelf/pyToneRIP/releases)
 [![License: GPL-3.0-only](https://img.shields.io/badge/license-GPL--3.0--only-blue?style=flat-square)](https://github.com/dfoxelf/pyToneRIP/blob/main/LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Windows%2011%20x64-0078D4?style=flat-square)](#install)
-[![Download Beta 1.0.0.219](https://img.shields.io/badge/Download-Beta%201.0.0.219-2ea44f?style=flat-square)](https://github.com/dfoxelf/pyToneRIP/releases/download/v1.0.0.219-beta/pyToneRIP-Setup-1.0.0.219-Beta.exe)
+[![Download Beta 1.0.0.224](https://img.shields.io/badge/Download-Beta%201.0.0.224-2ea44f?style=flat-square)](https://github.com/dfoxelf/pyToneRIP/releases/download/v1.0.0.224-beta/pyToneRIP-Setup-1.0.0.224-Beta.exe)
 
 Copyright © 2026 Alexander Eichhorn.
 
@@ -12,34 +12,37 @@ pyToneRIP is a monochrome Epson RIP for Windows 11. It contains the Python/Cytho
 
 ## Download the beta
 
-The current beta is **1.0.0.219**. [Download the setup installer](https://github.com/dfoxelf/pyToneRIP/releases/download/v1.0.0.219-beta/pyToneRIP-Setup-1.0.0.219-Beta.exe).
+The current beta is **1.0.0.224**. [Download the setup installer](https://github.com/dfoxelf/pyToneRIP/releases/download/v1.0.0.224-beta/pyToneRIP-Setup-1.0.0.224-Beta.exe).
 
 <details>
 <summary>Verify the installer checksum</summary>
 
-Installer size: **56,995,970 bytes**. SHA-256:
+Installer size: **73,821,554 bytes**. SHA-256:
 
 ```text
-898cccbbecc9bb9597da77c8617bfc5e290343aa17a4b709caea0dfb1df51b59
+dfa60090734a28f9feeea9c6355eb457b48641ce84fbe395c35c9dfcc160e2bf
 ```
 
 ```powershell
-Get-FileHash .\pyToneRIP-Setup-1.0.0.219-Beta.exe -Algorithm SHA256
+Get-FileHash .\pyToneRIP-Setup-1.0.0.224-Beta.exe -Algorithm SHA256
 ```
 
 </details>
 
-This rebuilt 1.0.0.219 beta corrects P900 K/MK channel handling and retains the original USB transport. It also includes the streaming dithering, multipage processing, printer capability, and Windows print settings changes listed below.
+This beta adds an experimental high-precision monochrome path and improves how large pages are prepared and sent to the printer. It includes the changes developed since the public 219 beta.
 
-- **Dithering:** added X2Y1 with tone-dependent threshold modulation and serpentine traversal, plus Coupled ED variants for C/M and C/M + LC/LM. Preferences shows variants compatible with the selected printer's ink channels. The implementations retain state across streaming bands and handle blank regions.
-- **Multipage streaming:** the live transport can receive the first page while later pages are still being processed. Job configuration and curve snapshots are prepared once; additional copies reuse rendered data.
-- **Windows rasterization:** added 360 and 720 DPI input raster choices for every model, alongside 300 and 600 DPI. These settings are separate from the printer's physical print resolution.
-- **Printer capabilities:** added the P800 720 x 1440 photo mode and restored missing Stylus Pro 3880 sheet formats, including 4 x 6 inches. The 3880 catalog now contains 25 sheet formats; the model does not support roll feed.
-- **P900 QUAD channels:** retain separate logical K and MK curves from ten-channel profiles, with independent physical routing and simultaneous output on either glossy or matte paper. Restore MK in older automatic channel lists while preserving user assignments.
-- **Print settings and diagnostics:** corrected application of legacy per-user defaults in Preferences and expanded support-report collection of PrintTickets, DEVMODE settings, and Windows print/security configuration.
-- **Protocol support:** extended native command encoding and validation for explicitly supported mode variants.
+- **Experimental 16-bit processing:** the new checkbox in Printer Preferences enables higher-precision tone, curve, resampling, and dithering calculations across supported models. Windows print jobs use a dedicated high-precision XPS renderer instead of the usual 8-bit converter. An 8-bit source, or an application that has already reduced its precision, cannot regain missing tones by enabling this option. Leave it off for the established 8-bit path when comparing results.
+- **Large-format printing:** page preparation, resolution conversion, and raster processing now work with bounded strips and row caches instead of allocating an entire image at printer resolution. This reduces peak memory and temporary-file demands on A1/A0 and larger jobs. Windows input rasterization can still create a full source TIFF in 8-bit mode; sufficient free disk space is still required.
+- **USB delivery:** a bounded buffer and a separate sender allow the RIP to prepare data while USB writes are in progress. Initial buffering helps absorb short processing pauses; it cannot guarantee continuous head movement if rendering or the connection is too slow. Cancellation and transfer diagnostics have also been improved.
+- **Dithering and page completion:** corrected the paired-channel error-diffusion calculations and improved handling of blank areas and the page tail. These changes address uneven paired-ink output and unnecessary processing delays near the end of a page.
+- **Resampling controls:** choose the resolution-conversion method even when RIP Layout is disabled and the source application controls placement. Added Mitchell resampling and explanations beside the resampling and dithering selectors in all 27 interface languages. The job log identifies the selected resampling method.
+- **Clearer progress:** streaming logs distinguish raster preparation from sending data. While output is still being generated, the byte total is shown as unknown rather than presenting a misleading fixed total.
+- **Printer settings:** improved handling of Windows PrintTickets and legacy application settings. This does not claim to resolve every Paint/Sumatra default-setting issue or the reported P900 configuration failure on one tester's system.
+- **Drying controls:** added a drying-delay setting for supported XP-750/XP-960 modes. Availability depends on the selected model; physical results need to be checked with the actual paper and ink.
+- **Installation and support:** removed the redundant Start menu shortcut and expanded technical diagnostics for Windows printer configuration failures. Support archives are created locally and are not automatically uploaded; review them before sharing.
+- **Package size:** omitted the optional AVIF and JPEG XL modules from imagecodecs. TIFF with JPEG XL compression is no longer supported by the RIP input decoder. Standard TIFF compression and the 16-bit path remain available.
 
-These changes have software regression coverage. Print quality, uninterrupted USB delivery, and physical output on every supported printer have not been verified. This remains a beta release.
+This is a **prerelease**. Automated and native rendering tests have passed, but physical output, paper handling, and print quality have not been verified on every supported printer. The reported P900 case with only eight paper-size entries remains under investigation.
 
 ## Support development and professional services
 
@@ -63,8 +66,8 @@ Run PowerShell from the repository root:
 
 ```powershell
 uv sync --locked
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows_psa\Build-ModelPackageSet.ps1 -Version 1.0.0.219
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows_psa\Build-InnoSetup.ps1 -Version 1.0.0.219
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows_psa\Build-ModelPackageSet.ps1 -Version 1.0.0.224
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows_psa\Build-InnoSetup.ps1 -Version 1.0.0.224
 ```
 
 Use a new four-part version for each build. The first script compiles Cython, freezes the Python runtime, builds and signs the Manager MSIX, and checks the result. The second produces `windows_psa/artifacts/pyToneRIP-Setup-<version>-Beta.exe`.
@@ -75,12 +78,12 @@ The bootstrap EXE is not Authenticode signed. Windows may show a publisher or Sm
 
 ## Install
 
-Run the [pyToneRIP 1.0.0.219 Beta installer](https://github.com/dfoxelf/pyToneRIP/releases/download/v1.0.0.219-beta/pyToneRIP-Setup-1.0.0.219-Beta.exe) on Windows 11 build 26100 or later. The installer requests administrator approval to trust the package certificate and install the Manager. Start pyToneRIP and add a printer through its interface.
+Run the [pyToneRIP 1.0.0.224 Beta installer](https://github.com/dfoxelf/pyToneRIP/releases/download/v1.0.0.224-beta/pyToneRIP-Setup-1.0.0.224-Beta.exe) on Windows 11 build 26100 or later. The installer requests administrator approval to trust the package certificate and install the Manager. Start pyToneRIP and add a printer through its interface.
 
 For a package without the bootstrap installer, open PowerShell as Administrator and run:
 
 ```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows_psa\artifacts\pyToneRIP-ModuleSet-1.0.0.219\Install-ModuleSet-Manager.ps1
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows_psa\artifacts\pyToneRIP-ModuleSet-1.0.0.224\Install-ModuleSet-Manager.ps1
 ```
 
 ## Source layout

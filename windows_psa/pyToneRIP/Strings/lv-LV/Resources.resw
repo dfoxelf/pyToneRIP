@@ -114,6 +114,7 @@
   <data name="Choice.dimensions"><value>izmēriem</value></data>
   <data name="Choice.fit"><value>der</value></data>
   <data name="Choice.lanczos"><value>lanczos</value></data>
+  <data name="Choice.mitchell"><value>Mitchell–Netravali</value></data>
   <data name="Choice.landscape"><value>Ainavorientācija</value></data>
   <data name="Choice.native"><value>Sākotnējais izmērs</value></data>
   <data name="Choice.nearest"><value>Tuvākais kaimiņš</value></data>
@@ -209,6 +210,17 @@
   <data name="Code.WindowsPrinterRenamedToConfigurationRemainsLinkedByPrinterUri"><value>Windows printeris ir pārdēvēts par {0}. Konfigurācija joprojām ir saistīta ar PrinterUri.</value></data>
   <data name="Code.WindowsWillRemoveTheVirtualQueueAndItsSavedPyToneRIPConfigurationTheSign"><value>Windows noņems virtuālo rindu {0} un tās saglabāto pyToneRIP konfigurāciju. Parakstītais modulis {1} paliek pieejams citai rindai.</value></data>
   <data name="Language.Automatic.Text"><value>Automātiski (Windows)</value></data>
+  <data name="DitherHelp.AdaptiveHybrid"><value>Pašreizējā RIP šī saderības opcija izmanto Ordered mainīga lieluma pilieniem. Izvēlieties tieši Ordered: šī opcija pašlaik nesniedz atsevišķu adaptīvās apstrādes kvalitātes priekšrocību.</value></data>
+  <data name="DitherHelp.BlueNoiseFM"><value>Izmanto zilā trokšņa sliekšņu masku, lai mazinātu rastra regularitāti. Piemērots fotogrāfijām un vienmērīgām debesu toņu pārejām; smalka graudainība vai maskas atlikusī struktūra var saglabāties.</value></data>
+  <data name="DitherHelp.CoupledED"><value>Saskaņo punktus C/M un LC/LM pāros ar kļūdas difūziju un no toņa atkarīgu sliekšņa troksni. Piemērots printeriem ar abiem pāriem; punktu pārklāšanās un pārī savienoto tinšu līdzsvars var mainīties. Pārbaudiet izmēģinājuma izdruku ar savām toņu līknēm.</value></data>
+  <data name="DitherHelp.CoupledEDCM"><value>Saskaņo punktus C/M pārī; gaišās tintes un pārējie kanāli paliek neatkarīgi. Piemērots četru krāsu printeriem vai ja LC/LM kopapstrāde nav vēlama; maina C/M pārklāšanos un tekstūru bez gaišo tinšu pāra sasaistes.</value></data>
+  <data name="DitherHelp.EntropyZhouFang"><value>Pielāgo Zhou-Fang sliekšņa modulāciju tonim un attēla lokālajai struktūrai. Piemērots detalizētām fotogrāfijām ar vienmērīgiem laukumiem; vajadzīgi papildu aprēķini, un smalku faktūru atveide var mainīties.</value></data>
+  <data name="DitherHelp.Fast"><value>Izmanto nelielu sakārtotu sliekšņu matricu un mainīga lieluma pilienus. Piemērots vienkāršai grafikai un izmēģinājuma izdrukām; toņu pārejās raksts var būt izteiktāks. Nosaukums negarantē ātrāku apstrādi.</value></data>
+  <data name="DitherHelp.Ordered"><value>Izvieto dažāda lieluma tintes pilienus pēc fiksētas sliekšņu matricas. Piemērots testa skalām un grafikai; vienmērīgās toņu pārejās var būt redzams atkārtots rastra raksts.</value></data>
+  <data name="DitherHelp.Ostromoukhov"><value>Sadala kvantēšanas kļūdu blakus esošajiem pikseļiem ar no toņa atkarīgiem svariem. Piemērots detalizētām fotogrāfijām un toņu pārejām; dažos toņos var veidoties noteiktā virzienā izvietotas punktu ķēdes.</value></data>
+  <data name="DitherHelp.VeryFast"><value>Katrā izvēlētajā punkta vietā izmanto tikai lielāko pieejamo pilienu. Piemērots aptuvenām izmēģinājuma izdrukām; graudainība ir rupjāka, un gaišo toņu gradācija var pasliktināties. Lielāks ātrums nav garantēts.</value></data>
+  <data name="DitherHelp.X2Y1"><value>Izmanto kļūdas difūziju ar mainīgu rindu virzienu, svariem četriem kaimiņiem un no toņa atkarīgu trokšņa modulāciju. Piemērots debesīm, saulrietiem un plašām toņu pārejām; smalka graudainība vai virziena tekstūra var saglabāties.</value></data>
+  <data name="DitherHelp.ZhouFang"><value>Papildina kļūdas difūziju ar no toņa atkarīgu kvantēšanas sliekšņa modulāciju, lai mazinātu regulāras struktūras vidustoņos. Piemērots pārejām, kur Ostromoukhov rada rakstus; graudainība var kļūt pamanāmāka.</value></data>
   <data name="MainPage.About.Label"><value>Par...</value></data>
   <data name="MainPage.Add.Label"><value>Pievienojiet printeri</value></data>
   <data name="MainPage.Empty.Add.Content"><value>Pievienojiet printeri</value></data>
@@ -244,6 +256,8 @@
   <data name="Maintenance.nozzle_check.Title"><value>Drukas sprauslu pārbaude</value></data>
   <data name="Maintenance.test_page.Description"><value>Drukājiet nelielu neapstrādātu kanālu katram kanālam, izmantojot atlasītos modeļa iestatījumus.</value></data>
   <data name="Maintenance.test_page.Title"><value>Izdrukājiet pyToneRIP testa lapu</value></data>
+  <data name="Processing16Bit.Content"><value>16 bitu apstrāde</value></data>
+  <data name="Processing16BitExperimental.Text"><value>(eksperimentāls režīms)</value></data>
   <data name="Splash.Continue.Content"><value>Turpināt</value></data>
   <data name="Splash.Description.Text"><value>Notiek rastra programmas sagatavošana un instalēto printeru ielāde...</value></data>
   <data name="Splash.Title.Text"><value>Tiek palaists pyToneRIP</value></data>
@@ -289,4 +303,9 @@
   <data name="DeviceChoice.Model_B" xml:space="preserve"><value>Modelis B</value></data>
   <data name="DeviceChoice.Code" xml:space="preserve"><value>Kods {0}</value></data>
   <data name="DeviceChoice.ThinPaper" xml:space="preserve"><value>{0} (plāns papīrs)</value></data>
+  <data name="ResamplingHelp.nearest"><value>Kopē tuvāko avota pikseli bez izlīdzināšanas; piemērots pikseļu grafikai un testa attēliem, kuros jāsaglabā pikseļu vērtības. Darbojas ātri, bet fotoattēlu palielināšana var radīt robainas malas un rupjas pārejas.</value></data>
+  <data name="ResamplingHelp.bilinear"><value>Sajauc blakus esošos pikseļus, lai iegūtu vienmērīgas pārejas un ātru apstrādi. Piemērots, ja svarīgs ir ātrums, taču smalkas detaļas un plānas līnijas kļūst maigākas.</value></data>
+  <data name="ResamplingHelp.bicubic"><value>Izmanto kubisku filtru, lai līdzsvarotu fotoattēlu asumu un vienmērīgas toņu pārejas. Saglabā vairāk detaļu nekā bilineārā metode, bet pie augsta kontrasta malām var rasties vieglas gaišas vai tumšas apmales.</value></data>
+  <data name="ResamplingHelp.lanczos"><value>Labi saglabā smalkas detaļas, pielāgojot fotoattēlus rastrēšanas režģim, īpaši samazinot. Izvēlieties asākam rezultātam, bet pievērsiet uzmanību gaišām vai tumšām apmalēm pie augsta kontrasta malām.</value></data>
+  <data name="ResamplingHelp.mitchell"><value>Līdzsvaro detaļas un vienmērīgas pārejas, radot mazāk malu apmaļu nekā Lanczos. Piemērots fotoattēliem, kuros apmales traucē, taču smalkas detaļas kļūst nedaudz maigākas un apstrāde ir lēnāka.</value></data>
 </root>

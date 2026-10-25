@@ -11,9 +11,13 @@
   </Page.Resources>
   <Grid Background="{StaticResource PageBackgroundBrush}">
     <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
-    <Grid Padding="26,20,26,12"><Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+    <Grid Padding="26,20,26,12"><Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
       <Button x:Name="BackButton" Content="&#xE72B;" FontFamily="Segoe MDL2 Assets" Click="Cancel" Width="40" Height="40" Margin="0,0,14,0"/>
       <StackPanel Grid.Column="1"><TextBlock i18n:DeferredLocalization.Key="Auto/9EB4D8F24BB2" Text="Printer Preferences" Style="{StaticResource PageTitleStyle}" TextWrapping="Wrap"/><TextBlock i18n:DeferredLocalization.Key="Auto/3CA6B2E88846" x:Name="QueueIdentityText" Text="Loading printer identity…" Foreground="{StaticResource SecondaryTextBrush}" Margin="0,3,0,0" TextWrapping="Wrap"/></StackPanel>
+      <StackPanel Grid.Column="2" VerticalAlignment="Top" Margin="16,6,0,0" MaxWidth="260">
+        <CheckBox x:Name="Processing16BitBox" i18n:DeferredLocalization.Key="Processing16Bit" Content="16-bit processing"/>
+        <TextBlock i18n:DeferredLocalization.Key="Processing16BitExperimental" Text="(experimental mode)" FontSize="12" Foreground="{StaticResource SecondaryTextBrush}" TextWrapping="Wrap" Margin="28,0,0,0"/>
+      </StackPanel>
     </Grid>
     <Pivot x:Name="PreferencesPivot" SelectionChanged="PreferencesPivotSelectionChanged" SizeChanged="PreferencesPivotSizeChanged" Grid.Row="1" Margin="20,0,20,0" HorizontalContentAlignment="Stretch">
       <PivotItem i18n:DeferredLocalization.Key="Auto/7B17669DCDFD" Header="General">
@@ -52,7 +56,7 @@
             <TextBlock i18n:DeferredLocalization.Key="Auto/CC5611F72641" Text="Off (recommended): preserve the page composed by the printing application and Windows. On: additionally scale and position the completed page in the RIP." Foreground="{StaticResource SecondaryTextBrush}" TextWrapping="Wrap" Margin="28,0,0,10"/>
             <ContentControl x:Name="RipLayoutPanel" IsEnabled="False" Opacity="0.45" HorizontalContentAlignment="Stretch"><Grid>
               <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-              <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+              <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
               <StackPanel><TextBlock i18n:DeferredLocalization.Key="Auto/B388B9C01523" Text="Size" Style="{StaticResource Label}"/><ComboBox x:Name="SizingBox" SelectionChanged="SizingChanged"/></StackPanel>
               <StackPanel Grid.Column="1"><TextBlock i18n:DeferredLocalization.Key="Auto/618B7038015F" Text="Scale (%)" Style="{StaticResource Label}"/><TextBox x:Name="ScaleBox"/></StackPanel>
               <StackPanel Grid.Row="1"><TextBlock i18n:DeferredLocalization.Key="Auto/6A05E926137D" Text="Width (mm)" Style="{StaticResource Label}"/><TextBox x:Name="WidthBox"/></StackPanel>
@@ -64,8 +68,13 @@
                 <StackPanel><TextBlock i18n:DeferredLocalization.Key="Auto/86B7F1C6BF78" Text="Left (X)" Style="{StaticResource Label}"/><TextBox x:Name="XBox"/></StackPanel>
                 <StackPanel Grid.Column="1"><TextBlock i18n:DeferredLocalization.Key="Auto/4CAE9181C34B" Text="Top (Y)" Style="{StaticResource Label}"/><TextBox x:Name="YBox"/></StackPanel>
               </Grid>
-              <StackPanel Grid.Row="4"><TextBlock i18n:DeferredLocalization.Key="Auto/FB46581869A8" Text="Resampling" Style="{StaticResource Label}"/><ComboBox x:Name="ResamplingBox"/></StackPanel>
             </Grid></ContentControl>
+            <Border Height="1" Background="{StaticResource SectionBorderBrush}" Margin="0,12,0,10"/>
+            <Grid>
+              <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+              <StackPanel><TextBlock i18n:DeferredLocalization.Key="Auto/FB46581869A8" Text="Resampling" Style="{StaticResource Label}"/><ComboBox x:Name="ResamplingBox" SelectionChanged="ResamplingChanged"/></StackPanel>
+              <TextBlock x:Name="ResamplingDescriptionText" Grid.Column="1" TextWrapping="Wrap" Foreground="{StaticResource SecondaryTextBrush}" VerticalAlignment="Center" Margin="12,5,0,9"/>
+            </Grid>
           </StackPanel></Border>
           <Border x:Name="ToneCurvesSection" Style="{StaticResource SectionBorder}"><StackPanel>
             <TextBlock i18n:DeferredLocalization.Key="Auto/33D3A7B787C3" Text="Tone curves" Style="{StaticResource SectionTitleStyle}"/>
@@ -94,7 +103,12 @@
             <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="2*"/><ColumnDefinition Width="3*"/><ColumnDefinition Width="54"/></Grid.ColumnDefinitions><TextBlock i18n:DeferredLocalization.Key="Auto/3A1FA8B92EC8" Text="Ink Limit (Shadows)" TextWrapping="Wrap" VerticalAlignment="Center" Margin="0,0,8,0"/><Slider x:Name="InkLimitSlider" Grid.Column="1" StepFrequency="1" ValueChanged="InkLimitChanged"/><TextBlock x:Name="InkLimitLabel" Grid.Column="2" Text="0" Width="54" TextAlignment="Right" VerticalAlignment="Center"/></Grid>
             <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="2*"/><ColumnDefinition Width="3*"/><ColumnDefinition Width="54"/></Grid.ColumnDefinitions><TextBlock i18n:DeferredLocalization.Key="Auto/1CA49E052294" Text="Gamma (Midtones)" TextWrapping="Wrap" VerticalAlignment="Center" Margin="0,0,8,0"/><Slider x:Name="GammaSlider" Grid.Column="1" StepFrequency="1" ValueChanged="GammaChanged"/><TextBlock x:Name="GammaLabel" Grid.Column="2" Text="0" Width="54" TextAlignment="Right" VerticalAlignment="Center"/></Grid>
             </StackPanel></ContentControl>
-            <TextBlock i18n:DeferredLocalization.Key="Auto/3BEF3F943CF4" Text="Dither" Style="{StaticResource Label}"/><ComboBox x:Name="DitherBox" HorizontalAlignment="Left" MinWidth="0" MaxWidth="420" ItemContainerStyle="{StaticResource CapabilityItem}"/>
+            <Border Height="1" Background="{StaticResource SectionBorderBrush}" Margin="0,12,0,10"/>
+            <Grid>
+              <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+              <StackPanel><TextBlock i18n:DeferredLocalization.Key="Auto/3BEF3F943CF4" Text="Dither" Style="{StaticResource Label}"/><ComboBox x:Name="DitherBox" SelectionChanged="DitherChanged" ItemContainerStyle="{StaticResource CapabilityItem}"/></StackPanel>
+              <TextBlock x:Name="DitherDescriptionText" Grid.Column="1" TextWrapping="Wrap" Foreground="{StaticResource SecondaryTextBrush}" VerticalAlignment="Center" Margin="12,5,0,9"/>
+            </Grid>
           </StackPanel></Border>
         </StackPanel></ScrollViewer>
       </PivotItem>

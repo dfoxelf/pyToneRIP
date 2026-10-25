@@ -138,10 +138,10 @@ class BlueNoiseFMDither:
         if not code_rows or not code_rows[0]:
             raise ValueError("QTR code raster dimensions must be positive")
         width, height = len(code_rows[0]), len(code_rows)
-        if any(len(row) != width for row in code_rows):
+        if getattr(code_rows, "width", None) != width and any(len(row) != width for row in code_rows):
             raise ValueError("all QTR code rows must share width")
-        if len(qtr_lut) != 256 or any(not 0 <= value <= UINT16_MAX for value in qtr_lut):
-            raise ValueError("QTR lookup table must contain 256 uint16 values")
+        if len(qtr_lut) not in (256, 65536) or any(not 0 <= value <= UINT16_MAX for value in qtr_lut):
+            raise ValueError("QTR lookup table must contain 256 or 65536 uint16 values")
         if canvas_width <= 0 or canvas_width % 8 or canvas_height <= 0:
             raise ValueError("invalid dither canvas dimensions")
         if x < 0 or y < 0 or x + width > canvas_width or y + height > canvas_height:
@@ -168,7 +168,7 @@ class BlueNoiseFMDither:
         for local_start in range(0, height, band_rows):
             local_end = min(local_start + band_rows, height)
             codes = np.frombuffer(
-                b"".join(code_rows[local_start:local_end]), dtype=np.uint8
+                b"".join(code_rows[local_start:local_end]), dtype=np.uint16 if len(qtr_lut) == 65536 else np.uint8
             ).reshape(local_end - local_start, width)
             global_start = y + local_start
             global_end = y + local_end

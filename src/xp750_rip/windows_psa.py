@@ -960,7 +960,7 @@ def configuration_to_argument_tokens(configuration: Mapping[str, object]) -> lis
     )
     adjustments = _mapping(root["adjustments"], "adjustments")
     _exact_keys(
-        adjustments, required={"gamma", "ink_limit", "dither"}, context="adjustments"
+        adjustments, required={"gamma", "ink_limit", "dither"}, optional={"processing_bits"}, context="adjustments"
     )
     channels = _mapping(root["channels"], "channels")
     _exact_keys(channels, required={"logical_inks", "routing"}, context="channels")
@@ -1062,6 +1062,10 @@ def configuration_to_argument_tokens(configuration: Mapping[str, object]) -> lis
         ("--ink-limit", str(_integer(adjustments["ink_limit"], "adjustments.ink_limit")))
     )
     tokens.extend(("--dither", _string(adjustments["dither"], "adjustments.dither")))
+    processing_bits = _integer(adjustments.get("processing_bits", 8), "adjustments.processing_bits")
+    if processing_bits not in (8, 16):
+        raise ValueError("processing_bits must be 8 or 16")
+    tokens.extend(("--processing-bits", str(processing_bits)))
     # Saved configurations from releases up to .97 may contain "auto".  That
     # value always emitted bidirectional ESC U 0, so migrate it at the boundary.
     direction = parse_print_direction(
@@ -1314,7 +1318,7 @@ def prepare_job_record(
         context="artifacts",
     )
     record_dir = resolved_record.parent
-    _artifact_path(record_dir, artifacts["pdl"], "artifacts.pdl")
+    pdl_path = _artifact_path(record_dir, artifacts["pdl"], "artifacts.pdl")
     print_ticket_path = _artifact_path(
         record_dir, artifacts["print_ticket"], "artifacts.print_ticket"
     )
@@ -1330,7 +1334,7 @@ def prepare_job_record(
         json.loads(configuration_path.read_text(encoding="utf-8")), "configuration"
     )
     tokens = configuration_to_argument_tokens(configuration)
-    if adapter_tiff_path is not None:
+    if adapter_tiff_path is not None or configuration.get("adjustments", {}).get("processing_bits", 8) == 16:
         layout = _mapping(configuration["layout"], "configuration.layout")
         apply_rip_layout = _bool(
             layout.get("apply_rip_layout", False),
@@ -1354,6 +1358,7 @@ def prepare_job_record(
         "executable": False,
         "status": PDL_BOUNDARY,
         "print_ticket_file": str(print_ticket_path.resolve()),
+        "pdl_file": str(pdl_path.resolve()),
         "copies": copies,
         "curve_mappings": curve_mappings,
     }
@@ -1441,7 +1446,7 @@ def normalize_adapter_tiff(
     source: Path,
     output: Path,
     *,
-    dpi: tuple[float, float] | None = None,
+    dpi: tuple[float, float] | None = None, processing_bits: int = 8, trace=None,
 ) -> Path:
     """Convert one Windows-converter TIFF page to the strict monochrome RIP input."""
 
@@ -1451,20 +1456,42 @@ def normalize_adapter_tiff(
     with Image.open(resolved_source) as image:
         if getattr(image, "n_frames", 1) != 1:
             raise ValueError("Phase 12.2 пока поддерживает только одностраничный TIFF")
-        normalize_adapter_page(image, output, dpi=dpi)
+        normalize_adapter_page(image, output, dpi=dpi, processing_bits=processing_bits, trace=trace)
     return output
 
 
 def normalize_adapter_page(
     image: Image.Image, output: Path, *, dpi: tuple[float, float] | None = None,
+    processing_bits: int = 8, trace=None,
 ) -> Path:
     """Normalize the current decoded frame without an intermediate color TIFF."""
+    source_tags = getattr(image, "tag_v2", {})
+    source_bits = source_tags.get(258, (8,))
+    source_bits = tuple(source_bits) if isinstance(source_bits, (tuple, list)) else (source_bits,)
+    if trace is not None:
+        trace.event(
+            f"Windows raster precision (source={max(source_bits)}, processing={processing_bits})",
+            bits_per_sample=source_bits, mode=image.mode,
+            samples_per_pixel=source_tags.get(277, len(image.getbands())),
+            width=image.width, height=image.height, frame=image.tell(),
+        )
     dpi_value = image.info.get("dpi")
     selected_dpi = dpi or (
         (float(dpi_value[0]), float(dpi_value[1]))
         if isinstance(dpi_value, tuple) and len(dpi_value) == 2
         else (360.0, 360.0)
     )
+    if processing_bits == 16:
+        from xp750_rip.precision import image_to_gray16
+        gray16 = image_to_gray16(image)
+        output.parent.mkdir(parents=True, exist_ok=True)
+        Image.fromarray(gray16).save(
+            output, format="TIFF", compression="tiff_lzw", dpi=selected_dpi,
+            tiffinfo={270: json.dumps({"pytone_rip_upstream_bits": list(source_bits)})},
+        )
+        return output
+    if processing_bits != 8:
+        raise ValueError("processing_bits must be 8 or 16")
     oriented = ImageOps.exif_transpose(image)
     if oriented.mode in {"RGBA", "LA"} or "transparency" in oriented.info:
         rgba = oriented.convert("RGBA")
@@ -1484,15 +1511,17 @@ def write_render_result(
     bridge: Mapping[str, object],
     input_tiff: Path,
     adapter_tiff: Path | None = None,
-    prn_path: Path,
+    prn_path: Path | None,
     manifest_path: Path | None,
     output: Path | None = None,
+    prn_stream: Mapping[str, object] | None = None,
 ) -> dict[str, object]:
     """Record a completed offline PSA TIFF-to-PRN render; never send bytes."""
 
     artifacts: dict[str, object] = {
         "input_tiff": _result_artifact(input_tiff),
-        "prn": _result_artifact(prn_path),
+        "prn": (_result_artifact(prn_path) if prn_path is not None
+                else {"retained": False, **dict(prn_stream or {})}),
     }
     if adapter_tiff is not None:
         artifacts["adapter_tiff"] = (

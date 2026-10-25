@@ -8,7 +8,6 @@ using Windows.ApplicationModel.Background;
 using Windows.Foundation;
 using Windows.Foundation.Metadata;
 using Windows.Graphics.Printing.PrintSupport;
-using Windows.Graphics.Printing.PrintTicket;
 using Windows.Storage;
 
 namespace pyToneRIP.Tasks
@@ -41,7 +40,8 @@ namespace pyToneRIP.Tasks
                     return;
                 }
 
-                session.PrintTicketValidationRequested += OnPrintTicketValidationRequested;
+                // Without a custom validator, Windows validates tickets against the PDC.
+                // Do not replace that check with an unconditional Resolved response.
                 session.PrintDeviceCapabilitiesChanged += OnPrintDeviceCapabilitiesChanged;
                 session.Start();
                 QueuePdcLog("PrintSupportExtension session started");
@@ -67,57 +67,6 @@ namespace pyToneRIP.Tasks
                 "PrintSupportExtension cancellation requested: " + reason);
             DetachSessionHandlers();
             CompleteTaskOnce("background-task cancellation");
-        }
-
-        private static void OnPrintTicketValidationRequested(
-            PrintSupportExtensionSession session,
-            PrintSupportPrintTicketValidationRequestedEventArgs args)
-        {
-            Deferral callbackDeferral = null;
-            var validationStatusWasSet = false;
-            var diagnostic = "PrintTicket validation completed: Resolved";
-            try
-            {
-                callbackDeferral = args.GetDeferral();
-                // pyToneRIP currently does not rewrite the application's ticket
-                // here. Model constraints are already expressed by the installed
-                // per-queue PDC, so a ticket accepted by the Windows print UI is
-                // acknowledged unchanged.
-                args.SetPrintTicketValidationStatus(
-                    WorkflowPrintTicketValidationStatus.Resolved);
-                validationStatusWasSet = true;
-            }
-            catch (Exception error)
-            {
-                diagnostic = "PrintTicket validation FAILED: " + DescribeException(error);
-
-                // If validation failed before a result was returned, explicitly
-                // reject the ticket instead of leaving Windows waiting for an
-                // unfinished callback. Never overwrite a status already supplied.
-                if (!validationStatusWasSet && args != null)
-                {
-                    try
-                    {
-                        args.SetPrintTicketValidationStatus(
-                            WorkflowPrintTicketValidationStatus.Invalid);
-                        diagnostic += "; PrintTicket validation fallback completed: Invalid";
-                    }
-                    catch (Exception fallbackError)
-                    {
-                        diagnostic += "; PrintTicket validation fallback FAILED: "
-                            + DescribeException(fallbackError);
-                    }
-                }
-            }
-            finally
-            {
-                CompleteCallbackDeferralSafely(
-                    callbackDeferral, "PrintTicket validation");
-            }
-            // Windows is waiting for Complete, not just Set...Status. Optional
-            // COM reads and file I/O must not hold the validation deferral.
-            // Detailed ticket diagnostics belong at the ValidateAsync caller.
-            QueuePdcLog(diagnostic);
         }
 
         private async void OnPrintDeviceCapabilitiesChanged(
@@ -221,8 +170,6 @@ namespace pyToneRIP.Tasks
 
             try
             {
-                activeSession.PrintTicketValidationRequested -=
-                    OnPrintTicketValidationRequested;
                 activeSession.PrintDeviceCapabilitiesChanged -=
                     OnPrintDeviceCapabilitiesChanged;
             }

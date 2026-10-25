@@ -108,7 +108,7 @@ class CoupledErrorDiffusion:
             if len(sources[ink]) != height:
                 raise ValueError("Coupled ED sources must have equal heights")
             lut = luts.get(ink.value)
-            if lut is None or len(lut) != 256 or any(not 0 <= value <= UINT16_MAX for value in lut):
+            if lut is None or len(lut) not in (256, 65536) or any(not 0 <= value <= UINT16_MAX for value in lut):
                 raise ValueError(f"invalid QTR LUT for {ink.value}")
         groups = coupled_channel_groups(inks, couple_light_inks=self.couple_light_inks)
         levels = adaptive_level_table(self.drops)
@@ -117,22 +117,37 @@ class CoupledErrorDiffusion:
                  & 0xFFFFFFFF for group in groups]
         empty_runs = [EMPTY_SETTLE_ROWS] * len(groups)
         group_luts = [np.array([luts[ink.value] for ink in group], dtype=np.uint16) for group in groups]
+        common_source = sources[inks[0]]
+        shared_source = all(sources[ink] is common_source for ink in inks)
+
+        def code_band(source, start, end):
+            rows = [source[row] for row in range(start, end)]
+            if any(len(row) != width for row in rows):
+                raise ValueError("Coupled ED source rows must have equal widths")
+            return np.frombuffer(b"".join(rows), dtype=np.uint16 if len(luts[inks[0].value]) == 65536 else np.uint8).reshape(end - start, width)
+
         for start in range(0, height, band_rows):
             if cancel_check:
                 cancel_check()
             end = min(start + band_rows, height)
             packed_by_ink = {}
+            # A grayscale QTR job shares one source across all curves. Decode
+            # this bounded band once, including the lazy polarity conversion.
+            common_codes = code_band(common_source, start, end) if shared_source else None
+            common_zero = common_codes is not None and not np.any(common_codes)
             for number, group in enumerate(groups):
-                codes = []
-                for ink in group:
-                    rows = [sources[ink][row] for row in range(start, end)]
-                    if any(len(row) != width for row in rows):
-                        raise ValueError("Coupled ED source rows must have equal widths")
-                    codes.append(np.frombuffer(b"".join(rows), dtype=np.uint8).reshape(end - start, width))
-                codes = np.stack(codes)
+                codes = np.stack([
+                    common_codes if common_codes is not None else code_band(sources[ink], start, end)
+                    for ink in group
+                ])
                 active = np.zeros(end - start, dtype=np.uint8)
-                for channel in range(len(group)):
-                    active |= qtr_active_rows_kernel(codes[channel], group_luts[number][channel])
+                if common_zero:
+                    # Input zero is blank only when every selected curve also
+                    # requests zero. Settling and error reset still run below.
+                    active.fill(bool(np.any(group_luts[number][:, 0])))
+                else:
+                    for channel in range(len(group)):
+                        active |= qtr_active_rows_kernel(codes[channel], group_luts[number][channel])
                 spans, empty_runs[number] = blank_row_spans(
                     active, empty_runs[number], settle_rows=EMPTY_SETTLE_ROWS,
                 )

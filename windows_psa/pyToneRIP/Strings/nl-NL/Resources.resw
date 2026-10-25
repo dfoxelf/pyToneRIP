@@ -114,6 +114,7 @@
   <data name="Choice.dimensions"><value>afmetingen</value></data>
   <data name="Choice.fit"><value>fit</value></data>
   <data name="Choice.lanczos"><value>lanczos</value></data>
+  <data name="Choice.mitchell"><value>Mitchell–Netravali</value></data>
   <data name="Choice.landscape"><value>Liggend</value></data>
   <data name="Choice.native"><value>Oorspronkelijke grootte</value></data>
   <data name="Choice.nearest"><value>Dichtstbijzijnde buur</value></data>
@@ -209,6 +210,17 @@
   <data name="Code.WindowsPrinterRenamedToConfigurationRemainsLinkedByPrinterUri"><value>Windows-printer hernoemd naar {0}. Configuratie blijft gekoppeld door PrinterUri.</value></data>
   <data name="Code.WindowsWillRemoveTheVirtualQueueAndItsSavedPyToneRIPConfigurationTheSign"><value>Windows verwijdert de virtuele wachtrij {0} en de opgeslagen pyToneRIP-configuratie. De ondertekende {1}-module blijft beschikbaar voor een andere wachtrij.</value></data>
   <data name="Language.Automatic.Text"><value>Automatisch (Windows)</value></data>
+  <data name="DitherHelp.AdaptiveHybrid"><value>Deze compatibiliteitsoptie gebruikt in de huidige RIP Ordered voor variabele druppelgroottes. Kies rechtstreeks Ordered: deze optie biedt momenteel geen afzonderlijk adaptief kwaliteitsvoordeel.</value></data>
+  <data name="DitherHelp.BlueNoiseFM"><value>Gebruikt een drempelmasker met blauwe ruis voor een minder regelmatig rasterpatroon. Geschikt voor foto&#x27;s en vloeiende verlopen in luchten; fijne korreligheid of een resterende maskerstructuur kan zichtbaar blijven.</value></data>
+  <data name="DitherHelp.CoupledED"><value>Stemt puntplaatsing binnen de paren C/M en LC/LM af met foutdiffusie en toonafhankelijke drempelruis. Geschikt voor printers met beide paren; puntoverlap en de balans tussen gekoppelde inkten kunnen veranderen. Controleer een proefdruk met uw tooncurves.</value></data>
+  <data name="DitherHelp.CoupledEDCM"><value>Stemt puntplaatsing binnen het paar C/M af; lichte inkten en andere kanalen blijven onafhankelijk. Geschikt voor vierkleurenprinters of als LC/LM-koppeling ongewenst is; verandert overlap en textuur van C/M zonder koppeling van de lichte inkten.</value></data>
+  <data name="DitherHelp.EntropyZhouFang"><value>Past de drempelmodulatie van Zhou-Fang aan op de toon en lokale beeldstructuur. Geschikt voor gedetailleerde foto&#x27;s met egale vlakken; vraagt extra berekeningen en kan fijne texturen anders weergeven.</value></data>
+  <data name="DitherHelp.Fast"><value>Gebruikt een kleine geordende drempelmatrix met variabele druppelgroottes. Geschikt voor eenvoudige afbeeldingen en proefdrukken; het herhalende patroon kan sterker opvallen in verlopen. De naam garandeert geen snellere verwerking.</value></data>
+  <data name="DitherHelp.Ordered"><value>Plaatst inktdruppels van verschillende grootte met een vaste drempelmatrix. Geschikt voor testkaarten en afbeeldingen; vloeiende toonverlopen kunnen een herhalend rasterpatroon vertonen.</value></data>
+  <data name="DitherHelp.Ostromoukhov"><value>Verdeelt de kwantisatiefout over naburige pixels met toonafhankelijke gewichten. Geschikt voor gedetailleerde foto&#x27;s en toonovergangen; bij sommige tonen kunnen gerichte puntketens ontstaan.</value></data>
+  <data name="DitherHelp.VeryFast"><value>Gebruikt op elke gekozen puntpositie alleen de grootste beschikbare druppel. Geschikt voor grove proefdrukken; de korreligheid is grover en de toongradatie in hoge lichten kan verslechteren. Snellere verwerking is niet gegarandeerd.</value></data>
+  <data name="DitherHelp.X2Y1"><value>Gebruikt foutdiffusie met afwisselende verwerkingsrichting per rij, gewichten voor vier buren en toonafhankelijke ruismodulatie. Geschikt voor luchten, zonsondergangen en brede toonverlopen; fijne korreligheid of gerichte textuur kan zichtbaar blijven.</value></data>
+  <data name="DitherHelp.ZhouFang"><value>Voegt toonafhankelijke modulatie van de kwantisatiedrempel toe aan foutdiffusie om regelmatige structuren in middentonen te verminderen. Geschikt voor verlopen waarin Ostromoukhov patronen geeft; de korreligheid kan duidelijker worden.</value></data>
   <data name="MainPage.About.Label"><value>Info…</value></data>
   <data name="MainPage.Add.Label"><value>Printer toevoegen</value></data>
   <data name="MainPage.Empty.Add.Content"><value>Printer toevoegen</value></data>
@@ -244,6 +256,8 @@
   <data name="Maintenance.nozzle_check.Title"><value>Controle van de spuitopeningen</value></data>
   <data name="Maintenance.test_page.Description"><value>Druk een klein onbewerkt patroon per kanaal af met behulp van de geselecteerde modelinstellingen.</value></data>
   <data name="Maintenance.test_page.Title"><value>Druk de pyToneRIP-testpagina af</value></data>
+  <data name="Processing16Bit.Content"><value>16-bitsverwerking</value></data>
+  <data name="Processing16BitExperimental.Text"><value>(experimentele modus)</value></data>
   <data name="Splash.Continue.Content"><value>Doorgaan</value></data>
   <data name="Splash.Description.Text"><value>Rasterengine voorbereiden en geïnstalleerde printers laden…</value></data>
   <data name="Splash.Title.Text"><value>pyToneRIP wordt gestart</value></data>
@@ -289,4 +303,9 @@
   <data name="DeviceChoice.Model_B" xml:space="preserve"><value>Model B</value></data>
   <data name="DeviceChoice.Code" xml:space="preserve"><value>Code {0}</value></data>
   <data name="DeviceChoice.ThinPaper" xml:space="preserve"><value>{0} (dun papier)</value></data>
+  <data name="ResamplingHelp.nearest"><value>Kopieert de dichtstbijzijnde bronpixel zonder verzachting; geschikt voor pixelkunst en testpatronen waarbij pixelwaarden behouden moeten blijven. Snel, maar kan bij het vergroten van foto’s blokkerige randen en grove overgangen veroorzaken.</value></data>
+  <data name="ResamplingHelp.bilinear"><value>Mengt naburige pixels voor vloeiende overgangen en snelle verwerking. Geschikt wanneer snelheid belangrijk is, maar maakt fijne details en dunne lijnen zachter.</value></data>
+  <data name="ResamplingHelp.bicubic"><value>Gebruikt een kubisch filter voor een balans tussen scherpte en vloeiende toonovergangen in foto’s. Behoudt meer details dan bilineaire interpolatie, maar kan lichte halo’s rond contrastrijke randen veroorzaken.</value></data>
+  <data name="ResamplingHelp.lanczos"><value>Behoudt fijne details goed bij het omrekenen van foto’s naar het ditheringraster, vooral bij verkleinen. Kies dit voor een scherper resultaat, maar let op lichte of donkere halo’s rond contrastrijke randen.</value></data>
+  <data name="ResamplingHelp.mitchell"><value>Combineert details met vloeiende overgangen en geeft minder randhalo’s dan Lanczos. Geschikt voor foto’s waarbij halo’s storen, ten koste van iets zachtere fijne details en tragere verwerking.</value></data>
 </root>
