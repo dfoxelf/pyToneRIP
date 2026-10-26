@@ -36,14 +36,19 @@ namespace pyToneRIP.Services
             int resolutionY,
             string mediaId,
             string inputSourceId,
-            bool? borderless = null)
+            bool? borderless = null,
+            bool allowConfigurationXmlFallback = false)
         {
+            await LogAsync(Diagnostics.PrintSettingsContext.Describe("ManagerDefaults", queueName));
             var printer = Resolve(queueName);
-            if (!printer.CanModifyUserDefaultPrintTicket)
+            var canModify = printer.CanModifyUserDefaultPrintTicket;
+            await LogAsync("User defaults authorization: canModify=" + canModify);
+            if (!canModify)
                 throw new InvalidOperationException(
                     "Windows did not authorize this PSA to modify the queue user default PrintTicket.");
             await LogAsync("User defaults apply begin: queue=" + queueName);
-            var ticket = await ReadInitialUserDefaultPrintTicketAsync(printer, queueName);
+            var ticket = await ReadInitialUserDefaultPrintTicketAsync(
+                printer, queueName, allowConfigurationXmlFallback);
             if (ticket == null)
                 throw new InvalidOperationException("Windows returned no user default PrintTicket.");
             Shared.PrintTicketSynchronization.Apply(
@@ -134,26 +139,77 @@ namespace pyToneRIP.Services
         }
 
         private static async Task<WorkflowPrintTicket> ReadInitialUserDefaultPrintTicketAsync(
-            IppPrintDevice printer, string queueName)
+            IppPrintDevice printer, string queueName, bool allowConfigurationXmlFallback)
         {
-            try { return printer.UserDefaultPrintTicket; }
-            catch (Exception error) when (error.HResult == unchecked((int)0x80004005))
+            Exception initialError;
+            try
             {
-                await LogAsync("Initial UserDefaultPrintTicket read failed: queue=" + queueName
-                    + "; HRESULT=0x80004005; checking effective DEVMODE");
-                var defaults = await QueueHelperClient.ReadLegacyUserDefaultsAsync(queueName);
+                var ticket = printer.UserDefaultPrintTicket;
+                if (ticket != null || !allowConfigurationXmlFallback) return ticket;
+                initialError = new InvalidDataException("Windows returned no user default PrintTicket.");
+            }
+            catch (Exception error) when (
+                allowConfigurationXmlFallback || error.HResult == unchecked((int)0x80004005))
+            {
+                initialError = error;
+            }
+            await LogAsync("Initial UserDefaultPrintTicket read failed: queue=" + queueName
+                + "; HRESULT=0x" + initialError.HResult.ToString("X8")
+                + "; checking effective DEVMODE");
+
+            Shared.LegacyPrinterDefaults defaults = null;
+            Exception legacyError = null;
+            try
+            {
+                defaults = await QueueHelperClient.ReadLegacyUserDefaultsAsync(queueName);
+            }
+            catch (Exception error) { legacyError = error; }
+            if (legacyError == null)
+            {
                 // A fresh queue can have global defaults without per-user data.
-                // Only seed from the effective Windows ticket in that case;
-                // existing user defaults and post-save readback must not be masked.
-                if (defaults.HasUserDevMode || string.IsNullOrWhiteSpace(defaults.PrintTicketXml))
-                    throw;
-                using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(defaults.PrintTicketXml)))
-                using (var input = stream.AsInputStream())
+                // Keep the existing guard: do not mask existing user defaults.
+                if (defaults != null && defaults.HasUserDevMode)
+                    throw new InvalidOperationException(
+                        "Initial PrintTicket recovery cannot replace existing per-user defaults.", initialError);
+                try
                 {
-                    var ticket = new WorkflowPrintTicket(queueName, input);
+                    if (defaults == null || string.IsNullOrWhiteSpace(defaults.PrintTicketXml))
+                        throw new InvalidDataException("Windows returned no effective DEVMODE PrintTicket XML.");
+                    var ticket = CreateTicketFromXml(queueName, defaults.PrintTicketXml);
                     await LogAsync("Initial user ticket loaded from effective DEVMODE: queue=" + queueName);
                     return ticket;
                 }
+                catch (Exception error) { legacyError = error; }
+            }
+            await LogAsync("Initial effective DEVMODE read failed: queue=" + queueName
+                + "; " + legacyError);
+            if (!allowConfigurationXmlFallback)
+                throw new AggregateException("Both initial printer settings reads failed.", initialError, legacyError);
+
+            try
+            {
+                // Only an initial P900 seed. Normal validation, the UserDefault
+                // setter, and direct post-save readback remain authoritative.
+                var xml = await QueueHelperClient.ReadConfigurationTicketXmlAsync(queueName);
+                var ticket = CreateTicketFromXml(queueName, xml);
+                await LogAsync("Initial user ticket loaded from CIM configuration XML: queue=" + queueName
+                    + "; scope=queue; perUserDevMode=absent; xmlCharacters=" + xml.Length);
+                return ticket;
+            }
+            catch (Exception error)
+            {
+                await LogAsync("Initial configuration XML recovery failed: queue=" + queueName + "; " + error);
+                throw new AggregateException("All three initial printer settings reads failed.",
+                    initialError, legacyError, error);
+            }
+        }
+
+        private static WorkflowPrintTicket CreateTicketFromXml(string queueName, string xml)
+        {
+            using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(xml)))
+            using (var input = stream.AsInputStream())
+            {
+                return new WorkflowPrintTicket(queueName, input);
             }
         }
 

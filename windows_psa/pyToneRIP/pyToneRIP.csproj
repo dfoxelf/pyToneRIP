@@ -72,6 +72,7 @@
     <Compile Include="Services\PrintTicketSynchronization.cs" />
     <Compile Include="Services\RipConfigurationProjection.cs" />
     <Compile Include="Services\PrinterSystemDefaultsService.cs" />
+    <Compile Include="Services\PrintSettingsContext.cs" />
     <Compile Include="Services\SettingsApplyNotifications.cs" />
     <Compile Include="Services\PrinterConnectivityService.cs" />
     <Compile Include="Services\PrinterSnmpService.cs" />

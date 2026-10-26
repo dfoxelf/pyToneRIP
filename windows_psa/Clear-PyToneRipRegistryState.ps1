@@ -1,7 +1,8 @@
 [CmdletBinding()]
 param(
     [string[]]$QueueNames = @(),
-    [switch]$CaptureOnly
+    [switch]$CaptureOnly,
+    [string]$UserSid
 )
 $ErrorActionPreference = 'Stop'
 
@@ -94,8 +95,17 @@ function Clear-PyToneRipUserRegistryState {
 }
 
 # Importable for isolated registry tests. The uninstall invokes the fixed
-# current-user root; Windows owns MSIX registration and spooler-owned keys.
+# target-user root; Windows owns MSIX registration and spooler-owned keys.
 if ($MyInvocation.InvocationName -ne '.') {
-    Clear-PyToneRipUserRegistryState -UserRoot ([Microsoft.Win32.Registry]::CurrentUser) `
-        -QueueNames $QueueNames -CaptureOnly:$CaptureOnly
+    if ($UserSid) {
+        $UserSid = [Security.Principal.SecurityIdentifier]::new($UserSid).Value
+        $userRoot = [Microsoft.Win32.Registry]::Users.OpenSubKey($UserSid, -not $CaptureOnly)
+        if ($null -eq $userRoot) { throw "The target user's registry hive is not loaded: $UserSid" }
+        try {
+            Clear-PyToneRipUserRegistryState -UserRoot $userRoot -QueueNames $QueueNames -CaptureOnly:$CaptureOnly
+        } finally { $userRoot.Dispose() }
+    } else {
+        Clear-PyToneRipUserRegistryState -UserRoot ([Microsoft.Win32.Registry]::CurrentUser) `
+            -QueueNames $QueueNames -CaptureOnly:$CaptureOnly
+    }
 }

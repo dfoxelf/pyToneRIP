@@ -10,6 +10,12 @@
 #ifndef InstallerLicense
   #error InstallerLicense must be supplied by Build-InnoSetup.ps1
 #endif
+#ifndef InstallerWizardImage
+  #error InstallerWizardImage must be supplied by Build-InnoSetup.ps1
+#endif
+#ifndef InstallerWizardSmallImage
+  #error InstallerWizardSmallImage must be supplied by Build-InnoSetup.ps1
+#endif
 
 [Setup]
 AppId={{C6BD7D38-8D0C-4E7E-8DB2-AF66D4356387}
@@ -26,6 +32,10 @@ ArchitecturesAllowed=x64os
 ArchitecturesInstallIn64BitMode=x64os
 MinVersion=10.0.26100
 WizardStyle=modern
+DisableWelcomePage=no
+WizardImageFile={#InstallerWizardImage}
+WizardSmallImageFile={#InstallerWizardSmallImage}
+WizardImageStretch=yes
 Compression=lzma2
 SolidCompression=yes
 OutputBaseFilename=pyToneRIP-Setup-{#PackageVersion}-Beta
@@ -118,10 +128,15 @@ Source: "{#InstallerLicense}"; DestDir: "{app}"; DestName: "LICENSE.txt"; Flags:
 ; Remove only the legacy installer shortcut when it still exists.
 [InstallDelete]
 Type: files; Name: "{group}\pyToneRIP.lnk"; Check: FileExists(ExpandConstant('{group}\pyToneRIP.lnk'))
+Type: files; Name: "{group}\{cm:UninstallProgram,pyToneRIP}.lnk"; Check: not WizardNoIcons
 
 ; Optional desktop and Quick Launch shortcuts use the stable packaged AUMID.
+; Keep the uninstaller directly in Programs: the installed nested shortcut
+; was absent from the Start app catalog, while a fresh root shortcut appeared.
+; It has its own identity, separate from the packaged application. Keep the
+; localized label and honor the installer's choice to omit Start shortcuts.
 [Icons]
-Name: "{group}\{cm:UninstallProgram,pyToneRIP}"; Filename: "{uninstallexe}"; IconFilename: "{app}\pyToneRIP.ico"
+Name: "{autoprograms}\{cm:UninstallProgram,pyToneRIP}"; Filename: "{uninstallexe}"; IconFilename: "{app}\pyToneRIP.ico"; AppUserModelID: "pyToneRIP.Setup.Uninstall"; Check: not WizardNoIcons
 Name: "{autodesktop}\pyToneRIP"; Filename: "{win}\explorer.exe"; Parameters: "shell:AppsFolder\pyToneRIP.Manager_qg4mjaqw0qctt!App"; IconFilename: "{app}\pyToneRIP.ico"; Tasks: desktopicon
 Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\pyToneRIP"; Filename: "{win}\explorer.exe"; Parameters: "shell:AppsFolder\pyToneRIP.Manager_qg4mjaqw0qctt!App"; IconFilename: "{app}\pyToneRIP.ico"; Tasks: quicklaunchicon
 
@@ -193,7 +208,8 @@ begin
     '-ExecutionPolicy Bypass -File "' +
     ExpandConstant('{app}\Payload\Uninstall-pyToneRIP.ps1') + '" -LogPath "' +
     ExpandConstant('{app}\Payload\uninstall-cleanup.log') + '"';
-  if not ShellExec('runas', ExpandConstant('{sys}\WindowsPowerShell\v1.0\powershell.exe'),
+  { The script records this user's SID before elevating its worker through UAC. }
+  if not Exec(ExpandConstant('{sys}\WindowsPowerShell\v1.0\powershell.exe'),
     Parameters, ExpandConstant('{app}'), SW_HIDE, ewWaitUntilTerminated,
     ResultCode) or (ResultCode <> 0) then
   begin

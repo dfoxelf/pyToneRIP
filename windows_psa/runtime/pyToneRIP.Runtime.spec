@@ -10,9 +10,17 @@ runtime_dir = Path(SPEC).resolve().parent
 project_root = runtime_dir.parents[1]
 source_root = project_root / "src"
 
-# Omit the optional AVIF and JPEG XL codecs. Standard TIFF compression codecs
-# remain available; TIFF pages compressed with JPEG XL are not supported.
-excluded_codecs = {"imagecodecs._avif", "imagecodecs._jpegxl"}
+# Omit optional formats outside the supported input path. JPEG XS, Jetraw
+# and HEIF also require external libraries not shipped with imagecodecs.
+# Standard TIFF compression codecs remain available; TIFF pages using the
+# excluded codecs are not supported.
+excluded_codecs = {
+    "imagecodecs._avif",
+    "imagecodecs._heif",
+    "imagecodecs._jetraw",
+    "imagecodecs._jpegxl",
+    "imagecodecs._jpegxs",
+}
 
 
 def license_file(distribution_name, suffix):
@@ -52,7 +60,14 @@ a = Analysis(
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
-    excludes=["scipy", "pytest"] + sorted(excluded_codecs),
+    # tifffile's optional file dialogs and Pillow's Tk bridge are unused by
+    # the RIP. Exclude both Python wrappers and native bridges so their hooks
+    # cannot collect the Tcl/Tk DLLs or runtime initialization code.
+    # Pillow has its own AVIF decoder, independent of imagecodecs._avif;
+    # exclude both that plugin and its native module as well.
+    excludes=["scipy", "pytest", "tkinter", "_tkinter", "PIL.ImageTk", "PIL._imagingtk",
+              "PIL.AvifImagePlugin", "PIL._avif"]
+    + sorted(excluded_codecs),
     noarchive=False,
     optimize=1,
 )

@@ -84,6 +84,8 @@ function Get-TechnicalContext([string]$line) {
         @{ Pattern = 'PrintTicket validation threw'; Text = 'PrintTicket validation request threw' },
         @{ Pattern = 'PrintTicket validation completed:\s*Resolved'; Text = 'PrintTicket callback completed: Resolved' },
         @{ Pattern = 'User defaults|DEVMODE|SetUserDefaults|VerifyUserDefaults'; Text = 'Windows printer defaults / DEVMODE' },
+        @{ Pattern = 'Print settings context'; Text = 'Actual print settings process context' },
+        @{ Pattern = 'Initial.*CIM|configuration XML recovery'; Text = 'CIM configuration XML recovery' },
         @{ Pattern = 'Print settings session'; Text = 'Print settings activation context' },
         @{ Pattern = 'WM_DEVMODECHANGE'; Text = 'Printer default settings notification' },
         @{ Pattern = 'VirtualPrinterDataAvailable|VirtualPrinterBackgroundTask'; Text = 'Virtual printer workflow' },
@@ -99,7 +101,7 @@ function Get-TechnicalContext([string]$line) {
         }
     }
     foreach ($field in [regex]::Matches($line,
-        '(?i)\b(page|readback|orientation|raster|status|model|stage|dpi|resolution|media|input|launch|delivered|validated|elapsedMs|refreshPolicy)\s*=\s*([A-Za-z0-9_.:+-]{1,96})(?=[;\s]|$)')) {
+        '(?i)\b(page|readback|orientation|raster|status|model|stage|dpi|resolution|media|input|launch|delivered|validated|elapsedMs|refreshPolicy|role|queueHash|userHash|processId|processBits|sessionId|elevated|integrity|appContainer|apartment|apartmentQualifier|apartmentStatus|canModify|scope|perUserDevMode|xmlCharacters)\s*=\s*([A-Za-z0-9_.:+-]{1,96})(?=[;\s]|$)')) {
         $labels.Add($field.Groups[1].Value + '=' + $field.Groups[2].Value)
     }
     $cancellation = [regex]::Match($line,
@@ -423,6 +425,12 @@ function Format-ProbeError($failure) {
 function Get-PrintQueueProbe([string]$queueName) {
     $results = [ordered]@{}
     $results['context'] = 'Read-only Windows PowerShell probe; not the PSA package identity. CanModify=false here does not prove that the Manager lacks permission. XML is queue configuration, never job/document data.'
+    $queueHash = [Security.Cryptography.SHA256]::Create()
+    try {
+        $digest = [BitConverter]::ToString($queueHash.ComputeHash([Text.Encoding]::UTF8.GetBytes($queueName.ToUpperInvariant()))).Replace('-','')
+        $results['context'] += '; role=CollectorProbe; queueHash=' + $digest + '; processId=' + $PID +
+            '; processBits=' + ([IntPtr]::Size * 8) + '; apartment=' + [Threading.Thread]::CurrentThread.GetApartmentState()
+    } finally { $queueHash.Dispose() }
     $probeClock = [Diagnostics.Stopwatch]::StartNew()
     function Save-ProbeStage([string]$stage) {
         $results['trace.txt'] += (Get-Date).ToString('o') + '; elapsedMs=' + $probeClock.ElapsedMilliseconds + '; ' + $stage + [Environment]::NewLine
@@ -465,6 +473,93 @@ public static class SupportReportDevModeProbe {
     [DllImport("winspool.drv",EntryPoint="OpenPrinterW",CharSet=CharSet.Unicode,SetLastError=true)]
     static extern bool OpenServer(string name,out IntPtr printer,ref ServerDefaults defaults);
     [DllImport("winspool.drv")] static extern bool ClosePrinter(IntPtr printer);
+    [DllImport("prntvpt.dll",CharSet=CharSet.Unicode)]
+    static extern int PTOpenProviderEx(string name,uint maximum,uint preferred,out IntPtr provider,out uint used);
+    [DllImport("prntvpt.dll")] static extern int PTCloseProvider(IntPtr provider);
+    [DllImport("prntvpt.dll")]
+    static extern int PTConvertDevModeToPrintTicket(IntPtr provider,uint length,IntPtr mode,int scope,System.Runtime.InteropServices.ComTypes.IStream output);
+    [DllImport("prntvpt.dll")]
+    static extern int PTGetPrintCapabilities(IntPtr provider,IntPtr ticket,System.Runtime.InteropServices.ComTypes.IStream output,out IntPtr error);
+    [DllImport("prntvpt.dll")]
+    static extern int PTGetPrintDeviceCapabilities(IntPtr provider,IntPtr ticket,System.Runtime.InteropServices.ComTypes.IStream output,out IntPtr error);
+    [DllImport("prntvpt.dll",CharSet=CharSet.Unicode)]
+    static extern int PTGetPrintDeviceResources(IntPtr provider,string locale,IntPtr ticket,System.Runtime.InteropServices.ComTypes.IStream output,out IntPtr error);
+    [DllImport("ole32.dll")]
+    static extern int CreateStreamOnHGlobal(IntPtr memory,[MarshalAs(UnmanagedType.Bool)]bool release,out System.Runtime.InteropServices.ComTypes.IStream stream);
+
+    delegate int ProviderCall(System.Runtime.InteropServices.ComTypes.IStream output,out IntPtr error);
+    static string ReadProviderStream(System.Runtime.InteropServices.ComTypes.IStream stream) {
+        System.Runtime.InteropServices.ComTypes.STATSTG info;stream.Stat(out info,1);
+        if(info.cbSize<0 || info.cbSize>16*1024*1024) throw new InvalidOperationException("Provider XML exceeds diagnostic limit");
+        byte[] bytes=new byte[(int)info.cbSize];stream.Seek(0,0,IntPtr.Zero);
+        IntPtr count=Marshal.AllocHGlobal(4);
+        try {
+            Marshal.WriteInt32(count,0);
+            stream.Read(bytes,bytes.Length,count);
+            if(Marshal.ReadInt32(count)!=bytes.Length) throw new InvalidOperationException("Provider XML stream was truncated");
+        } finally {Marshal.FreeHGlobal(count);}
+        using(var memory=new System.IO.MemoryStream(bytes))
+        using(var reader=new System.IO.StreamReader(memory,System.Text.Encoding.UTF8,true)) return reader.ReadToEnd();
+    }
+    static void CaptureProviderCall(string name,ProviderCall call,System.Collections.Generic.Dictionary<string,string> result,System.Text.StringBuilder status) {
+        System.Runtime.InteropServices.ComTypes.IStream output=null;IntPtr error=IntPtr.Zero;
+        var clock=System.Diagnostics.Stopwatch.StartNew();Trace(name+" begin");
+        try {
+            Marshal.ThrowExceptionForHR(CreateStreamOnHGlobal(IntPtr.Zero,true,out output));
+            int hr=call(output,out error);
+            string record=name+"; HRESULT=0x"+hr.ToString("X8")+"; elapsedMs="+clock.ElapsedMilliseconds;
+            Trace(record);status.AppendLine(record);
+            if(error!=IntPtr.Zero) status.AppendLine(name+"; providerMessage="+Marshal.PtrToStringBSTR(error));
+            if(hr>=0) result["native-"+name+".xml"]=ReadProviderStream(output);
+        } catch(Exception failure) {
+            string record=name+"; exception="+failure.GetType().FullName+"; HRESULT=0x"+failure.HResult.ToString("X8");
+            Trace(record);status.AppendLine(record);status.AppendLine(failure.Message);
+        } finally {
+            if(error!=IntPtr.Zero)Marshal.FreeBSTR(error);
+            if(output!=null)Marshal.ReleaseComObject(output);
+        }
+    }
+    public static System.Collections.Generic.Dictionary<string,string> Provider(string name,byte[] mode) {
+        var result=new System.Collections.Generic.Dictionary<string,string>();
+        var status=new System.Text.StringBuilder();IntPtr provider=IntPtr.Zero;
+        status.AppendLine("Direct read-only PrintTicket provider calls, same thread; null base ticket for capability requests. HRESULT is authoritative; no GetLastError inference.");
+        try {
+            Trace("PTOpenProviderEx begin");var clock=System.Diagnostics.Stopwatch.StartNew();uint used;
+            int hr=PTOpenProviderEx(name,1,1,out provider,out used);
+            string record="PTOpenProviderEx; HRESULT=0x"+hr.ToString("X8")+"; usedVersion="+used+"; elapsedMs="+clock.ElapsedMilliseconds;
+            Trace(record);status.AppendLine(record);
+            if(hr<0) {provider=IntPtr.Zero;return result;}
+            if(provider==IntPtr.Zero)throw new InvalidOperationException("Provider returned a null handle");
+            if(mode!=null) {
+                IntPtr data=Marshal.AllocHGlobal(mode.Length);
+                try {
+                    Marshal.Copy(mode,0,data,mode.Length);
+                    CaptureProviderCall("PTConvertDevModeToPrintTicket",delegate(System.Runtime.InteropServices.ComTypes.IStream output,out IntPtr error) {
+                        error=IntPtr.Zero;return PTConvertDevModeToPrintTicket(provider,(uint)mode.Length,data,2,output);
+                    },result,status);
+                } finally {Marshal.FreeHGlobal(data);}
+            }
+            CaptureProviderCall("PTGetPrintDeviceCapabilities",delegate(System.Runtime.InteropServices.ComTypes.IStream output,out IntPtr error) {
+                return PTGetPrintDeviceCapabilities(provider,IntPtr.Zero,output,out error);
+            },result,status);
+            string locale=System.Globalization.CultureInfo.CurrentUICulture.Name;status.AppendLine("PDR locale="+locale);
+            CaptureProviderCall("PTGetPrintDeviceResources",delegate(System.Runtime.InteropServices.ComTypes.IStream output,out IntPtr error) {
+                return PTGetPrintDeviceResources(provider,locale,IntPtr.Zero,output,out error);
+            },result,status);
+            CaptureProviderCall("PTGetPrintCapabilities",delegate(System.Runtime.InteropServices.ComTypes.IStream output,out IntPtr error) {
+                return PTGetPrintCapabilities(provider,IntPtr.Zero,output,out error);
+            },result,status);
+        } catch(Exception failure) {
+            status.AppendLine(failure.GetType().FullName+"; HRESULT=0x"+failure.HResult.ToString("X8")+"; "+failure.Message);
+        } finally {
+            if(provider!=IntPtr.Zero) {
+                int hr=PTCloseProvider(provider);Trace("PTCloseProvider; HRESULT=0x"+hr.ToString("X8"));
+                status.AppendLine("PTCloseProvider; HRESULT=0x"+hr.ToString("X8"));
+            }
+            result["native-provider.txt"]=status.ToString();
+        }
+        return result;
+    }
     [StructLayout(LayoutKind.Sequential)] struct Size { public int W,H; }
     [StructLayout(LayoutKind.Sequential)] struct Rect { public int L,T,R,B; }
     [StructLayout(LayoutKind.Sequential)] struct FormInfo {
@@ -566,6 +661,18 @@ public static class SupportReportDevModeProbe {
     $printingReady = $false
     try { Add-Type -AssemblyName System.Printing, ReachFramework; $printingReady = $true }
     catch { $results['system-printing-load.error.txt'] = Format-ProbeError $_ }
+    $nativeProviderProbed = $false
+    function Save-NativeProviderResult([byte[]]$mode) {
+        Save-ProbeStage 'Direct PrintTicket provider begin'
+        try {
+            $native = [SupportReportDevModeProbe]::Provider($queueName, $mode)
+            foreach ($item in $native.GetEnumerator()) {
+                $results[$item.Key] = if ($item.Key.EndsWith('.xml')) { $item.Value }
+                    else { Protect-DiagnosticText $item.Value }
+            }
+        } catch { $results['native-provider.error.txt'] = Format-ProbeError $_ }
+        Save-ProbeStage 'Direct PrintTicket provider completed'
+    }
     # Keep global, per-user and application defaults independent: one broken
     # provider path must not prevent collecting the remaining sources.
     foreach ($source in @('global', 'user', 'effective')) {
@@ -586,6 +693,11 @@ public static class SupportReportDevModeProbe {
                 '; specVersion=' + [BitConverter]::ToUInt16($data,64) + '; driverVersion=' +
                 [BitConverter]::ToUInt16($data,66) + '; sha256=' + $digest
             $results["$source-devmode.base64.txt"] = [Convert]::ToBase64String($data)
+            if (-not $nativeProviderProbed -and $null -ne [SupportReportDevModeProbe].GetMethod('Provider')) {
+                $nativeProviderProbed = $true
+                $results['native-provider-devmode-source.txt'] = $source
+                Save-NativeProviderResult $data
+            }
             Save-ProbeStage "$source DEVMODE captured; ConvertDevModeToPrintTicket begin"
             if ($printingReady) {
                 $converter = [System.Printing.Interop.PrintTicketConverter]::new($queueName,1)
@@ -601,6 +713,10 @@ public static class SupportReportDevModeProbe {
             }
         } catch { $results["$source-devmode.error.txt"] = Format-ProbeError $_ }
         Save-ProbeStage "$source DEVMODE completed"
+    }
+    if (-not $nativeProviderProbed -and $null -ne [SupportReportDevModeProbe].GetMethod('Provider')) {
+        $results['native-provider-devmode-source.txt'] = 'No DEVMODE was readable; conversion was not attempted.'
+        Save-NativeProviderResult $null
     }
     if ($printingReady) {
         $server = $null; $queue = $null
@@ -767,6 +883,13 @@ function Get-PrintSecuritySnapshot {
             $principal = [System.Security.Principal.WindowsPrincipal]::new($identity)
             $lines.Add('Collector token administrator=' + $principal.IsInRole([System.Security.Principal.WindowsBuiltInRole]::Administrator))
             $lines.Add('Collector token system=' + $identity.IsSystem + '; impersonation=' + $identity.ImpersonationLevel)
+            if ($null -ne $identity.User) {
+                $bytes = New-Object byte[] $identity.User.BinaryLength
+                $identity.User.GetBinaryForm($bytes, 0)
+                $hash = [Security.Cryptography.SHA256]::Create()
+                try { $lines.Add('Collector userHash=' + [BitConverter]::ToString($hash.ComputeHash($bytes)).Replace('-','')) }
+                finally { $hash.Dispose() }
+            }
         } finally { $identity.Dispose() }
     } catch { $lines.Add((Format-ProbeError $_)) }
     try {
@@ -880,10 +1003,26 @@ function Get-PrintActivationEventDetails($record) {
     if ($isActivation -and $document.DocumentElement.InnerText -notmatch '(?i)pyToneRIP|PrintSupport|PrintWorkflow') { return $null }
     $lines = [Collections.Generic.List[string]]::new()
     $lines.Add(('time={0}; channel={1}; provider={2}; event_id={3}' -f $record.TimeCreated.ToString('o'),$channel,$provider,$id))
+    $correlation = $document.SelectSingleNode('/*/*[local-name()="System"]/*[local-name()="Correlation"]')
+    if ($null -ne $correlation) {
+        foreach ($attribute in @('ActivityID','RelatedActivityID')) {
+            $value = $correlation.GetAttribute($attribute)
+            $guid = [guid]::Empty
+            if ([guid]::TryParse($value, [ref]$guid)) { $lines.Add($attribute + '=' + $guid.ToString('D')) }
+        }
+    }
     foreach ($node in @($document.SelectNodes('//*[local-name()="EventData"]/*|//*[local-name()="UserData"]//*[not(*)]'))) {
         $name = if ($node.HasAttribute('Name')) { $node.GetAttribute('Name') } else { $node.LocalName }
         # Driver-install and service-failure fields have no job contents.
         # For activation export only technical fields, never command lines.
+        if ($isActivation -and $name -match '(?i)^(ImageName|ApplicationName|ApplicationNames)$') {
+            # Retain executable basenames for attribution, never full paths
+            # or arbitrary command-line text from activation events.
+            $executables = @([regex]::Matches($node.InnerText, '(?i)(?<![A-Za-z0-9_.-])([A-Za-z0-9_.-]+\.exe)\b') |
+                ForEach-Object { $_.Groups[1].Value } | Select-Object -Unique)
+            if ($executables.Count) { $lines.Add($name + '=' + ($executables -join ',')) }
+            continue
+        }
         if ($isActivation -and $name -notmatch '(?i)^(Package.*|AppUserModelId|ApplicationId|Contract.*|EntryPoint|Task.*|Error.*|HResult|Status.*|Result.*|ProcessId|Service.*|ServerName|Phase)$') { continue }
         $value = Protect-DiagnosticText $node.InnerText
         $value = [regex]::Replace($value, '\bS-1-\d+(?:-\d+)+\b', '<sid>')
@@ -1188,6 +1327,7 @@ try {
         $writer.WriteLine('Document contents and full raw log files are not collected. Original Windows event messages are excluded; their structured technical fields are in windows-events.txt.')
         $writer.WriteLine('printing/ contains original queue-level PrintTicket/PrintCapabilities XML, which may include vendor private DEVMODE and printer identifiers, plus driver/software versions and hashes. No print contents or document tickets are read. USB counters include only selected numeric transport fields. Provider probes run read-only outside the PSA package; compare their results with the packaged Manager error logs.')
         $writer.WriteLine('Provider diagnostics include exact queue DEVMODE in base64, per-stage timing, native DocumentProperties results/last-error values and EnumForms metadata. Last-error is only meaningful when the API documents it for the returned result. Partial results survive a provider timeout (45 seconds for pyToneRIP, 15 seconds for other queues).')
+        $writer.WriteLine('native-provider.txt separates provider opening, raw DEVMODE conversion and PDC/PDR/PrintCapabilities requests, retaining original HRESULTs and available provider explanations. Actual UI/helper token userHash, session, elevation, integrity, AppContainer and COM apartment are recorded in application timelines; compare with the collector context rather than assuming identical permissions. Hashes correlate contexts, not user names. A successful call or a security policy alone does not establish the cause of E_FAIL.')
         $writer.WriteLine('printing/psa-registration.txt lists current-user package/contract registration and log presence. Installed manifests and PDC/PDR assets for queue models are copied byte-for-byte with SHA-256. Presence does not prove successful activation. windows-print-activation-events.txt retains selected sanitized EventData, including PrintService 215/370 and Service Control Manager failures; paths, document filenames, endpoints and SIDs are masked.')
         $writer.WriteLine('Created: ' + (Get-Date).ToString('O'))
         $writer.WriteLine('Windows version: ' + [Environment]::OSVersion.Version.ToString())

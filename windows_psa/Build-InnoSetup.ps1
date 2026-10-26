@@ -113,12 +113,38 @@ try {
     } finally { $writer.Dispose() }
 } finally { $stream.Dispose() }
 
+# Use BMP inputs for compatibility with the supported Inno Setup 6 compiler.
+# Keep PNG source art in the repository; wizard bitmaps are build outputs.
+$wizardImagePath = Join-Path $buildDir 'WizardImage.bmp'
+$wizardSmallImagePath = Join-Path $buildDir 'WizardSmallImage.bmp'
+$wizardImages = @(
+    @{
+        Source = Join-Path $scriptRoot 'installer\Assets\WizardImage.png'
+        Destination = $wizardImagePath
+    },
+    @{
+        Source = Join-Path $scriptRoot 'pyToneRIP\Assets\Square150x150Logo.png'
+        Destination = $wizardSmallImagePath
+    }
+)
+foreach ($item in $wizardImages) {
+    if (-not (Test-Path -LiteralPath $item.Source -PathType Leaf)) {
+        throw "Installer wizard artwork is missing: $($item.Source)"
+    }
+    $bitmap = [System.Drawing.Bitmap]::FromFile($item.Source)
+    try {
+        $bitmap.Save($item.Destination, [System.Drawing.Imaging.ImageFormat]::Bmp)
+    } finally { $bitmap.Dispose() }
+}
+
 $issPath = Join-Path $scriptRoot 'installer\pyToneRIP.iss'
 $arguments = @(
     "/DPackageVersion=$Version",
     "/DModuleSetDir=$moduleRoot",
     "/DInstallerIcon=$iconPath",
     "/DInstallerLicense=$licensePath",
+    "/DInstallerWizardImage=$wizardImagePath",
+    "/DInstallerWizardSmallImage=$wizardSmallImagePath",
     "/O$artifactRoot",
     $issPath
 )

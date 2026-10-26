@@ -1,16 +1,81 @@
 [CmdletBinding()]
-param([string]$LogPath)
+param([string]$LogPath, [string]$UserSid, [switch]$ElevatedWorker, [string]$QueueNamesBase64)
 
-# Run from an elevated PowerShell window. A clean uninstall intentionally
-# deletes retained jobs from pyToneRIP virtual queues before removing the MSIX.
+# Capture the initiating user before UAC can switch to another administrator.
+# Inno must invoke this script without elevation; only the worker elevates.
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 if (-not $LogPath) { $LogPath = Join-Path $PSScriptRoot 'uninstall-cleanup.log' }
+$identity = [Security.Principal.WindowsIdentity]::GetCurrent()
+if (-not $UserSid) { $UserSid = $identity.User.Value }
+$UserSid = [Security.Principal.SecurityIdentifier]::new($UserSid).Value
+$userQueueNames = @()
+if (-not $ElevatedWorker) {
+    if ($UserSid -ne $identity.User.Value) { throw 'Start uninstall in the account whose installation is being removed.' }
+    # The user-specific API must run BEFORE UAC changes the caller's identity.
+    # Find by package ownership, including renamed queues; never delete another
+    # profile's queues through the machine-wide Remove-Printer command.
+    $families = @(Get-AppxPackage -ErrorAction Stop | Where-Object {
+        $_.Name -eq 'pyToneRIP.PSA' -or $_.Name -eq 'pyToneRIP.Manager' -or $_.Name -like 'pyToneRIP.Printer.*'
+    } | ForEach-Object PackageFamilyName | Select-Object -Unique)
+    if ($families.Count) {
+        $manager = [Windows.Devices.Printers.VirtualPrinterManager, Windows.Devices.Printers, ContentType = WindowsRuntime]
+        Add-Type -AssemblyName System.Runtime.WindowsRuntime
+        $asTask = [System.WindowsRuntimeSystemExtensions].GetMethods() | Where-Object {
+            $_.Name -eq 'AsTask' -and $_.IsGenericMethod -and $_.GetParameters().Count -eq 1 -and
+            $_.GetParameters()[0].ParameterType.Name -eq 'IAsyncOperation`1'
+        } | Select-Object -First 1
+        foreach ($family in $families) {
+            $names = @($manager::FindAllVirtualPrinters($family))
+            $userQueueNames += $names
+            foreach ($name in $names) {
+                $operation = $manager::RemoveVirtualPrinterAsync($name)
+                $task = $asTask.MakeGenericMethod([bool]).Invoke($null, @($operation))
+                if (-not $task.Wait(30000)) { throw "Timed out removing the user's virtual printer: $name" }
+                $removed = $task.GetAwaiter().GetResult()
+                if (-not $removed -and $name -in @($manager::FindAllVirtualPrinters($family))) {
+                    throw "Windows did not remove the user's virtual printer: $name"
+                }
+            }
+            if (@($manager::FindAllVirtualPrinters($family)).Count) {
+                throw "Virtual printers remain for the user's package: $family"
+            }
+        }
+    }
+    $QueueNamesBase64 = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes(
+        (ConvertTo-Json -InputObject @($userQueueNames) -Compress)))
+} elseif ($QueueNamesBase64) {
+    $userQueueNames = @(ConvertFrom-Json ([Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($QueueNamesBase64))))
+}
+$principal = [Security.Principal.WindowsPrincipal]::new($identity)
+if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+    $windowsRoot = [Environment]::GetFolderPath([Environment+SpecialFolder]::Windows)
+    $systemDirectory = if ([Environment]::Is64BitOperatingSystem -and -not [Environment]::Is64BitProcess) {
+        'Sysnative'
+    } else { 'System32' }
+    $start = [Diagnostics.ProcessStartInfo]::new()
+    $start.FileName = Join-Path $windowsRoot ($systemDirectory + '\WindowsPowerShell\v1.0\powershell.exe')
+    $start.UseShellExecute = $true
+    $start.Verb = 'runas'
+    $start.WindowStyle = [Diagnostics.ProcessWindowStyle]::Hidden
+    $start.Arguments = '-NoLogo -NoProfile -NonInteractive -WindowStyle Hidden -ExecutionPolicy Bypass -File "' +
+        $PSCommandPath + '" -ElevatedWorker -UserSid "' + $UserSid + '" -QueueNamesBase64 "' +
+        $QueueNamesBase64 + '" -LogPath "' + $LogPath + '"'
+    $worker = [Diagnostics.Process]::Start($start)
+    try {
+        $worker.WaitForExit()
+        exit $worker.ExitCode
+    } finally { $worker.Dispose() }
+}
 Start-Transcript -LiteralPath $LogPath -Force | Out-Null
 $uninstallSucceeded = $false
+$targetUserRoot = $null
 try {
 
 function Get-PyToneRipQueue {
+    # Shared queues are owned by Windows package registration. Do not purge
+    # another user's jobs or manually delete their endpoints.
+    if ($sharedInstallation) { return }
     @(Get-Printer -ErrorAction Stop | Where-Object {
         $_.PortName -match '(?i)^(pytone-rip:|pyToneRIP\.(Manager|PSA|Printer\.[^_]+)_)' -or
         ($_.Name -like 'pyToneRIP:*' -and
@@ -18,11 +83,16 @@ function Get-PyToneRipQueue {
     })
 }
 
-$identity = [Security.Principal.WindowsIdentity]::GetCurrent()
-$principal = [Security.Principal.WindowsPrincipal]::new($identity)
-if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
-    throw 'Run this script from PowerShell opened with Run as administrator.'
-}
+Write-Host "Uninstall target SID: $UserSid; worker SID: $($identity.User.Value)"
+$allPackages = @(Get-AppxPackage -AllUsers -ErrorAction Stop | Where-Object {
+    $_.Name -eq 'pyToneRIP.PSA' -or $_.Name -eq 'pyToneRIP.Manager' -or $_.Name -like 'pyToneRIP.Printer.*'
+})
+$sharedInstallation = @($allPackages | ForEach-Object { $_.PackageUserInformation } | Where-Object {
+    $_.InstallState -eq 'Installed' -and $_.UserSecurityId.ToString() -ne $UserSid
+}).Count -gt 0
+# Open only the initiating user's loaded hive; never fall back to the worker's HKCU.
+$targetUserRoot = [Microsoft.Win32.Registry]::Users.OpenSubKey($UserSid, $true)
+if ($null -eq $targetUserRoot) { throw "The uninstall target's registry hive is not loaded: $UserSid" }
 $printStateCleanup = Join-Path $PSScriptRoot 'Clear-PyToneRipPrintState.ps1'
 $registryStateCleanup = Join-Path $PSScriptRoot 'Clear-PyToneRipRegistryState.ps1'
 if (-not (Test-Path -LiteralPath $printStateCleanup -PathType Leaf)) {
@@ -34,7 +104,7 @@ if (-not (Test-Path -LiteralPath $registryStateCleanup -PathType Leaf)) {
 $formPlanPath = Join-Path $PSScriptRoot 'pyToneRIP-print-form-cleanup.json'
 
 $queues = @(Get-PyToneRipQueue)
-$ownedQueueNames = @($queues | ForEach-Object Name)
+$ownedQueueNames = @(@($queues | ForEach-Object Name) + $userQueueNames | Select-Object -Unique)
 foreach ($queue in $queues) {
     Write-Host "Purging pyToneRIP jobs: $($queue.Name)"
     @(Get-PrintJob -PrinterName $queue.Name -ErrorAction SilentlyContinue) |
@@ -90,7 +160,7 @@ if ($remainingJobs.Count -gt 0) {
         [TimeSpan]::FromSeconds(15))
 }
 
-$packages = @(Get-AppxPackage -ErrorAction SilentlyContinue | Where-Object {
+$packages = @(Get-AppxPackage -User $UserSid -ErrorAction Stop | Where-Object {
     $_.Name -eq 'pyToneRIP.PSA' -or
     $_.Name -eq 'pyToneRIP.Manager' -or
     $_.Name -like 'pyToneRIP.Printer.*'
@@ -127,12 +197,15 @@ if ($formCleanupPlan.Count) {
 }
 foreach ($package in $packages) {
     Write-Host "Removing package: $($package.PackageFullName)"
-    Remove-AppxPackage -Package $package.PackageFullName
+    Remove-AppxPackage -Package $package.PackageFullName -User $UserSid -ErrorAction Stop
 }
+if (@(Get-AppxPackage -User $UserSid -ErrorAction Stop | Where-Object {
+    $_.Name -eq 'pyToneRIP.PSA' -or $_.Name -eq 'pyToneRIP.Manager' -or $_.Name -like 'pyToneRIP.Printer.*'
+}).Count) { throw "pyToneRIP is still registered for the uninstall target: $UserSid" }
 
 $startMenuShortcut = Join-Path ([Environment]::GetFolderPath(
     [Environment+SpecialFolder]::CommonPrograms)) 'pyToneRIP Manager.lnk'
-if (Test-Path -LiteralPath $startMenuShortcut -PathType Leaf) {
+if (-not $sharedInstallation -and (Test-Path -LiteralPath $startMenuShortcut -PathType Leaf)) {
     Remove-Item -LiteralPath $startMenuShortcut -Force
     Write-Host "Removed pyToneRIP Start Menu shortcut: $startMenuShortcut"
 }
@@ -146,7 +219,7 @@ if ([System.IO.Path]::GetDirectoryName($deploymentRoot) -ne $programDataRoot -or
     [System.IO.Path]::GetFileName($deploymentRoot) -ne 'pyToneRIP') {
     throw 'Unsafe pyToneRIP deployment repository path.'
 }
-if (Test-Path -LiteralPath $deploymentRoot -PathType Container) {
+if (-not $sharedInstallation -and (Test-Path -LiteralPath $deploymentRoot -PathType Container)) {
     Remove-Item -LiteralPath $deploymentRoot -Recurse -Force
     Write-Host "Removed pyToneRIP deployment repository: $deploymentRoot"
 }
@@ -170,13 +243,14 @@ if ($remaining.Count) {
     throw "Windows still holds pyToneRIP queues: $names. Restart Windows before installing another clean copy."
 }
 $cleanup = & $printStateCleanup -Forms $formCleanupPlan
-$registryCleanup = & $registryStateCleanup -QueueNames $ownedQueueNames
+$registryCleanup = & $registryStateCleanup -QueueNames $ownedQueueNames -UserSid $UserSid
 Write-Host "Removed print registry cache keys: $($registryCleanup.RemovedRegistryKeys); values: $($registryCleanup.RemovedRegistryValues)."
 if (Test-Path -LiteralPath $formPlanPath -PathType Leaf) {
     Remove-Item -LiteralPath $formPlanPath -Force
 }
 Write-Host "Removed private forms: $($cleanup.RemovedForms); removed orphan ports: $($cleanup.RemovedPorts)."
-Write-Host 'pyToneRIP packages, queues, jobs, private forms and unused ports were removed.'
+Write-Host "pyToneRIP was removed for user $UserSid."
+if ($sharedInstallation) { Write-Host 'Other users still have pyToneRIP; shared queues, forms and deployment files were kept.' }
 if ((Split-Path -Leaf $PSScriptRoot) -eq 'Payload') {
     $installerRoot = Split-Path -Parent $PSScriptRoot
     foreach ($file in @('install-msix.log', 'language-setup.log')) {
@@ -186,6 +260,7 @@ if ((Split-Path -Leaf $PSScriptRoot) -eq 'Payload') {
 }
 $uninstallSucceeded = $true
 } finally {
+    if ($null -ne $targetUserRoot) { $targetUserRoot.Dispose() }
     Stop-Transcript | Out-Null
     if ($uninstallSucceeded -and (Test-Path -LiteralPath $LogPath -PathType Leaf)) {
         Remove-Item -LiteralPath $LogPath -Force

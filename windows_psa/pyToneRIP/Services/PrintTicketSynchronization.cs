@@ -302,15 +302,35 @@ namespace pyToneRIP.Shared
                 .Select(item => item.GetObject())
                 .Where(item => item.GetNamedBoolean("enabled"))
                 .ToList();
+            // Paper-list-only applications can select a named borderless
+            // variant while retaining None from their earlier DEVMODE. Honor
+            // the explicit supported variant and update the standard feature
+            // before Windows rendering and before capturing the job ticket.
             var page = pages.FirstOrDefault(item =>
-                OptionNameMatchesPageId(selection.PageOptionName, item.GetNamedString("id"))
+                item.ContainsKey("windows_media_size_name")
+                && item.GetNamedBoolean("borderless")
+                && OptionNameMatchesPageId(selection.PageOptionName, item.GetNamedString("id")));
+            if (page != null && !MeasurementsMatchCatalogPage(selection, page))
+                throw new InvalidOperationException(
+                    "The selected borderless paper size conflicts with its declared dimensions.");
+            if (page != null && selection.Borderless != true)
+            {
+                if (ticket.PageBorderlessFeature != null)
+                    SetByMeasurements(ticket.PageBorderlessFeature,
+                        option => OptionNameIs(option, "Borderless"), null, "Borderless printing");
+                selection.Borderless = true;
+                WriteValidationLog(log, "Named borderless paper selected: model="
+                    + printerId + "; page=" + selection.PageOptionName
+                    + "; PageBorderless=Borderless");
+            }
+            page = page ?? pages.FirstOrDefault(item =>
+                OptionMatchesCatalogPage(selection, item)
                 && (!selection.Borderless.HasValue || item.GetNamedBoolean("borderless") == selection.Borderless.Value));
             if (page == null && selection.PageWidthMm.HasValue && selection.PageHeightMm.HasValue)
             {
                 page = pages.FirstOrDefault(item =>
                         (!selection.Borderless.HasValue || item.GetNamedBoolean("borderless") == selection.Borderless.Value)
-                        && Math.Abs(item.GetNamedNumber("width_mm") - selection.PageWidthMm.Value) <= PageDimensionToleranceMm
-                        && Math.Abs(item.GetNamedNumber("height_mm") - selection.PageHeightMm.Value) <= PageDimensionToleranceMm);
+                        && MeasurementsMatchCatalogPage(selection, item));
             }
             if (page == null && selection.Borderless == true)
             {
@@ -321,10 +341,8 @@ namespace pyToneRIP.Shared
                 // Unknown names and explicit unsupported borderless page IDs
                 // still fail; supported normalized borderless sizes above win.
                 page = pages.FirstOrDefault(item => !item.GetNamedBoolean("borderless")
-                    && OptionNameMatchesPageId(selection.PageOptionName, item.GetNamedString("id"))
-                    && (!selection.PageWidthMm.HasValue || !selection.PageHeightMm.HasValue
-                        || (Math.Abs(item.GetNamedNumber("width_mm") - selection.PageWidthMm.Value) <= PageDimensionToleranceMm
-                            && Math.Abs(item.GetNamedNumber("height_mm") - selection.PageHeightMm.Value) <= PageDimensionToleranceMm)));
+                    && OptionMatchesCatalogPage(selection, item)
+                    && MeasurementsMatchCatalogPage(selection, item));
                 if (page != null)
                 {
                     SetByMeasurements(ticket.PageBorderlessFeature,
@@ -365,6 +383,9 @@ namespace pyToneRIP.Shared
 
             if (page == null && selection.Borderless == true)
                 throw new InvalidOperationException("The selected borderless paper size is unavailable for this printer.");
+            if (page == null && pages.Any(item => item.ContainsKey("windows_media_size_name")))
+                throw new InvalidOperationException("The selected Windows paper size is unavailable in this printer's native catalog: "
+                    + selection.PageOptionName + ". Select a supported paper size again.");
 
             if (!string.IsNullOrWhiteSpace(selection.OrientationOptionName))
             {
@@ -398,13 +419,13 @@ namespace pyToneRIP.Shared
                 .FirstOrDefault(item => item.GetNamedString("id") == printerId);
             if (model == null) return configuration.Stringify();
 
+            var legacySelection = new StandardPrintTicketSelection {
+                PageWidthMm = defaults.PageWidthMm, PageHeightMm = defaults.PageHeightMm,
+            };
             var pages = model.GetNamedArray("pages")
                 .Select(item => item.GetObject())
                 .Where(item => item.GetNamedBoolean("enabled"))
-                .Where(item => Math.Abs(item.GetNamedNumber("width_mm") - defaults.PageWidthMm)
-                    <= PageDimensionToleranceMm
-                    && Math.Abs(item.GetNamedNumber("height_mm") - defaults.PageHeightMm)
-                    <= PageDimensionToleranceMm)
+                .Where(item => MeasurementsMatchCatalogPage(legacySelection, item))
                 .ToList();
             if (defaults.Borderless.HasValue)
                 pages = pages.Where(item => item.GetNamedBoolean("borderless")
@@ -492,6 +513,30 @@ namespace pyToneRIP.Shared
                     ? character : '_').ToArray());
             return string.Equals(optionName, localName, StringComparison.OrdinalIgnoreCase)
                 || optionName.EndsWith(":" + localName, StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static bool OptionMatchesCatalogPage(StandardPrintTicketSelection selection, JsonObject page)
+        {
+            var declared = page.GetNamedString("windows_media_size_name", "");
+            var localName = (selection.PageOptionName ?? "").Split(':').Last();
+            var matches = (!string.IsNullOrWhiteSpace(declared)
+                && string.Equals(localName, declared, StringComparison.Ordinal))
+                || OptionNameMatchesPageId(selection.PageOptionName, page.GetNamedString("id"));
+            if (!matches || string.IsNullOrWhiteSpace(declared)) return matches;
+            // A saved old ID may describe different geometry (for example old
+            // Super B versus native P900 A3+). Never accept its name alone.
+            return MeasurementsMatchCatalogPage(selection, page);
+        }
+
+        private static bool MeasurementsMatchCatalogPage(StandardPrintTicketSelection selection, JsonObject page)
+        {
+            if (!selection.PageWidthMm.HasValue || !selection.PageHeightMm.HasValue) return true;
+            // Native P900 data has canonical metric dimensions. Half a legacy
+            // 0.1 mm unit allows serialization rounding, while keeping 177.8 mm
+            // (5x7) distinct from the native 177.9 mm 2L sheet.
+            var tolerance = page.ContainsKey("windows_media_size_name") ? 0.05 : PageDimensionToleranceMm;
+            return Math.Abs(page.GetNamedNumber("width_mm") - selection.PageWidthMm.Value) <= tolerance
+                && Math.Abs(page.GetNamedNumber("height_mm") - selection.PageHeightMm.Value) <= tolerance;
         }
 
         public static bool OptionNameMatchesPageId(string optionName, string pageId)

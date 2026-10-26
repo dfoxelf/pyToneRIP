@@ -249,6 +249,9 @@ class PageCapability:
     # Some ReferenceDriver borderless PPDs describe an enlarged raster canvas.
     # Windows PageMediaSize describes the physical sheet, not that canvas.
     physical_media_size_mm: tuple[float, float] | None = None
+    # Explicit model-local Print Schema mapping. A public keyword or a private
+    # Page_* option, never a firmware or DEVMODE paper code.
+    windows_media_size_name: str | None = None
 
     @property
     def media_width_mm(self) -> float:

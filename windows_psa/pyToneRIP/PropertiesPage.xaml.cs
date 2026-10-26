@@ -167,6 +167,8 @@ namespace pyToneRIP
             loaded = true;
             try
             {
+                App.WriteStartupStage(Diagnostics.PrintSettingsContext.Describe(
+                    session == null ? "ManagerSettingsUI" : "SettingsUI", printerName));
                 if (session != null && instance == null)
                 {
                     var registry = await PrinterInstanceStore.ReadAsync();
@@ -2150,10 +2152,12 @@ namespace pyToneRIP
                 await PrinterSystemDefaultsService.ApplyUserDefaultsAsync(
                     printerName, page.Id, page.WidthMm.Value, page.HeightMm.Value,
                     configuration.Layout.Orientation, rasterResolution.X, rasterResolution.Y,
-                    configuration.Printer.Media, configuration.Printer.InputSource, page.Borderless);
+                    configuration.Printer.Media, configuration.Printer.InputSource, page.Borderless,
+                    configuration.Printer.Model == "SureColorP900RIP");
                 return;
             }
             var ticket = session.SessionPrintTicket;
+            App.WriteStartupStage(Diagnostics.PrintSettingsContext.Describe("SettingsUI", printerName));
             PrintTicketSynchronization.Apply(
                 ticket, page.Id, page.WidthMm.Value, page.HeightMm.Value,
                 configuration.Layout.Orientation, rasterResolution.X, rasterResolution.Y,

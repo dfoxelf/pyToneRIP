@@ -89,6 +89,10 @@ namespace pyToneRIP.QueueHelper
                 if (request == null || string.IsNullOrWhiteSpace(request.Operation))
                     throw new InvalidDataException("Queue helper request has no operation.");
 
+                if (request.Operation == "read-user-defaults" || request.Operation == "read-configuration-ticket"
+                    || request.Operation == "set-user-defaults" || request.Operation == "verify-user-defaults")
+                    TryLog(localState, Diagnostics.PrintSettingsContext.Describe("QueueHelper", request.CurrentName));
+
                 if (string.Equals(request.Operation, "list", StringComparison.OrdinalIgnoreCase))
                 {
                     response = QueueHelperResponse.Pass(PrinterApi.ListPrinters());
@@ -166,6 +170,11 @@ namespace pyToneRIP.QueueHelper
                 {
                     response = QueueHelperResponse.Pass(new List<QueueDescriptor>());
                     response.LegacyDefaults = PrinterApi.ReadUserDefaults(request.CurrentName);
+                }
+                else if (string.Equals(request.Operation, "read-configuration-ticket", StringComparison.OrdinalIgnoreCase))
+                {
+                    response = QueueHelperResponse.Pass(new List<QueueDescriptor>());
+                    response.ConfigurationTicketXml = PrinterApi.ReadConfigurationTicketXml(request.CurrentName);
                 }
                 else if (string.Equals(request.Operation, "notify-user-defaults", StringComparison.OrdinalIgnoreCase))
                 {
@@ -1029,6 +1038,39 @@ namespace pyToneRIP.QueueHelper
             finally { ClosePrinter(handle); }
         }
 
+        public static string ReadConfigurationTicketXml(string queueName)
+        {
+            var queue = ListPrinters().FirstOrDefault(item => string.Equals(
+                item.Name, queueName, StringComparison.OrdinalIgnoreCase));
+            if (queue == null || queue.PortName == null || !queue.PortName.StartsWith(
+                "pyToneRIP.Manager_", StringComparison.OrdinalIgnoreCase) || queue.PortName.IndexOf(
+                "_pytone-rip:surecolorp900rip/", StringComparison.OrdinalIgnoreCase) < 0)
+                throw new InvalidOperationException("A Manager-owned P900 queue is required for configuration XML recovery.");
+
+            var defaults = new PrinterDefaults { DesiredAccess = PrinterAccessUse };
+            IntPtr handle;
+            if (!OpenPrinterW(queue.Name, out handle, ref defaults))
+                throw new Win32Exception(Marshal.GetLastWin32Error(), "Could not inspect per-user printer defaults.");
+            try
+            {
+                // CIM supplies queue configuration. It is a safe initial seed
+                // only when Windows has no existing per-user DEVMODE. Never
+                // silently substitute global settings for unreadable user data.
+                EnsureConfigurationSeedHasNoUserDefaults(ReadStoredDevMode(handle, 9) != null);
+                var xml = ConfigurationTicketXmlReader.Read(queue.Name);
+                EnsureConfigurationSeedHasNoUserDefaults(ReadStoredDevMode(handle, 9) != null);
+                return xml;
+            }
+            finally { ClosePrinter(handle); }
+        }
+
+        internal static void EnsureConfigurationSeedHasNoUserDefaults(bool hasUserDevMode)
+        {
+            if (hasUserDevMode)
+                throw new InvalidOperationException(
+                    "Queue configuration XML cannot replace existing per-user printer defaults.");
+        }
+
         private static string ReadTicketXml(System.IO.Stream stream)
         {
             using (stream)
@@ -1583,6 +1625,7 @@ namespace pyToneRIP.QueueHelper
         [DataMember(Name = "usb_printers", Order = 6, EmitDefaultValue = false)] public List<UsbPrinterDescriptor> UsbPrinters { get; set; }
         [DataMember(Name = "legacy_defaults", Order = 7, EmitDefaultValue = false)] public LegacyPrinterDefaults LegacyDefaults { get; set; }
         [DataMember(Name = "usb_ink_levels", Order = 8, EmitDefaultValue = false)] public List<UsbInkLevel> UsbInkLevels { get; set; }
+        [DataMember(Name = "configuration_ticket_xml", Order = 9, EmitDefaultValue = false)] public string ConfigurationTicketXml { get; set; }
 
         public static QueueHelperResponse Pass(List<QueueDescriptor> queues) => new QueueHelperResponse
         {

@@ -107,13 +107,18 @@ if ($CaptureOnly) {
 
 $principal = [Security.Principal.WindowsPrincipal]::new([Security.Principal.WindowsIdentity]::GetCurrent())
 if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) { throw 'Run print-state cleanup as Administrator.' }
+if (@(Get-AppxPackage -AllUsers -ErrorAction Stop | Where-Object {
+    ($_.Name -eq 'pyToneRIP.Manager' -or $_.Name -eq 'pyToneRIP.PSA' -or $_.Name -like 'pyToneRIP.Printer.*') -and
+    @($_.PackageUserInformation | Where-Object { $_.InstallState -eq 'Installed' }).Count -gt 0
+}).Count) {
+    Write-Host 'pyToneRIP is registered for another Windows user; shared print state was kept.'
+    [pscustomobject]@{ RemovedForms=0; RemovedPorts=0; SpoolerRestarted=$false; SharedStateKept=$true }
+    return
+}
 $queues = @(Get-Printer)
 if (@($queues | Where-Object { $_.Name -like 'pyToneRIP*' -or $_.PortName -match 'pytone-rip:' }).Count) {
     throw 'Remove pyToneRIP queues before clearing their print state.'
 }
-if (@(Get-AppxPackage -AllUsers | Where-Object {
-    $_.Name -eq 'pyToneRIP.Manager' -or $_.Name -eq 'pyToneRIP.PSA' -or $_.Name -like 'pyToneRIP.Printer.*'
-}).Count) { throw 'pyToneRIP is still registered for a Windows user; shared forms were kept.' }
 
 $removedForms = 0
 foreach ($form in $Forms) {

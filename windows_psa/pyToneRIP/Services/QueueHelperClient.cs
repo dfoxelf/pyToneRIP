@@ -242,6 +242,17 @@ namespace pyToneRIP.Services
                 Operation = "notify-user-defaults", CurrentName = queueName,
             });
 
+        public static async Task<string> ReadConfigurationTicketXmlAsync(string queueName)
+        {
+            var response = await ExecuteRawAsync(new QueueHelperRequest
+            {
+                Operation = "read-configuration-ticket", CurrentName = queueName,
+            }, maxAttempts: 300);
+            if (string.IsNullOrWhiteSpace(response.ConfigurationTicketXml))
+                throw new InvalidDataException("Queue helper returned no configuration PrintTicket XML.");
+            return response.ConfigurationTicketXml;
+        }
+
         private static async Task<IReadOnlyList<WindowsQueueDescriptor>> ExecuteAsync(
             QueueHelperRequest request,
             int maxAttempts = 150)
@@ -357,6 +368,7 @@ namespace pyToneRIP.Services
         [DataMember(Name = "usb_printers", Order = 6, EmitDefaultValue = false)] public List<UsbPrinterDescriptor> UsbPrinters { get; set; }
         [DataMember(Name = "legacy_defaults", Order = 7, EmitDefaultValue = false)] public LegacyPrinterDefaults LegacyDefaults { get; set; }
         [DataMember(Name = "usb_ink_levels", Order = 8, EmitDefaultValue = false)] public List<UsbInkLevel> UsbInkLevels { get; set; }
+        [DataMember(Name = "configuration_ticket_xml", Order = 9, EmitDefaultValue = false)] public string ConfigurationTicketXml { get; set; }
     }
 
     [DataContract]

@@ -146,6 +146,8 @@ def export_capabilities(registry: PrinterRegistry | None = None) -> dict[str, ob
                         "width_mm": _windows_page_dimensions_mm(item)[0],
                         "height_mm": _windows_page_dimensions_mm(item)[1],
                         "borderless": item.ppd.borderless,
+                        **({"windows_media_size_name": item.windows_media_size_name}
+                           if item.windows_media_size_name else {}),
                         # Same effective native policy as the backend,
                         # including model-level PPD capability corrections.
                         "allowed_media": [
@@ -364,6 +366,10 @@ def _readable_page_label(
 
 
 def _windows_standard_page_option(capability: PageCapability) -> tuple[str, int, int] | None:
+    if capability.windows_media_size_name and not capability.windows_media_size_name.startswith("Page_"):
+        return (capability.windows_media_size_name,
+                round(capability.media_width_mm * 1000),
+                round(capability.media_height_mm * 1000))
     # B5 in imported PPDs can mean ISO (176 x 250), not JIS (182 x 257).
     # ISO B5 sheet has no matching standard keyword in our schema mapping;
     # retain the catalog ID and publish it as a custom sheet option.
@@ -390,6 +396,13 @@ def _windows_page_dimensions_mm(capability: PageCapability) -> tuple[float, floa
 def _page_option_identity(page_name: str, capability=None) -> tuple[str, str]:
     """Return the PDC namespace URI and local option name for a PPD page."""
 
+    if capability is not None and capability.windows_media_size_name and capability.ppd.borderless:
+        # A named borderless variant must remain selectable in paper lists
+        # whose applications do not expose the separate PageBorderless feature.
+        # Keep its canonical sheet geometry, but give the option its own QName.
+        return _page_option_identity(page_name)
+    if capability is not None and (capability.windows_media_size_name or "").startswith("Page_"):
+        return _PYTONERIP_PRINT_TICKET_URI, capability.windows_media_size_name
     standard = (_windows_standard_page_option(capability) if capability is not None
                 else _STANDARD_PAGE_OPTIONS.get(page_name))
     if standard:
@@ -428,6 +441,7 @@ def export_print_device_resources(
 
     model = (registry or default_registry()).get(model_id)
     lines = ['<?xml version="1.0" encoding="utf-8"?>', "<root>"]
+    emitted_resources: set[str] = set()
     for capability in model.pages:
         if not capability.implemented:
             continue
@@ -452,10 +466,21 @@ def export_print_device_resources(
             if namespace_uri == _PYTONERIP_PRINT_TICKET_URI
             else namespace_uri.split("://", 1)[-1]
         )
-        resource_name = resource_namespace + "/" + local_name
-        lines.append(
-            f'  <data name="{escape(resource_name)}"><value>{escape(label)}</value></data>'
-        )
+        resource_names = [resource_namespace + "/" + local_name]
+        if model.identity == "SureColorP900RIP":
+            # Retain legacy GUI resource keys as well as the public sheet names.
+            # Named borderless variants have their own localized resource.
+            legacy_uri, legacy_name = _page_option_identity(page.name)
+            legacy_namespace = (legacy_uri if legacy_uri == _PYTONERIP_PRINT_TICKET_URI
+                                else legacy_uri.split("://", 1)[-1])
+            resource_names.append(legacy_namespace + "/" + legacy_name)
+        for resource_name in dict.fromkeys(resource_names):
+            if resource_name in emitted_resources:
+                continue
+            emitted_resources.add(resource_name)
+            lines.append(
+                f'  <data name="{escape(resource_name)}"><value>{escape(label)}</value></data>'
+            )
     for kind, capabilities, ppd_option in (
         ("Media", model.media, "MediaType"),
         ("Input", model.selectable_input_sources(), "InputSlot"),
@@ -510,6 +535,10 @@ def export_print_device_capabilities(
             if model_id is None and page.ppd.borderless:
                 continue
             if page.implemented and (not fallback_only or page.ppd.name == "A4"):
+                if model_id is None and page.windows_media_size_name and page.ppd.name in pages:
+                    # A model-specific overlay must not redefine another model's
+                    # same-named sheet in the shared bootstrap union.
+                    continue
                 existing = pages.setdefault(page.ppd.name, page)
                 # Standard Print Schema names have authoritative metric
                 # dimensions below. PPDs encode those sizes in rounded
@@ -553,10 +582,16 @@ def export_print_device_capabilities(
         '  <psk:PageMediaSize psf2:psftype="Feature">',
     ]
     ordered_pages = sorted(pages.values(), key=lambda item: (item.ppd.name != "A4", item.ppd.name))
+    emitted_pages: set[tuple[str, str]] = set()
     for capability in ordered_pages:
         page = capability.ppd
         standard = _windows_standard_page_option(capability)
         namespace_uri, local_name = _page_option_identity(page.name, capability)
+        if models[0].identity == "SureColorP900RIP" and model_id is not None:
+            identity = (namespace_uri, local_name)
+            if identity in emitted_pages:
+                continue
+            emitted_pages.add(identity)
         prefix = "psk" if namespace_uri == _PRINT_SCHEMA_KEYWORDS_URI else "ptr"
         default = ' psf2:default="true"' if page.name == "A4" else ""
         # A standard keyword must always carry its canonical Windows metric

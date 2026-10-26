@@ -39,6 +39,7 @@ from xp750_rip.printers.media_mappings import (
     media_display_name,
     media_material_id,
 )
+from xp750_rip.printers.p900_pages import native_p900_pages
 from xp750_rip.printers.verified_reference_driver_pro_media import (
     CAPTURED_PRO_MEDIA_BY_DRIVER,
 )
@@ -2712,6 +2713,8 @@ def load_catalog_model(
     )
     if package.package_id == "gp--escp2-3880":
         pages = _pro3880_sheet_pages(pages)
+    if package.package_id == "pf--Epson_SureColorP900_RIP":
+        pages, ppd = native_p900_pages(pages, ppd)
     if (
         package.ppd_source != "vendor.ppd"
         and package.package_id.removeprefix("gp--") in CAPTURED_PRO_MEDIA_BY_DRIVER
