@@ -44,12 +44,6 @@ This beta adds an experimental high-precision monochrome path and improves how l
 
 This is a **prerelease**. Automated and native rendering tests have passed, but physical output, paper handling, and print quality have not been verified on every supported printer. The reported P900 case with only eight paper-size entries remains under investigation.
 
-## Support development and professional services
-
-pyToneRIP is developed independently. Financial support helps sustain development, printer testing, and support for more models.
-
-Paid printer setup, paper calibration, technical support, and sponsored development are available by arrangement. Companies interested in further development can contact Alexander Eichhorn at [df11@mail.de](mailto:df11@mail.de). The project remains open source under GPL 3.0.
-
 ## Build requirements
 
 - Windows 11 x64, build 26100 or later.
