@@ -2129,6 +2129,28 @@ def _media(
     else:
         # A synthetic PPD or one for another manufacturer is not Epson evidence.
         normalized = tuple(result)
+    if package.package_id in {"gp--escp2-p7000", "gp--escp2-p7000c",
+                              "gp--escp2-p9000", "gp--escp2-p9000c"}:
+        # Own P7000 captures: three selectors absent from the open media list.
+        # P9000's exact XML inherits the same media/command definitions;
+        # Epson also documents common media profiles. Its values are therefore
+        # family-derived, not independently captured P9000 values.
+        # Preserve existing GP choices/IDs rather than reassigning them.
+        # Mechanical defaults below are captured PH/SN, not copied colour
+        # corrections or the unrelated template medium's feed compensation.
+        templates = {medium.gutenprint_name: medium for medium in normalized}
+        normalized += tuple(replace(
+            templates[template], identity=identity, display_name=label,
+            media_code=code, source=("ReferenceDriver P7000 captured REMOTE1 MI/PH/SN"
+                if package.package_id in {"gp--escp2-p7000", "gp--escp2-p7000c"}
+                else "Shared P7000/P9000 media definitions; P7000 MI/PH/SN capture"),
+            paper_thickness_code=0, vacuum_intensity_code=51,
+            feed_adjustment_code=None, feed_sequence_code=None, platen_gap_code=None,
+        ) for template, identity, label, code in (
+            ("Inkjet", "Epson_Inkjet_Paper", "Epson Inkjet Paper", 29),
+            ("WaterColorRadiant", "Fine_Art_Paper", "Fine Art Paper", 25),
+            ("Luster", "Baryta_Paper", "Baryta Paper", 139),
+        ))
     if package.package_id == "gp--escp2-r2880":
         # Gutenprint's exact model includes ColorLife with its own MI 23,
         # even though the product paper menu omits it. Keep distinct native
@@ -2149,6 +2171,18 @@ def _media(
                 display_name="Epson Photo Glossy", media_code=14,
                 source="ReferenceDriver R2880 REMOTE1 MI capture",
             ),
+        )
+    if package.package_id == "gp--escp2-artisan1430":
+        # The model's own ReferenceDriver captures confirm these additional
+        # selectors. Keep one public paper per MI code and existing IDs.
+        templates = {medium.gutenprint_name: medium for medium in normalized}
+        normalized += (
+            replace(templates["Inkjet"], identity="Epson_Inkjet_Paper",
+                display_name="Epson Inkjet Paper", media_code=29,
+                source="ReferenceDriver 1500W captured REMOTE1 MI"),
+            replace(templates["Photo"], identity="Epson_Photo_Glossy",
+                display_name="Epson Photo Glossy", media_code=14,
+                source="ReferenceDriver 1500W captured REMOTE1 MI"),
         )
     if package.package_id == "gp--escp2-r2000":
         # A fresh product capture sends MI 0e for Epson Photo Glossy. The
@@ -2218,6 +2252,33 @@ def _media(
             ("Plain_paper_MI0B", "Plain_Paper"),
         )
     canonical_ids = {medium.identity.casefold() for medium in canonical}
+    if package.package_id in {"gp--escp2-p6000", "gp--escp2-p8000",
+                              "gp--escp2-7890", "gp--escp2-9890"}:
+        # P6000 native A/B captures through its explicit 7890 driver alias
+        # confirm Paper.Param[0] for sheets and Param[1] for rolls. The exact
+        # 9890 descriptor declares the same pairs; GP 89/90 share this table.
+        roll_codes = {11: 27, 1: 25, 2: 12, 4: 13, 23: 24}
+        canonical = tuple(replace(medium,
+            roll_media_code=roll_codes[medium.media_code],
+            source=("ReferenceDriver 7890/P6000 sheet/roll captures"
+                    if package.package_id in {"gp--escp2-p6000", "gp--escp2-7890"}
+                    else "ReferenceDriver 9890 descriptor; shared 7890 command path"
+                    if package.package_id == "gp--escp2-9890"
+                    else "Shared P6000/P8000 media definitions; P6000 sheet/roll captures"))
+            if medium.media_code in roll_codes else medium for medium in canonical)
+        native_aliases += (("Inkjet_Paper", "Epson_Inkjet_Paper"),
+                           ("Premium_Glossy_Photo_Paper", "Epson_Photo_Glossy"),
+                           ("ColorLife_Paper", "Epson_Proof_Satin"))
+    if package.package_id in {"gp--escp2-7890", "gp--escp2-9890",
+                              "gp--escp2-p6000", "gp--escp2-p8000"}:
+        # The exact descriptors call both Photo Glossy and Premium Glossy/
+        # Satin the same sheet MI 04. Show the useful product name without
+        # adding a duplicate firmware mode or changing saved media IDs.
+        canonical = tuple(replace(medium, display_name="Epson Premium Glossy / Satin")
+                          if medium.identity == "Epson_Photo_Glossy" else medium
+                          for medium in canonical)
+        native_aliases += (("Premium_Glossy_Photo_Paper", "Epson_Photo_Glossy"),
+                           ("Epson_Premium_Glossy", "Epson_Photo_Glossy"))
     aliases = tuple((alias, target)
         for alias, target in _flatten_aliases((*ppd_aliases, *native_aliases))
         if alias.casefold() != "other" and target.casefold() in canonical_ids)
@@ -2539,6 +2600,61 @@ def _normalize_photo_model_controls(
 ) -> tuple[tuple[MediaCapability, ...], tuple[DeviceSettingCapability, ...]]:
     """Apply hardware-specific controls omitted or overstated by imports."""
 
+    if package.package_id in {
+        "gp--escp2-7890", "gp--escp2-9890",
+        "gp--escp2-p5000-s", "gp--escp2-p5000se", "gp--escp2-p5000ce",
+        "gp--escp2-p6000", "gp--escp2-p7000", "gp--escp2-p7000c",
+        "gp--escp2-p8000", "gp--escp2-p9000", "gp--escp2-p9000c",
+        "gp--escp2-p10000", "gp--escp2-p20000",
+    }:
+        # Exact ReferenceDriver 7890/9890/P5000/P7000 descriptors and Epson
+        # P10000/P20000 paper menus declare 0.1..1.5 mm. Values present in
+        # the GP media table are defaults, not the range of this user control.
+        # Preserve saved Code_N IDs and the default's lack of an override.
+        legacy = next((setting for setting in settings
+                       if setting.identity == "Paper_Thickness"),
+                      _automatic_runtime_setting("PaperThickness", ()))
+        complete = _feature_setting("paper_thickness")
+        by_wire = {(choice.remote_command, choice.remote_payload): choice
+                   for choice in legacy.choices}
+        choices = tuple(choice for choice in legacy.choices if not choice.remote_command)
+        choices += tuple(replace(by_wire.get((choice.remote_command, choice.remote_payload), choice),
+                                 display_name=choice.display_name) for choice in complete.choices)
+        supported = {(choice.remote_command, choice.remote_payload) for choice in choices}
+        choices += tuple(choice for choice in legacy.choices
+                         if (choice.remote_command, choice.remote_payload) not in supported)
+        expanded = replace(legacy, choices=choices)
+        settings = tuple(expanded if setting.identity == "Paper_Thickness" else setting
+                         for setting in settings)
+        if not any(setting.identity == "Paper_Thickness" for setting in settings):
+            settings += (expanded,)
+
+    if package.package_id in {"gp--escp2-p7000", "gp--escp2-p7000c",
+                              "gp--escp2-p6000", "gp--escp2-p8000"}:
+        # P7000 and the explicitly aliased P6000 descriptor declare PH 0..15 and suction
+        # 51/26/16/6/4. The import kept only values used by its media table.
+        # Preserve saved Auto/Code_N selections and append missing choices.
+        replacements = {
+            "Paper_Suction": _feature_setting("paper_suction"),
+        }
+        expanded = []
+        for setting in settings:
+            complete = replacements.get(setting.identity)
+            if complete is not None:
+                known = {(choice.remote_command, choice.remote_payload)
+                         for choice in setting.choices}
+                setting = replace(setting, choices=setting.choices + tuple(
+                    choice for choice in complete.choices
+                    if (choice.remote_command, choice.remote_payload) not in known))
+            expanded.append(setting)
+        settings = _with_feature_settings(tuple(expanded), ("save_roll_paper",))
+
+    if package.package_id == "gp--escp2-artisan1430":
+        # Per-pass drying support is confirmed by the owner for 1500W.
+        # Reuse the standard DR selector 0 / milliseconds control, as on P600;
+        # the installed 1500W descriptor omits this user-facing setting.
+        settings = _with_feature_settings(settings, ("scan_drying_time",))
+
     if package.package_id in {"gp--escp2-r2400", "gp--escp2-r2880", "gp--escp2-r3000"}:
         # Epson's paper-configuration UI documents per-pass drying for these
         # models. R3000's product descriptor additionally supplies PH 0..15.
@@ -2650,6 +2766,16 @@ def load_catalog_model(
         if backend_runtime_path.is_file()
         else runtime
     )
+    wide_surecolor = package.package_id in {
+        "gp--escp2-p6000", "gp--escp2-p8000",
+        "gp--escp2-p7000", "gp--escp2-p9000",
+        "gp--escp2-p7000c", "gp--escp2-p9000c",
+    }
+    if wide_surecolor:
+        # Each model's own ink lists contain photo/matte configurations.
+        # The imported boolean omitted that distinction. Keep the raw source
+        # intact; expose the configurations through the normal routing path.
+        backend_runtime = {**backend_runtime, "interchangeable_ink": True}
     reference_driver_peer = _REFERENCE_DRIVER_PAPER_PEERS.get(package.package_id)
     reference_driver_source_path = (
         root / "packages" / reference_driver_peer / "printer.json"
@@ -2711,8 +2837,43 @@ def load_catalog_model(
         trust_ppd_imageable_area=package.ppd_source == "vendor.ppd",
         include_unmatched_native_pages=package.package_id == "pf--Epson_EcoTank_ET2550",
     )
+    if wide_surecolor:
+        # The minimal imported PPD rounded A4 down to 595x841 pt.
+        # Preserve page IDs and margins, but use physical ISO/metric sizes
+        # for Windows, raster layout and native page-length arithmetic alike.
+        dimensions_mm = {"A4": (210, 297), "A3": (297, 420),
+                         "A2": (420, 594), "A1": (594, 841), "A0": (841, 1189),
+                         "30x40cm": (300, 400), "40x60cm": (400, 600)}
+        corrected = []
+        for page in pages:
+            dimensions = dimensions_mm.get(page.ppd.name)
+            if dimensions is not None:
+                width, height = (value * 72 / 25.4 for value in dimensions)
+                old = page.ppd
+                page = replace(page, physical_media_size_mm=dimensions,
+                    ppd=replace(old, width_points=width, height_points=height,
+                        imageable_right_points=width - (old.width_points - old.imageable_right_points),
+                        imageable_top_points=height - (old.height_points - old.imageable_top_points)))
+            corrected.append(page)
+        pages = tuple(corrected)
+    if package.package_id == "gp--escp2-artisan1430":
+        # Exact 1500W Size.Param values; A4/4x6/A6/A3+ independently
+        # verified in native PRNs. Unknown formats retain code 99.
+        size_codes = {"L": 15, "4X6FULL": 10, "2L": 28, "8x10": 12,
+                      "A4": 0, "Letter": 1, "USB": 64, "A3": 62, "A3+": 61}
+        pages = tuple(replace(page, media_size_code=size_codes.get(
+            page.ppd.name[1:] if page.ppd.borderless else page.ppd.name,
+            page.media_size_code)) for page in pages)
+        pages += (PageCapability(
+            PpdPage("Roll13x19", "13 \u00d7 19 in (roll)", 936.0, 1368.0,
+                    9.0, 0.0, 927.0, 1368.0),
+            True, True, media_size_code=61, sheet_geometry_class="roll"),)
     if package.package_id == "gp--escp2-3880":
         pages = _pro3880_sheet_pages(pages)
+    if package.package_id in {"gp--escp2-p7000", "gp--escp2-p7000c"}:
+        # Every Size.Param is zero in the exact P7000 descriptor. Native
+        # A4/A3+ and borderless captures confirm the MI size position is 00.
+        pages = tuple(replace(page, media_size_code=0) for page in pages)
     if package.package_id == "pf--Epson_SureColorP900_RIP":
         pages, ppd = native_p900_pages(pages, ppd)
     if (
@@ -2761,6 +2922,13 @@ def load_catalog_model(
         raise ValueError(f"Imported printer has no page sizes: {package.package_id}")
     driver_mechanics = (source.get("driver") or {}).get("driver_mechanics") or {}
     physical_paths = _physical_paths(package, source, backend_runtime)
+    if package.package_id in {"gp--escp2-p7000c", "gp--escp2-p9000c"}:
+        # Commercial Edition replaces LLK with Violet. The exact Gutenprint
+        # model explicitly marks Violet unsupported, yet inherits an LLK
+        # entry. Do not advertise that bank as LLK or invent its Violet code.
+        # Retain the remaining Pn IDs for saved explicit channel routing.
+        physical_paths = tuple(path for path in physical_paths
+                               if path.factory_role != "lightlightblack")
     if package.package_id == "pf--Epson_SureColorF100":
         physical_paths = tuple(
             replace(path, escp2_selector=0, additional_escp2_selectors=(),
@@ -2773,6 +2941,17 @@ def load_catalog_model(
         prefer_model_feeds=package.package_id in _MODEL_SPECIFIC_FEED_PACKAGES,
         include_product_roll_feed=package.package_id == "pf--Epson_SureColorP800",
     )
+    if wide_surecolor:
+        # All six audited SureColor XMLs inherit pro_cutter_roll_feed.xml:
+        # Standard is PP 00 01 FF, not the imported PP 00 02 00.
+        # Native P6000/P7000 sheet captures independently confirm this path.
+        input_sources = tuple(replace(
+            feed, path_type=1, path_number=255,
+            initialization_commands=tuple(
+                (command, bytes.fromhex("0001ff")) if command == "PP"
+                else (command, payload)
+                for command, payload in feed.initialization_commands),
+        ) if feed.identity == "Standard" else feed for feed in input_sources)
     if package.package_id == "pf--Epson_SureColorP800":
         # P800 captures: top PP 01 00, fine-art PP 02 02, board PP 02 00,
         # roll PP 03 00 with EX's continuous-feed flag. Preserve saved feed IDs.
@@ -2792,6 +2971,17 @@ def load_catalog_model(
                 ("PP", bytes.fromhex("000300")),
             ),
         ) for feed in input_sources)
+    if package.package_id == "gp--escp2-artisan1430":
+        # The exact 1500W descriptor advertises Roll (Feed3). Native
+        # captures confirm PP 03 00 with continuous EX 05 01 and no FF.
+        # A sheet-only QTR PPD does not exclude this RIP roll mode.
+        input_sources = tuple(
+            replace(feed, display_name="Standard feed") if feed.identity == "Standard"
+            else replace(feed, path_type=3, path_number=0,
+                initialization_commands=tuple(
+                    (command, bytes.fromhex("000300")) if command == "PP" else (command, payload)
+                    for command, payload in feed.initialization_commands))
+            for feed in input_sources if feed.identity in {"Standard", "Roll"})
     if package.package_id in {"gp--escp2-r2880", "gp--escp2-r3000"}:
         input_sources = tuple(feed for feed in input_sources if feed.identity != "CD")
     return PrinterModel(

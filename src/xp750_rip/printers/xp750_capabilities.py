@@ -215,9 +215,13 @@ def load_xp750_model(
         # owner (2026-09-08). The ESC/P-R PPD forbids these pairs, but our
         # native ESC/P2 path uses independent page geometry and media codes.
         # This is a capability correction, not a hardware-validation claim.
+        # Include Ultra Glossy and Semigloss for XP-750 (owner correction,
+        # 2026-10-31); do not extend this policy to other products using this loader.
         native_media_page_overrides=tuple(
             (item.identity, "A6") for item in unique_media
             if item.identity.startswith(("PMPHOTO_", "GLOSSYPHOTO_", "GLOSSYCAST_"))
+            or (ppd.metadata.get("ModelName") == "Epson XP-750 Series"
+                and item.identity.startswith(("PLATINA_", "PSGLOS_")))
         ),
     )
 

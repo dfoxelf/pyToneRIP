@@ -1,5 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
+  <data name="PreviewWindow.Unsimulated" xml:space="preserve"><value>Gråskala utan papperssimulering.</value></data>
+  <data name="PreviewWindow.Title" xml:space="preserve"><value>Förhandsgranskning - Soft Proof</value></data>
+  <data name="PreviewWindow.Print"><value>Skriv ut</value></data>
+  <data name="PreviewWindow.Cancel"><value>Avboka</value></data>
+  <data name="PreviewWindow.Close"><value>Nära</value></data>
+  <data name="PreviewWindow.CancelCloseHelp" xml:space="preserve"><value>Avbryt utskriftsjobbet och stäng förhandsgranskningsfönstret.</value></data>
+  <data name="PreviewWindow.Previous"><value>Föregående</value></data>
+  <data name="PreviewWindow.Next"><value>Nästa</value></data>
+  <data name="PreviewWindow.Fit"><value>Anpassa sida</value></data>
+  <data name="PreviewWindow.Preparing" xml:space="preserve"><value>Förbereder utskriftsjobb…</value></data>
+  <data name="PreviewWindow.Sending" xml:space="preserve"><value>Skickar data till skrivaren…</value></data>
+  <data name="PreviewWindow.Sent" xml:space="preserve"><value>Data skickade; fysisk utskrift kan fortsätta.</value></data>
+  <data name="PreviewWindow.Cancelled" xml:space="preserve"><value>Jobbet avbröts.</value></data>
+  <data name="PreviewWindow.Failed" xml:space="preserve"><value>Jobbet misslyckades.</value></data>
+  <data name="PreviewWindow.Measured" xml:space="preserve"><value>Soft Proof med valt ICC. Kontrollera tilldelningen till höger.</value></data>
+  <data name="PreviewWindow.Approximate" xml:space="preserve"><value>Ungefärlig Soft Proof med mätningar för papperskategorin och uppskattad papperston.</value></data>
+  <data name="Preview.Enabled.Text"><value>Förhandsvisning — Aktivera (Softproofing)</value></data>
+  <data name="Preview.EnabledHelp"><value>Öppnar ett förhandsvisningsfönster före utskrift. Med en ICC-profil simuleras toner, färgstick, pappersvitt och trycksvärta; utan profil är simuleringen ungefärlig. Ändrar inte utskriftsdata.</value></data>
+  <data name="Preview.Profile.Text"><value>ICC-profil (valfri)</value></data>
+  <data name="Preview.WithOba.Content"><value>Papper med OBA</value></data>
+  <data name="Preview.WithoutOba.Content"><value>Papper utan OBA</value></data>
+  <data name="Preview.WithObaHelp"><value>Simulerar ungefär pappersvitt med optiska vitmedel under D50–D65-belysning. Påverkar endast förhandsvisningen.</value></data>
+  <data name="Preview.WithoutObaHelp"><value>Simulerar ungefär pappersvitt utan optiska vitmedel. Påverkar endast förhandsvisningen.</value></data>
   <data name="AppDescription"><value>pyToneRIP-app för utskriftsstöd</value></data>
   <data name="Auto.0163AD0F367D.Text"><value>Förbigår .quad-kurvor, blandning, gamma och normal bläckgräns. Den här skrivaren kommer endast att skriva ut kalibreringsmål tills detta läge stängs av och tillämpas.</value></data>
   <data name="Auto.043112257626.Text"><value>Logiska ID:n måste matcha alla valda .quad-profiler. Mappa varje logiskt bläck till en fysisk sökväg för den valda skrivaren.</value></data>
@@ -308,4 +331,39 @@
   <data name="ResamplingHelp.bicubic"><value>Använder ett kubiskt filter för balans mellan skärpa och mjuka tonövergångar i foton. Bevarar fler detaljer än bilinjär interpolation, men kan ge svaga ljusa eller mörka konturer vid kanter med hög kontrast.</value></data>
   <data name="ResamplingHelp.lanczos"><value>Bevarar fina detaljer väl när foton räknas om till ditheringrastret, särskilt vid förminskning. Välj det för ett skarpare resultat, men se upp för ljusa eller mörka konturer vid kanter med hög kontrast.</value></data>
   <data name="ResamplingHelp.mitchell"><value>Balanserar detaljer och mjuka övergångar med färre kantkonturer än Lanczos. Lämpligt för foton där sådana konturer stör, till priset av något mjukare fina detaljer och långsammare bearbetning.</value></data>
+  <data name="Preview.IlluminantHelp" xml:space="preserve"><value>Ungefärligt betraktningsljus: D50, D55, D60 eller D65. Ändrar endast förhandsvisningens ton, inte utskriftsdata. Utan spektralmätningar kan OBA-fluorescens inte förutsägas.</value></data>
+  <data name="PreviewWindow.PrintClose" xml:space="preserve"><value>Skriv ut och stäng</value></data>
+  <data name="PreviewWindow.Rulers" xml:space="preserve"><value>Linjaler</value></data>
+  <data name="PreviewWindow.Printer" xml:space="preserve"><value>Skrivare</value></data>
+  <data name="PreviewWindow.Paper" xml:space="preserve"><value>Papper</value></data>
+  <data name="PreviewWindow.Size" xml:space="preserve"><value>Storlek</value></data>
+  <data name="PreviewWindow.Dither" xml:space="preserve"><value>Dither</value></data>
+  <data name="PreviewWindow.Mode" xml:space="preserve"><value>Läge</value></data>
+  <data name="PreviewWindow.Curves" xml:space="preserve"><value>Kurvor</value></data>
+  <data name="PreviewWindow.Resolution" xml:space="preserve"><value>Upplösning</value></data>
+  <data name="PreviewWindow.ProfileMatch" xml:space="preserve"><value>ICC-tilldelning</value></data>
+  <data name="PreviewWindow.ProfileUnknown" xml:space="preserve"><value>ICC-villkoren är okända.</value></data>
+  <data name="PreviewWindow.ProfileAssigned" xml:space="preserve"><value>Tilldelad till dessa inställningar av användaren.</value></data>
+  <data name="PreviewWindow.ProfileMismatch" xml:space="preserve"><value>ICC skiljer sig från de sparade utskriftsvillkoren.</value></data>
+  <data name="PreviewWindow.PhysicalUnavailable" xml:space="preserve"><value>Skrivarens fysiska status är inte tillgänglig.</value></data>
+  <data name="PreviewWindow.PhysicalUnconfirmed" xml:space="preserve"><value>Enhetens status bekräftar inte att detta jobb är klart eller att arket har matats ut.</value></data>
+  <data name="PreviewWindow.DeviceOther" xml:space="preserve"><value>Skrivare: annat tillstånd</value></data>
+  <data name="PreviewWindow.DeviceUnknown" xml:space="preserve"><value>Skrivare: okänt tillstånd</value></data>
+  <data name="PreviewWindow.DeviceIdle" xml:space="preserve"><value>Skrivare: inaktiv</value></data>
+  <data name="PreviewWindow.DevicePrinting" xml:space="preserve"><value>Skrivare: skriver ut</value></data>
+  <data name="PreviewWindow.DeviceWarming" xml:space="preserve"><value>Skrivare: värmer upp</value></data>
+  <data name="PreviewWindow.EditSettings" xml:space="preserve"><value>Ändra inställningar</value></data>
+  <data name="PreviewWindow.Editing" xml:space="preserve"><value>Uppdaterar förhandsgranskningen…</value></data>
+  <data name="PreviewWindow.ZoomHelp" xml:space="preserve"><value>Ctrl + mushjul: zoom. Procent kan anges.</value></data>
+  <data name="PreviewWindow.ActualSizeHelp" xml:space="preserve"><value>100%: en rasterpixel per fysisk skärmpixel. Kräver känd, lika X/Y-rasterupplösning.</value></data>
+  <data name="PreviewWindow.SourceChanged" xml:space="preserve"><value>Källkurvorna har ändrats. Öppna Ändra inställningar för att uppdatera förhandsgranskningen.</value></data>
+  <data name="PreviewWindow.ICC" xml:space="preserve"><value>ICC</value></data>
+  <data name="PreviewWindow.PhotoPlacement" xml:space="preserve"><value>Fotoplacering</value></data>
+  <data name="PreviewWindow.PhotoFit" xml:space="preserve"><value>Anpassa foto</value></data>
+  <data name="PreviewWindow.PhotoReset" xml:space="preserve"><value>Återställ foto</value></data>
+  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Dra bilden för att flytta den och dra ett hörn för att ändra storlek proportionellt. Rotera med 90°-knapparna. Marginaler från källappen förblir en del av bilden.</value></data>
+  <data name="PreviewWindow.PhotoCenterHorizontal" xml:space="preserve"><value>Centrera vågrätt</value></data>
+  <data name="PreviewWindow.PhotoCenterVertical" xml:space="preserve"><value>Centrera lodrätt</value></data>
+  <data name="PreviewWindow.PrintStart" xml:space="preserve"><value>Utskriftsstart</value></data>
+  <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>Pilen markerar den kant av arket som skrivs ut först.</value></data>
 </root>

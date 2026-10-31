@@ -181,6 +181,10 @@ namespace pyToneRIP.Models
         [DataMember(Name = "output_resolution_dpi")] public List<int> OutputResolutionDpi { get; set; }
         [DataMember(Name = "width_mm")] public double? WidthMm { get; set; }
         [DataMember(Name = "height_mm")] public double? HeightMm { get; set; }
+        [DataMember(Name = "preview_media_class")] public string PreviewMediaClass { get; set; }
+        [DataMember(Name = "preview_paper_points")] public List<double> PreviewPaperPoints { get; set; }
+        [DataMember(Name = "preview_imageable_points")] public List<double> PreviewImageablePoints { get; set; }
+        [DataMember(Name = "preview_regions")] public List<PreviewPageRegion> PreviewRegions { get; set; }
         [DataMember(Name = "borderless")] public bool Borderless { get; set; }
         [DataMember(Name = "allowed_media")] public List<string> AllowedMedia { get; set; }
 
@@ -189,6 +193,14 @@ namespace pyToneRIP.Models
             var label = DisplayName ?? Id;
             return Enabled ? label : label + " — " + Status;
         }
+    }
+
+    [DataContract]
+    public sealed class PreviewPageRegion
+    {
+        [DataMember(Name = "points")] public List<double> Points { get; set; }
+        [DataMember(Name = "modes")] public List<string> Modes { get; set; }
+        [DataMember(Name = "input_sources")] public List<string> InputSources { get; set; }
     }
 
     [DataContract]

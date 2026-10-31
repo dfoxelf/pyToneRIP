@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
@@ -9,6 +10,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using pyToneRIP.Shared;
+using pyToneRIP.Models;
 using Windows.Data.Json;
 using Windows.Graphics.Printing.Workflow;
 using Windows.Storage;
@@ -21,9 +23,17 @@ namespace pyToneRIP.Tasks.Services
         public const string BoundaryStatus = "WINDOWS_TIFF_READY_PYTHON_PENDING";
         public StorageFolder JobFolder { get; private set; }
         public string JobId { get; private set; }
+        public JsonObject PreviewOptions { get; private set; }
         private int cancellationRequested;
         private string cancellationReason = "Windows print job was canceled.";
         private string acceptedUtc;
+        private JobRecord capturedRecord;
+        private StorageFile capturedPdl;
+        private StorageFile sourcePdl;
+        private Func<Task<JobArtifact>> deferredRaster;
+        private PrintWorkflowVirtualPrinterDataAvailableEventArgs capturedArgs;
+        private readonly Dictionary<int, PreviewPhotoPlacement> photoPlacements = new Dictionary<int, PreviewPhotoPlacement>();
+        private string lastEditId;
 
         public async Task BeginAsync(string queueName)
         {
@@ -66,7 +76,8 @@ namespace pyToneRIP.Tasks.Services
 
         public async Task<StorageFile> CaptureAsync(
             PrintWorkflowVirtualPrinterSession session,
-            PrintWorkflowVirtualPrinterDataAvailableEventArgs args)
+            PrintWorkflowVirtualPrinterDataAvailableEventArgs args,
+            Func<Task> beginPreview = null)
         {
             pyToneRIP.Tasks.VirtualPrinterBackgroundTask.WriteWorkflowStage(
                 "JobRecordWriter.CaptureAsync entered");
@@ -100,6 +111,7 @@ namespace pyToneRIP.Tasks.Services
             // persisting/rendering the ticket. XpsToTiff and the RIP must see
             // the same supported paper selection.
             var configurationJson = await ReadAndValidateConfigurationAsync(ticket, session);
+            if (PreviewOptions != null && beginPreview != null) await beginPreview();
             var ticketText = ticket.XmlNode.GetXml();
             var ticketArtifact = await WriteTextAndHashAsync(folder, "print-ticket.xml", ticketText);
             var precision = JsonObject.Parse(configurationJson)
@@ -109,34 +121,10 @@ namespace pyToneRIP.Tasks.Services
             JobArtifact adapterTiffArtifact = null;
             if (precision == 8)
             {
-                var adapterTiffFile = await folder.CreateFileAsync(
-                    "windows-converter-output.tiff",
-                    CreationCollisionOption.FailIfExists);
-                var converter = args.GetPdlConverter(PrintWorkflowPdlConversionType.XpsToTiff);
-                pyToneRIP.Tasks.VirtualPrinterBackgroundTask.WriteWorkflowStage(
-                    "JobRecordWriter XpsToTiff conversion begin");
-                await JobProgressWriter.WriteAsync(
-                    folder, jobId, 15, "WINDOWS_RENDER", "Windows is rasterizing the page");
-                using (var source = await pdlFile.OpenAsync(FileAccessMode.Read))
-                using (var target = await adapterTiffFile.OpenAsync(FileAccessMode.ReadWrite))
-                {
-                    // The RIP repeats the completed native job for each copy.
-                    // Exclude host copy expansion so XpsToTiff supplies each page once.
-                    // Python orders completed page streams according to DocumentCollate.
-                    var hostProcessing =
-                        PdlConversionHostBasedProcessingOperations.PageRotation |
-                        PdlConversionHostBasedProcessingOperations.PageOrdering |
-                        PdlConversionHostBasedProcessingOperations.BlankPageInsertion;
-                    await converter.ConvertPdlAsync(ticket, source, target, hostProcessing);
-                    await target.FlushAsync();
-                }
-                ThrowIfCancellationRequested();
-                adapterTiffArtifact = await HashFileAsync(adapterTiffFile);
-                pyToneRIP.Tasks.VirtualPrinterBackgroundTask.WriteWorkflowStage(
-                    "JobRecordWriter XpsToTiff conversion complete: "
-                    + adapterTiffArtifact.SizeBytes + " bytes");
-                await JobProgressWriter.WriteAsync(
-                    folder, jobId, 25, "WINDOWS_TIFF_READY", "Windows page raster is ready");
+                if (PreviewOptions != null)
+                    deferredRaster = () => RasterizeAsync(args, ticket, pdlFile);
+                else
+                    adapterTiffArtifact = await RasterizeAsync(args, ticket, pdlFile);
             }
             else
             {
@@ -154,6 +142,21 @@ namespace pyToneRIP.Tasks.Services
                 folder, jobId, 28, "CONFIGURATION_READY", "RIP configuration captured");
 
             pdlArtifact.ContentType = contentType;
+            capturedArgs = args; capturedPdl = sourcePdl = pdlFile;
+            if (PreviewOptions != null)
+            {
+                var previewPdf = await folder.CreateFileAsync("preview.pdf", CreationCollisionOption.FailIfExists);
+                var converter = args.GetPdlConverter(PrintWorkflowPdlConversionType.XpsToPdf);
+                using (var source = await pdlFile.OpenAsync(FileAccessMode.Read))
+                using (var target = await previewPdf.OpenAsync(FileAccessMode.ReadWrite))
+                {
+                    var operations = PdlConversionHostBasedProcessingOperations.PageRotation
+                        | PdlConversionHostBasedProcessingOperations.PageOrdering
+                        | PdlConversionHostBasedProcessingOperations.BlankPageInsertion;
+                    await converter.ConvertPdlAsync(ticket, source, target, operations);
+                    await target.FlushAsync();
+                }
+            }
             var record = new JobRecord
             {
                 Schema = "pytone-rip.job-record",
@@ -183,6 +186,7 @@ namespace pyToneRIP.Tasks.Services
                     AdapterTiff = adapterTiffArtifact
                 }
             };
+            capturedRecord = record;
             var recordFile = await folder.CreateFileAsync(
                 "job-record.json", CreationCollisionOption.FailIfExists);
             using (var stream = await recordFile.OpenStreamForWriteAsync())
@@ -195,6 +199,69 @@ namespace pyToneRIP.Tasks.Services
             await JobProgressWriter.WriteAsync(
                 folder, jobId, 30, "RUNTIME_QUEUED", "Packaged Python RIP is queued");
             return recordFile;
+        }
+
+        private async Task<JobArtifact> RasterizeAsync(
+            PrintWorkflowVirtualPrinterDataAvailableEventArgs args,
+            Windows.Graphics.Printing.PrintTicket.WorkflowPrintTicket ticket,
+            StorageFile pdlFile)
+        {
+            ThrowIfCancellationRequested();
+            var folder = JobFolder;
+            var jobId = JobId;
+                var adapterTiffFile = await folder.CreateFileAsync(
+                    "windows-converter-output.tiff",
+                    CreationCollisionOption.FailIfExists);
+                var converter = args.GetPdlConverter(PrintWorkflowPdlConversionType.XpsToTiff);
+                pyToneRIP.Tasks.VirtualPrinterBackgroundTask.WriteWorkflowStage(
+                    "JobRecordWriter XpsToTiff conversion begin: job=" + jobId
+                    + "; pdl=" + pdlFile.Name + "; ticket="
+                    + (capturedRecord?.Artifacts?.PrintTicket?.File ?? "print-ticket.xml"));
+                await JobProgressWriter.WriteAsync(
+                    folder, jobId, 15, "WINDOWS_RENDER", "Windows is rasterizing the page");
+                pyToneRIP.Tasks.VirtualPrinterBackgroundTask.WriteWorkflowStage("XpsToTiff OpenSource begin: " + jobId);
+                using (var source = await pdlFile.OpenAsync(FileAccessMode.Read))
+                {
+                pyToneRIP.Tasks.VirtualPrinterBackgroundTask.WriteWorkflowStage("XpsToTiff OpenTarget begin: " + jobId);
+                using (var target = await adapterTiffFile.OpenAsync(FileAccessMode.ReadWrite))
+                {
+                    // The RIP repeats the completed native job for each copy.
+                    // Exclude host copy expansion so XpsToTiff supplies each page once.
+                    // Python orders completed page streams according to DocumentCollate.
+                    var hostProcessing =
+                        PdlConversionHostBasedProcessingOperations.PageRotation |
+                        PdlConversionHostBasedProcessingOperations.PageOrdering |
+                        PdlConversionHostBasedProcessingOperations.BlankPageInsertion;
+                    pyToneRIP.Tasks.VirtualPrinterBackgroundTask.WriteWorkflowStage("XpsToTiff ConvertPdlAsync begin: " + jobId);
+                    await converter.ConvertPdlAsync(ticket, source, target, hostProcessing);
+                    pyToneRIP.Tasks.VirtualPrinterBackgroundTask.WriteWorkflowStage("XpsToTiff ConvertPdlAsync complete; FlushAsync begin: " + jobId);
+                    await target.FlushAsync();
+                    pyToneRIP.Tasks.VirtualPrinterBackgroundTask.WriteWorkflowStage("XpsToTiff FlushAsync complete: " + jobId);
+                }
+                }
+                ThrowIfCancellationRequested();
+                var adapterTiffArtifact = await HashFileAsync(adapterTiffFile);
+                pyToneRIP.Tasks.VirtualPrinterBackgroundTask.WriteWorkflowStage(
+                    "JobRecordWriter XpsToTiff conversion complete: "
+                    + adapterTiffArtifact.SizeBytes + " bytes");
+                await JobProgressWriter.WriteAsync(
+                    folder, jobId, 25, "WINDOWS_TIFF_READY", "Windows page raster is ready");
+            return adapterTiffArtifact;
+        }
+
+        public async Task FinalizeCaptureAsync(StorageFile recordFile)
+        {
+            if (deferredRaster == null) return;
+            recordFile = await JobFolder.GetFileAsync("job-record.json");
+            ThrowIfCancellationRequested();
+            var raster = await deferredRaster();
+            ThrowIfCancellationRequested();
+            capturedRecord.Artifacts.AdapterTiff = raster;
+            var temporary = await JobFolder.CreateFileAsync("job-record-final.json", CreationCollisionOption.FailIfExists);
+            using (var stream = await temporary.OpenStreamForWriteAsync())
+                new DataContractJsonSerializer(typeof(JobRecord)).WriteObject(stream, capturedRecord);
+            await temporary.MoveAndReplaceAsync(recordFile);
+            deferredRaster = null;
         }
 
         public void RequestCancellation(string reason)
@@ -263,7 +330,7 @@ namespace pyToneRIP.Tasks.Services
                 true);
         }
 
-        private static async Task<string> ReadAndValidateConfigurationAsync(
+        private async Task<string> ReadAndValidateConfigurationAsync(
             Windows.Graphics.Printing.PrintTicket.WorkflowPrintTicket ticket,
             PrintWorkflowVirtualPrinterSession session)
         {
@@ -290,12 +357,290 @@ namespace pyToneRIP.Tasks.Services
             {
                 throw new InvalidDataException("pyToneRIP configuration schema is invalid.");
             }
+            var preview = configuration.GetNamedObject("preview", null);
+            var calibration = configuration.GetNamedObject("calibration", null);
+            PreviewOptions = preview?.GetNamedBoolean("enabled", false) == true
+                && calibration?.GetNamedBoolean("enabled", false) != true ? preview : null;
             var capabilityFile = await StorageFile.GetFileFromApplicationUriAsync(
                 new Uri("ms-appx:///Assets/capabilities.generated.json"));
             var capabilityJson = await FileIO.ReadTextAsync(capabilityFile);
-            return PrintTicketSynchronization.OverlayConfiguration(
+            var projected = PrintTicketSynchronization.OverlayConfiguration(
                 ticket, json, capabilityJson,
                 pyToneRIP.Tasks.VirtualPrinterBackgroundTask.WriteWorkflowStage);
+            if (PreviewOptions != null)
+                await WritePreviewDraftAsync(projected, PreviewOptions, ticket, "preview-configuration.json");
+            return projected;
+        }
+
+        private async Task WritePreviewDraftAsync(string projected, JsonObject preview,
+            Windows.Graphics.Printing.PrintTicket.WorkflowPrintTicket ticket, string name)
+        {
+            var draft = JsonObject.Parse(projected);
+            draft["schema"] = JsonValue.CreateStringValue("pytone-rip.configuration");
+            draft["preview"] = JsonObject.Parse(preview.Stringify());
+            var resolution = PrintTicketSynchronization.Read(ticket);
+            if (resolution.ResolutionX.HasValue) draft.GetNamedObject("printer")["raster_resolution_x"] = JsonValue.CreateNumberValue(resolution.ResolutionX.Value);
+            if (resolution.ResolutionY.HasValue) draft.GetNamedObject("printer")["raster_resolution_y"] = JsonValue.CreateNumberValue(resolution.ResolutionY.Value);
+            await PreviewWorkflowStore.WriteAtomicAsync(JobFolder, name, draft.Stringify());
+        }
+
+        public async Task ProcessPreviewEditAsync()
+        {
+            var requestPath = Path.Combine(JobFolder.Path, "preview-edit-request.json");
+            if (!File.Exists(requestPath)) return;
+            var request = JsonObject.Parse(File.ReadAllText(requestPath, Encoding.UTF8));
+            var id = request.GetNamedString("id");
+            if (!Guid.TryParse(id, out _) || id == lastEditId) return;
+            lastEditId = id;
+            var result = new JsonObject { ["id"] = JsonValue.CreateStringValue(id) };
+            var commitStarted = false;
+            var editStep = "ReadRequest";
+            try
+            {
+                ThrowIfCancellationRequested();
+                var draft = request.GetNamedObject("configuration");
+                var oldDraft = JsonObject.Parse(await FileIO.ReadTextAsync(await JobFolder.GetFileAsync("preview-configuration.json")));
+                var printer = draft.GetNamedObject("printer");
+                if (printer.GetNamedString("model") != oldDraft.GetNamedObject("printer").GetNamedString("model")
+                    || !SameDestination(draft.GetNamedObject("connection"), oldDraft.GetNamedObject("connection"))
+                    || draft.GetNamedObject("calibration", null)?.GetNamedBoolean("enabled", false) == true)
+                    throw new InvalidDataException("A captured job cannot change its physical printer or enable RAW calibration.");
+                var capabilityFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/capabilities.generated.json"));
+                var capabilities = await FileIO.ReadTextAsync(capabilityFile);
+                var model = JsonObject.Parse(capabilities).GetNamedArray("printers").Select(value => value.GetObject())
+                    .Single(value => value.GetNamedString("id") == printer.GetNamedString("model"));
+                var page = model.GetNamedArray("pages").Select(value => value.GetObject())
+                    .Single(value => value.GetNamedString("id") == printer.GetNamedString("page") && value.GetNamedBoolean("enabled"));
+                var oldPrinter = oldDraft.GetNamedObject("printer");
+                var standardChanged = new[] { "page", "media", "input_source", "raster_resolution_x", "raster_resolution_y" }
+                    .Any(key => printer.GetNamedValue(key).Stringify() != oldPrinter.GetNamedValue(key).Stringify())
+                    || draft.GetNamedObject("layout").GetNamedString("orientation") != oldDraft.GetNamedObject("layout").GetNamedString("orientation");
+                var geometryChanged = printer.GetNamedString("page") != oldPrinter.GetNamedString("page")
+                    || draft.GetNamedObject("layout").GetNamedString("orientation") != oldDraft.GetNamedObject("layout").GetNamedString("orientation");
+                pyToneRIP.Tasks.VirtualPrinterBackgroundTask.WriteWorkflowStage(
+                    "Preview edit begin: job=" + JobId + "; edit=" + id + "; standardChanged=" + standardChanged + "; geometryChanged=" + geometryChanged);
+                editStep = "OpenPrintTicket";
+                var sourceTicket = await JobFolder.GetFileAsync(capturedRecord.Artifacts.PrintTicket.File);
+                using (var input = await sourceTicket.OpenReadAsync())
+                {
+                    editStep = "ConstructWorkflowPrintTicket";
+                    var ticket = new Windows.Graphics.Printing.PrintTicket.WorkflowPrintTicket(capturedRecord.Metadata.QueueName, input);
+                    editStep = "ApplyPrintTicket";
+                    if (standardChanged)
+                    {
+                        PrintTicketSynchronization.Apply(ticket, printer.GetNamedString("page"), page.GetNamedNumber("width_mm"), page.GetNamedNumber("height_mm"),
+                            draft.GetNamedObject("layout").GetNamedString("orientation"), (int)printer.GetNamedNumber("raster_resolution_x"),
+                            (int)printer.GetNamedNumber("raster_resolution_y"), printer.GetNamedString("media"), printer.GetNamedString("input_source"),
+                            page.GetNamedBoolean("borderless"));
+                        editStep = "ValidatePrintTicket";
+                        var validation = await PrintTicketSynchronization.ValidateAsync(
+                            ticket, pyToneRIP.Tasks.VirtualPrinterBackgroundTask.WriteWorkflowStage);
+                        if (!validation.Validated) throw new InvalidDataException("PrintTicket validation failed: " + validation.ExtendedError);
+                        if (!PrintTicketSynchronization.SelectionMatchesDefaults(PrintTicketSynchronization.Read(ticket),
+                            printer.GetNamedString("page"), page.GetNamedNumber("width_mm"), page.GetNamedNumber("height_mm"),
+                            draft.GetNamedObject("layout").GetNamedString("orientation"), (int)printer.GetNamedNumber("raster_resolution_x"),
+                            (int)printer.GetNamedNumber("raster_resolution_y"), printer.GetNamedString("media"), printer.GetNamedString("input_source"), page.GetNamedBoolean("borderless")))
+                            throw new InvalidDataException("Windows changed the requested print settings during validation.");
+                    }
+                    editStep = "PreparePlacement";
+                    var pendingPlacements = photoPlacements.ToDictionary(item => item.Key, item => item.Value.Copy());
+                    var requestedPlacements = new List<PreviewPhotoPlacement>();
+                    var placementRequest = request.GetNamedArray("placements", null);
+                    var previousLayout = JsonObject.Parse(draft.GetNamedObject("layout").Stringify());
+                    if (placementRequest != null)
+                    {
+                        using (var bytes = new MemoryStream(Encoding.UTF8.GetBytes(placementRequest.Stringify())))
+                            requestedPlacements = (List<PreviewPhotoPlacement>)new DataContractJsonSerializer(typeof(List<PreviewPhotoPlacement>)).ReadObject(bytes);
+                        if (requestedPlacements.Count == 0 || requestedPlacements.Select(item => item.PageIndex).Distinct().Count() != requestedPlacements.Count)
+                            throw new InvalidDataException("Invalid photo placement batch.");
+                        draft.GetNamedObject("layout")["apply_rip_layout"] = JsonValue.CreateBooleanValue(false);
+                    }
+                    var projected = standardChanged ? PrintTicketSynchronization.OverlayConfiguration(ticket, draft.Stringify(), capabilities)
+                        : RipConfigurationProjection.FromQueueJson(draft.Stringify()).Stringify();
+                    var curves = ReadExternalCurvePaths(projected);
+                    var precision = JsonObject.Parse(projected).GetNamedObject("adjustments").GetNamedNumber("processing_bits", 8);
+                    if (precision != 8 && precision != 16) throw new InvalidDataException("processing_bits must be 8 or 16.");
+                    var ticketArtifact = await WriteTextAndHashAsync(JobFolder, "ticket-" + id + ".xml", ticket.XmlNode.GetXml());
+                    var configArtifact = await WriteTextAndHashAsync(JobFolder, "configuration-" + id + ".json", projected);
+                    // Compose the captured vector page before both Windows
+                    // converters. The printer backend receives its usual input.
+                    var paperWidth = page.GetNamedNumber("width_mm"); var paperHeight = page.GetNamedNumber("height_mm");
+                    if (draft.GetNamedObject("layout").GetNamedString("orientation") == "landscape")
+                    { var savedWidth = paperWidth; paperWidth = paperHeight; paperHeight = savedWidth; }
+                    if (placementRequest != null && previousLayout.GetNamedBoolean("apply_rip_layout", false))
+                        await BakeAdditionalLayoutAsync(pendingPlacements, previousLayout, printer, page, paperWidth, paperHeight);
+                    foreach (var placement in requestedPlacements) pendingPlacements[placement.PageIndex] = placement;
+                    if (geometryChanged)
+                    {
+                        foreach (var placement in pendingPlacements.Values)
+                        {
+                            if (placement.Width > paperWidth || placement.Height > paperHeight)
+                            {
+                                var fit = Math.Min(paperWidth/placement.Width, paperHeight/placement.Height);
+                                placement.Width *= fit; placement.Height *= fit;
+                            }
+                            placement.X = Math.Max(0, Math.Min(placement.X, paperWidth-placement.Width));
+                            placement.Y = Math.Max(0, Math.Min(placement.Y, paperHeight-placement.Height));
+                        }
+                    }
+                    var activePdl = capturedPdl;
+                    var pdlArtifact = capturedRecord.Artifacts.Pdl;
+                    if (geometryChanged || placementRequest != null)
+                    {
+                        editStep = "RewriteXps";
+                        activePdl = await JobFolder.CreateFileAsync("layout-" + id + ".oxps", CreationCollisionOption.FailIfExists);
+                        using (var source = await sourcePdl.OpenStreamForReadAsync())
+                        using (var target = await activePdl.OpenStreamForWriteAsync())
+                            PreviewPageTransform.Write(source, target, pendingPlacements, paperWidth, paperHeight);
+                        pdlArtifact = await HashFileAsync(activePdl);
+                        pdlArtifact.ContentType = capturedRecord.Artifacts.Pdl.ContentType;
+                    }
+                    editStep = "SavePreviewSettings";
+                    // Render the immutable initial PDF with native transforms.
+                    // Do not invoke the workflow PDF converter again for edits.
+                    const string pdfName = "preview.pdf";
+                    var placementsName = "placement-" + id + ".json";
+                    using (var memory = new MemoryStream())
+                    {
+                        new DataContractJsonSerializer(typeof(List<PreviewPhotoPlacement>)).WriteObject(memory, pendingPlacements.Values.ToList());
+                        await PreviewWorkflowStore.WriteAtomicAsync(JobFolder, placementsName, Encoding.UTF8.GetString(memory.ToArray()));
+                    }
+                    var settings = JsonObject.Parse(draft.GetNamedObject("preview").Stringify());
+                    var iccPath = settings.GetNamedString("icc_path", "");
+                    if (!string.IsNullOrWhiteSpace(iccPath))
+                    {
+                        var iccName = "printer-" + id + ".icc";
+                        await (await ExternalIccAccessStore.OpenAsync(iccPath)).CopyAsync(JobFolder, iccName, NameCollisionOption.FailIfExists);
+                        settings["icc_file"] = JsonValue.CreateStringValue(iccName);
+                    }
+                    var settingsName = "settings-" + id + ".json";
+                    await PreviewWorkflowStore.WriteAtomicAsync(JobFolder, settingsName, settings.Stringify());
+                    var draftName = "draft-" + id + ".json";
+                    await WritePreviewDraftAsync(projected, settings, ticket, draftName);
+                    ThrowIfCancellationRequested();
+                    editStep = "CommitEdit";
+                    commitStarted = true;
+                    capturedRecord.Artifacts.Configuration = configArtifact;
+                    capturedRecord.Artifacts.Pdl = pdlArtifact;
+                    capturedRecord.Artifacts.PrintTicket = ticketArtifact;
+                    capturedRecord.Artifacts.AdapterTiff = null;
+                    capturedRecord.Metadata.SourceCurvePaths = curves;
+                    capturedPdl = activePdl;
+                    photoPlacements.Clear();
+                    foreach (var item in pendingPlacements) photoPlacements[item.Key] = item.Value;
+                    deferredRaster = precision == 8 ? (Func<Task<JobArtifact>>)(() => RasterizeAsync(capturedArgs, ticket, capturedPdl)) : null;
+
+                    using (var memory = new MemoryStream())
+                    {
+                        new DataContractJsonSerializer(typeof(JobRecord)).WriteObject(memory, capturedRecord);
+                        await PreviewWorkflowStore.WriteAtomicAsync(JobFolder, "job-record.json", Encoding.UTF8.GetString(memory.ToArray()));
+                    }
+                    var descriptor = new JsonObject
+                    {
+                        ["pdf"] = JsonValue.CreateStringValue(pdfName), ["configuration"] = JsonValue.CreateStringValue(configArtifact.File),
+                        ["ticket"] = JsonValue.CreateStringValue(ticketArtifact.File), ["settings"] = JsonValue.CreateStringValue(settingsName),
+                        ["draft"] = JsonValue.CreateStringValue(draftName),
+                        ["placements"] = JsonValue.CreateStringValue(placementsName),
+                    };
+                    await PreviewWorkflowStore.WriteAtomicAsync(JobFolder, "preview-document.json", descriptor.Stringify());
+                    // Keep the stable editor snapshot in sync for later edits.
+                    await WritePreviewDraftAsync(projected, settings, ticket, "preview-configuration.json");
+                    using (var memory = new MemoryStream())
+                    {
+                        new DataContractJsonSerializer(typeof(List<PreviewPhotoPlacement>)).WriteObject(memory, photoPlacements.Values.ToList());
+                        await PreviewWorkflowStore.WriteAtomicAsync(JobFolder, "preview-placement.json", Encoding.UTF8.GetString(memory.ToArray()));
+                    }
+                    result["success"] = JsonValue.CreateBooleanValue(true);
+                    pyToneRIP.Tasks.VirtualPrinterBackgroundTask.WriteWorkflowStage("Preview edit complete: job=" + JobId + "; edit=" + id);
+                }
+            }
+            catch (Exception error)
+            {
+                result["success"] = JsonValue.CreateBooleanValue(false);
+                result["fatal"] = JsonValue.CreateBooleanValue(commitStarted);
+                result["error"] = JsonValue.CreateStringValue(error.Message);
+                pyToneRIP.Tasks.VirtualPrinterBackgroundTask.WriteWorkflowStage("Preview edit failed: job=" + JobId + "; edit=" + id + "; step=" + editStep + "; HRESULT=0x" + error.HResult.ToString("X8") + "; " + error);
+                if (commitStarted) await PreviewWorkflowStore.WriteAtomicAsync(JobFolder, "preview-failed.txt", error.ToString());
+            }
+            await PreviewWorkflowStore.WriteAtomicAsync(JobFolder, "preview-edit-result.json", result.Stringify());
+        }
+
+        private async Task BakeAdditionalLayoutAsync(Dictionary<int, PreviewPhotoPlacement> placements, JsonObject layout,
+            JsonObject printer, JsonObject page, double paperWidth, double paperHeight)
+        {
+            // Removing the global extra-layout flag must preserve all the other
+            // pages too, not just the photo the user is currently dragging.
+            var points = page.GetNamedArray("preview_imageable_points").Select(value => value.GetNumber()).ToArray();
+            foreach (var value in page.GetNamedArray("preview_regions", new JsonArray()))
+            {
+                var region = value.GetObject();
+                if (region.GetNamedArray("modes").Any(item => item.GetString() == printer.GetNamedString("mode"))
+                    && region.GetNamedArray("input_sources").Any(item => item.GetString() == printer.GetNamedString("input_source")))
+                { points = region.GetNamedArray("points").Select(item => item.GetNumber()).ToArray(); break; }
+            }
+            var paperPoints = page.GetNamedArray("preview_paper_points");
+            var ph = paperPoints[1].GetNumber();
+            var left = points[0]*25.4/72; var top = (ph-points[3])*25.4/72;
+            var areaWidth = (points[2]-points[0])*25.4/72; var areaHeight = (points[3]-points[1])*25.4/72;
+            if (layout.GetNamedString("orientation") == "landscape")
+            {
+                var oldLeft = left; var oldWidth = areaWidth;
+                left = ph*25.4/72-top-areaHeight; top = oldLeft; areaWidth = areaHeight; areaHeight = oldWidth;
+            }
+            var aspect = paperWidth/paperHeight;
+            var requestedWidth = LayoutNumber(layout, "width_mm", 0); var requestedHeight = LayoutNumber(layout, "height_mm", 0);
+            double width, height;
+            if (requestedWidth > 0 || requestedHeight > 0)
+            {
+                width = requestedWidth > 0 ? (requestedHeight > 0 ? Math.Min(requestedWidth, requestedHeight*aspect) : requestedWidth)
+                    : requestedHeight*aspect;
+                height = width/aspect;
+            }
+            else if (layout.GetNamedString("sizing", "fit") != "fit")
+            {
+                var scale = LayoutNumber(layout, "scale_percent", 100)/100;
+                width = paperWidth*scale; height = paperHeight*scale;
+            }
+            else
+            {
+                width = Math.Min(areaWidth, areaHeight*aspect); height = width/aspect;
+            }
+            var centered = layout.GetNamedString("placement", "center") == "center";
+            var x = left+(centered ? (areaWidth-width)/2 : LayoutNumber(layout, "x_mm", 0));
+            var y = top+(centered ? (areaHeight-height)/2 : LayoutNumber(layout, "y_mm", 0));
+            List<double[]> sizes;
+            using (var source = await sourcePdl.OpenStreamForReadAsync()) sizes = PreviewPageTransform.SourceSizes(source);
+            for (var i = 0; i < sizes.Count; i++)
+            {
+                if (!placements.TryGetValue(i, out var placement))
+                {
+                    var fit = Math.Min(paperWidth/sizes[i][0], paperHeight/sizes[i][1]);
+                    placement = new PreviewPhotoPlacement { PageIndex = i, Width = sizes[i][0]*fit, Height = sizes[i][1]*fit };
+                    placement.X = (paperWidth-placement.Width)/2; placement.Y = (paperHeight-placement.Height)/2;
+                    placements[i] = placement;
+                }
+                placement.ApplyPageBox(x, y, width, height, paperWidth, paperHeight);
+            }
+        }
+
+        private static double LayoutNumber(JsonObject layout, string name, double fallback)
+        {
+            var value = layout.GetNamedValue(name, null);
+            return value?.ValueType == JsonValueType.Number ? value.GetNumber() : fallback;
+        }
+
+        private static bool SameDestination(JsonObject first, JsonObject second)
+        {
+            string Value(JsonObject value, string name, string fallback = "")
+            {
+                var item = value.GetNamedValue(name, null);
+                return item?.ValueType == JsonValueType.String ? item.GetString().Trim() : fallback;
+            }
+            bool Same(string name, string fallback = "") => string.Equals(Value(first, name, fallback), Value(second, name, fallback), StringComparison.OrdinalIgnoreCase);
+            if (!Same("kind", "network")) return false;
+            if (Value(first, "kind", "network") == "network")
+                return Same("host") && LayoutNumber(first, "port", 9100) == LayoutNumber(second, "port", 9100);
+            return Same("usb_device_id") && Same("usb_port") && Same("printer_queue") && Same("usb_transport_mode", "usbprint");
         }
 
         private static List<string> ReadExternalCurvePaths(string configurationJson)

@@ -6,7 +6,9 @@ param(
     [string]$ResultPath,
     [ValidateRange(1, 30)][int]$LookbackDays = 1,
     [string]$PrintProbeQueueName,
-    [string]$PrintProbeOutputPath
+    [string]$PrintProbeOutputPath,
+    [int]$WaitSnapshotProcessId,
+    [string]$WaitSnapshotOutputPath
 )
 
 $ErrorActionPreference = 'Stop'
@@ -783,6 +785,242 @@ public static class SupportReportDevModeProbe {
     return $results
 }
 
+function Initialize-SupportWaitChains {
+    if ('SupportReportWaitChains' -as [type]) { return }
+    Add-Type -TypeDefinition @'
+using System;
+using System.Diagnostics;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Text;
+public static class SupportReportWaitChains {
+    [StructLayout(LayoutKind.Explicit,Size=280)] public struct Node {
+        [FieldOffset(0)] public uint Type;
+        [FieldOffset(4)] public uint Status;
+        [FieldOffset(8)] public uint ProcessId;
+        [FieldOffset(12)] public uint ThreadId;
+    }
+    [DllImport("advapi32.dll",SetLastError=true)] static extern IntPtr OpenThreadWaitChainSession(uint flags,IntPtr callback);
+    [DllImport("advapi32.dll")] static extern void CloseThreadWaitChainSession(IntPtr session);
+    [DllImport("advapi32.dll",SetLastError=true)] [return:MarshalAs(UnmanagedType.Bool)]
+    static extern bool GetThreadWaitChain(IntPtr session,UIntPtr context,uint flags,uint thread,ref uint count,[Out]Node[] nodes,[MarshalAs(UnmanagedType.Bool)]out bool cycle);
+    [DllImport("advapi32.dll")] static extern void RegisterWaitChainCOMCallback(IntPtr call,IntPtr activation);
+    [DllImport("kernel32.dll",CharSet=CharSet.Unicode)] static extern IntPtr LoadLibraryW(string name);
+    [DllImport("kernel32.dll",CharSet=CharSet.Ansi)] static extern IntPtr GetProcAddress(IntPtr module,string name);
+    [DllImport("kernel32.dll")] static extern bool FreeLibrary(IntPtr module);
+    [DllImport("kernel32.dll")] static extern IntPtr OpenProcess(uint rights,bool inherit,int id);
+    [DllImport("kernel32.dll")] static extern bool CloseHandle(IntPtr handle);
+    [DllImport("kernel32.dll",CharSet=CharSet.Unicode)] static extern int GetPackageFullName(IntPtr process,ref uint length,StringBuilder name);
+    static bool Related(Process process,int probeId) {
+        string name=process.ProcessName;
+        if(process.Id==probeId || name.StartsWith("pyToneRIP",StringComparison.OrdinalIgnoreCase)
+            || name=="spoolsv" || name=="PrintIsolationHost") return true;
+        if(name!="backgroundTaskHost" && name!="taskhostw") return false;
+        IntPtr handle=OpenProcess(0x1000,false,process.Id);
+        if(handle==IntPtr.Zero)return false;
+        try { uint length=512;var package=new StringBuilder(512);
+            return GetPackageFullName(handle,ref length,package)==0 && package.ToString().StartsWith("pyToneRIP.",StringComparison.OrdinalIgnoreCase);
+        } finally {CloseHandle(handle);}
+    }
+    public static void Capture(int probeId,string path) {
+        using(var writer=new StreamWriter(path,true,new UTF8Encoding(false))) {
+            writer.AutoFlush=true;
+            writer.WriteLine("snapshotUtc="+DateTime.UtcNow.ToString("o")+"; probeProcessId="+probeId);
+            writer.WriteLine("Wait chains only, not call stacks or memory dumps. No threads are suspended; object names, command lines and memory are excluded. Access failures are evidence of missing visibility, not a diagnosed cause.");
+            IntPtr ole=LoadLibraryW("ole32.dll"); IntPtr session=IntPtr.Zero;
+            try {
+                if(ole!=IntPtr.Zero) RegisterWaitChainCOMCallback(GetProcAddress(ole,"CoGetCallState"),GetProcAddress(ole,"CoGetActivationState"));
+                session=OpenThreadWaitChainSession(0,IntPtr.Zero);
+                if(session==IntPtr.Zero){writer.WriteLine("OpenThreadWaitChainSession lastError="+Marshal.GetLastWin32Error());return;}
+                int processes=0;
+                foreach(var process in Process.GetProcesses()) using(process) {
+                    try {
+                        if(!Related(process,probeId))continue;
+                        if(++processes>12){writer.WriteLine("processLimit=12");break;}
+                        writer.WriteLine("processId="+process.Id+"; executable="+process.ProcessName+".exe; responding="+process.Responding);
+                        int threads=0;
+                        foreach(ProcessThread thread in process.Threads) using(thread) {
+                            if(++threads>48){writer.WriteLine("threadLimit=48");break;}
+                            var nodes=new Node[16];uint count=16;bool cycle;
+                            writer.WriteLine("threadId="+thread.Id+"; state="+thread.ThreadState+"; WCT begin");
+                            bool ok=GetThreadWaitChain(session,UIntPtr.Zero,7,(uint)thread.Id,ref count,nodes,out cycle);
+                            int error=ok?0:Marshal.GetLastWin32Error();
+                            writer.WriteLine("WCT success="+ok+"; lastError="+error+"; nodes="+count+"; cycle="+cycle);
+                            if(!ok && error!=234 && error!=565)continue;
+                            for(int i=0;i<Math.Min(count,16);i++) {
+                                writer.Write("node="+i+"; type="+nodes[i].Type+"; status="+nodes[i].Status);
+                                if(nodes[i].Type==8)writer.Write("; processId="+nodes[i].ProcessId+"; threadId="+nodes[i].ThreadId);
+                                writer.WriteLine();
+                            }
+                        }
+                    } catch(Exception error){writer.WriteLine("processSnapshot HRESULT=0x"+error.HResult.ToString("X8")+"; type="+error.GetType().Name);}
+                }
+            } finally {
+                if(session!=IntPtr.Zero)CloseThreadWaitChainSession(session);
+                RegisterWaitChainCOMCallback(IntPtr.Zero,IntPtr.Zero);
+                if(ole!=IntPtr.Zero)FreeLibrary(ole);
+            }
+        }
+    }
+}
+'@
+}
+
+function Convert-SupportLiveEvent($record) {
+    [xml]$xml = $record.ToXml()
+    $system = $xml.Event.System
+    $lines = [Collections.Generic.List[string]]::new()
+    $lines.Add(('time={0}; provider={1}; event_id={2}; level={3}; task={4}; opcode={5}; processId={6}; threadId={7}; activityId={8}; relatedActivityId={9}' -f
+        $record.TimeCreated.ToUniversalTime().ToString('o'), $record.ProviderName, $record.Id, $record.Level,
+        $system.Task, $system.Opcode, $system.Execution.ProcessID, $system.Execution.ThreadID,
+        $system.Correlation.ActivityID, $system.Correlation.RelatedActivityID))
+    foreach ($node in @($xml.SelectNodes('//*[local-name()="EventData"]/*|//*[local-name()="UserData"]//*[not(*)]'))) {
+        $name = if ($node.HasAttribute('Name')) { $node.GetAttribute('Name') } else { $node.LocalName }
+        $value = [string]$node.InnerText
+        if ($name -notmatch '^[A-Za-z0-9_.-]{1,80}$') { continue }
+        if ($name -match '(?i)(error|hresult|result|status|processid|threadid|activityid|duration|elapsed|contract|entrypoint|package|taskid|operation|phase|reason|serverpid|clientpid|version|count|size|length)' -and
+            ($value -match '^(?:0x[0-9A-Fa-f]+|-?[0-9]+|\{?[0-9A-Fa-f-]{36}\}?|true|false)$' -or
+             $value -match '^(?:pyToneRIP\.|Windows\.PrintSupport|windows\.printSupport)[A-Za-z0-9_.+-]{0,180}$')) {
+            $lines.Add($name + '=' + $value)
+        } elseif ($name -match '(?i)(module|image|executable|dll)' -and $value -match '\.(exe|dll)$') {
+            $basename = [IO.Path]::GetFileName($value)
+            if ($basename -match '^[A-Za-z0-9_.-]{1,120}\.(exe|dll)$') { $lines.Add($name + '=' + $basename) }
+        } elseif ($name -match '^(PrinterName|QueueName)$') {
+            $sha = [Security.Cryptography.SHA256]::Create()
+            try { $lines.Add($name + 'Hash=' + [BitConverter]::ToString($sha.ComputeHash([Text.Encoding]::UTF8.GetBytes($value.ToUpperInvariant()))).Replace('-','')) }
+            finally { $sha.Dispose() }
+        }
+    }
+    return $lines -join '; '
+}
+
+function Invoke-SupportLogman([string[]]$Arguments) {
+    $info = [Diagnostics.ProcessStartInfo]::new()
+    $info.FileName = Join-Path $env:SystemRoot 'System32/logman.exe'
+    $info.Arguments = ($Arguments | ForEach-Object { '"' + $_.Replace('"','\"') + '"' }) -join ' '
+    $info.UseShellExecute = $false; $info.CreateNoWindow = $true; $info.WindowStyle = 'Hidden'
+    # Native output is deliberately not exported: localized messages may carry paths.
+    $info.RedirectStandardOutput = $true; $info.RedirectStandardError = $true
+    $process = [Diagnostics.Process]::Start($info)
+    try {
+        $output = $process.StandardOutput.ReadToEndAsync(); $errorOutput = $process.StandardError.ReadToEndAsync()
+        if (-not $process.WaitForExit(5000)) { $process.Kill(); [void]$process.WaitForExit(1000); return 'timeout' }
+        return [string]$process.ExitCode
+    } finally { $process.Dispose() }
+}
+
+function Start-SupportTraceGuard([string]$Name) {
+    # A separate bounded watcher also stops our session if the exporter is killed.
+    # Names are generated internally; no queue names or external command text enter this command.
+    if ($Name -notmatch '^pyToneRIP-Support-[a-f0-9]{32}$') { throw 'Invalid diagnostic trace name.' }
+    $logman = (Join-Path $env:SystemRoot 'System32/logman.exe').Replace("'","''")
+    $command = "Wait-Process -Id $PID -Timeout 80 -ErrorAction SilentlyContinue; & '$logman' stop '$Name' -ets *> `$null"
+    $encoded = [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($command))
+    return Start-Process -FilePath (Join-Path $PSHOME 'powershell.exe') -WindowStyle Hidden -PassThru -ArgumentList @(
+        '-NoProfile','-NonInteractive','-ExecutionPolicy','Bypass','-EncodedCommand',$encoded)
+}
+
+function Start-SupportLiveTrace {
+    $token = [guid]::NewGuid().ToString('N')
+    $state = [pscustomobject]@{ Name=('pyToneRIP-Support-' + $token); Path=(Join-Path ([IO.Path]::GetTempPath()) ('pyToneRIP-support-' + $token + '.etl'));
+        ProvidersPath=(Join-Path ([IO.Path]::GetTempPath()) ('pyToneRIP-support-' + $token + '.providers')); Attempted=$false; Guard=$null; Status=[Text.StringBuilder]::new() }
+    [void]$state.Status.AppendLine('ETW surrounds read-only provider probes, not an earlier Apply. No persistent logging channels or printer settings are changed.')
+    [void]$state.Status.AppendLine('ETW may require an elevated token or provider permission; failure is recorded, never interpreted as no activation. No automatic elevation is attempted.')
+    try {
+        $providers = @()
+        foreach ($name in @('Microsoft-Windows-PrintService','Microsoft-Windows-AppModel-Runtime','Microsoft-Windows-AppModel-Exec','Microsoft-Windows-COMRuntime')) {
+            try {
+                $provider = Get-WinEvent -ListProvider $name -ErrorAction Stop
+                if ($provider.Id) { $providers += ('{' + $provider.Id.ToString() + '} 0xffffffffffffffff 5'); [void]$state.Status.AppendLine('provider=' + $name + '; id=' + $provider.Id) }
+            } catch { [void]$state.Status.AppendLine('provider=' + $name + '; metadata unavailable; ' + (Format-ProbeError $_)) }
+        }
+        if ($providers.Count -eq 0) { [void]$state.Status.AppendLine('No trace providers available.'); return $state }
+        [IO.File]::WriteAllLines($state.ProvidersPath, [string[]]$providers, [Text.UTF8Encoding]::new($false))
+        $state.Attempted = $true
+        $code = Invoke-SupportLogman @('create','trace',$state.Name,'-ets','-o',$state.Path,'-pf',$state.ProvidersPath,'-f','bincirc','-max','8')
+        [void]$state.Status.AppendLine('traceStartExit=' + $code)
+        if ($code -eq '0') {
+            try { $state.Guard = Start-SupportTraceGuard $state.Name }
+            catch {
+                [void]$state.Status.AppendLine('Trace safety watcher unavailable; stopping session. ' + (Format-ProbeError $_))
+                [void]$state.Status.AppendLine('traceSafetyStopExit=' + (Invoke-SupportLogman @('stop',$state.Name,'-ets')))
+            }
+        }
+    } catch { [void]$state.Status.AppendLine((Format-ProbeError $_)) }
+    return $state
+}
+
+function Stop-SupportLiveTrace($state, $archive, $included) {
+    if ($null -eq $state) { return }
+    $stopped = -not $state.Attempted
+    try {
+        if ($state.Attempted) {
+            try {
+                $stopCode = Invoke-SupportLogman @('stop',$state.Name,'-ets')
+                $stopped = $stopCode -in @('0','-2144337918')
+                [void]$state.Status.AppendLine('traceStopExit=' + $stopCode)
+            }
+            catch { [void]$state.Status.AppendLine((Format-ProbeError $_)) }
+        }
+        $events = [Text.StringBuilder]::new()
+        [void]$events.AppendLine('Sanitized live ETW events during this report only. Raw ETL and arbitrary event strings are not included. Wait chains are not call stacks.')
+        if (Test-Path -LiteralPath $state.Path -PathType Leaf) {
+            try {
+                $count = 0
+                foreach ($record in @(Get-WinEvent -Path $state.Path -Oldest -MaxEvents 3000 -ErrorAction Stop)) {
+                    try { [void]$events.AppendLine((Convert-SupportLiveEvent $record)); $count++ }
+                    catch { [void]$events.AppendLine((Format-ProbeError $_)) }
+                }
+                [void]$state.Status.AppendLine('eventsExported=' + $count + '; limit=3000')
+            } catch { [void]$state.Status.AppendLine((Format-ProbeError $_)) }
+        } else { [void]$state.Status.AppendLine('Trace file absent; no inference about successful or failed PSA activation is possible.') }
+        Add-ReportText $archive $included 'printing/live-trace-status.txt' $state.Status.ToString()
+        Add-ReportText $archive $included 'printing/live-print-events.txt' $events.ToString()
+    } finally {
+        if ($null -ne $state.Guard) {
+            # Stop only our diagnostic watcher, never the application or spooler.
+            if ($stopped -and -not $state.Guard.HasExited) { $state.Guard.Kill(); [void]$state.Guard.WaitForExit(1000) }
+            $state.Guard.Dispose()
+        }
+        foreach ($path in @($state.Path,$state.ProvidersPath)) {
+            if (Test-Path -LiteralPath $path -PathType Leaf) { Remove-Item -LiteralPath $path -ErrorAction SilentlyContinue }
+        }
+    }
+}
+
+function Start-SupportWaitSnapshot([int]$ProbeId, [string]$Path) {
+    $command = "& '" + $PSCommandPath.Replace("'","''") + "' -WaitSnapshotProcessId " + $ProbeId + " -WaitSnapshotOutputPath '" + $Path.Replace("'","''") + "'"
+    $encoded = [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($command))
+    return Start-Process -FilePath (Join-Path $PSHOME 'powershell.exe') -WindowStyle Hidden -PassThru -ArgumentList @(
+        '-NoProfile','-NonInteractive','-ExecutionPolicy','Bypass','-EncodedCommand',$encoded)
+}
+
+function Add-PrintProviderDiagnostics($archive, $included) {
+    $script:SupportProbeDeadline = [DateTime]::UtcNow.AddSeconds(65)
+    $trace = $null
+    try {
+        # Do not start tracing when the read-only inventory finds no relevant queues.
+        try {
+            $relevant = @(Get-CimInstance Win32_Printer -ErrorAction Stop | Where-Object { $_.Name -like 'pyToneRIP*' })
+            if ($relevant.Count) { $trace = Start-SupportLiveTrace }
+        } catch {
+            Add-ReportText $archive $included 'printing/live-trace-unavailable.txt' (Format-ProbeError $_)
+        }
+        Add-PrintProviderDiagnosticsCore $archive $included
+    } finally { Stop-SupportLiveTrace $trace $archive $included }
+}
+
+# Snapshot work runs in its own bounded child: a WCT/COM query must not hang export.
+if ($WaitSnapshotProcessId -gt 0 -and -not [string]::IsNullOrWhiteSpace($WaitSnapshotOutputPath)) {
+    try {
+        Initialize-SupportWaitChains
+        [SupportReportWaitChains]::Capture($WaitSnapshotProcessId, $WaitSnapshotOutputPath)
+        Start-Sleep -Milliseconds 1500
+        [SupportReportWaitChains]::Capture($WaitSnapshotProcessId, $WaitSnapshotOutputPath)
+    } catch { [IO.File]::AppendAllText($WaitSnapshotOutputPath, (Format-ProbeError $_), [Text.UTF8Encoding]::new($false)); exit 1 }
+    exit
+}
+
 # Run provider calls in a disposable read-only child process. A provider hang
 # must not freeze the Manager or prevent exporting the other diagnostic logs.
 if (-not [string]::IsNullOrWhiteSpace($PrintProbeOutputPath)) {
@@ -1031,7 +1269,7 @@ function Get-PrintActivationEventDetails($record) {
     return $lines -join [Environment]::NewLine
 }
 
-function Add-PrintProviderDiagnostics($archive, $included) {
+function Add-PrintProviderDiagnosticsCore($archive, $included) {
     $inventory = [System.Text.StringBuilder]::new()
     [void]$inventory.AppendLine('Read-only diagnostics. No preferences, registry values, media or queues are changed. Queue numbers are local to this report.')
     [void]$inventory.AppendLine('Original queue PrintTicket/PrintCapabilities XML may contain vendor private DEVMODE and printer identifiers. No document/job tickets are read. Software presence is not proof of causation.')
@@ -1048,8 +1286,12 @@ function Add-PrintProviderDiagnostics($archive, $included) {
         $number++
         [void]$inventory.AppendLine("Queue $number; driver=$($printer.DriverName); virtual=$($printer.PortName -like 'pyToneRIP.Manager_*'); default=$($printer.Default); attributes=$($printer.Attributes); status=$($printer.PrinterStatus); workOffline=$($printer.WorkOffline)")
         if ($number -gt 6) { continue }
+        if ($null -ne $script:SupportProbeDeadline -and [DateTime]::UtcNow -ge $script:SupportProbeDeadline) {
+            [void]$inventory.AppendLine("Queue $number; probe skipped: total provider diagnostic budget exhausted"); continue
+        }
         $probePath = Join-Path ([System.IO.Path]::GetTempPath()) ('pyToneRIP-print-probe-' + [guid]::NewGuid().ToString('N') + '.json')
-        $process = $null
+        $process = $null; $waitProcess = $null; $waitRequested = $false
+        $waitPath = $probePath + ".wait.txt"
         $timeoutMs = if ($printer.PortName -like 'pyToneRIP.Manager_*' -or $printer.Name -like 'pyToneRIP*') { 45000 } else { 15000 }
         $timedOut = $false
         try {
@@ -1058,7 +1300,22 @@ function Add-PrintProviderDiagnostics($archive, $included) {
             $encoded = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($command))
             $process = Start-Process -FilePath (Join-Path $PSHOME 'powershell.exe') -WindowStyle Hidden -PassThru -ArgumentList @(
                 '-NoProfile','-NonInteractive','-Sta','-ExecutionPolicy','Bypass','-EncodedCommand',$encoded)
-            if (-not $process.WaitForExit($timeoutMs)) {
+            $probeTimer = [Diagnostics.Stopwatch]::StartNew()
+            while (-not $process.WaitForExit(250)) {
+                if (-not $waitRequested -and $probeTimer.ElapsedMilliseconds -ge 3000 -and
+                    ($printer.Name -like 'pyToneRIP*' -or $printer.PortName -like 'pyToneRIP.Manager_*')) {
+                    $waitRequested = $true
+                    try { $waitProcess = Start-SupportWaitSnapshot $process.Id $waitPath }
+                    catch { [IO.File]::WriteAllText($waitPath, (Format-ProbeError $_), [Text.UTF8Encoding]::new($false)) }
+                }
+                if ($null -ne $waitProcess -and -not $waitProcess.HasExited -and $probeTimer.ElapsedMilliseconds -ge 12000) {
+                    $waitProcess.Kill(); [void]$waitProcess.WaitForExit(1000)
+                    [IO.File]::AppendAllText($waitPath, "`r`nWait snapshot exceeded its bounded window; partial results retained.")
+                }
+                if ($probeTimer.ElapsedMilliseconds -ge $timeoutMs -or
+                    ($null -ne $script:SupportProbeDeadline -and [DateTime]::UtcNow -ge $script:SupportProbeDeadline)) { $timedOut = $true; break }
+            }
+            if ($timedOut) {
                 $timedOut = $true
                 $process.Kill()
                 [void]$process.WaitForExit(2000)
@@ -1075,6 +1332,15 @@ function Add-PrintProviderDiagnostics($archive, $included) {
             }
         } catch { Add-ReportText $archive $included "printing/queue-$number/probe-export.error.txt" (Format-ProbeError $_) }
         finally {
+            if ($null -ne $waitProcess) {
+                if (-not $waitProcess.WaitForExit(500)) { $waitProcess.Kill(); [void]$waitProcess.WaitForExit(1000) }
+                $waitProcess.Dispose()
+            }
+            if (Test-Path -LiteralPath $waitPath -PathType Leaf) {
+                Add-ReportText $archive $included "printing/queue-$number/wait-chains.txt" ([IO.File]::ReadAllText($waitPath))
+            } elseif ($printer.Name -like 'pyToneRIP*') {
+                Add-ReportText $archive $included "printing/queue-$number/wait-chains.txt" 'No wait snapshot captured: the probe finished before the sampling threshold, or the observer was unavailable. This does not prove there was no transient wait.'
+            }
             if ($null -ne $process) {
                 if (-not $process.HasExited) { $process.Kill(); [void]$process.WaitForExit(2000) }
                 $process.Dispose()
@@ -1083,7 +1349,7 @@ function Add-PrintProviderDiagnostics($archive, $included) {
             if (Test-Path -LiteralPath $nativeTrace) {
                 Add-ReportText $archive $included "printing/queue-$number/native-calls.txt" ([IO.File]::ReadAllText($nativeTrace))
             }
-            foreach ($temporary in @($probePath, ($probePath + '.pending'), $nativeTrace)) {
+            foreach ($temporary in @($probePath, ($probePath + '.pending'), $nativeTrace, $waitPath)) {
                 if (Test-Path -LiteralPath $temporary) { Remove-Item -LiteralPath $temporary -ErrorAction SilentlyContinue }
             }
         }
@@ -1321,6 +1587,8 @@ try {
     $writer = [System.IO.StreamWriter]::new($manifest.Open(), [System.Text.UTF8Encoding]::new($false))
     try {
         $writer.WriteLine('pyToneRIP technical diagnostics. No files are sent by the application.')
+        $writer.WriteLine('Live ETW is attempted around the diagnostic provider requests, not retrospectively around Apply. Sanitized events only; raw ETL is excluded. Trace permission failures are in printing/live-trace-status.txt. No automatic elevation.')
+        $writer.WriteLine('Wait-chain samples are captured during slow virtual-queue probes in a bounded child. They show thread dependencies, not managed/native call stacks. No process memory dumps or document contents are collected. WCT access errors do not identify the original printer failure.')
         $writer.WriteLine('*.errors.txt contain detailed application/installer error records: original messages, HRESULTs, inner exceptions and stack traces when logged. Paths, document/profile filenames and IP/URL endpoints are replaced.')
         $writer.WriteLine('*.diagnostics.txt contain compact technical summaries and a settings timeline. Missing or unreadable logs are reported explicitly in both formats.')
         $writer.WriteLine('Windows reports cover crashes and hangs of any application, plus printing and system events. Look in windows-events.txt for the time, application, fault module and exception code.')

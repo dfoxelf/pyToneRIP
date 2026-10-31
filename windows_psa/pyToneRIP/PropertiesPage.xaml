@@ -41,7 +41,9 @@
               <TextBlock i18n:DeferredLocalization.Key="Auto/D82E05E03E19" Text="Select the black ink currently installed in the printer. PK and MK share one native raster path on models with an ink-change mechanism." Foreground="{StaticResource SecondaryTextBrush}" TextWrapping="Wrap" Margin="0,0,12,8"/>
             </StackPanel>
           </StackPanel></Border>
-          <Border Style="{StaticResource SectionBorder}"><StackPanel>
+          <Grid>
+            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+          <Border x:Name="CalibrationSection" Style="{StaticResource SectionBorder}" Margin="0,0,7,14"><StackPanel>
             <TextBlock i18n:DeferredLocalization.Key="Auto/3457E8ADBBC1" Text="Calibration mode" Style="{StaticResource SectionTitleStyle}"/>
             <CheckBox i18n:DeferredLocalization.Key="Auto/940BA1A89E05" x:Name="CalibrationEnabledBox" Content="Enable RAW calibration mode" Checked="CalibrationModeChanged" Unchecked="CalibrationModeChanged" Margin="0,6,0,5"/>
             <TextBlock i18n:DeferredLocalization.Key="Auto/0163AD0F367D" Text="Uses printer settings, Gamma and normal Ink Limit; bypasses .quad curves and blending. This printer prints calibration targets until calibration mode is switched off and applied." Foreground="{StaticResource SecondaryTextBrush}" TextWrapping="Wrap" Margin="28,0,0,8"/>
@@ -50,6 +52,31 @@
               <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="2*"/><ColumnDefinition Width="3*"/><ColumnDefinition Width="54"/></Grid.ColumnDefinitions><TextBlock i18n:DeferredLocalization.Key="Auto/CDCD10FF02CC" Text="Ink Limit (%)" VerticalAlignment="Center" TextWrapping="Wrap"/><Slider x:Name="CalibrationInkLimitSlider" Grid.Column="1" Minimum="0" Maximum="100" Value="100" StepFrequency="1" ValueChanged="CalibrationInkLimitChanged"/><TextBlock x:Name="CalibrationInkLimitLabel" Grid.Column="2" Text="100%" Width="54" TextAlignment="Right" VerticalAlignment="Center"/></Grid>
             </StackPanel>
           </StackPanel></Border>
+          <Border x:Name="PreviewSection" Grid.Column="1" Style="{StaticResource SectionBorder}" Margin="7,0,0,14"><StackPanel>
+            <CheckBox x:Name="PreviewEnabledBox" Checked="PreviewModeChanged" Unchecked="PreviewModeChanged" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" Margin="0,0,0,8">
+              <TextBlock i18n:DeferredLocalization.Key="Preview/Enabled" Text="Enable preview (Softproofing)" Style="{StaticResource SectionTitleStyle}" TextWrapping="Wrap" VerticalAlignment="Center" Margin="0"/>
+            </CheckBox>
+            <ContentControl x:Name="PreviewOptionsPanel" IsEnabled="False" Opacity="0.45" HorizontalContentAlignment="Stretch"><StackPanel>
+              <TextBlock i18n:DeferredLocalization.Key="Preview/Profile" Text="ICC profile (optional)" Style="{StaticResource Label}"/>
+              <TextBox x:Name="PreviewIccBox" IsReadOnly="True" IsTabStop="False" TextChanged="PreviewProfileChanged" Margin="0,4,0,9"/>
+              <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button i18n:DeferredLocalization.Key="Auto/6C608FB407A2" Content="Browse…" Click="BrowsePreviewProfile" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                <Button x:Name="RemovePreviewProfileButton" i18n:DeferredLocalization.Key="Auto/15E3A2F6A311" Content="Remove" Click="RemovePreviewProfile" VerticalAlignment="Center" IsEnabled="False"/>
+              </StackPanel>
+              <Grid Margin="0,5,0,0">
+                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                <ContentControl x:Name="PreviewPaperPanel" HorizontalContentAlignment="Stretch"><StackPanel>
+                <RadioButton x:Name="PreviewObaRadio" GroupName="PreviewPaperWhite" i18n:DeferredLocalization.Key="Preview/WithOba" Content="Paper with OBA"/>
+                <RadioButton x:Name="PreviewObaFreeRadio" GroupName="PreviewPaperWhite" i18n:DeferredLocalization.Key="Preview/WithoutOba" Content="OBA-free paper"/>
+                </StackPanel></ContentControl>
+                <StackPanel Grid.Column="1" Margin="12,0,0,0" VerticalAlignment="Center">
+                  <TextBlock x:Name="PreviewIlluminantLabel" Text="D50" HorizontalAlignment="Center"/>
+                  <Slider x:Name="PreviewIlluminantSlider" Minimum="0" Maximum="3" StepFrequency="1" TickFrequency="1" TickPlacement="Outside" SnapsTo="Ticks" ValueChanged="PreviewIlluminantChanged"/>
+                </StackPanel>
+              </Grid>
+            </StackPanel></ContentControl>
+          </StackPanel></Border>
+          </Grid>
           <Border x:Name="LayoutSection" Style="{StaticResource SectionBorder}"><StackPanel>
             <TextBlock i18n:DeferredLocalization.Key="Auto/A5C0DF7110EB" Text="Layout" Style="{StaticResource SectionTitleStyle}"/>
             <CheckBox i18n:DeferredLocalization.Key="Auto/63DC2882C404" x:Name="ApplyRipLayoutBox" Content="Apply additional RIP layout" Checked="RipLayoutModeChanged" Unchecked="RipLayoutModeChanged" Margin="0,8,0,2"/>
@@ -175,6 +202,6 @@
         </ScrollViewer>
       </PivotItem>
     </Pivot>
-    <Grid Grid.Row="2" Padding="26,12" Background="{StaticResource StatusBarBrush}"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><TextBlock i18n:DeferredLocalization.Key="Auto/69ADB2613C25" x:Name="ValidationSummary" Text="Loading capabilities…" TextWrapping="Wrap" VerticalAlignment="Center" Margin="0,0,18,0"/><StackPanel Grid.Column="1" Orientation="Horizontal"><Button i18n:DeferredLocalization.Key="Auto/B259EC506A15" Content="Cancel" Click="Cancel" Margin="0,0,8,0"/><Button i18n:DeferredLocalization.Key="Auto/AF70020B40EA" x:Name="ApplyButton" Content="Apply" Click="Apply" IsEnabled="False"/></StackPanel></Grid>
+    <Grid Grid.Row="2" Padding="26,12" Background="{StaticResource StatusBarBrush}"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><TextBlock i18n:DeferredLocalization.Key="Auto/69ADB2613C25" x:Name="ValidationSummary" Text="Loading capabilities…" TextWrapping="Wrap" VerticalAlignment="Center" Margin="0,0,18,0"/><StackPanel x:Name="SettingsActions" Grid.Column="1" Orientation="Horizontal"><Button i18n:DeferredLocalization.Key="Auto/B259EC506A15" Content="Cancel" Click="Cancel" Margin="0,0,8,0"/><Button i18n:DeferredLocalization.Key="Auto/AF70020B40EA" x:Name="ApplyButton" Content="Apply" Click="Apply" IsEnabled="False"/></StackPanel></Grid>
   </Grid>
 </Page>

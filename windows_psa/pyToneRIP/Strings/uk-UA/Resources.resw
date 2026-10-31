@@ -1,5 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
+  <data name="PreviewWindow.Unsimulated" xml:space="preserve"><value>Чорно-біле зображення без імітації паперу.</value></data>
+  <data name="PreviewWindow.Title" xml:space="preserve"><value>Попередній перегляд - Soft Proof</value></data>
+  <data name="PreviewWindow.Print"><value>Друк</value></data>
+  <data name="PreviewWindow.Cancel"><value>Скасувати</value></data>
+  <data name="PreviewWindow.Close"><value>Закрити</value></data>
+  <data name="PreviewWindow.CancelCloseHelp" xml:space="preserve"><value>Скасувати завдання друку та закрити вікно попереднього перегляду.</value></data>
+  <data name="PreviewWindow.Previous"><value>Назад</value></data>
+  <data name="PreviewWindow.Next"><value>Далі</value></data>
+  <data name="PreviewWindow.Fit"><value>Вписати сторінку</value></data>
+  <data name="PreviewWindow.Preparing" xml:space="preserve"><value>Підготовка завдання…</value></data>
+  <data name="PreviewWindow.Sending" xml:space="preserve"><value>Передавання даних принтеру…</value></data>
+  <data name="PreviewWindow.Sent" xml:space="preserve"><value>Дані передано; фізичний друк може тривати.</value></data>
+  <data name="PreviewWindow.Cancelled" xml:space="preserve"><value>Завдання скасовано.</value></data>
+  <data name="PreviewWindow.Failed" xml:space="preserve"><value>Помилка завдання.</value></data>
+  <data name="PreviewWindow.Measured" xml:space="preserve"><value>Soft Proof за вибраним ICC. Перевірте відповідність праворуч.</value></data>
+  <data name="PreviewWindow.Approximate" xml:space="preserve"><value>Приблизний Soft Proof за вимірюваннями категорії паперу та оцінкою його відтінку.</value></data>
+  <data name="Preview.Enabled.Text"><value>Попередній перегляд — Увімкнути (Softproofing)</value></data>
+  <data name="Preview.EnabledHelp"><value>Відкриває вікно попереднього перегляду перед друком для оцінки тонів, відтінку сірого, білизни паперу та глибини чорного. З ICC-профілем імітує відбиток; без профілю результат приблизний. Не змінює дані друку.</value></data>
+  <data name="Preview.Profile.Text"><value>ICC-профіль (необов’язково)</value></data>
+  <data name="Preview.WithOba.Content"><value>Папір з OBA</value></data>
+  <data name="Preview.WithoutOba.Content"><value>Папір без OBA</value></data>
+  <data name="Preview.WithObaHelp"><value>Приблизно імітує білизну паперу з оптичним відбілювачем за освітлення D50–D65. Впливає лише на попередній перегляд.</value></data>
+  <data name="Preview.WithoutObaHelp"><value>Приблизно імітує білизну паперу без оптичного відбілювача. Впливає лише на попередній перегляд.</value></data>
   <data name="AppDescription"><value>Програма підтримки друку pyToneRIP</value></data>
   <data name="Auto.0163AD0F367D.Text"><value>Обходить .quad криві, змішування, гамму та нормальне обмеження чорнила. Цей принтер друкуватиме калібрувальні мішені, лише доки цей режим не буде вимкнено та застосовано.</value></data>
   <data name="Auto.043112257626.Text"><value>Логічні ідентифікатори мають відповідати кожному вибраному профілю .quad. Зіставте кожне логічне чорнило з одним фізичним шляхом вибраного принтера.</value></data>
@@ -308,4 +331,39 @@
   <data name="ResamplingHelp.bicubic"><value>Використовує кубічний фільтр для балансу різкості й плавних тональних переходів на фотографіях. Зберігає більше деталей, ніж білінійний метод, але біля контрастних меж можливі невеликі світлі або темні ореоли.</value></data>
   <data name="ResamplingHelp.lanczos"><value>Добре зберігає дрібні деталі під час перерахунку фотографії на сітку дизерингу, особливо при зменшенні. Підходить для різкішого результату, але біля контрастних меж можуть з’являтися світлі або темні ореоли.</value></data>
   <data name="ResamplingHelp.mitchell"><value>Поєднує деталізацію та плавні переходи з менш вираженими ореолами на межах, ніж у Lanczos. Підходить для фотографій, де ореоли заважають, ціною трохи м’якших дрібних деталей і повільнішої обробки.</value></data>
+  <data name="Preview.IlluminantHelp" xml:space="preserve"><value>Приблизне освітлення перегляду: D50, D55, D60 або D65. Змінює лише відтінок перегляду, а не дані друку. Без спектральних вимірювань неможливо передбачити флуоресценцію OBA.</value></data>
+  <data name="PreviewWindow.PrintClose" xml:space="preserve"><value>Друк і закрити</value></data>
+  <data name="PreviewWindow.Rulers" xml:space="preserve"><value>Лінійки</value></data>
+  <data name="PreviewWindow.Printer" xml:space="preserve"><value>Принтер</value></data>
+  <data name="PreviewWindow.Paper" xml:space="preserve"><value>Папір</value></data>
+  <data name="PreviewWindow.Size" xml:space="preserve"><value>Розмір</value></data>
+  <data name="PreviewWindow.Dither" xml:space="preserve"><value>Дизер</value></data>
+  <data name="PreviewWindow.Mode" xml:space="preserve"><value>Режим</value></data>
+  <data name="PreviewWindow.Curves" xml:space="preserve"><value>Криві</value></data>
+  <data name="PreviewWindow.Resolution" xml:space="preserve"><value>Роздільність</value></data>
+  <data name="PreviewWindow.ProfileMatch" xml:space="preserve"><value>Відповідність ICC</value></data>
+  <data name="PreviewWindow.ProfileUnknown" xml:space="preserve"><value>Умови ICC невідомі.</value></data>
+  <data name="PreviewWindow.ProfileAssigned" xml:space="preserve"><value>Призначений цим налаштуванням користувачем.</value></data>
+  <data name="PreviewWindow.ProfileMismatch" xml:space="preserve"><value>ICC не відповідає збереженим умовам друку.</value></data>
+  <data name="PreviewWindow.PhysicalUnavailable" xml:space="preserve"><value>Фізичний стан принтера недоступний.</value></data>
+  <data name="PreviewWindow.PhysicalUnconfirmed" xml:space="preserve"><value>Стан пристрою не підтверджує завершення цього завдання та вихід аркуша.</value></data>
+  <data name="PreviewWindow.DeviceOther" xml:space="preserve"><value>Принтер: інший стан</value></data>
+  <data name="PreviewWindow.DeviceUnknown" xml:space="preserve"><value>Принтер: стан невідомий</value></data>
+  <data name="PreviewWindow.DeviceIdle" xml:space="preserve"><value>Принтер: вільний</value></data>
+  <data name="PreviewWindow.DevicePrinting" xml:space="preserve"><value>Принтер: друкує</value></data>
+  <data name="PreviewWindow.DeviceWarming" xml:space="preserve"><value>Принтер: прогрівання</value></data>
+  <data name="PreviewWindow.EditSettings" xml:space="preserve"><value>Змінити налаштування</value></data>
+  <data name="PreviewWindow.Editing" xml:space="preserve"><value>Оновлення попереднього перегляду…</value></data>
+  <data name="PreviewWindow.ZoomHelp" xml:space="preserve"><value>Ctrl + коліщатко миші: масштаб. Можна ввести відсотки.</value></data>
+  <data name="PreviewWindow.ActualSizeHelp" xml:space="preserve"><value>100%: один піксель растра на фізичний піксель екрана. Потрібна відома однакова роздільність X/Y.</value></data>
+  <data name="PreviewWindow.SourceChanged" xml:space="preserve"><value>Початкові криві змінилися. Відкрийте «Змінити налаштування», щоб оновити перегляд.</value></data>
+  <data name="PreviewWindow.ICC" xml:space="preserve"><value>ICC</value></data>
+  <data name="PreviewWindow.PhotoPlacement" xml:space="preserve"><value>Розміщення фото</value></data>
+  <data name="PreviewWindow.PhotoFit" xml:space="preserve"><value>Вписати фото</value></data>
+  <data name="PreviewWindow.PhotoReset" xml:space="preserve"><value>Скинути фото</value></data>
+  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Перетягуйте зображення мишею; тягніть кутовий маркер для зміни розміру зі збереженням пропорцій. Поворот — кнопками 90°. Поля початкової програми залишаються частиною зображення.</value></data>
+  <data name="PreviewWindow.PhotoCenterHorizontal" xml:space="preserve"><value>Центрувати по горизонталі</value></data>
+  <data name="PreviewWindow.PhotoCenterVertical" xml:space="preserve"><value>Центрувати по вертикалі</value></data>
+  <data name="PreviewWindow.PrintStart" xml:space="preserve"><value>Початок друку</value></data>
+  <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>Стрілка вказує край аркуша, який друкується першим.</value></data>
 </root>

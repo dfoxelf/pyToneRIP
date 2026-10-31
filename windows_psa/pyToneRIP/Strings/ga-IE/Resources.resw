@@ -1,5 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
+  <data name="PreviewWindow.Unsimulated" xml:space="preserve"><value>Liathscála gan ionsamhlú páipéir.</value></data>
+  <data name="PreviewWindow.Title" xml:space="preserve"><value>Réamhamharc priontála - Soft Proof</value></data>
+  <data name="PreviewWindow.Print"><value>Priontáil</value></data>
+  <data name="PreviewWindow.Cancel"><value>Cealaigh</value></data>
+  <data name="PreviewWindow.Close"><value>Dún</value></data>
+  <data name="PreviewWindow.CancelCloseHelp" xml:space="preserve"><value>Cealaigh an jab priontála agus dún an fhuinneog réamhamhairc.</value></data>
+  <data name="PreviewWindow.Previous"><value>Roimhe seo</value></data>
+  <data name="PreviewWindow.Next"><value>Ar aghaidh</value></data>
+  <data name="PreviewWindow.Fit"><value>Oiriúnaigh an leathanach</value></data>
+  <data name="PreviewWindow.Preparing" xml:space="preserve"><value>Jab priontála á ullmhú…</value></data>
+  <data name="PreviewWindow.Sending" xml:space="preserve"><value>Sonraí á seoladh chuig an printéir…</value></data>
+  <data name="PreviewWindow.Sent" xml:space="preserve"><value>Sonraí seolta; d’fhéadfadh priontáil fhisiciúil leanúint.</value></data>
+  <data name="PreviewWindow.Cancelled" xml:space="preserve"><value>Jab curtha ar ceal.</value></data>
+  <data name="PreviewWindow.Failed" xml:space="preserve"><value>Theip ar an jab.</value></data>
+  <data name="PreviewWindow.Measured" xml:space="preserve"><value>Soft Proof leis an ICC roghnaithe. Seiceáil an sannadh ar dheis.</value></data>
+  <data name="PreviewWindow.Approximate" xml:space="preserve"><value>Soft Proof measta ó thomhais chatagóir an pháipéir agus dath páipéir measta.</value></data>
+  <data name="Preview.Enabled.Text"><value>Réamhamharc — Cumasaigh (Softproofing)</value></data>
+  <data name="Preview.EnabledHelp"><value>Osclaíonn sé fuinneog réamhamhairc roimh phriontáil. Le próifíl ICC, insamhlaíonn sé toin, teilgean datha, bán an pháipéir agus dubh an phrionta; gan próifíl tá an insamhladh garbh. Ní athraíonn sé sonraí priontála.</value></data>
+  <data name="Preview.Profile.Text"><value>Próifíl ICC (roghnach)</value></data>
+  <data name="Preview.WithOba.Content"><value>Páipéar le OBA</value></data>
+  <data name="Preview.WithoutOba.Content"><value>Páipéar gan OBA</value></data>
+  <data name="Preview.WithObaHelp"><value>Insamhlaíonn sé go garbh báine páipéir le gealaitheoirí optúla faoi shoilsiú D50–D65. Ní théann sé i bhfeidhm ach ar an réamhamharc.</value></data>
+  <data name="Preview.WithoutObaHelp"><value>Insamhlaíonn sé go garbh báine páipéir gan gealaitheoirí optúla. Ní théann sé i bhfeidhm ach ar an réamhamharc.</value></data>
   <data name="AppDescription"><value>Aip Tacaíochta Priontála pyToneRIP</value></data>
   <data name="Auto.0163AD0F367D.Text"><value>Seachnaíonn sé cuair .quad, cumasc, gáma agus an ghnáth-theorainn dúigh. Ní phriontálfaidh an printéir seo ach spriocanna calabrúcháin go dtí go múchtar agus go gcuirtear an mód seo i bhfeidhm.</value></data>
   <data name="Auto.043112257626.Text"><value>Ní mór d&#x27;aitheantais loighciúla gach próifíl .quad roghnaithe a mheaitseáil. Déan gach dúch loighciúil a mhapáil go cosán fisiciúil amháin den phrintéir roghnaithe.</value></data>
@@ -308,4 +331,39 @@
   <data name="ResamplingHelp.bicubic"><value>Úsáideann sé scagaire ciúbach chun géire agus trasdulta míne toin i ngrianghraif a chothromú. Caomhnaíonn sé níos mó mionsonraí ná an modh délíneach, ach d’fhéadfadh luan éadrom teacht timpeall ar imill ardchodarsnachta.</value></data>
   <data name="ResamplingHelp.lanczos"><value>Caomhnaíonn sé mionsonraí go maith agus grianghraif á n-athshampláil chuig an eangach díodánaithe, go háirithe agus iad á laghdú. Roghnaigh é le haghaidh toraidh níos géire, ach bí ag faire ar luan geal nó dorcha timpeall ar imill ardchodarsnachta.</value></data>
   <data name="ResamplingHelp.mitchell"><value>Cothromaíonn sé mionsonraí agus trasdulta míne le níos lú luain timpeall ar imill ná Lanczos. Oiriúnach do ghrianghraif ina gcuireann luan isteach ar an toradh, ach bíonn mionsonraí beagán níos boige agus an phróiseáil níos moille.</value></data>
+  <data name="Preview.IlluminantHelp" xml:space="preserve"><value>Solas féachana measta: D50, D55, D60 nó D65. Athraíonn sé dath an réamhamhairc amháin, ní na sonraí priontála. Ní féidir fluaraiseacht OBA a thuar gan tomhais speictreacha.</value></data>
+  <data name="PreviewWindow.PrintClose" xml:space="preserve"><value>Priontáil agus dún</value></data>
+  <data name="PreviewWindow.Rulers" xml:space="preserve"><value>Rialóirí</value></data>
+  <data name="PreviewWindow.Printer" xml:space="preserve"><value>Printéir</value></data>
+  <data name="PreviewWindow.Paper" xml:space="preserve"><value>Páipéar</value></data>
+  <data name="PreviewWindow.Size" xml:space="preserve"><value>Méid</value></data>
+  <data name="PreviewWindow.Dither" xml:space="preserve"><value>Dither</value></data>
+  <data name="PreviewWindow.Mode" xml:space="preserve"><value>Mód</value></data>
+  <data name="PreviewWindow.Curves" xml:space="preserve"><value>Cuair</value></data>
+  <data name="PreviewWindow.Resolution" xml:space="preserve"><value>Taifeach</value></data>
+  <data name="PreviewWindow.ProfileMatch" xml:space="preserve"><value>Sannadh ICC</value></data>
+  <data name="PreviewWindow.ProfileUnknown" xml:space="preserve"><value>Níl coinníollacha ICC ar eolas.</value></data>
+  <data name="PreviewWindow.ProfileAssigned" xml:space="preserve"><value>Sannadh do na socruithe seo ag an úsáideoir.</value></data>
+  <data name="PreviewWindow.ProfileMismatch" xml:space="preserve"><value>Ní mheaitseálann ICC na coinníollacha priontála sábháilte.</value></data>
+  <data name="PreviewWindow.PhysicalUnavailable" xml:space="preserve"><value>Níl stádas fisiciúil an phrintéara ar fáil.</value></data>
+  <data name="PreviewWindow.PhysicalUnconfirmed" xml:space="preserve"><value>Ní dheimhníonn stádas an ghléis críochnú an jab seo ná aschur na bileoige.</value></data>
+  <data name="PreviewWindow.DeviceOther" xml:space="preserve"><value>Printéir: staid eile</value></data>
+  <data name="PreviewWindow.DeviceUnknown" xml:space="preserve"><value>Printéir: anaithnid</value></data>
+  <data name="PreviewWindow.DeviceIdle" xml:space="preserve"><value>Printéir: díomhaoin</value></data>
+  <data name="PreviewWindow.DevicePrinting" xml:space="preserve"><value>Printéir: ag priontáil</value></data>
+  <data name="PreviewWindow.DeviceWarming" xml:space="preserve"><value>Printéir: ag téamh</value></data>
+  <data name="PreviewWindow.EditSettings" xml:space="preserve"><value>Athraigh socruithe</value></data>
+  <data name="PreviewWindow.Editing" xml:space="preserve"><value>Réamhamharc á nuashonrú…</value></data>
+  <data name="PreviewWindow.ZoomHelp" xml:space="preserve"><value>Ctrl + roth luiche: súmáil. Is féidir céatadán a chur isteach.</value></data>
+  <data name="PreviewWindow.ActualSizeHelp" xml:space="preserve"><value>100%: picteilín rastair amháin in aghaidh picteilín fisiciúil scáileáin. Teastaíonn taifeach X/Y atá ar eolas agus cothrom.</value></data>
+  <data name="PreviewWindow.SourceChanged" xml:space="preserve"><value>Tá na cuair foinse athraithe. Oscail Athraigh socruithe chun an réamhamharc a athnuachan.</value></data>
+  <data name="PreviewWindow.ICC" xml:space="preserve"><value>ICC</value></data>
+  <data name="PreviewWindow.PhotoPlacement" xml:space="preserve"><value>Suíomh grianghraif</value></data>
+  <data name="PreviewWindow.PhotoFit" xml:space="preserve"><value>Oiriúnaigh grianghraf</value></data>
+  <data name="PreviewWindow.PhotoReset" xml:space="preserve"><value>Athshocraigh grianghraf</value></data>
+  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Tarraing an íomhá chun í a bhogadh agus cúinne chun a méid a athrú go comhréireach. Rothlaigh leis na cnaipí 90°. Fanann imeall an fheidhmchláir fhoinseach mar chuid den íomhá.</value></data>
+  <data name="PreviewWindow.PhotoCenterHorizontal" xml:space="preserve"><value>Láraigh go cothrománach</value></data>
+  <data name="PreviewWindow.PhotoCenterVertical" xml:space="preserve"><value>Láraigh go hingearach</value></data>
+  <data name="PreviewWindow.PrintStart" xml:space="preserve"><value>Tús priontála</value></data>
+  <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>Léiríonn an tsaighead imeall an leathanaigh a phriontáiltear ar dtús.</value></data>
 </root>

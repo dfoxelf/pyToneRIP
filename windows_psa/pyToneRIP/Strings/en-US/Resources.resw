@@ -1,5 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
+  <data name="PreviewWindow.Unsimulated" xml:space="preserve"><value>Grayscale without paper simulation.</value></data>
+  <data name="PreviewWindow.Title" xml:space="preserve"><value>Print preview - Soft Proof</value></data>
+  <data name="PreviewWindow.Print"><value>Print</value></data>
+  <data name="PreviewWindow.Cancel"><value>Cancel</value></data>
+  <data name="PreviewWindow.Close"><value>Close</value></data>
+  <data name="PreviewWindow.CancelCloseHelp" xml:space="preserve"><value>Cancel the print job and close the preview window.</value></data>
+  <data name="PreviewWindow.Previous"><value>Previous</value></data>
+  <data name="PreviewWindow.Next"><value>Next</value></data>
+  <data name="PreviewWindow.Fit"><value>Fit page</value></data>
+  <data name="PreviewWindow.Preparing" xml:space="preserve"><value>Preparing print job…</value></data>
+  <data name="PreviewWindow.Sending" xml:space="preserve"><value>Sending data to the printer…</value></data>
+  <data name="PreviewWindow.Sent" xml:space="preserve"><value>Data sent; physical printing may continue.</value></data>
+  <data name="PreviewWindow.Cancelled" xml:space="preserve"><value>Print job canceled.</value></data>
+  <data name="PreviewWindow.Failed" xml:space="preserve"><value>Print job failed.</value></data>
+  <data name="PreviewWindow.Measured" xml:space="preserve"><value>Soft Proof using the selected ICC. Check its assignment on the right.</value></data>
+  <data name="PreviewWindow.Approximate" xml:space="preserve"><value>Approximate Soft Proof using paper-category measurements and an estimated paper tint.</value></data>
+  <data name="Preview.Enabled.Text"><value>Enable preview (Softproofing)</value></data>
+  <data name="Preview.EnabledHelp"><value>Opens a preview window before printing to assess tones, color cast, paper white and print black. Uses the selected ICC profile for softproofing; without a profile the simulation is approximate. Does not change print data.</value></data>
+  <data name="Preview.Profile.Text"><value>ICC profile (optional)</value></data>
+  <data name="Preview.WithOba.Content"><value>Paper with OBA</value></data>
+  <data name="Preview.WithoutOba.Content"><value>OBA-free paper</value></data>
+  <data name="Preview.WithObaHelp"><value>Approximates the white of paper with optical brighteners under D50–D65 lighting. The selected paper type supplies an estimated black point. Affects preview only.</value></data>
+  <data name="Preview.WithoutObaHelp"><value>Approximates the white of paper without optical brighteners. The selected paper type supplies an estimated black point. Affects preview only.</value></data>
   <data name="AppDescription"><value>pyToneRIP Print Support App</value></data>
   <data name="Auto.0163AD0F367D.Text"><value>Uses printer settings, Gamma and normal Ink Limit; bypasses .quad curves and blending. This printer prints calibration targets until calibration mode is switched off and applied.</value></data>
   <data name="Auto.043112257626.Text"><value>Logical IDs must match every selected .quad profile. Map each logical ink to one physical path of the selected printer.</value></data>
@@ -308,4 +331,39 @@
   <data name="ResamplingHelp.bicubic"><value>Uses a cubic filter for a balance of sharpness and smooth tonal transitions in photos. It retains more detail than bilinear, but may create slight halos around high-contrast edges.</value></data>
   <data name="ResamplingHelp.lanczos"><value>Preserves fine detail well when mapping photos to the dithering grid, especially when reducing size. Choose it for sharper results, but watch for light or dark halos around high-contrast edges.</value></data>
   <data name="ResamplingHelp.mitchell"><value>Balances detail and smooth transitions with less edge ringing than Lanczos. Suitable for photos where halos are distracting, at the cost of slightly softer fine detail and slower processing.</value></data>
+  <data name="Preview.IlluminantHelp" xml:space="preserve"><value>Approximate viewing light: D50, D55, D60 or D65. Changes only the preview tint, not print data. Without spectral measurements this cannot predict OBA fluorescence.</value></data>
+  <data name="PreviewWindow.PrintClose" xml:space="preserve"><value>Print and close</value></data>
+  <data name="PreviewWindow.Rulers" xml:space="preserve"><value>Rulers</value></data>
+  <data name="PreviewWindow.Printer" xml:space="preserve"><value>Printer</value></data>
+  <data name="PreviewWindow.Paper" xml:space="preserve"><value>Paper</value></data>
+  <data name="PreviewWindow.Size" xml:space="preserve"><value>Size</value></data>
+  <data name="PreviewWindow.Dither" xml:space="preserve"><value>Dither</value></data>
+  <data name="PreviewWindow.Mode" xml:space="preserve"><value>Mode</value></data>
+  <data name="PreviewWindow.Curves" xml:space="preserve"><value>Curves</value></data>
+  <data name="PreviewWindow.Resolution" xml:space="preserve"><value>Resolution</value></data>
+  <data name="PreviewWindow.ProfileMatch" xml:space="preserve"><value>ICC assignment</value></data>
+  <data name="PreviewWindow.ProfileUnknown" xml:space="preserve"><value>ICC conditions are unknown.</value></data>
+  <data name="PreviewWindow.ProfileAssigned" xml:space="preserve"><value>Assigned to these settings by the user.</value></data>
+  <data name="PreviewWindow.ProfileMismatch" xml:space="preserve"><value>ICC differs from the saved print conditions.</value></data>
+  <data name="PreviewWindow.PhysicalUnavailable" xml:space="preserve"><value>Physical printer status unavailable.</value></data>
+  <data name="PreviewWindow.PhysicalUnconfirmed" xml:space="preserve"><value>Device state does not confirm completion of this job or sheet output.</value></data>
+  <data name="PreviewWindow.DeviceOther" xml:space="preserve"><value>Printer: other state</value></data>
+  <data name="PreviewWindow.DeviceUnknown" xml:space="preserve"><value>Printer: unknown</value></data>
+  <data name="PreviewWindow.DeviceIdle" xml:space="preserve"><value>Printer: idle</value></data>
+  <data name="PreviewWindow.DevicePrinting" xml:space="preserve"><value>Printer: printing</value></data>
+  <data name="PreviewWindow.DeviceWarming" xml:space="preserve"><value>Printer: warming up</value></data>
+  <data name="PreviewWindow.EditSettings" xml:space="preserve"><value>Change settings</value></data>
+  <data name="PreviewWindow.Editing" xml:space="preserve"><value>Updating job preview…</value></data>
+  <data name="PreviewWindow.ZoomHelp" xml:space="preserve"><value>Ctrl + mouse wheel: zoom. You can enter a percentage.</value></data>
+  <data name="PreviewWindow.ActualSizeHelp" xml:space="preserve"><value>100%: one raster pixel per physical screen pixel. Requires known, equal X/Y raster DPI.</value></data>
+  <data name="PreviewWindow.SourceChanged" xml:space="preserve"><value>Source curves changed. Open Change settings to refresh the preview.</value></data>
+  <data name="PreviewWindow.ICC" xml:space="preserve"><value>ICC</value></data>
+  <data name="PreviewWindow.PhotoPlacement" xml:space="preserve"><value>Photo placement</value></data>
+  <data name="PreviewWindow.PhotoFit" xml:space="preserve"><value>Fit photo</value></data>
+  <data name="PreviewWindow.PhotoReset" xml:space="preserve"><value>Reset photo</value></data>
+  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Drag the picture to move it; drag a corner to resize proportionally. Rotate with the 90° buttons. The captured page includes any margins added by the source application.</value></data>
+  <data name="PreviewWindow.PhotoCenterHorizontal" xml:space="preserve"><value>Center horizontally</value></data>
+  <data name="PreviewWindow.PhotoCenterVertical" xml:space="preserve"><value>Center vertically</value></data>
+  <data name="PreviewWindow.PrintStart" xml:space="preserve"><value>Print start</value></data>
+  <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>The arrow marks the edge of the sheet that is printed first.</value></data>
 </root>

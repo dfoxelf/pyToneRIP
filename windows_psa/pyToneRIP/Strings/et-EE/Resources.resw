@@ -1,5 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
+  <data name="PreviewWindow.Unsimulated" xml:space="preserve"><value>Halltoonid ilma paberi jäljenduseta.</value></data>
+  <data name="PreviewWindow.Title" xml:space="preserve"><value>Prindieelvaade - Soft Proof</value></data>
+  <data name="PreviewWindow.Print"><value>Prindi</value></data>
+  <data name="PreviewWindow.Cancel"><value>Tühista</value></data>
+  <data name="PreviewWindow.Close"><value>Sule</value></data>
+  <data name="PreviewWindow.CancelCloseHelp" xml:space="preserve"><value>Tühista prinditöö ja sulge eelvaateaken.</value></data>
+  <data name="PreviewWindow.Previous"><value>Eelmine</value></data>
+  <data name="PreviewWindow.Next"><value>Järgmine</value></data>
+  <data name="PreviewWindow.Fit"><value>Mahuta leht</value></data>
+  <data name="PreviewWindow.Preparing" xml:space="preserve"><value>Prinditöö ettevalmistamine…</value></data>
+  <data name="PreviewWindow.Sending" xml:space="preserve"><value>Andmete saatmine printerile…</value></data>
+  <data name="PreviewWindow.Sent" xml:space="preserve"><value>Andmed saadetud; füüsiline printimine võib jätkuda.</value></data>
+  <data name="PreviewWindow.Cancelled" xml:space="preserve"><value>Töö tühistatud.</value></data>
+  <data name="PreviewWindow.Failed" xml:space="preserve"><value>Töö ebaõnnestus.</value></data>
+  <data name="PreviewWindow.Measured" xml:space="preserve"><value>Soft Proof valitud ICC-ga. Kontrollige seost paremal.</value></data>
+  <data name="PreviewWindow.Approximate" xml:space="preserve"><value>Ligikaudne Soft Proof paberikategooria mõõtmiste ja hinnangulise tooni põhjal.</value></data>
+  <data name="Preview.Enabled.Text"><value>Eelvaade — Luba (Softproofing)</value></data>
+  <data name="Preview.EnabledHelp"><value>Avab enne printimist eelvaateakna. ICC-profiiliga simuleerib toone, värvivarjundit, paberivalget ja trükimusta; ilma profiilita on simulatsioon ligikaudne. Ei muuda prindiandmeid.</value></data>
+  <data name="Preview.Profile.Text"><value>ICC-profiil (valikuline)</value></data>
+  <data name="Preview.WithOba.Content"><value>OBA-ga paber</value></data>
+  <data name="Preview.WithoutOba.Content"><value>OBA-vaba paber</value></data>
+  <data name="Preview.WithObaHelp"><value>Simuleerib ligikaudselt optiliste valgenditega paberi valget D50–D65-valgustuses. Mõjutab ainult eelvaadet.</value></data>
+  <data name="Preview.WithoutObaHelp"><value>Simuleerib ligikaudselt optiliste valgenditeta paberi valget. Mõjutab ainult eelvaadet.</value></data>
   <data name="AppDescription"><value>pyToneRIP printimise tugirakendus</value></data>
   <data name="Auto.0163AD0F367D.Text"><value>Mööda .quad kõverad, segamine, gamma ja tavaline tindi piirang. See printer prindib kalibreerimismärke ainult seni, kuni see režiim välja lülitatakse ja rakendatakse.</value></data>
   <data name="Auto.043112257626.Text"><value>Loogilised ID-d peavad ühtima iga valitud .quad-profiiliga. Vastake iga loogiline tint valitud printeri ühele füüsilisele teele.</value></data>
@@ -308,4 +331,39 @@
   <data name="ResamplingHelp.bicubic"><value>Kasutab kuupfiltrit, et tasakaalustada fotode teravust ja sujuvaid tooniüleminekuid. Säilitab rohkem detaile kui bilineaarne meetod, kuid suure kontrastsusega servade ümber võivad tekkida nõrgad halod.</value></data>
   <data name="ResamplingHelp.lanczos"><value>Säilitab peened detailid hästi fotode teisendamisel ditterduse võrgustikule, eriti vähendamisel. Valige teravama tulemuse jaoks, kuid jälgige heledaid või tumedaid halosid suure kontrastsusega servade ümber.</value></data>
   <data name="ResamplingHelp.mitchell"><value>Tasakaalustab detaile ja sujuvaid üleminekuid, tekitades servade ümber vähem halosid kui Lanczos. Sobib fotodele, kus halod häirivad, kuid peened detailid muutuvad veidi pehmemaks ja töötlus on aeglasem.</value></data>
+  <data name="Preview.IlluminantHelp" xml:space="preserve"><value>Ligikaudne vaatlusvalgus: D50, D55, D60 või D65. Muudab ainult eelvaate tooni, mitte prindiandmeid. Spektraalmõõtmisteta ei saa OBA fluorestsentsi ennustada.</value></data>
+  <data name="PreviewWindow.PrintClose" xml:space="preserve"><value>Prindi ja sulge</value></data>
+  <data name="PreviewWindow.Rulers" xml:space="preserve"><value>Joonlauad</value></data>
+  <data name="PreviewWindow.Printer" xml:space="preserve"><value>Printer</value></data>
+  <data name="PreviewWindow.Paper" xml:space="preserve"><value>Paber</value></data>
+  <data name="PreviewWindow.Size" xml:space="preserve"><value>Suurus</value></data>
+  <data name="PreviewWindow.Dither" xml:space="preserve"><value>Rasterdus</value></data>
+  <data name="PreviewWindow.Mode" xml:space="preserve"><value>Režiim</value></data>
+  <data name="PreviewWindow.Curves" xml:space="preserve"><value>Kõverad</value></data>
+  <data name="PreviewWindow.Resolution" xml:space="preserve"><value>Eraldusvõime</value></data>
+  <data name="PreviewWindow.ProfileMatch" xml:space="preserve"><value>ICC seos</value></data>
+  <data name="PreviewWindow.ProfileUnknown" xml:space="preserve"><value>ICC tingimused on teadmata.</value></data>
+  <data name="PreviewWindow.ProfileAssigned" xml:space="preserve"><value>Kasutaja määratud nendele sätetele.</value></data>
+  <data name="PreviewWindow.ProfileMismatch" xml:space="preserve"><value>ICC erineb salvestatud printimistingimustest.</value></data>
+  <data name="PreviewWindow.PhysicalUnavailable" xml:space="preserve"><value>Printeri füüsiline olek pole saadaval.</value></data>
+  <data name="PreviewWindow.PhysicalUnconfirmed" xml:space="preserve"><value>Seadme olek ei kinnita selle töö lõpetamist ega lehe väljumist.</value></data>
+  <data name="PreviewWindow.DeviceOther" xml:space="preserve"><value>Printer: muu olek</value></data>
+  <data name="PreviewWindow.DeviceUnknown" xml:space="preserve"><value>Printer: teadmata olek</value></data>
+  <data name="PreviewWindow.DeviceIdle" xml:space="preserve"><value>Printer: jõude</value></data>
+  <data name="PreviewWindow.DevicePrinting" xml:space="preserve"><value>Printer: prindib</value></data>
+  <data name="PreviewWindow.DeviceWarming" xml:space="preserve"><value>Printer: soojeneb</value></data>
+  <data name="PreviewWindow.EditSettings" xml:space="preserve"><value>Muuda sätteid</value></data>
+  <data name="PreviewWindow.Editing" xml:space="preserve"><value>Eelvaate uuendamine…</value></data>
+  <data name="PreviewWindow.ZoomHelp" xml:space="preserve"><value>Ctrl + hiireratas: suum. Võite sisestada protsendi.</value></data>
+  <data name="PreviewWindow.ActualSizeHelp" xml:space="preserve"><value>100%: üks rasterpiksel füüsilise ekraanipiksli kohta. Vajab teadaolevat võrdset X/Y-eraldusvõimet.</value></data>
+  <data name="PreviewWindow.SourceChanged" xml:space="preserve"><value>Lähtekõverad on muutunud. Eelvaate uuendamiseks avage Muuda sätteid.</value></data>
+  <data name="PreviewWindow.ICC" xml:space="preserve"><value>ICC</value></data>
+  <data name="PreviewWindow.PhotoPlacement" xml:space="preserve"><value>Foto paigutus</value></data>
+  <data name="PreviewWindow.PhotoFit" xml:space="preserve"><value>Mahuta foto</value></data>
+  <data name="PreviewWindow.PhotoReset" xml:space="preserve"><value>Lähtesta foto</value></data>
+  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Lohistage pilti liigutamiseks ja nurka proportsionaalseks suuruse muutmiseks. Pöörake 90° nuppudega. Lähterakenduse veerised jäävad pildi osaks.</value></data>
+  <data name="PreviewWindow.PhotoCenterHorizontal" xml:space="preserve"><value>Tsentreeri horisontaalselt</value></data>
+  <data name="PreviewWindow.PhotoCenterVertical" xml:space="preserve"><value>Tsentreeri vertikaalselt</value></data>
+  <data name="PreviewWindow.PrintStart" xml:space="preserve"><value>Printimise algus</value></data>
+  <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>Nool tähistab lehe serva, mis prinditakse esimesena.</value></data>
 </root>

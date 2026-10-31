@@ -1,5 +1,5 @@
 {
-  "count": 184,
+  "count": 187,
   "packages": [
     {
       "backend_status": "IMPLEMENTED",
@@ -283,6 +283,13 @@
     },
     {
       "backend_status": "IMPLEMENTED",
+      "display_name": "Epson Stylus Photo P50",
+      "model_id": "Stylus_Photo_P50",
+      "package_id": "gp--escp2-p50",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
       "display_name": "Epson SC-P5000 Series",
       "model_id": "SC_P5000_Series",
       "package_id": "gp--escp2-p5000-s",
@@ -426,6 +433,20 @@
       "display_name": "Epson Stylus Photo R800",
       "model_id": "Stylus_Photo_R800",
       "package_id": "gp--escp2-r800",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson Stylus Photo T50",
+      "model_id": "Stylus_Photo_T50",
+      "package_id": "gp--escp2-t50",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson Stylus Photo T60",
+      "model_id": "Stylus_Photo_T60",
+      "package_id": "gp--escp2-t60",
       "visible": true
     },
     {

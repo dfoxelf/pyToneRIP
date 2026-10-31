@@ -20,6 +20,7 @@ namespace pyToneRIP.Shared
             var printer = configuration.GetNamedObject("printer");
             printer.Remove("raster_resolution_x");
             printer.Remove("raster_resolution_y");
+            configuration.Remove("preview");
             configuration.SetNamedValue("schema", JsonValue.CreateStringValue(Schema));
             return configuration;
         }

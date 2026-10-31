@@ -58,6 +58,17 @@
     <Compile Include="Models\RipRuntimeContract.cs" />
     <Compile Include="MainPage.xaml.cs"><DependentUpon>MainPage.xaml</DependentUpon></Compile>
     <Compile Include="PropertiesPage.xaml.cs"><DependentUpon>PropertiesPage.xaml</DependentUpon></Compile>
+    <Compile Include="JobPreviewPage.cs" />
+    <Compile Include="Services\PreviewWorkflowStore.cs" />
+    <Compile Include="Services\PreviewApprovalGate.cs" />
+    <Compile Include="Services\PreviewRenderer.cs" />
+    <Compile Include="Services\PreviewToneMapping.cs" />
+    <Compile Include="Services\PreviewPaperMeasurements.cs" />
+    <Compile Include="Services\PreviewProfileAssociations.cs" />
+    <Compile Include="Services\PreviewPageTransform.cs" />
+    <Compile Include="Models\PreviewPhotoPlacement.cs" />
+    <Compile Include="JobPreviewPage.PhotoPlacement.cs" />
+    <Compile Include="Services\ExternalIccAccessStore.cs" />
     <Compile Include="Services\CapabilityCatalog.cs" />
     <Compile Include="Services\ConfigurationCodec.cs" />
     <Compile Include="Services\CyclicBlendWeights.cs" />
@@ -121,6 +132,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.2.14" />
+    <PackageReference Include="Win2D.uwp" Version="1.28.3" />
     <SDKReference Include="WindowsDesktop, Version=10.0.26100.0" />
   </ItemGroup>
   <ItemGroup>

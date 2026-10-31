@@ -147,6 +147,7 @@ namespace pyToneRIP.Services
             {
                 case "Letter": return "NorthAmericaLetter";
                 case "A4": return "ISOA4";
+                case "A2": return "ISOA2";
                 case "A3": return "ISOA3";
                 case "Legal": return "NorthAmericaLegal";
                 case "A6": return "ISOA6";

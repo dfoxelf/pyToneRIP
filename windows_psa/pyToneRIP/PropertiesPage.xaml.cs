@@ -18,8 +18,17 @@ using Windows.UI.Xaml.Shapes;
 
 namespace pyToneRIP
 {
+    internal sealed class PreviewJobSettings
+    {
+        public PrinterInstanceRecord Printer { get; set; }
+        public string Configuration { get; set; }
+        public Action<string> Applied { get; set; }
+        public Action Canceled { get; set; }
+    }
+
     public sealed partial class PropertiesPage : Page
     {
+        private readonly PreviewJobSettings jobSettings;
         private readonly PrintSupportSettingsUISession session;
         private readonly Deferral activationDeferral;
         private CapabilityExport capabilities;
@@ -43,6 +52,7 @@ namespace pyToneRIP
         private bool usbRefreshRunning;
         private bool localizationStarted;
         private bool applyRunning;
+        private bool previewProfilePicked, previewProfileRemoved;
         private IReadOnlyList<DeferredLocalization.Entry> deferredStrings;
 
         private sealed class LocalizedValue
@@ -53,6 +63,19 @@ namespace pyToneRIP
         }
 
         public PropertiesPage() : this(null, null) { }
+
+        internal PropertiesPage(PreviewJobSettings settings) : this(null, null)
+        {
+            jobSettings = settings ?? throw new ArgumentNullException(nameof(settings));
+            instance = settings.Printer;
+            printerUri = instance.PrinterUri; printerName = instance.QueueName;
+            // A captured job cannot change its assigned physical device or
+            // switch to RAW calibration after Windows composed the source.
+            SettingsActions.Visibility = Visibility.Collapsed;
+            ConnectionPivot.IsEnabled = false;
+            CalibrationEnabledBox.IsEnabled = false;
+            PreviewEnabledBox.IsEnabled = false;
+        }
 
         public PropertiesPage(PrintSupportSettingsUISession session, Deferral deferral = null)
         {
@@ -75,6 +98,19 @@ namespace pyToneRIP
                 App.WriteStartupStage("PropertiesPage.InitializeComponent complete");
                 TestConnectionButton.Content = LocalizationService.Get("Code.Test");
                 ReadStatusButton.Content = LocalizationService.Get("Code.ReadPrinterStatus");
+                ToolTipService.SetToolTip(PreviewEnabledBox, new ToolTip
+                {
+                    Content = new TextBlock { Text = LocalizationService.Get("Preview.EnabledHelp"), TextWrapping = TextWrapping.Wrap, MaxWidth = 420 },
+                });
+                ToolTipService.SetToolTip(PreviewObaRadio, new ToolTip
+                {
+                    Content = new TextBlock { Text = LocalizationService.Get("Preview.WithObaHelp"), TextWrapping = TextWrapping.Wrap, MaxWidth = 360 },
+                });
+                ToolTipService.SetToolTip(PreviewObaFreeRadio, new ToolTip
+                {
+                    Content = new TextBlock { Text = LocalizationService.Get("Preview.WithoutObaHelp"), TextWrapping = TextWrapping.Wrap, MaxWidth = 360 },
+                });
+                UpdatePreviewControls();
                 InkTitleText.Text = LocalizationService.Get("Code.InkLevels");
                 InkReadoutText.Text = LocalizationService.Get("Code.InkUnavailable");
                 ConnectionStatusText.Text = LocalizationService.Get("Choice.Unknown");
@@ -86,6 +122,8 @@ namespace pyToneRIP
                 PortBox.Width = 80;
                 PortBox.MinWidth = 0;
                 PortBox.HorizontalAlignment = HorizontalAlignment.Left;
+                var previewPaperGroup = "PreviewPaperWhite-" + Guid.NewGuid().ToString("N");
+                PreviewObaRadio.GroupName = PreviewObaFreeRadio.GroupName = previewPaperGroup;
                 InitializeBlendControls();
                 if (session != null)
                 {
@@ -228,7 +266,7 @@ namespace pyToneRIP
                 QueueIdentityText.Text = (printerName ?? LocalizationService.Get("Code.PyToneRIPQueue"))
                     + "  •  " + (printerUri ?? LocalizationService.Get("Code.NameFallback"));
 
-                var saved = await ConfigurationCodec.ReadStoredAsync(printerUri, printerName);
+                var saved = jobSettings?.Configuration ?? await ConfigurationCodec.ReadStoredAsync(printerUri, printerName);
                 if (!string.IsNullOrWhiteSpace(saved) && saved != "{}")
                     originalConfiguration = ConfigurationCodec.Deserialize(saved);
 
@@ -360,6 +398,17 @@ namespace pyToneRIP
 
         private void LoadConfigurationValues(PyToneRipConfiguration value)
         {
+            PreviewEnabledBox.IsChecked = value?.Preview?.Enabled == true;
+            PreviewIccBox.Text = value?.Preview?.IccPath ?? "";
+            PreviewObaRadio.IsChecked = false;
+            PreviewObaFreeRadio.IsChecked = false;
+            (value?.Preview?.PaperWithOba == true ? PreviewObaRadio : PreviewObaFreeRadio).IsChecked = true;
+            App.WriteStartupStage("Preview paper restored: jobDraft=" + (jobSettings != null)
+                + "; storedOBA=" + (value?.Preview?.PaperWithOba == true)
+                + "; selectedOBA=" + PreviewObaRadio.IsChecked + "; selectedOBAFree=" + PreviewObaFreeRadio.IsChecked);
+            PreviewIlluminantSlider.Value = Math.Max(0, Math.Min(3, value?.Preview?.IlluminantStep ?? 0));
+            PreviewIlluminantChanged(null, null);
+            UpdatePreviewControls();
             if (value == null)
             {
                 HostBox.Text = instance?.Host ?? "";
@@ -921,7 +970,8 @@ namespace pyToneRIP
                     || printer?.Id == "SureColorP800" ? "Roll17x22"
                 : printer?.Id == "SureColorP700RIP"
                     || printer?.Id == "Stylus_Photo_R2880"
-                    || printer?.Id == "Stylus_Photo_R3000" ? "Roll13x19" : null;
+                    || printer?.Id == "Stylus_Photo_R3000"
+                    || printer?.Id == "Stylus_Photo_1500W" ? "Roll13x19" : null;
             if (defaultPage == null) return;
             var pages = PageBox.ItemsSource as IEnumerable<CapabilityOption>;
             var page = pages?.FirstOrDefault(item => item.Enabled && item.Id == defaultPage);
@@ -1094,6 +1144,64 @@ namespace pyToneRIP
                 && item.Y == selection.ResolutionY.Value);
             if (resolution != null)
                 RasterResolutionBox.SelectedItem = resolution;
+        }
+
+        private async void BrowsePreviewProfile(object sender, RoutedEventArgs args)
+        {
+            try
+            {
+                var picker = new FileOpenPicker { SuggestedStartLocation = PickerLocationId.DocumentsLibrary };
+                picker.FileTypeFilter.Add(".icc");
+                var file = await picker.PickSingleFileAsync();
+                if (file != null)
+                {
+                    PreviewIccBox.Text = ExternalIccAccessStore.Register(file);
+                    previewProfilePicked = true; previewProfileRemoved = false;
+                }
+            }
+            catch (Exception error)
+            {
+                ValidationSummary.Text = LocalizationService.Format("Code.NotApplied", error.Message);
+            }
+        }
+
+        private void RemovePreviewProfile(object sender, RoutedEventArgs args)
+        { PreviewIccBox.Text = ""; previewProfilePicked = false; previewProfileRemoved = true; }
+
+        private void PreviewProfileChanged(object sender, TextChangedEventArgs args)
+        {
+            UpdateCurvePathToolTip(sender as TextBox);
+            UpdatePreviewControls();
+        }
+
+        private void PreviewModeChanged(object sender, RoutedEventArgs args) => UpdatePreviewControls();
+
+        private void PreviewIlluminantChanged(object sender, Windows.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs args)
+        {
+            if (PreviewIlluminantLabel == null || PreviewIlluminantSlider == null) return;
+            PreviewIlluminantLabel.Text = new[] { "D50", "D55", "D60", "D65" }[(int)PreviewIlluminantSlider.Value];
+            ToolTipService.SetToolTip(PreviewIlluminantSlider, LocalizationService.Get("Preview.IlluminantHelp"));
+        }
+
+        private void UpdatePreviewControls()
+        {
+            // XAML events can fire before the remaining named controls exist.
+            if (PreviewSection == null || PreviewOptionsPanel == null || PreviewPaperPanel == null
+                || PreviewIccBox == null || RemovePreviewProfileButton == null) return;
+            var calibration = CalibrationEnabledBox?.IsChecked == true;
+            PreviewSection.Visibility = calibration ? Visibility.Collapsed : Visibility.Visible;
+            if (CalibrationSection != null)
+            {
+                Grid.SetColumnSpan(CalibrationSection, calibration ? 2 : 1);
+                CalibrationSection.Margin = new Thickness(0, 0, calibration ? 0 : 7, 14);
+            }
+            var enabled = PreviewEnabledBox?.IsChecked == true;
+            PreviewOptionsPanel.IsEnabled = enabled;
+            PreviewOptionsPanel.Opacity = enabled ? 1 : 0.45;
+            var hasProfile = !string.IsNullOrWhiteSpace(PreviewIccBox.Text);
+            PreviewPaperPanel.IsEnabled = !hasProfile;
+            PreviewPaperPanel.Opacity = hasProfile ? 0.45 : 1;
+            RemovePreviewProfileButton.IsEnabled = hasProfile;
         }
 
         private async void BrowseCurve(object sender, RoutedEventArgs args)
@@ -1502,7 +1610,7 @@ namespace pyToneRIP
                 case "VLM": case "VIVID_LIGHT_MAGENTA": return Color.FromArgb(255, 255, 105, 180);
                 case "V": case "VIOLET": return Color.FromArgb(255, 138, 43, 226);
                 case "O": case "OR": case "ORANGE": return Colors.DarkOrange;
-                case "G": case "GREEN": return Colors.ForestGreen;
+                case "G": case "GR": case "GREEN": return Colors.ForestGreen;
                 case "R": case "RED": return Colors.IndianRed;
                 case "B": case "BLUE": return Colors.RoyalBlue;
                 case "K": case "BLACK": case "PK": case "MK": return Colors.Black;
@@ -1972,7 +2080,7 @@ namespace pyToneRIP
             if (value == "y" || value.Contains("yellow")) return Colors.Goldenrod;
             if (value == "o" || value == "or" || value.Contains("orange"))
                 return Colors.DarkOrange;
-            if (value == "g" || value.Contains("green")) return Colors.ForestGreen;
+            if (value == "g" || value == "gr" || value.Contains("green")) return Colors.ForestGreen;
             if (value == "r" || value.Contains("red")) return Colors.IndianRed;
             if (value == "b" || value.Contains("blue")) return Colors.RoyalBlue;
             if (value == "v" || value.Contains("violet")) return Colors.DarkViolet;
@@ -2070,6 +2178,7 @@ namespace pyToneRIP
             if (CalibrationPanel != null) CalibrationPanel.Visibility = enabled ? Visibility.Visible : Visibility.Collapsed;
             if (LayoutSection != null) LayoutSection.Visibility = enabled ? Visibility.Collapsed : Visibility.Visible;
             if (ToneCurvesSection != null) ToneCurvesSection.Visibility = enabled ? Visibility.Collapsed : Visibility.Visible;
+            UpdatePreviewControls();
             UpdateRequiredFieldStates();
             // RAW bypasses profile curves and blending. Gamma, normal ink
             // limit and dither remain active with their saved values.
@@ -2092,7 +2201,13 @@ namespace pyToneRIP
             OffsetPanel.Visibility = isOffset ? Visibility.Visible : Visibility.Collapsed;
         }
 
-        private async void Apply(object sender, RoutedEventArgs args)
+        internal Button ApplyActionButton => ApplyButton;
+
+        internal System.Threading.Tasks.Task ApplyJobSettingsAsync() => ApplyAsync();
+
+        private async void Apply(object sender, RoutedEventArgs args) => await ApplyAsync();
+
+        private async System.Threading.Tasks.Task ApplyAsync()
         {
             if (applyRunning) return;
             applyRunning = true;
@@ -2101,15 +2216,32 @@ namespace pyToneRIP
             {
                 var configuration = BuildConfiguration();
                 await ValidateCurveChannelsAsync(configuration);
-                if (configuration.Connection.Kind == "usb") await ValidateUsbDestinationAsync(configuration.Connection);
-                else await EnsureNetworkHostAvailableAsync(configuration.Connection.Host);
+                if (jobSettings == null)
+                {
+                    if (configuration.Connection.Kind == "usb") await ValidateUsbDestinationAsync(configuration.Connection);
+                    else await EnsureNetworkHostAvailableAsync(configuration.Connection.Host);
+                }
                 var json = ConfigurationCodec.Serialize(configuration);
+                if (configuration.Preview?.Enabled == true && configuration.Calibration?.Enabled != true)
+                {
+                    var previewConfiguration = Windows.Data.Json.JsonObject.Parse(json);
+                    if (previewProfilePicked) await PreviewProfileAssociations.RememberAsync(previewConfiguration);
+                    else if (!previewProfileRemoved) await PreviewProfileAssociations.RestoreAsync(previewConfiguration);
+                    json = previewConfiguration.Stringify();
+                    configuration = ConfigurationCodec.Deserialize(json);
+                    PreviewIccBox.Text = configuration.Preview.IccPath ?? "";
+                }
                 VerifyCalibrationPersistence(configuration, json, "serialization");
                 var page = RequiredOption(PageBox, "page");
                 var rasterResolution = Required<RasterResolutionChoice>(
                     RasterResolutionBox, "Windows raster resolution");
                 if (!page.WidthMm.HasValue || !page.HeightMm.HasValue)
                     throw new InvalidOperationException("Selected page has no physical dimensions.");
+                if (jobSettings != null)
+                {
+                    jobSettings.Applied?.Invoke(json);
+                    return;
+                }
                 // RIP settings belong to our store. A Windows PrintTicket
                 // failure must not discard them or leave a new queue unconfigured.
                 await ConfigurationCodec.WriteStoredAsync(printerUri, printerName, json);
@@ -2257,7 +2389,11 @@ namespace pyToneRIP
             return stored;
         }
 
-        private void Cancel(object sender, RoutedEventArgs args) => CompleteAndClose();
+        private void Cancel(object sender, RoutedEventArgs args)
+        {
+            if (jobSettings != null) { jobSettings.Canceled?.Invoke(); return; }
+            CompleteAndClose();
+        }
 
         private PyToneRipConfiguration BuildConfiguration()
         {
@@ -2324,6 +2460,15 @@ namespace pyToneRIP
                     Highlights = GetBlendGroup(1).Take(active).ToList(),
                     Midtones = GetBlendGroup(2).Take(active).ToList(),
                     Shadows = GetBlendGroup(3).Take(active).ToList(),
+                },
+                Preview = new PreviewSelection
+                {
+                    Enabled = PreviewEnabledBox.IsChecked == true,
+                    IccPath = string.IsNullOrWhiteSpace(PreviewIccBox.Text) ? null : PreviewIccBox.Text.Trim(),
+                    PaperWithOba = PreviewObaRadio.IsChecked == true,
+                    IlluminantStep = (int)PreviewIlluminantSlider.Value,
+                    ConditionFingerprint = !previewProfilePicked && !previewProfileRemoved ? originalConfiguration?.Preview?.ConditionFingerprint : null,
+                    IccSha256 = !previewProfilePicked && !previewProfileRemoved ? originalConfiguration?.Preview?.IccSha256 : null,
                 },
                 Adjustments = new AdjustmentSelection { Gamma = (int)GammaSlider.Value, InkLimit = (int)InkLimitSlider.Value, Dither = dither.Id, ProcessingBits = Processing16BitBox.IsChecked == true ? 16 : 8 },
                 Channels = new ChannelSelection { LogicalInks = inks, Routing = mapping },

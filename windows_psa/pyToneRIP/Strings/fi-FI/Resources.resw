@@ -1,5 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
+  <data name="PreviewWindow.Unsimulated" xml:space="preserve"><value>Harmaasävyt ilman paperin simulointia.</value></data>
+  <data name="PreviewWindow.Title" xml:space="preserve"><value>Tulostuksen esikatselu - Soft Proof</value></data>
+  <data name="PreviewWindow.Print"><value>Tulosta</value></data>
+  <data name="PreviewWindow.Cancel"><value>Peruuttaa</value></data>
+  <data name="PreviewWindow.Close"><value>Lähellä</value></data>
+  <data name="PreviewWindow.CancelCloseHelp" xml:space="preserve"><value>Peruuta tulostustyö ja sulje esikatseluikkuna.</value></data>
+  <data name="PreviewWindow.Previous"><value>Edellinen</value></data>
+  <data name="PreviewWindow.Next"><value>Seuraava</value></data>
+  <data name="PreviewWindow.Fit"><value>Sovita sivu</value></data>
+  <data name="PreviewWindow.Preparing" xml:space="preserve"><value>Valmistellaan tulostustyötä…</value></data>
+  <data name="PreviewWindow.Sending" xml:space="preserve"><value>Lähetetään tietoja tulostimelle…</value></data>
+  <data name="PreviewWindow.Sent" xml:space="preserve"><value>Tiedot lähetetty; fyysinen tulostus voi jatkua.</value></data>
+  <data name="PreviewWindow.Cancelled" xml:space="preserve"><value>Työ peruutettu.</value></data>
+  <data name="PreviewWindow.Failed" xml:space="preserve"><value>Työ epäonnistui.</value></data>
+  <data name="PreviewWindow.Measured" xml:space="preserve"><value>Soft Proof valitulla ICC:llä. Tarkista määritys oikealta.</value></data>
+  <data name="PreviewWindow.Approximate" xml:space="preserve"><value>Arvioitu Soft Proof paperiluokan mittauksista ja arvioidusta paperin sävystä.</value></data>
+  <data name="Preview.Enabled.Text"><value>Esikatselu — Ota käyttöön (Softproofing)</value></data>
+  <data name="Preview.EnabledHelp"><value>Avaa esikatseluikkunan ennen tulostusta. ICC-profiililla jäljitellään tulosteen sävyjä, värivivahdetta, paperin valkoista ja mustaa; ilman profiilia jäljittely on likimääräistä. Ei muuta tulostustietoja.</value></data>
+  <data name="Preview.Profile.Text"><value>ICC-profiili (valinnainen)</value></data>
+  <data name="Preview.WithOba.Content"><value>Paperi, jossa OBA</value></data>
+  <data name="Preview.WithoutOba.Content"><value>Paperi ilman OBA:ta</value></data>
+  <data name="Preview.WithObaHelp"><value>Jäljittelee likimääräisesti optisia kirkasteita sisältävän paperin valkoisuutta D50–D65-valaistuksessa. Vaikuttaa vain esikatseluun.</value></data>
+  <data name="Preview.WithoutObaHelp"><value>Jäljittelee likimääräisesti paperin valkoisuutta ilman optisia kirkasteita. Vaikuttaa vain esikatseluun.</value></data>
   <data name="AppDescription"><value>pyToneRIP-tulostustukisovellus</value></data>
   <data name="Auto.0163AD0F367D.Text"><value>Ohittaa .quad-käyrät, sekoituksen, gamma- ja normaalin musterajan. Tämä tulostin tulostaa vain kalibrointikohteita, kunnes tämä tila kytketään pois päältä ja sitä käytetään.</value></data>
   <data name="Auto.043112257626.Text"><value>Loogisten tunnusten on vastattava jokaista valittua .quad-profiilia. Yhdistä jokainen looginen muste valitun tulostimen yhteen fyysiseen polkuun.</value></data>
@@ -308,4 +331,39 @@
   <data name="ResamplingHelp.bicubic"><value>Käyttää kuutiosuodatinta valokuvan terävyyden ja pehmeiden sävysiirtymien tasapainottamiseen. Säilyttää enemmän yksityiskohtia kuin bilineaarinen menetelmä, mutta voi muodostaa lieviä vaaleita tai tummia reunuksia jyrkkiin kontrastirajoihin.</value></data>
   <data name="ResamplingHelp.lanczos"><value>Säilyttää pienet yksityiskohdat hyvin muunnettaessa valokuvia rasterointiruudukkoon, erityisesti pienennettäessä. Valitse terävämpää tulosta varten, mutta tarkkaile vaaleita tai tummia reunuksia jyrkkien kontrastirajojen ympärillä.</value></data>
   <data name="ResamplingHelp.mitchell"><value>Tasapainottaa yksityiskohdat ja pehmeät siirtymät sekä muodostaa vähemmän reunuksia kuin Lanczos. Sopii valokuviin, joissa reunukset häiritsevät, mutta pienet yksityiskohdat pehmenevät hieman ja käsittely hidastuu.</value></data>
+  <data name="Preview.IlluminantHelp" xml:space="preserve"><value>Arvioitu katseluvalo: D50, D55, D60 tai D65. Muuttaa vain esikatselun sävyä, ei tulostustietoja. Ilman spektrimittauksia OBA-fluoresenssia ei voi ennustaa.</value></data>
+  <data name="PreviewWindow.PrintClose" xml:space="preserve"><value>Tulosta ja sulje</value></data>
+  <data name="PreviewWindow.Rulers" xml:space="preserve"><value>Viivaimet</value></data>
+  <data name="PreviewWindow.Printer" xml:space="preserve"><value>Tulostin</value></data>
+  <data name="PreviewWindow.Paper" xml:space="preserve"><value>Paperi</value></data>
+  <data name="PreviewWindow.Size" xml:space="preserve"><value>Koko</value></data>
+  <data name="PreviewWindow.Dither" xml:space="preserve"><value>Rasterointi</value></data>
+  <data name="PreviewWindow.Mode" xml:space="preserve"><value>Tila</value></data>
+  <data name="PreviewWindow.Curves" xml:space="preserve"><value>Käyrät</value></data>
+  <data name="PreviewWindow.Resolution" xml:space="preserve"><value>Tarkkuus</value></data>
+  <data name="PreviewWindow.ProfileMatch" xml:space="preserve"><value>ICC-määritys</value></data>
+  <data name="PreviewWindow.ProfileUnknown" xml:space="preserve"><value>ICC-olosuhteet ovat tuntemattomat.</value></data>
+  <data name="PreviewWindow.ProfileAssigned" xml:space="preserve"><value>Käyttäjän määrittämä näille asetuksille.</value></data>
+  <data name="PreviewWindow.ProfileMismatch" xml:space="preserve"><value>ICC poikkeaa tallennetuista tulostusolosuhteista.</value></data>
+  <data name="PreviewWindow.PhysicalUnavailable" xml:space="preserve"><value>Tulostimen fyysinen tila ei ole saatavilla.</value></data>
+  <data name="PreviewWindow.PhysicalUnconfirmed" xml:space="preserve"><value>Laitteen tila ei vahvista tämän työn valmistumista tai arkin ulostuloa.</value></data>
+  <data name="PreviewWindow.DeviceOther" xml:space="preserve"><value>Tulostin: muu tila</value></data>
+  <data name="PreviewWindow.DeviceUnknown" xml:space="preserve"><value>Tulostin: tuntematon tila</value></data>
+  <data name="PreviewWindow.DeviceIdle" xml:space="preserve"><value>Tulostin: vapaa</value></data>
+  <data name="PreviewWindow.DevicePrinting" xml:space="preserve"><value>Tulostin: tulostaa</value></data>
+  <data name="PreviewWindow.DeviceWarming" xml:space="preserve"><value>Tulostin: lämpenee</value></data>
+  <data name="PreviewWindow.EditSettings" xml:space="preserve"><value>Muuta asetuksia</value></data>
+  <data name="PreviewWindow.Editing" xml:space="preserve"><value>Päivitetään esikatselua…</value></data>
+  <data name="PreviewWindow.ZoomHelp" xml:space="preserve"><value>Ctrl + hiiren rulla: zoomaus. Prosentin voi syöttää.</value></data>
+  <data name="PreviewWindow.ActualSizeHelp" xml:space="preserve"><value>100%: yksi rasteripikseli fyysistä näyttöpikseliä kohti. Vaatii tunnetun, saman X/Y-rasteritarkkuuden.</value></data>
+  <data name="PreviewWindow.SourceChanged" xml:space="preserve"><value>Lähdekäyrät ovat muuttuneet. Avaa Muuta asetuksia päivittääksesi esikatselun.</value></data>
+  <data name="PreviewWindow.ICC" xml:space="preserve"><value>ICC</value></data>
+  <data name="PreviewWindow.PhotoPlacement" xml:space="preserve"><value>Kuvan sijoittelu</value></data>
+  <data name="PreviewWindow.PhotoFit" xml:space="preserve"><value>Sovita kuva</value></data>
+  <data name="PreviewWindow.PhotoReset" xml:space="preserve"><value>Palauta kuva</value></data>
+  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Siirrä kuvaa vetämällä ja muuta kokoa suhteellisesti kulmasta vetämällä. Kierrä 90°-painikkeilla. Lähdesovelluksen reunukset pysyvät kuvan osana.</value></data>
+  <data name="PreviewWindow.PhotoCenterHorizontal" xml:space="preserve"><value>Keskitä vaakasuunnassa</value></data>
+  <data name="PreviewWindow.PhotoCenterVertical" xml:space="preserve"><value>Keskitä pystysuunnassa</value></data>
+  <data name="PreviewWindow.PrintStart" xml:space="preserve"><value>Tulostuksen alku</value></data>
+  <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>Nuoli osoittaa arkin reunan, joka tulostetaan ensimmäisenä.</value></data>
 </root>

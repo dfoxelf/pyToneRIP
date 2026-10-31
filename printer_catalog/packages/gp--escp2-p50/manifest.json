@@ -1,0 +1,25 @@
+{
+  "backend_family": "epson_escp2_gutenprint_model_97",
+  "backend_runtime_file": "backend-runtime.json",
+  "backend_runtime_sha256": "9e03a3b7de61a7a1d4b8524562eae8c313a86617bfc0f363f3f9641da657ed08",
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson Stylus Photo P50",
+  "model_id": "Stylus_Photo_P50",
+  "package_id": "gp--escp2-p50",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "907dea53976712ad2a8d29d8efd4d38fb5c2cef5d8907c8b25c3633ad3b38903",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "gutenprint-model-97",
+  "runtime_source_file": null,
+  "runtime_source_sha256": null,
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "2abe716f61a001b6707ec3cf0d52e98253469c97c325024bd8c8ef27a310dd7a",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "SYNTHETIC_PPD: no Epson manufacturer PPD supplied; technical source escp2-p50"
+  ]
+}

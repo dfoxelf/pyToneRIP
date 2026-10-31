@@ -1,10 +1,10 @@
 # pyToneRIP
 
-[![Release](https://img.shields.io/github/v/release/dfoxelf/pyToneRIP?include_prereleases&style=flat-square&v=229)](https://github.com/dfoxelf/pyToneRIP/releases)
-[![Release downloads](https://img.shields.io/github/downloads/dfoxelf/pyToneRIP/total?style=flat-square&label=release%20downloads&v=229)](https://github.com/dfoxelf/pyToneRIP/releases)
+[![Release](https://img.shields.io/github/v/release/dfoxelf/pyToneRIP?include_prereleases&style=flat-square&v=244)](https://github.com/dfoxelf/pyToneRIP/releases)
+[![Release downloads](https://img.shields.io/github/downloads/dfoxelf/pyToneRIP/total?style=flat-square&label=release%20downloads&v=244)](https://github.com/dfoxelf/pyToneRIP/releases)
 [![License: GPL-3.0-only](https://img.shields.io/badge/license-GPL--3.0--only-blue?style=flat-square)](https://github.com/dfoxelf/pyToneRIP/blob/main/LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Windows%2011%20x64-0078D4?style=flat-square)](#install)
-[![Download Beta 1.0.0.229](https://img.shields.io/badge/Download-Beta%201.0.0.229-2ea44f?style=flat-square)](https://github.com/dfoxelf/pyToneRIP/releases/download/v1.0.0.229-beta/pyToneRIP-Setup-1.0.0.229-Beta.exe)
+[![Download Beta 1.0.0.244](https://img.shields.io/badge/Download-Beta%201.0.0.244-2ea44f?style=flat-square)](https://github.com/dfoxelf/pyToneRIP/releases/download/v1.0.0.244-beta/pyToneRIP-Setup-1.0.0.244-Beta.exe)
 
 Copyright © 2026 Alexander Eichhorn.
 
@@ -12,39 +12,46 @@ pyToneRIP is a monochrome Epson RIP for Windows 11. It contains the Python/Cytho
 
 ## Download the beta
 
-The current beta is **1.0.0.229**. [Download the setup installer](https://github.com/dfoxelf/pyToneRIP/releases/download/v1.0.0.229-beta/pyToneRIP-Setup-1.0.0.229-Beta.exe).
+The current beta is **1.0.0.244**. [Download the setup installer](https://github.com/dfoxelf/pyToneRIP/releases/download/v1.0.0.244-beta/pyToneRIP-Setup-1.0.0.244-Beta.exe).
 
 <details>
 <summary>Verify the installer checksum</summary>
 
-Installer size: **67,554,885 bytes**. SHA-256:
+Installer size: **68,670,303 bytes**. SHA-256:
 
 ```text
-4bce9de05b8e50f92558212d2027c0dc7e1088f6f778956a3e40e94135e26af7
+5abf8688e362691d204357b207a2cb6e5d901dbe89029299393b83c658e5d59f
 ```
 
 ```powershell
-Get-FileHash .\pyToneRIP-Setup-1.0.0.229-Beta.exe -Algorithm SHA256
+Get-FileHash .\pyToneRIP-Setup-1.0.0.244-Beta.exe -Algorithm SHA256
 ```
 
 </details>
 
-This beta improves P900 paper-size compatibility, recovery when Windows cannot read initial printer settings, and the evidence collected for difficult configuration failures. Changes below are relative to public beta 224.
+## Changes in beta 244
 
-- **P900 paper sizes:** the catalog uses exact geometry measured from the installed Epson driver and public Windows Print Schema identities. Six sheet labels now match Windows built-in form names, addressing repeated entries such as Japanese Postcard / 100 x 148 mm. Saved page IDs are preserved.
-- **Borderless choices in applications:** named borderless variants are available in paper-size lists used by both legacy and modern print dialogs. They also select the standard borderless feature. Shorter names keep every localized variant within the Windows form-name limit, including 4 x 6 inch borderless.
-- **P900 initial-settings recovery:** if reading the Windows user PrintTicket and the existing DEVMODE path both fail, the Manager can obtain the queue configuration XML through the Windows CIM provider. This is limited to initial recovery when no per-user DEVMODE exists. Existing user settings are not replaced by queue defaults, and normal Windows validation, saving and readback checks remain required.
-- **More useful support reports:** diagnostics separate provider opening, DEVMODE conversion and capability/resource retrieval. Reports retain original Windows error codes and available provider explanations, and compare the actual Manager/helper user context, session, elevation and AppContainer state. Activation events include process and correlation information. Reports are created locally and are not uploaded automatically; review them before sharing.
-- **Uninstalling under another administrator account:** removal identifies the original user's package and virtual queues before elevation. Shared print resources needed by another Windows user are retained without treating that as a failed removal.
-- **Start menu and installer:** the uninstaller shortcut is placed directly in the program list with its own identity and a localized label. The packaged app supplies the main entry. The installer now has matching welcome-page and header artwork.
-- **Smaller runtime:** unused Tcl/Tk components, the remaining Pillow AVIF decoder, and additional optional imagecodecs modules for HEIF, JPEG XS and Jetraw are excluded. Standard TIFF compression and the existing 16-bit processing path remain available. TIFF pages compressed with an excluded codec are not supported.
-- **Native XPS maintenance:** the high-precision Windows renderer has detailed English comments explaining its interfaces and conversion steps, alongside the native safety checks developed for this branch.
+Changes below are relative to public beta 229.
 
-The P900 catalog currently contains **21 physical sheet sizes and 7 named borderless variants**. Five sizes present in the Epson driver remain omitted: 5 x 8 inch, 16:9 Wide (101.6 x 180.6 mm), 11 x 14 inch, 12 x 12 inch and 16 x 20 inch. This release does not claim complete parity with every Epson driver paper or borderless mode.
+- **Optional Soft Proof preview:** enable the preview in printer settings, inspect the pages, and approve or cancel the print job before transmission. Select an optional print ICC profile; without one, use the paper/OBA approximation and the D50–D65 viewing-light control. The preview uses the system display-color settings. These options affect the preview, not the selected `.quad` printing curves.
+- **Page inspection and placement:** page thumbnails, printer/paper/mode/curve/ICC details, the selected dithering algorithm, zoom controls and Ctrl + mouse wheel, a numerical zoom, rulers in millimetres or inches, and an indication of the leading print edge. Photo Placement supports dragging, resizing, rotation, fitting the photo to the sheet, and horizontal/vertical centering. Fit Page controls the view separately. Rulers are enabled by default.
+- **Settings and print controls in preview:** edit the job settings and return to the preview, print, print and close, or cancel and close. The cancel/close button explains its action in a tooltip. Preview controls and explanations are localized in all 27 application languages.
+- **Printing after preview edits:** XPS rewriting now uses a forward-only ZIP-writing path compatible with the Windows conversion stream, addressing the `NotImplementedException` after updating an edited job. Placement/settings refresh fixes preserve the Photo Placement selection, orientation and OBA settings, avoid misleading rotation errors, and reduce visible placement rollback. The 8-bit and 16-bit processing paths remain independent.
+- **New printers:** Epson Stylus Photo P50, T50 and T60 are available as separate models using their shared printer class, including the implemented paper and borderless capabilities.
+- **Epson 1500W / Artisan 1430:** restored per-pass drying control, roll-feed capability and a 13-inch roll format, with corrected model-specific paper, borderless and native-coordinate handling. Roll and borderless combinations still require physical testing on the target printer.
+- **Wide-format printers:** P6000/P8000 and P7000/P9000 have corrected sheet-feed commands, explicit Photo Black/Matte Black selection, more accurate metric page dimensions, and corrected left-origin handling. Commercial Edition no longer advertises an LLK channel in place of unsupported Violet. Additional P7000/P9000 media selectors are available; entries transferred within a family are distinguished from independently captured model data in the source.
+- **Paper names and thickness:** 7890/9890 and P6000/P8000 show their shared glossy choice as Epson Premium Glossy / Satin. Sheet and roll media selectors are handled separately where their descriptors require it. Wide-format P5000 through P20000 variants and 7890/9890 offer the complete 0.1–1.5 mm thickness range in 0.1 mm steps, with existing saved setting IDs retained. The green channel marker recognizes the `GR` name.
+- **Other fixes:** restored A6 combinations for XP-750, improved the available space in preview settings and localized Manager toolbars, and expanded local support-report evidence for Windows capability and settings failures.
 
-Experimental 16-bit processing, strip-based large-page preparation, buffered USB delivery, paired-channel dithering, and independent resampling controls from beta 224 remain available. An 8-bit source cannot regain missing tonal information simply by enabling 16-bit processing.
+Experimental 16-bit processing, bounded large-page preparation, buffered USB delivery, paired-channel dithering, and independent resampling controls remain available. An 8-bit source cannot regain missing tonal information simply by enabling 16-bit processing.
 
-This is a **prerelease**. Automated tests and read-only Windows provider checks have passed on the development PC. The original P900 `E_FAIL` on the tester's machine is not confirmed fixed: XML recovery and the expanded diagnostics still need testing there. The revised paper labels and borderless 4 x 6 entry also need confirmation after installing this build. Physical output and paper handling have not been verified on every supported printer.
+## Beta limitations
+
+This is a **prerelease**. Automated checks and native-stream comparisons do not replace physical testing of every printer, paper, feed and borderless combination. The inherited wide-format vertical page geometry is retained from the previously tested 7890 path; a complete physical qualification of every SureColor variant is not claimed. Violet printing in Commercial Edition is not implemented.
+
+Soft proofing without a measured print ICC profile is an approximation. The paper/OBA and viewing-light controls do not reproduce every paper's fluorescence or the user's actual viewing booth. Print progress covers preparation and transmission; confirmation of physical sheet completion depends on available printer status. A preview approves one Windows print job; reprinting after completion requires a new job.
+
+The P900 catalog has 21 physical sheet sizes and 7 named borderless variants. Five sizes present in the Epson driver remain omitted: 5 x 8 inch, 16:9 Wide (101.6 x 180.6 mm), 11 x 14 inch, 12 x 12 inch and 16 x 20 inch. The original P900 configuration failure on the tester's machine is not confirmed fixed; recovery and diagnostic improvements still need confirmation there. Support reports are created locally and are not uploaded automatically; review them before sharing.
 
 ## Build requirements
 
@@ -62,8 +69,8 @@ Run PowerShell from the repository root:
 
 ```powershell
 uv sync --locked
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows_psa\Build-ModelPackageSet.ps1 -Version 1.0.0.229
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows_psa\Build-InnoSetup.ps1 -Version 1.0.0.229
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows_psa\Build-ModelPackageSet.ps1 -Version 1.0.0.244
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows_psa\Build-InnoSetup.ps1 -Version 1.0.0.244
 ```
 
 Use a new four-part version for each build. The first script compiles Cython, freezes the Python runtime, builds and signs the Manager MSIX, and checks the result. The second produces `windows_psa/artifacts/pyToneRIP-Setup-<version>-Beta.exe`.
@@ -74,12 +81,12 @@ The bootstrap EXE is not Authenticode signed. Windows may show a publisher or Sm
 
 ## Install
 
-Run the [pyToneRIP 1.0.0.229 Beta installer](https://github.com/dfoxelf/pyToneRIP/releases/download/v1.0.0.229-beta/pyToneRIP-Setup-1.0.0.229-Beta.exe) on Windows 11 build 26100 or later. The installer requests administrator approval to trust the package certificate and install the Manager. Start pyToneRIP and add a printer through its interface.
+Run the [pyToneRIP 1.0.0.244 Beta installer](https://github.com/dfoxelf/pyToneRIP/releases/download/v1.0.0.244-beta/pyToneRIP-Setup-1.0.0.244-Beta.exe) on Windows 11 build 26100 or later. The installer requests administrator approval to trust the package certificate and install the Manager. Start pyToneRIP and add a printer through its interface.
 
 For a package without the bootstrap installer, open PowerShell as Administrator and run:
 
 ```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows_psa\artifacts\pyToneRIP-ModuleSet-1.0.0.229\Install-ModuleSet-Manager.ps1
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows_psa\artifacts\pyToneRIP-ModuleSet-1.0.0.244\Install-ModuleSet-Manager.ps1
 ```
 
 ## Source layout

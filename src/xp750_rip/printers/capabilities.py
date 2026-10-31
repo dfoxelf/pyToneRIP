@@ -289,6 +289,14 @@ class MediaCapability:
     feed_adjustment_code: int | None = None
     feed_sequence_code: int | None = None
     platen_gap_code: int | None = None
+    # Some physical media use different REMOTE1 MI selectors on roll feed.
+    # None preserves the existing sheet selector for every other model.
+    roll_media_code: int | None = None
+
+    def media_code_for_source(self, source: InputSourceCapability) -> int | None:
+        return (self.roll_media_code
+                if source.medium_kind == "roll" and self.roll_media_code is not None
+                else self.media_code)
 
     def print_method(self, mode_id: str) -> int:
         for identity, value in self.print_methods:

@@ -1,5 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
+  <data name="PreviewWindow.Unsimulated" xml:space="preserve"><value>Сива скала без симулация на хартия.</value></data>
+  <data name="PreviewWindow.Title" xml:space="preserve"><value>Преглед за печат - Soft Proof</value></data>
+  <data name="PreviewWindow.Print"><value>Печат</value></data>
+  <data name="PreviewWindow.Cancel"><value>Отказ</value></data>
+  <data name="PreviewWindow.Close"><value>затвори</value></data>
+  <data name="PreviewWindow.CancelCloseHelp" xml:space="preserve"><value>Отмяна на заданието за печат и затваряне на прозореца за предварителен преглед.</value></data>
+  <data name="PreviewWindow.Previous"><value>Предишна</value></data>
+  <data name="PreviewWindow.Next"><value>Следваща</value></data>
+  <data name="PreviewWindow.Fit"><value>Побиране на страницата</value></data>
+  <data name="PreviewWindow.Preparing" xml:space="preserve"><value>Подготовка на задачата…</value></data>
+  <data name="PreviewWindow.Sending" xml:space="preserve"><value>Изпращане на данни към принтера…</value></data>
+  <data name="PreviewWindow.Sent" xml:space="preserve"><value>Данните са изпратени; физическият печат може да продължи.</value></data>
+  <data name="PreviewWindow.Cancelled" xml:space="preserve"><value>Задачата е отменена.</value></data>
+  <data name="PreviewWindow.Failed" xml:space="preserve"><value>Грешка в задачата.</value></data>
+  <data name="PreviewWindow.Measured" xml:space="preserve"><value>Soft Proof с избрания ICC. Проверете свързването вдясно.</value></data>
+  <data name="PreviewWindow.Approximate" xml:space="preserve"><value>Приблизителен Soft Proof по измервания за категорията хартия и оценен оттенък.</value></data>
+  <data name="Preview.Enabled.Text"><value>Преглед — Включване (Softproofing)</value></data>
+  <data name="Preview.EnabledHelp"><value>Отваря прозорец за преглед преди печат. С ICC профил симулира тоновете, оттенъка, хартията и черното на отпечатъка; без профил симулацията е приблизителна. Не променя данните за печат.</value></data>
+  <data name="Preview.Profile.Text"><value>ICC профил (по избор)</value></data>
+  <data name="Preview.WithOba.Content"><value>Хартия с OBA</value></data>
+  <data name="Preview.WithoutOba.Content"><value>Хартия без OBA</value></data>
+  <data name="Preview.WithObaHelp"><value>Приблизително симулира белотата на хартия с оптични избелители при осветление D50–D65. Само за преглед.</value></data>
+  <data name="Preview.WithoutObaHelp"><value>Приблизително симулира белотата на хартия без оптични избелители. Само за преглед.</value></data>
   <data name="AppDescription"><value>pyToneRIP Приложение за поддръжка на печат</value></data>
   <data name="Auto.0163AD0F367D.Text"><value>Заобикаля .quad криви, смесване, гама и ограничение за нормално мастило. Този принтер ще отпечатва цели за калибриране само докато този режим не бъде изключен и приложен.</value></data>
   <data name="Auto.043112257626.Text"><value>Логическите идентификатори трябва да съответстват на всеки избран .quad профил. Нанесете всяко логическо мастило на един физически път на избрания принтер.</value></data>
@@ -308,4 +331,39 @@
   <data name="ResamplingHelp.bicubic"><value>Използва кубичен филтър за баланс между рязкост и плавни тонални преходи в снимките. Запазва повече детайли от билинейния метод, но може да създаде леки ореоли около силно контрастни ръбове.</value></data>
   <data name="ResamplingHelp.lanczos"><value>Запазва добре фините детайли при преобразуване на снимки към решетката за дитеринг, особено при намаляване. Изберете го за по-рязък резултат, но следете за светли или тъмни ореоли около силно контрастни ръбове.</value></data>
   <data name="ResamplingHelp.mitchell"><value>Балансира детайлите и плавните преходи с по-слаби ореоли около ръбовете от Lanczos. Подходящ е за снимки, при които ореолите пречат, за сметка на леко омекотени фини детайли и по-бавна обработка.</value></data>
+  <data name="Preview.IlluminantHelp" xml:space="preserve"><value>Приблизително осветление за преглед: D50, D55, D60 или D65. Променя само оттенъка на прегледа, не данните за печат. Без спектрални измервания не може да се предвиди флуоресценцията на OBA.</value></data>
+  <data name="PreviewWindow.PrintClose" xml:space="preserve"><value>Печат и затваряне</value></data>
+  <data name="PreviewWindow.Rulers" xml:space="preserve"><value>Линийки</value></data>
+  <data name="PreviewWindow.Printer" xml:space="preserve"><value>Принтер</value></data>
+  <data name="PreviewWindow.Paper" xml:space="preserve"><value>Хартия</value></data>
+  <data name="PreviewWindow.Size" xml:space="preserve"><value>Размер</value></data>
+  <data name="PreviewWindow.Dither" xml:space="preserve"><value>Дизеринг</value></data>
+  <data name="PreviewWindow.Mode" xml:space="preserve"><value>Режим</value></data>
+  <data name="PreviewWindow.Curves" xml:space="preserve"><value>Криви</value></data>
+  <data name="PreviewWindow.Resolution" xml:space="preserve"><value>Разделителна способност</value></data>
+  <data name="PreviewWindow.ProfileMatch" xml:space="preserve"><value>Свързване на ICC</value></data>
+  <data name="PreviewWindow.ProfileUnknown" xml:space="preserve"><value>Условията на ICC са неизвестни.</value></data>
+  <data name="PreviewWindow.ProfileAssigned" xml:space="preserve"><value>Зададен за тези настройки от потребителя.</value></data>
+  <data name="PreviewWindow.ProfileMismatch" xml:space="preserve"><value>ICC се различава от запазените условия за печат.</value></data>
+  <data name="PreviewWindow.PhysicalUnavailable" xml:space="preserve"><value>Физическото състояние на принтера не е достъпно.</value></data>
+  <data name="PreviewWindow.PhysicalUnconfirmed" xml:space="preserve"><value>Състоянието на устройството не потвърждава завършването на тази задача или излизането на листа.</value></data>
+  <data name="PreviewWindow.DeviceOther" xml:space="preserve"><value>Принтер: друго състояние</value></data>
+  <data name="PreviewWindow.DeviceUnknown" xml:space="preserve"><value>Принтер: неизвестно състояние</value></data>
+  <data name="PreviewWindow.DeviceIdle" xml:space="preserve"><value>Принтер: свободен</value></data>
+  <data name="PreviewWindow.DevicePrinting" xml:space="preserve"><value>Принтер: печата</value></data>
+  <data name="PreviewWindow.DeviceWarming" xml:space="preserve"><value>Принтер: загряване</value></data>
+  <data name="PreviewWindow.EditSettings" xml:space="preserve"><value>Промяна на настройките</value></data>
+  <data name="PreviewWindow.Editing" xml:space="preserve"><value>Обновяване на прегледа…</value></data>
+  <data name="PreviewWindow.ZoomHelp" xml:space="preserve"><value>Ctrl + колелце: мащаб. Може да въведете процент.</value></data>
+  <data name="PreviewWindow.ActualSizeHelp" xml:space="preserve"><value>100%: един растерен пиксел на физически пиксел от екрана. Нужно е известно еднакво разрешение X/Y.</value></data>
+  <data name="PreviewWindow.SourceChanged" xml:space="preserve"><value>Изходните криви са променени. Отворете „Промяна на настройките“, за да обновите прегледа.</value></data>
+  <data name="PreviewWindow.ICC" xml:space="preserve"><value>ICC</value></data>
+  <data name="PreviewWindow.PhotoPlacement" xml:space="preserve"><value>Разполагане на снимка</value></data>
+  <data name="PreviewWindow.PhotoFit" xml:space="preserve"><value>Побиране на снимката</value></data>
+  <data name="PreviewWindow.PhotoReset" xml:space="preserve"><value>Нулиране на снимката</value></data>
+  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Плъзнете изображението за преместване и ъгловия маркер за пропорционално оразмеряване. Завъртайте с бутоните 90°. Полетата от изходната програма остават част от изображението.</value></data>
+  <data name="PreviewWindow.PhotoCenterHorizontal" xml:space="preserve"><value>Центриране хоризонтално</value></data>
+  <data name="PreviewWindow.PhotoCenterVertical" xml:space="preserve"><value>Центриране вертикално</value></data>
+  <data name="PreviewWindow.PrintStart" xml:space="preserve"><value>Начало на печата</value></data>
+  <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>Стрелката показва края на листа, който се отпечатва първи.</value></data>
 </root>

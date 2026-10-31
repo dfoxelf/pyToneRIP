@@ -1284,6 +1284,7 @@ namespace pyToneRIP.QueueHelper
             const string keywords = "http://schemas.microsoft.com/windows/2003/08/printing/printschemakeywords";
             var standard = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
             {
+                { "A2", "ISOA2" },
                 { "A3", "ISOA3" }, { "A4", "ISOA4" }, { "A5", "ISOA5" }, { "A6", "ISOA6" },
                 { "B5", "JISB5" }, { "Letter", "NorthAmericaLetter" }, { "Legal", "NorthAmericaLegal" },
                 { "ENV10", "NorthAmericaNumber10Envelope" }, { "ENVC6", "ISOC6Envelope" },

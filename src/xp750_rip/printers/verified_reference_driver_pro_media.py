@@ -3,9 +3,11 @@
 
 """Media selectors verified in ReferenceDriver streams for specific Stylus Pro models.
 
-The five listed printers send REMOTE1 MI with the first Paper.Param byte and
-media-size byte zero. Other Stylus Pro generations may omit MI entirely, so
-these records must not be inherited through a Gutenprint model family.
+The captured sheet paths send REMOTE1 MI with the first Paper.Param byte and
+media-size byte zero. P6000's explicitly aliased driver is included below;
+its roll selector is separately captured and modeled by the catalog loader.
+Other generations may omit MI entirely. Family-derived records are labeled
+explicitly and must not be mistaken for independent native captures.
 """
 
 from __future__ import annotations
@@ -44,4 +46,9 @@ CAPTURED_PRO_MEDIA_BY_DRIVER = {
     "escp2-9900": _PRO4900_MEDIA,
     "escp2-7890": _PRO7890_MEDIA,
     "escp2-9890": _PRO7890_MEDIA,
+    # Installed ReferenceDriver explicitly aliases P6000 to its 7890 driver;
+    # P6000 captures confirm these sheet codes. P8000 shares the exact GP
+    # media/command source; its mapping is family-derived, not a native capture.
+    "escp2-p6000": _PRO7890_MEDIA,
+    "escp2-p8000": _PRO7890_MEDIA,
 }

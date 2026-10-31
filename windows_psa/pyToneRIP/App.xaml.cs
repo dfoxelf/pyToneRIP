@@ -7,6 +7,7 @@ using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Resources.Core;
 using Windows.Globalization;
 using Windows.Graphics.Printing.PrintSupport;
+using Windows.Graphics.Printing.Workflow;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -238,6 +239,24 @@ namespace pyToneRIP
         protected override async void OnActivated(IActivatedEventArgs args)
         {
             WriteStartupStage("App.OnActivated entered: " + args.Kind);
+            if (args.Kind == ActivationKind.PrintSupportJobUI)
+            {
+                try
+                {
+                    if (startupFailure != null) throw startupFailure;
+                    var activation = (PrintWorkflowJobActivatedEventArgs)args;
+                    var page = new JobPreviewPage(activation.Session);
+                    Window.Current.Content = page;
+                    Window.Current.Activate();
+                    page.Start();
+                }
+                catch (Exception error)
+                {
+                    WriteStartupException("Print preview activation failed", error);
+                    ShowStartupFailure(error);
+                }
+                return;
+            }
             if (args.Kind != ActivationKind.PrintSupportSettingsUI)
             {
                 WriteStartupStage("App.OnActivated forwarding non-print activation");

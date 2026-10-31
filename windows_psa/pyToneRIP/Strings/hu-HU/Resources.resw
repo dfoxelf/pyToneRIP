@@ -1,5 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
+  <data name="PreviewWindow.Unsimulated" xml:space="preserve"><value>Szürkeárnyalatok papírszimuláció nélkül.</value></data>
+  <data name="PreviewWindow.Title" xml:space="preserve"><value>Nyomtatási előnézet - Soft Proof</value></data>
+  <data name="PreviewWindow.Print"><value>Nyomtatás</value></data>
+  <data name="PreviewWindow.Cancel"><value>Mégse</value></data>
+  <data name="PreviewWindow.Close"><value>Közeli</value></data>
+  <data name="PreviewWindow.CancelCloseHelp" xml:space="preserve"><value>A nyomtatási feladat megszakítása és az előnézeti ablak bezárása.</value></data>
+  <data name="PreviewWindow.Previous"><value>Előző</value></data>
+  <data name="PreviewWindow.Next"><value>Következő</value></data>
+  <data name="PreviewWindow.Fit"><value>Oldal igazítása</value></data>
+  <data name="PreviewWindow.Preparing" xml:space="preserve"><value>Nyomtatási feladat előkészítése…</value></data>
+  <data name="PreviewWindow.Sending" xml:space="preserve"><value>Adatok küldése a nyomtatónak…</value></data>
+  <data name="PreviewWindow.Sent" xml:space="preserve"><value>Adatok elküldve; a fizikai nyomtatás folytatódhat.</value></data>
+  <data name="PreviewWindow.Cancelled" xml:space="preserve"><value>Feladat megszakítva.</value></data>
+  <data name="PreviewWindow.Failed" xml:space="preserve"><value>A feladat meghiúsult.</value></data>
+  <data name="PreviewWindow.Measured" xml:space="preserve"><value>Soft Proof a kiválasztott ICC-vel. Ellenőrizze a hozzárendelést jobbra.</value></data>
+  <data name="PreviewWindow.Approximate" xml:space="preserve"><value>Közelítő Soft Proof a papírkategória méréseiből és becsült papírárnyalatból.</value></data>
+  <data name="Preview.Enabled.Text"><value>Előnézet — Engedélyezés (Softproofing)</value></data>
+  <data name="Preview.EnabledHelp"><value>Nyomtatás előtt előnézeti ablakot nyit. ICC-profillal szimulálja a tónusokat, a színárnyalatot, a papír fehérjét és a nyomat feketéjét; profil nélkül a szimuláció közelítő. Nem módosítja a nyomtatási adatokat.</value></data>
+  <data name="Preview.Profile.Text"><value>ICC-profil (opcionális)</value></data>
+  <data name="Preview.WithOba.Content"><value>Papír OBA-val</value></data>
+  <data name="Preview.WithoutOba.Content"><value>OBA-mentes papír</value></data>
+  <data name="Preview.WithObaHelp"><value>Megközelítőleg szimulálja az optikai fehérítős papír fehérségét D50–D65 megvilágításban. Csak az előnézetre hat.</value></data>
+  <data name="Preview.WithoutObaHelp"><value>Megközelítőleg szimulálja az optikai fehérítő nélküli papír fehérségét. Csak az előnézetre hat.</value></data>
   <data name="AppDescription"><value>pyToneRIP nyomtatási támogatási alkalmazás</value></data>
   <data name="Auto.0163AD0F367D.Text"><value>Megkerüli a .quad görbéket, a keverést, a gamma- és a normál tintakorlátot. Ez a nyomtató csak addig nyomtat kalibrációs célokat, amíg ezt a módot ki nem kapcsolja és nem alkalmazza.</value></data>
   <data name="Auto.043112257626.Text"><value>A logikai azonosítóknak meg kell egyeznie minden kiválasztott .quad profillal. Minden logikai tintát hozzárendelhet a kiválasztott nyomtató egy fizikai elérési útjához.</value></data>
@@ -308,4 +331,39 @@
   <data name="ResamplingHelp.bicubic"><value>Köbös szűrővel egyensúlyozza a fényképek élességét és sima tónusátmeneteit. Több részletet őriz meg a bilineáris módszernél, de a nagy kontrasztú élek körül enyhe világos vagy sötét szegélyt okozhat.</value></data>
   <data name="ResamplingHelp.lanczos"><value>Jól megőrzi a finom részleteket a fényképek ditheringrácsra alakításakor, különösen kicsinyítéskor. Élesebb eredményhez válassza, de figyeljen a nagy kontrasztú élek körüli világos vagy sötét szegélyekre.</value></data>
   <data name="ResamplingHelp.mitchell"><value>A részletek és a sima átmenetek egyensúlyát adja, a Lanczosnál kevesebb élszegéllyel. Olyan fényképekhez megfelelő, ahol a szegélyek zavaróak, kissé lágyabb finom részletek és lassabb feldolgozás árán.</value></data>
+  <data name="Preview.IlluminantHelp" xml:space="preserve"><value>Közelítő megtekintési fény: D50, D55, D60 vagy D65. Csak az előnézet árnyalatát módosítja, a nyomtatási adatokat nem. Spektrális mérések nélkül az OBA fluoreszcenciája nem jelezhető előre.</value></data>
+  <data name="PreviewWindow.PrintClose" xml:space="preserve"><value>Nyomtatás és bezárás</value></data>
+  <data name="PreviewWindow.Rulers" xml:space="preserve"><value>Vonalzók</value></data>
+  <data name="PreviewWindow.Printer" xml:space="preserve"><value>Nyomtató</value></data>
+  <data name="PreviewWindow.Paper" xml:space="preserve"><value>Papír</value></data>
+  <data name="PreviewWindow.Size" xml:space="preserve"><value>Méret</value></data>
+  <data name="PreviewWindow.Dither" xml:space="preserve"><value>Raszterezés</value></data>
+  <data name="PreviewWindow.Mode" xml:space="preserve"><value>Mód</value></data>
+  <data name="PreviewWindow.Curves" xml:space="preserve"><value>Görbék</value></data>
+  <data name="PreviewWindow.Resolution" xml:space="preserve"><value>Felbontás</value></data>
+  <data name="PreviewWindow.ProfileMatch" xml:space="preserve"><value>ICC-hozzárendelés</value></data>
+  <data name="PreviewWindow.ProfileUnknown" xml:space="preserve"><value>Az ICC feltételei ismeretlenek.</value></data>
+  <data name="PreviewWindow.ProfileAssigned" xml:space="preserve"><value>A felhasználó rendelte ezekhez a beállításokhoz.</value></data>
+  <data name="PreviewWindow.ProfileMismatch" xml:space="preserve"><value>Az ICC eltér a mentett nyomtatási feltételektől.</value></data>
+  <data name="PreviewWindow.PhysicalUnavailable" xml:space="preserve"><value>A nyomtató fizikai állapota nem érhető el.</value></data>
+  <data name="PreviewWindow.PhysicalUnconfirmed" xml:space="preserve"><value>Az eszköz állapota nem igazolja a feladat befejezését vagy a lap kiadását.</value></data>
+  <data name="PreviewWindow.DeviceOther" xml:space="preserve"><value>Nyomtató: egyéb állapot</value></data>
+  <data name="PreviewWindow.DeviceUnknown" xml:space="preserve"><value>Nyomtató: ismeretlen állapot</value></data>
+  <data name="PreviewWindow.DeviceIdle" xml:space="preserve"><value>Nyomtató: tétlen</value></data>
+  <data name="PreviewWindow.DevicePrinting" xml:space="preserve"><value>Nyomtató: nyomtat</value></data>
+  <data name="PreviewWindow.DeviceWarming" xml:space="preserve"><value>Nyomtató: bemelegszik</value></data>
+  <data name="PreviewWindow.EditSettings" xml:space="preserve"><value>Beállítások módosítása</value></data>
+  <data name="PreviewWindow.Editing" xml:space="preserve"><value>Előnézet frissítése…</value></data>
+  <data name="PreviewWindow.ZoomHelp" xml:space="preserve"><value>Ctrl + egérgörgő: nagyítás. Százalék megadható.</value></data>
+  <data name="PreviewWindow.ActualSizeHelp" xml:space="preserve"><value>100%: egy raszterpixel egy fizikai képernyőpixelre. Ismert, azonos X/Y-raszterfelbontás szükséges.</value></data>
+  <data name="PreviewWindow.SourceChanged" xml:space="preserve"><value>A forrásgörbék módosultak. Az előnézet frissítéséhez nyissa meg a Beállítások módosítása ablakot.</value></data>
+  <data name="PreviewWindow.ICC" xml:space="preserve"><value>ICC</value></data>
+  <data name="PreviewWindow.PhotoPlacement" xml:space="preserve"><value>Fénykép elhelyezése</value></data>
+  <data name="PreviewWindow.PhotoFit" xml:space="preserve"><value>Fénykép igazítása</value></data>
+  <data name="PreviewWindow.PhotoReset" xml:space="preserve"><value>Fénykép alaphelyzetbe</value></data>
+  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Húzza a képet az áthelyezéshez, a sarkát az arányos átméretezéshez. Forgatás a 90°-os gombokkal. A forrásprogram margói a kép részei maradnak.</value></data>
+  <data name="PreviewWindow.PhotoCenterHorizontal" xml:space="preserve"><value>Vízszintes középre igazítás</value></data>
+  <data name="PreviewWindow.PhotoCenterVertical" xml:space="preserve"><value>Függőleges középre igazítás</value></data>
+  <data name="PreviewWindow.PrintStart" xml:space="preserve"><value>Nyomtatás kezdete</value></data>
+  <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>A nyíl a lap elsőként nyomtatott szélét jelöli.</value></data>
 </root>

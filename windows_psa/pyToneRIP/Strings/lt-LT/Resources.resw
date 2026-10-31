@@ -1,5 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
+  <data name="PreviewWindow.Unsimulated" xml:space="preserve"><value>Pilki tonai be popieriaus imitavimo.</value></data>
+  <data name="PreviewWindow.Title" xml:space="preserve"><value>Spausdinimo peržiūra - Soft Proof</value></data>
+  <data name="PreviewWindow.Print"><value>Spausdinti</value></data>
+  <data name="PreviewWindow.Cancel"><value>Atšaukti</value></data>
+  <data name="PreviewWindow.Close"><value>Uždaryti</value></data>
+  <data name="PreviewWindow.CancelCloseHelp" xml:space="preserve"><value>Atšaukti spausdinimo užduotį ir uždaryti peržiūros langą.</value></data>
+  <data name="PreviewWindow.Previous"><value>Ankstesnis</value></data>
+  <data name="PreviewWindow.Next"><value>Kitas</value></data>
+  <data name="PreviewWindow.Fit"><value>Talpinti puslapį</value></data>
+  <data name="PreviewWindow.Preparing" xml:space="preserve"><value>Ruošiama spausdinimo užduotis…</value></data>
+  <data name="PreviewWindow.Sending" xml:space="preserve"><value>Siunčiami duomenys spausdintuvui…</value></data>
+  <data name="PreviewWindow.Sent" xml:space="preserve"><value>Duomenys išsiųsti; fizinis spausdinimas gali tęstis.</value></data>
+  <data name="PreviewWindow.Cancelled" xml:space="preserve"><value>Užduotis atšaukta.</value></data>
+  <data name="PreviewWindow.Failed" xml:space="preserve"><value>Užduotis nepavyko.</value></data>
+  <data name="PreviewWindow.Measured" xml:space="preserve"><value>Soft Proof su pasirinktu ICC. Patikrinkite susiejimą dešinėje.</value></data>
+  <data name="PreviewWindow.Approximate" xml:space="preserve"><value>Apytikslis Soft Proof pagal popieriaus kategorijos matavimus ir numanomą atspalvį.</value></data>
+  <data name="Preview.Enabled.Text"><value>Peržiūra — Įjungti (Softproofing)</value></data>
+  <data name="Preview.EnabledHelp"><value>Prieš spausdinimą atveria peržiūros langą. Su ICC profiliu imituoja tonus, atspalvį, popieriaus baltumą ir spaudinio juodą; be profilio imitacija apytikslė. Nekeičia spausdinimo duomenų.</value></data>
+  <data name="Preview.Profile.Text"><value>ICC profilis (nebūtinas)</value></data>
+  <data name="Preview.WithOba.Content"><value>Popierius su OBA</value></data>
+  <data name="Preview.WithoutOba.Content"><value>Popierius be OBA</value></data>
+  <data name="Preview.WithObaHelp"><value>Apytiksliai imituoja popieriaus su optiniais balikliais baltumą D50–D65 apšvietime. Veikia tik peržiūrą.</value></data>
+  <data name="Preview.WithoutObaHelp"><value>Apytiksliai imituoja popieriaus be optinių baliklių baltumą. Veikia tik peržiūrą.</value></data>
   <data name="AppDescription"><value>pyToneRIP spausdinimo palaikymo programa</value></data>
   <data name="Auto.0163AD0F367D.Text"><value>Apeina .quad kreives, maišymą, gama ir normalų rašalo ribą. Šis spausdintuvas spausdins tik kalibravimo tikslus, kol šis režimas nebus išjungtas ir pritaikytas.</value></data>
   <data name="Auto.043112257626.Text"><value>Loginiai ID turi atitikti kiekvieną pasirinktą .quad profilį. Susiekite kiekvieną loginį rašalą su vienu fiziniu pasirinkto spausdintuvo keliu.</value></data>
@@ -308,4 +331,39 @@
   <data name="ResamplingHelp.bicubic"><value>Naudoja kubinį filtrą, kad suderintų nuotraukų ryškumą ir tolygius tonų perėjimus. Išsaugo daugiau detalių nei dvilinijinis metodas, bet ties didelio kontrasto kraštais gali atsirasti nežymių šviesių ar tamsių apvadų.</value></data>
   <data name="ResamplingHelp.lanczos"><value>Gerai išsaugo smulkias detales keičiant nuotraukas pagal rastravimo tinklelį, ypač mažinant. Rinkitės ryškesniam rezultatui, bet stebėkite, ar ties didelio kontrasto kraštais neatsiranda šviesių ar tamsių apvadų.</value></data>
   <data name="ResamplingHelp.mitchell"><value>Derina detales ir tolygius perėjimus, sukeldamas mažiau kraštų apvadų nei Lanczos. Tinka nuotraukoms, kuriose apvadai trukdo, tačiau smulkios detalės tampa kiek švelnesnės, o apdorojimas lėtesnis.</value></data>
+  <data name="Preview.IlluminantHelp" xml:space="preserve"><value>Apytikslis peržiūros apšvietimas: D50, D55, D60 arba D65. Keičia tik peržiūros atspalvį, o ne spausdinimo duomenis. Be spektrinių matavimų OBA fluorescencijos numatyti negalima.</value></data>
+  <data name="PreviewWindow.PrintClose" xml:space="preserve"><value>Spausdinti ir uždaryti</value></data>
+  <data name="PreviewWindow.Rulers" xml:space="preserve"><value>Liniuotės</value></data>
+  <data name="PreviewWindow.Printer" xml:space="preserve"><value>Spausdintuvas</value></data>
+  <data name="PreviewWindow.Paper" xml:space="preserve"><value>Popierius</value></data>
+  <data name="PreviewWindow.Size" xml:space="preserve"><value>Dydis</value></data>
+  <data name="PreviewWindow.Dither" xml:space="preserve"><value>Taškinis pustoniavimas</value></data>
+  <data name="PreviewWindow.Mode" xml:space="preserve"><value>Režimas</value></data>
+  <data name="PreviewWindow.Curves" xml:space="preserve"><value>Kreivės</value></data>
+  <data name="PreviewWindow.Resolution" xml:space="preserve"><value>Skiriamoji geba</value></data>
+  <data name="PreviewWindow.ProfileMatch" xml:space="preserve"><value>ICC susiejimas</value></data>
+  <data name="PreviewWindow.ProfileUnknown" xml:space="preserve"><value>ICC sąlygos nežinomos.</value></data>
+  <data name="PreviewWindow.ProfileAssigned" xml:space="preserve"><value>Naudotojo priskirtas šioms nuostatoms.</value></data>
+  <data name="PreviewWindow.ProfileMismatch" xml:space="preserve"><value>ICC skiriasi nuo išsaugotų spausdinimo sąlygų.</value></data>
+  <data name="PreviewWindow.PhysicalUnavailable" xml:space="preserve"><value>Fizinė spausdintuvo būsena nepasiekiama.</value></data>
+  <data name="PreviewWindow.PhysicalUnconfirmed" xml:space="preserve"><value>Įrenginio būsena nepatvirtina šios užduoties pabaigos ar lapo išstūmimo.</value></data>
+  <data name="PreviewWindow.DeviceOther" xml:space="preserve"><value>Spausdintuvas: kita būsena</value></data>
+  <data name="PreviewWindow.DeviceUnknown" xml:space="preserve"><value>Spausdintuvas: nežinoma būsena</value></data>
+  <data name="PreviewWindow.DeviceIdle" xml:space="preserve"><value>Spausdintuvas: laisvas</value></data>
+  <data name="PreviewWindow.DevicePrinting" xml:space="preserve"><value>Spausdintuvas: spausdina</value></data>
+  <data name="PreviewWindow.DeviceWarming" xml:space="preserve"><value>Spausdintuvas: įšyla</value></data>
+  <data name="PreviewWindow.EditSettings" xml:space="preserve"><value>Keisti nuostatas</value></data>
+  <data name="PreviewWindow.Editing" xml:space="preserve"><value>Atnaujinama peržiūra…</value></data>
+  <data name="PreviewWindow.ZoomHelp" xml:space="preserve"><value>Ctrl + pelės ratukas: mastelis. Galima įvesti procentus.</value></data>
+  <data name="PreviewWindow.ActualSizeHelp" xml:space="preserve"><value>100%: vienas rastrinis pikselis vienam fiziniam ekrano pikseliui. Reikia žinomos vienodos X/Y skyros.</value></data>
+  <data name="PreviewWindow.SourceChanged" xml:space="preserve"><value>Pradinės kreivės pasikeitė. Atverkite Keisti nuostatas, kad atnaujintumėte peržiūrą.</value></data>
+  <data name="PreviewWindow.ICC" xml:space="preserve"><value>ICC</value></data>
+  <data name="PreviewWindow.PhotoPlacement" xml:space="preserve"><value>Nuotraukos padėtis</value></data>
+  <data name="PreviewWindow.PhotoFit" xml:space="preserve"><value>Talpinti nuotrauką</value></data>
+  <data name="PreviewWindow.PhotoReset" xml:space="preserve"><value>Atkurti nuotrauką</value></data>
+  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Vilkite vaizdą, kad perkeltumėte, ir kampą, kad proporcingai pakeistumėte dydį. Sukite 90° mygtukais. Pradinės programos paraštės lieka vaizdo dalimi.</value></data>
+  <data name="PreviewWindow.PhotoCenterHorizontal" xml:space="preserve"><value>Centruoti horizontaliai</value></data>
+  <data name="PreviewWindow.PhotoCenterVertical" xml:space="preserve"><value>Centruoti vertikaliai</value></data>
+  <data name="PreviewWindow.PrintStart" xml:space="preserve"><value>Spausdinimo pradžia</value></data>
+  <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>Rodyklė žymi lapo kraštą, kuris spausdinamas pirmiausia.</value></data>
 </root>

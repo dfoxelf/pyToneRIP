@@ -1,5 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
+  <data name="PreviewWindow.Unsimulated" xml:space="preserve"><value>Graustufen ohne Papiersimulation.</value></data>
+  <data name="PreviewWindow.Title" xml:space="preserve"><value>Druckvorschau - Soft Proof</value></data>
+  <data name="PreviewWindow.Print"><value>Drucken</value></data>
+  <data name="PreviewWindow.Cancel"><value>Abbrechen</value></data>
+  <data name="PreviewWindow.Close"><value>Schließen</value></data>
+  <data name="PreviewWindow.CancelCloseHelp" xml:space="preserve"><value>Den Druckauftrag abbrechen und das Vorschaufenster schließen.</value></data>
+  <data name="PreviewWindow.Previous"><value>Zurück</value></data>
+  <data name="PreviewWindow.Next"><value>Weiter</value></data>
+  <data name="PreviewWindow.Fit"><value>Seite einpassen</value></data>
+  <data name="PreviewWindow.Preparing" xml:space="preserve"><value>Druckauftrag wird vorbereitet…</value></data>
+  <data name="PreviewWindow.Sending" xml:space="preserve"><value>Daten werden an den Drucker gesendet…</value></data>
+  <data name="PreviewWindow.Sent" xml:space="preserve"><value>Daten gesendet; der physische Druck kann weiterlaufen.</value></data>
+  <data name="PreviewWindow.Cancelled" xml:space="preserve"><value>Druckauftrag abgebrochen.</value></data>
+  <data name="PreviewWindow.Failed" xml:space="preserve"><value>Druckauftrag fehlgeschlagen.</value></data>
+  <data name="PreviewWindow.Measured" xml:space="preserve"><value>Soft Proof mit dem gewählten ICC. Zuordnung rechts prüfen.</value></data>
+  <data name="PreviewWindow.Approximate" xml:space="preserve"><value>Angenäherter Soft Proof aus Papierkategorie-Messungen und geschätztem Papierton.</value></data>
+  <data name="Preview.Enabled.Text"><value>Vorschau — Aktivieren (Softproofing)</value></data>
+  <data name="Preview.EnabledHelp"><value>Öffnet vor dem Drucken ein Vorschaufenster. Mit ICC-Profil werden Tonwerte, Farbstich, Papierweiß und Druckschwarz simuliert; ohne Profil ist die Simulation näherungsweise. Die Druckdaten bleiben unverändert.</value></data>
+  <data name="Preview.Profile.Text"><value>ICC-Profil (optional)</value></data>
+  <data name="Preview.WithOba.Content"><value>Papier mit OBA</value></data>
+  <data name="Preview.WithoutOba.Content"><value>Papier ohne OBA</value></data>
+  <data name="Preview.WithObaHelp"><value>Simuliert näherungsweise das Papierweiß mit optischen Aufhellern unter D50–D65-Beleuchtung. Betrifft nur die Vorschau.</value></data>
+  <data name="Preview.WithoutObaHelp"><value>Simuliert näherungsweise das Papierweiß ohne optische Aufheller. Betrifft nur die Vorschau.</value></data>
   <data name="AppDescription"><value>pyToneRIP-Druckunterstützungs-App</value></data>
   <data name="Auto.0163AD0F367D.Text"><value>Umgeht .quad-Kurven, Blending, Gamma und normale Tintenbegrenzung. Dieser Drucker druckt Kalibrierungsziele nur so lange, bis dieser Modus ausgeschaltet und angewendet wird.</value></data>
   <data name="Auto.043112257626.Text"><value>Logische IDs müssen mit jedem ausgewählten .quad-Profil übereinstimmen. Ordnen Sie jede logische Tinte einem physischen Pfad des ausgewählten Druckers zu.</value></data>
@@ -308,4 +331,39 @@
   <data name="ResamplingHelp.bicubic"><value>Verwendet einen kubischen Filter für einen ausgewogenen Kompromiss zwischen Schärfe und weichen Tonwertübergängen in Fotos. Erhält mehr Details als bilineare Interpolation, kann an kontrastreichen Kanten aber leichte helle oder dunkle Säume erzeugen.</value></data>
   <data name="ResamplingHelp.lanczos"><value>Erhält feine Details bei der Umrechnung von Fotos auf das Dithering-Raster gut, besonders beim Verkleinern. Für schärfere Ergebnisse geeignet; an kontrastreichen Kanten können jedoch helle oder dunkle Säume auftreten.</value></data>
   <data name="ResamplingHelp.mitchell"><value>Verbindet Detailerhalt mit weichen Übergängen und erzeugt weniger Kantensäume als Lanczos. Geeignet für Fotos mit störenden Säumen; sehr feine Details werden etwas weicher, und die Verarbeitung dauert länger.</value></data>
+  <data name="Preview.IlluminantHelp" xml:space="preserve"><value>Angenähertes Betrachtungslicht: D50, D55, D60 oder D65. Ändert nur den Farbton der Vorschau, keine Druckdaten. Ohne Spektralmessung lässt sich die OBA-Fluoreszenz nicht vorhersagen.</value></data>
+  <data name="PreviewWindow.PrintClose" xml:space="preserve"><value>Drucken und schließen</value></data>
+  <data name="PreviewWindow.Rulers" xml:space="preserve"><value>Lineale</value></data>
+  <data name="PreviewWindow.Printer" xml:space="preserve"><value>Drucker</value></data>
+  <data name="PreviewWindow.Paper" xml:space="preserve"><value>Papier</value></data>
+  <data name="PreviewWindow.Size" xml:space="preserve"><value>Format</value></data>
+  <data name="PreviewWindow.Dither" xml:space="preserve"><value>Dithering</value></data>
+  <data name="PreviewWindow.Mode" xml:space="preserve"><value>Modus</value></data>
+  <data name="PreviewWindow.Curves" xml:space="preserve"><value>Kurven</value></data>
+  <data name="PreviewWindow.Resolution" xml:space="preserve"><value>Auflösung</value></data>
+  <data name="PreviewWindow.ProfileMatch" xml:space="preserve"><value>ICC-Zuordnung</value></data>
+  <data name="PreviewWindow.ProfileUnknown" xml:space="preserve"><value>ICC-Bedingungen unbekannt.</value></data>
+  <data name="PreviewWindow.ProfileAssigned" xml:space="preserve"><value>Diesen Einstellungen vom Benutzer zugeordnet.</value></data>
+  <data name="PreviewWindow.ProfileMismatch" xml:space="preserve"><value>ICC stimmt nicht mit den gespeicherten Druckbedingungen überein.</value></data>
+  <data name="PreviewWindow.PhysicalUnavailable" xml:space="preserve"><value>Physischer Druckerstatus nicht verfügbar.</value></data>
+  <data name="PreviewWindow.PhysicalUnconfirmed" xml:space="preserve"><value>Der Gerätestatus bestätigt weder den Abschluss dieses Auftrags noch die Blattausgabe.</value></data>
+  <data name="PreviewWindow.DeviceOther" xml:space="preserve"><value>Drucker: anderer Zustand</value></data>
+  <data name="PreviewWindow.DeviceUnknown" xml:space="preserve"><value>Drucker: unbekannt</value></data>
+  <data name="PreviewWindow.DeviceIdle" xml:space="preserve"><value>Drucker: bereit</value></data>
+  <data name="PreviewWindow.DevicePrinting" xml:space="preserve"><value>Drucker: druckt</value></data>
+  <data name="PreviewWindow.DeviceWarming" xml:space="preserve"><value>Drucker: Aufwärmen</value></data>
+  <data name="PreviewWindow.EditSettings" xml:space="preserve"><value>Einstellungen ändern</value></data>
+  <data name="PreviewWindow.Editing" xml:space="preserve"><value>Auftragsvorschau wird aktualisiert…</value></data>
+  <data name="PreviewWindow.ZoomHelp" xml:space="preserve"><value>Strg + Mausrad: Zoom. Prozentwert kann eingegeben werden.</value></data>
+  <data name="PreviewWindow.ActualSizeHelp" xml:space="preserve"><value>100%: ein Rasterpixel je physischem Bildschirmpixel. Erfordert bekannte, gleiche X/Y-Rasterauflösung.</value></data>
+  <data name="PreviewWindow.SourceChanged" xml:space="preserve"><value>Die Quellkurven wurden geändert. Öffnen Sie „Einstellungen ändern“, um die Vorschau zu aktualisieren.</value></data>
+  <data name="PreviewWindow.ICC" xml:space="preserve"><value>ICC</value></data>
+  <data name="PreviewWindow.PhotoPlacement" xml:space="preserve"><value>Foto platzieren</value></data>
+  <data name="PreviewWindow.PhotoFit" xml:space="preserve"><value>Foto einpassen</value></data>
+  <data name="PreviewWindow.PhotoReset" xml:space="preserve"><value>Foto zurücksetzen</value></data>
+  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Bild zum Verschieben ziehen; Ecke zum proportionalen Skalieren ziehen. Drehung mit den 90°-Tasten. Ränder der Quellanwendung bleiben Teil des Bildes.</value></data>
+  <data name="PreviewWindow.PhotoCenterHorizontal" xml:space="preserve"><value>Horizontal zentrieren</value></data>
+  <data name="PreviewWindow.PhotoCenterVertical" xml:space="preserve"><value>Vertikal zentrieren</value></data>
+  <data name="PreviewWindow.PrintStart" xml:space="preserve"><value>Druckbeginn</value></data>
+  <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>Der Pfeil markiert die Blattkante, die zuerst bedruckt wird.</value></data>
 </root>

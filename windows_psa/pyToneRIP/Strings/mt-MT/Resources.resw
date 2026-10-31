@@ -1,5 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
+  <data name="PreviewWindow.Unsimulated" xml:space="preserve"><value>Skala ta’ griż mingħajr simulazzjoni tal-karta.</value></data>
+  <data name="PreviewWindow.Title" xml:space="preserve"><value>Previżjoni tal-istampar - Soft Proof</value></data>
+  <data name="PreviewWindow.Print"><value>Stampa</value></data>
+  <data name="PreviewWindow.Cancel"><value>Ikkanċella</value></data>
+  <data name="PreviewWindow.Close"><value>Agħlaq</value></data>
+  <data name="PreviewWindow.CancelCloseHelp" xml:space="preserve"><value>Ikkanċella x-xogħol tal-istampar u agħlaq it-tieqa tal-previżjoni.</value></data>
+  <data name="PreviewWindow.Previous"><value>Preċedenti</value></data>
+  <data name="PreviewWindow.Next"><value>Li jmiss</value></data>
+  <data name="PreviewWindow.Fit"><value>Waħħal il-paġna</value></data>
+  <data name="PreviewWindow.Preparing" xml:space="preserve"><value>Qed jitħejja x-xogħol…</value></data>
+  <data name="PreviewWindow.Sending" xml:space="preserve"><value>Qed tintbagħat id-data lill-printer…</value></data>
+  <data name="PreviewWindow.Sent" xml:space="preserve"><value>Id-data ntbagħtet; l-istampar fiżiku jista’ jkompli.</value></data>
+  <data name="PreviewWindow.Cancelled" xml:space="preserve"><value>Ix-xogħol ġie kkanċellat.</value></data>
+  <data name="PreviewWindow.Failed" xml:space="preserve"><value>Ix-xogħol falla.</value></data>
+  <data name="PreviewWindow.Measured" xml:space="preserve"><value>Soft Proof bl-ICC magħżul. Iċċekkja l-assoċjazzjoni fuq il-lemin.</value></data>
+  <data name="PreviewWindow.Approximate" xml:space="preserve"><value>Soft Proof approssimattiv minn kejl tal-kategorija tal-karta u lewn stmat.</value></data>
+  <data name="Preview.Enabled.Text"><value>Previżjoni — Attiva (Softproofing)</value></data>
+  <data name="Preview.EnabledHelp"><value>Jiftaħ tieqa ta’ previżjoni qabel l-istampar. Bi profil ICC jissimula t-toni, il-lewn, l-abjad tal-karta u l-iswed tal-istampar; mingħajr profil is-simulazzjoni hija approssimattiva. Ma jbiddilx id-data tal-istampar.</value></data>
+  <data name="Preview.Profile.Text"><value>Profil ICC (mhux obbligatorju)</value></data>
+  <data name="Preview.WithOba.Content"><value>Karta b’OBA</value></data>
+  <data name="Preview.WithoutOba.Content"><value>Karta mingħajr OBA</value></data>
+  <data name="Preview.WithObaHelp"><value>Jissimula bejn wieħed u ieħor l-abjad tal-karta b’sustanzi li jbajdu ottikament taħt dawl D50–D65. Jaffettwa biss il-previżjoni.</value></data>
+  <data name="Preview.WithoutObaHelp"><value>Jissimula bejn wieħed u ieħor l-abjad tal-karta mingħajr sustanzi li jbajdu ottikament. Jaffettwa biss il-previżjoni.</value></data>
   <data name="AppDescription"><value>App għall-Appoġġ għall-Istampar pyToneRIP</value></data>
   <data name="Auto.0163AD0F367D.Text"><value>Bypasses .quad kurvi, taħlit, gamma u limitu tal-linka normali. Dan l-istampatur jistampa l-miri tal-kalibrazzjoni biss sakemm din il-modalità tintefa u tiġi applikata.</value></data>
   <data name="Auto.043112257626.Text"><value>L-IDs loġiċi għandhom jaqblu ma&#x27; kull profil .quad magħżul. Map kull linka loġika għal mogħdija fiżika waħda tal-istampatur magħżul.</value></data>
@@ -308,4 +331,39 @@
   <data name="ResamplingHelp.bicubic"><value>Juża filtru kubiku biex jibbilanċja ċ-ċarezza u tranżizzjonijiet lixxi tat-toni fir-ritratti. Iżomm aktar dettall mill-metodu bilineari, iżda jista’ joħloq kontorni ċari jew skuri ħfief madwar truf b’kuntrast qawwi.</value></data>
   <data name="ResamplingHelp.lanczos"><value>Iżomm tajjeb id-dettalji fini meta jadatta r-ritratti għall-gradilja tad-dithering, speċjalment meta jnaqqas id-daqs. Agħżlu għal riżultat aktar ċar, iżda oqgħod attent għal kontorni ċari jew skuri madwar truf b’kuntrast qawwi.</value></data>
   <data name="ResamplingHelp.mitchell"><value>Jibbilanċja d-dettalji u tranżizzjonijiet lixxi b’inqas kontorni mhux mixtieqa madwar it-truf minn Lanczos. Adattat għal ritratti fejn dawn il-kontorni jdejqu, iżda d-dettalji fini jkunu kemxejn aktar rotob u l-ipproċessar aktar bil-mod.</value></data>
+  <data name="Preview.IlluminantHelp" xml:space="preserve"><value>Dawl approssimattiv għall-wiri: D50, D55, D60 jew D65. Ibiddel biss il-lewn tal-previżjoni, mhux id-data tal-istampar. Mingħajr kejl spettrali ma tistax titbassar il-fluworexxenza OBA.</value></data>
+  <data name="PreviewWindow.PrintClose" xml:space="preserve"><value>Stampa u agħlaq</value></data>
+  <data name="PreviewWindow.Rulers" xml:space="preserve"><value>Rigi</value></data>
+  <data name="PreviewWindow.Printer" xml:space="preserve"><value>Printer</value></data>
+  <data name="PreviewWindow.Paper" xml:space="preserve"><value>Karta</value></data>
+  <data name="PreviewWindow.Size" xml:space="preserve"><value>Daqs</value></data>
+  <data name="PreviewWindow.Dither" xml:space="preserve"><value>Dither</value></data>
+  <data name="PreviewWindow.Mode" xml:space="preserve"><value>Modalità</value></data>
+  <data name="PreviewWindow.Curves" xml:space="preserve"><value>Kurvi</value></data>
+  <data name="PreviewWindow.Resolution" xml:space="preserve"><value>Riżoluzzjoni</value></data>
+  <data name="PreviewWindow.ProfileMatch" xml:space="preserve"><value>Assoċjazzjoni ICC</value></data>
+  <data name="PreviewWindow.ProfileUnknown" xml:space="preserve"><value>Il-kundizzjonijiet ICC mhumiex magħrufa.</value></data>
+  <data name="PreviewWindow.ProfileAssigned" xml:space="preserve"><value>Assenjat għal dawn is-settings mill-utent.</value></data>
+  <data name="PreviewWindow.ProfileMismatch" xml:space="preserve"><value>L-ICC huwa differenti mill-kundizzjonijiet tal-istampar salvati.</value></data>
+  <data name="PreviewWindow.PhysicalUnavailable" xml:space="preserve"><value>L-istat fiżiku tal-printer mhuwiex disponibbli.</value></data>
+  <data name="PreviewWindow.PhysicalUnconfirmed" xml:space="preserve"><value>L-istat tal-apparat ma jikkonfermax it-tlestija ta’ dan ix-xogħol jew il-ħruġ tal-folja.</value></data>
+  <data name="PreviewWindow.DeviceOther" xml:space="preserve"><value>Printer: stat ieħor</value></data>
+  <data name="PreviewWindow.DeviceUnknown" xml:space="preserve"><value>Printer: stat mhux magħruf</value></data>
+  <data name="PreviewWindow.DeviceIdle" xml:space="preserve"><value>Printer: wieqaf</value></data>
+  <data name="PreviewWindow.DevicePrinting" xml:space="preserve"><value>Printer: qed jistampa</value></data>
+  <data name="PreviewWindow.DeviceWarming" xml:space="preserve"><value>Printer: qed jisħon</value></data>
+  <data name="PreviewWindow.EditSettings" xml:space="preserve"><value>Ibdel is-settings</value></data>
+  <data name="PreviewWindow.Editing" xml:space="preserve"><value>Qed tiġi aġġornata l-previżjoni…</value></data>
+  <data name="PreviewWindow.ZoomHelp" xml:space="preserve"><value>Ctrl + rota tal-maws: żum. Tista’ ddaħħal perċentwal.</value></data>
+  <data name="PreviewWindow.ActualSizeHelp" xml:space="preserve"><value>100%: pixel raster wieħed għal kull pixel fiżiku tal-iskrin. Jeħtieġ riżoluzzjoni X/Y magħrufa u ugwali.</value></data>
+  <data name="PreviewWindow.SourceChanged" xml:space="preserve"><value>Il-kurvi tas-sors inbidlu. Iftaħ Ibdel is-settings biex taġġorna l-previżjoni.</value></data>
+  <data name="PreviewWindow.ICC" xml:space="preserve"><value>ICC</value></data>
+  <data name="PreviewWindow.PhotoPlacement" xml:space="preserve"><value>Pożizzjoni tar-ritratt</value></data>
+  <data name="PreviewWindow.PhotoFit" xml:space="preserve"><value>Waħħal ir-ritratt</value></data>
+  <data name="PreviewWindow.PhotoReset" xml:space="preserve"><value>Irrisettja r-ritratt</value></data>
+  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Iġbed l-immaġni biex iċċaqlaqha u kantuniera biex tbiddel id-daqs proporzjonalment. Dawwar bil-buttuni 90°. Il-marġini tal-applikazzjoni tas-sors jibqgħu parti mill-immaġni.</value></data>
+  <data name="PreviewWindow.PhotoCenterHorizontal" xml:space="preserve"><value>Iċċentra orizzontalment</value></data>
+  <data name="PreviewWindow.PhotoCenterVertical" xml:space="preserve"><value>Iċċentra vertikalment</value></data>
+  <data name="PreviewWindow.PrintStart" xml:space="preserve"><value>Bidu tal-istampar</value></data>
+  <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>Il-vleġġa tindika t-tarf tal-folja li jiġi stampat l-ewwel.</value></data>
 </root>

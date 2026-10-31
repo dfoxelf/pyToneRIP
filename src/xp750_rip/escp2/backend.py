@@ -248,6 +248,75 @@ def _mode_page_geometry(
     )
 
 
+_P50_FAMILY_PACKAGES = frozenset({
+    "gp--escp2-p50", "gp--escp2-t50", "gp--escp2-t60",
+})
+
+
+def _is_p50_borderless(model: PrinterModel, page: PageCapability) -> bool:
+    return model.catalog_package_id in _P50_FAMILY_PACKAGES and page.ppd.borderless
+
+
+def _p50_borderless_geometry(
+    model: PrinterModel, page: PageCapability,
+    native_mode: EpsonEscp2ModeParameters, geometry: LetterPageGeometry,
+) -> LetterPageGeometry:
+    if not _is_p50_borderless(model, page):
+        return geometry
+    # Gutenprint model_97: Full borderless; max_nozzle_span() is count *
+    # separation (90 * 4), not (count - 1) * separation. setup_page adds one
+    # point to page_bottom; escp2_set_margins expands both limits by the span.
+    # Keep the physical sheet dimensions: ReferenceDriver's +200/+300 mil
+    # borderless descriptor canvas is not a larger sheet.
+    units = _profile_page_units(model, native_mode)
+    span = native_mode.nozzle_count * native_mode.raw_nozzle_separation * units // model.base_separation_dpi
+    width = int(page.ppd.width_points * units / 72)
+    height = int(page.ppd.height_points * units / 72)
+    return replace(
+        geometry, width_page_units=width, height_page_units=height,
+        format_top_vertical_units=-span,
+        format_bottom_vertical_units=int((page.ppd.height_points + 1) * units / 72) + span,
+    )
+
+
+def _is_artisan1430_borderless(model: PrinterModel, page: PageCapability) -> bool:
+    return model.catalog_package_id == "gp--escp2-artisan1430" and page.ppd.borderless
+
+
+def _artisan1430_page_geometry(
+    model: PrinterModel, page: PageCapability,
+    native_mode: EpsonEscp2ModeParameters, geometry: LetterPageGeometry,
+    input_source: InputSourceCapability,
+) -> LetterPageGeometry:
+    if model.catalog_package_id == "gp--escp2-artisan1430" and input_source.medium_kind == "roll":
+        # Own 1500W TPP Size records and five independent roll captures:
+        # add 1000 mil transport length; borderless adds a 200/300 mil canvas.
+        physical = {0: (8268, 11693), 1: (8500, 11000), 3: (5846, 8268),
+                    4: (4134, 5827), 10: (4000, 6000), 12: (8000, 10000),
+                    15: (3500, 5000), 28: (5000, 7000), 61: (13000, 19000),
+                    62: (11693, 16535), 64: (11000, 17000)}
+        width_mils, height_mils = physical.get(page.media_size_code,
+            (round(page.ppd.width_points * 1000 / 72), round(page.ppd.height_points * 1000 / 72)))
+        borderless = page.ppd.borderless
+        units = _profile_page_units(model, native_mode)
+        width = round((width_mils + (200 if borderless else 0)) * units / 1000)
+        height = round((height_mils + 1000 + (300 if borderless else 0)) * units / 1000)
+        return replace(geometry, width_page_units=width, height_page_units=height,
+            format_top_vertical_units=0 if borderless else round(120 * units / 1000),
+            format_bottom_vertical_units=height if borderless else round((height_mils + 880) * units / 1000))
+    if not _is_artisan1430_borderless(model, page):
+        return geometry
+    # model_82 is borderless=Yes, not Full: setup_page expands by
+    # zeroMarginOffset (80), not by the 90 * 4 nozzle span of model_97.
+    units = _profile_page_units(model, native_mode)
+    extra = 80 * units // model.base_separation_dpi
+    return replace(geometry,
+        width_page_units=int(page.ppd.width_points * units / 72),
+        height_page_units=int(page.ppd.height_points * units / 72),
+        format_top_vertical_units=-extra,
+        format_bottom_vertical_units=int((page.ppd.height_points + 1) * units / 72) + extra)
+
+
 def _profile_imageable_origin_offsets(
     model: PrinterModel, page: PageCapability, native_mode: EpsonEscp2ModeParameters,
     *, input_source: InputSourceCapability | None = None,
@@ -255,7 +324,21 @@ def _profile_imageable_origin_offsets(
     """Locate the cropped PPD imageable raster on the physical sheet."""
 
     ppd = page.ppd
+    if model.catalog_package_id in {"gp--escp2-p6000", "gp--escp2-p8000",
+                                    "gp--escp2-p7000", "gp--escp2-p9000",
+                                    "gp--escp2-p7000c", "gp--escp2-p9000c"}:
+        # The image is already cropped to its imageable rectangle. In the
+        # exact GP source image_left = requested_left - page_left; P6000/P7000
+        # captures start at X=0 too. Adding the PPD left margin doubles it.
+        return 0, 0
+    if (model.catalog_package_id == "gp--escp2-artisan1430"
+            and input_source is not None and input_source.medium_kind == "roll"):
+        return 0, 0
     left = round(ppd.imageable_left_points * native_mode.horizontal_units / 72)
+    if _is_p50_borderless(model, page) or _is_artisan1430_borderless(model, page):
+        # print-escp2.c setup_page: (zeroMarginOffset - microLeftMargin)
+        # * micro_units / baseSeparation. model_97 supplies 80 and 42.
+        return 0, 38 * native_mode.horizontal_units // model.base_separation_dpi
     if model.escp2_command_set == "Pro":
         # Pro profiles place the top margin in ESC (c page format.
         return 0, left
@@ -287,6 +370,17 @@ def _profile_initial_feed_offset_rows(
     an offset between colour channels.
     """
 
+    if (model.catalog_package_id == "gp--escp2-artisan1430"
+            and input_source is not None and input_source.medium_kind == "roll"):
+        # Both captured roll modes start marked K dots at wire Y=0.
+        return 0
+    if page is not None and _is_artisan1430_borderless(model, page):
+        return 80 * native_mode.printed_vertical_dpi // model.base_separation_dpi
+    if page is not None and _is_p50_borderless(model, page):
+        # Full-borderless weave origin compensates the negative ESC (c top.
+        # Gutenprint setup_weave: page_extra_height * raster_dpi / units.
+        return (native_mode.nozzle_count * native_mode.raw_nozzle_separation
+                * native_mode.printed_vertical_dpi // model.base_separation_dpi)
     if model.catalog_package_id == "gp--escp2-r2880":
         if page is None or input_source is None:
             raise ValueError("R2880 feed origin requires the page and physical feed")
@@ -728,7 +822,7 @@ def _selected_device_commands(
     for setting in model.device_settings:
         if setting.identity in skip:
             continue
-        if ((model.catalog_package_id in {"gp--escp2-r2400", "gp--escp2-r2880"}
+        if ((model.catalog_package_id in {"gp--escp2-r2400", "gp--escp2-r2880", "gp--escp2-artisan1430"}
              or model.backend_family == "epson_escp2_model96")
             and setting.identity == "Drying_Time" and setting.identity not in values):
             # Legacy jobs did not advertise a drying override. An explicit
@@ -927,11 +1021,12 @@ def _encode_profile_stream(
     output.extend(commands.remote_mode_enter())
     output.extend(commands.remote_job_start(job_label))
     output.extend(commands.remote_sn(0))
-    if medium.media_code is not None:
+    media_code = medium.media_code_for_source(input_source)
+    if media_code is not None:
         output.extend(
             commands.remote_media_info(
                 media_format=1,
-                media_type=medium.media_code,
+                media_type=media_code,
                 media_size=page.media_size_code if page.media_size_code is not None else 99,
             )
         )
@@ -946,6 +1041,14 @@ def _encode_profile_stream(
     else:
         for remote_command, payload in profile.remote_extras:
             output.extend(commands.remote_payload(remote_command, payload))
+        if model.catalog_package_id == "gp--escp2-artisan1430" and input_source.medium_kind == "roll":
+            output.extend(commands.remote_payload("US", bytes.fromhex("000001")))
+            output.extend(commands.remote_payload("FP", bytes.fromhex("00b0ff" if page.ppd.borderless else "000000")))
+        elif _is_p50_borderless(model, page) or _is_artisan1430_borderless(model, page):
+            # escp2-driver.c FullBleed: FP signed -80 (models 82/97), followed by
+            # model_97 verticalBorderlessSequence US 00 00 02.
+            output.extend(commands.remote_payload("FP", bytes.fromhex("00b0ff")))
+            output.extend(commands.remote_payload("US", bytes.fromhex("000002")))
         for device_command in _selected_device_commands(
             model, device_settings, skip=("Save_Paper_Roll_Paper",)
         ):
@@ -973,7 +1076,12 @@ def _encode_profile_stream(
         page=page,
         base_separation_dpi=model.base_separation_dpi,
     )
-    if model.identity in {"SureColorP600", "SureColorP800", "Stylus_Photo_R3000"}:
+    wide_surecolor = model.catalog_package_id in {
+        "gp--escp2-p6000", "gp--escp2-p8000",
+        "gp--escp2-p7000", "gp--escp2-p9000",
+        "gp--escp2-p7000c", "gp--escp2-p9000c",
+    }
+    if model.identity in {"SureColorP600", "SureColorP800", "Stylus_Photo_R3000"} or wide_surecolor:
         # R3000's Gutenprint ink lists specify IK 31/51; its captured photo
         # sheet confirms IK 31. P600/P800 cartridge captures confirm the pair.
         selected_ink = model.ink_configuration(ink_configuration)
@@ -985,6 +1093,11 @@ def _encode_profile_stream(
         }.get(selected_ink.active_logical_ink)
         if ink_switch is None:
             raise ValueError(f"Unsupported {model.identity} black ink configuration")
+        if wide_surecolor and model.catalog_package_id.endswith("c"):
+            # P7000 cartridge captures distinguish LLK (31/51) from Violet
+            # (39/59). P9000 shares the exact corresponding ink-list source;
+            # its independent native capture remains an audit limitation.
+            ink_switch = bytes((0, ink_switch[1] | 0x08))
         output.extend(commands.remote_payload("IK", ink_switch))
     output.extend(commands.remote_mode_exit())
     output.extend(commands.graphics_mode())
@@ -1152,6 +1265,8 @@ class EpsonEscp2Backend:
                 borderless_top_extra_unit=(model.catalog_package_id != "gp--escp2-r2880"
                     and not (model.escp2_profile.identity in {"ET8550", "P700RIP"} and page.native_page_format_mils)),
             )
+            geometry = _p50_borderless_geometry(model, page, native_mode, geometry)
+            geometry = _artisan1430_page_geometry(model, page, native_mode, geometry, input_source)
             parts = _encode_profile_stream(
                 model=model,
                 mode=mode,
@@ -1396,6 +1511,8 @@ class EpsonEscp2Backend:
                 borderless_top_extra_unit=(model.catalog_package_id != "gp--escp2-r2880"
                     and not (model.escp2_profile.identity in {"ET8550", "P700RIP"} and page.native_page_format_mils)),
             )
+            geometry = _p50_borderless_geometry(model, page, native_mode, geometry)
+            geometry = _artisan1430_page_geometry(model, page, native_mode, geometry, input_source)
             encoded_passes = tuple(item.encode(timings) for item in passes)
             stream_started = perf_counter()
             data = _encode_profile_stream(

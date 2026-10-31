@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using pyToneRIP.Tasks.Services;
+using pyToneRIP.Shared;
 using Windows.ApplicationModel.Background;
 using Windows.Graphics.Printing.Workflow;
 using Windows.Storage;
@@ -18,6 +19,8 @@ namespace pyToneRIP.Tasks
         private CancellationTokenSource statusMonitorCancellation;
         private int cancellationRequested;
         private int dataAvailableEntered;
+        private int submissionCompleted;
+        private string previewSessionId;
 
         public void Run(IBackgroundTaskInstance taskInstance)
         {
@@ -69,9 +72,26 @@ namespace pyToneRIP.Tasks
                     session.Printer.PrinterName);
                 ThrowIfCancellationRequested();
                 WriteWorkflowStage("PrinterAssignmentGate configured PASS");
-                var record = await writer.CaptureAsync(session, args);
+                Task<PrintWorkflowUICompletionStatus> previewUi = null;
+                var record = await writer.CaptureAsync(session, args, async () =>
+                {
+                    if (!args.UILauncher.IsUILaunchEnabled())
+                        throw new InvalidOperationException("Print preview was requested, but Windows cannot launch its UI for this job.");
+                    previewSessionId = args.Configuration.SessionId;
+                    await PreviewWorkflowStore.PrepareAsync(writer.JobFolder, previewSessionId, writer.PreviewOptions);
+                    previewUi = args.UILauncher.LaunchAndCompleteUIAsync().AsTask();
+                    _ = ObservePreviewClosureAsync(previewUi);
+                });
                 ThrowIfCancellationRequested();
                 WriteWorkflowStage("VirtualPrinterDataAvailable capture complete");
+                if (previewUi != null)
+                {
+                    await PreviewWorkflowStore.WriteAtomicAsync(writer.JobFolder, "preview-capture-ready", "");
+                    await WaitForPreviewApprovalAsync(previewUi);
+                }
+                await writer.FinalizeCaptureAsync(record);
+                ThrowIfCancellationRequested();
+                record = await writer.JobFolder.GetFileAsync("job-record.json");
                 var response = await CoreAppServiceClient.ExecuteAsync(record);
                 ThrowIfCancellationRequested();
                 WriteWorkflowStage(
@@ -80,9 +100,16 @@ namespace pyToneRIP.Tasks
                     throw new InvalidOperationException(
                         "pyToneRIP Core returned unexpected terminal status: "
                         + response.Status + ".");
+                statusMonitorCancellation?.Cancel();
                 args.CompleteJob(PrintWorkflowSubmittedStatus.Succeeded);
+                Interlocked.Exchange(ref submissionCompleted, 1);
                 WriteWorkflowStage(
                     "VirtualPrinterDataAvailable completed job as Succeeded (PRN sent)");
+                if (previewUi != null)
+                {
+                    try { await previewUi; }
+                    catch (Exception uiError) { WriteWorkflowFailure("Completed job preview closed with an error", uiError); }
+                }
             }
             catch (OperationCanceledException error)
             {
@@ -108,6 +135,11 @@ namespace pyToneRIP.Tasks
             }
             finally
             {
+                if (previewSessionId != null)
+                {
+                    try { await PreviewWorkflowStore.RemoveSessionAsync(previewSessionId); }
+                    catch (Exception error) { WriteWorkflowFailure("Preview session cleanup failed", error); }
+                }
                 var monitor = Interlocked.Exchange(ref statusMonitorCancellation, null);
                 monitor?.Cancel();
                 monitor?.Dispose();
@@ -117,6 +149,38 @@ namespace pyToneRIP.Tasks
                     taskInstance.Canceled -= OnCanceled;
                 this.session = null;
                 CompleteDeferral();
+            }
+        }
+
+        private Task WaitForPreviewApprovalAsync(Task<PrintWorkflowUICompletionStatus> launch)
+        {
+            return PreviewApprovalGate.WaitAsync(
+                () =>
+                {
+                    var failure = Path.Combine(writer.JobFolder.Path, "preview-failed.txt");
+                    if (File.Exists(failure)) throw new InvalidOperationException(File.ReadAllText(failure));
+                    return File.Exists(Path.Combine(writer.JobFolder.Path, "preview-approved"));
+                },
+                () => IsCancellationRequested || File.Exists(Path.Combine(writer.JobFolder.Path, "cancel.requested")),
+                launch, writer.ProcessPreviewEditAsync);
+        }
+
+        private async Task ObservePreviewClosureAsync(Task<PrintWorkflowUICompletionStatus> launch)
+        {
+            try
+            {
+                var result = await launch;
+                if (Volatile.Read(ref submissionCompleted) != 0) return;
+                if (File.Exists(Path.Combine(writer.JobFolder.Path, "preview-failed.txt"))) return;
+                if (result != PrintWorkflowUICompletionStatus.Completed
+                    || !File.Exists(Path.Combine(writer.JobFolder.Path, "preview-approved")))
+                    RequestCancellation("Print preview was closed without print approval.");
+            }
+            catch (Exception error)
+            {
+                if (Volatile.Read(ref submissionCompleted) != 0) return;
+                WriteWorkflowFailure("Print preview UI failed", error);
+                RequestCancellation("Print preview UI could not be completed.");
             }
         }
 

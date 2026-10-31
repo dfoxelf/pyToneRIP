@@ -1,5 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
+  <data name="PreviewWindow.Unsimulated" xml:space="preserve"><value>Pelēktoņi bez papīra simulācijas.</value></data>
+  <data name="PreviewWindow.Title" xml:space="preserve"><value>Drukas priekšskatījums - Soft Proof</value></data>
+  <data name="PreviewWindow.Print"><value>Drukāt</value></data>
+  <data name="PreviewWindow.Cancel"><value>Atcelt</value></data>
+  <data name="PreviewWindow.Close"><value>Aizvērt</value></data>
+  <data name="PreviewWindow.CancelCloseHelp" xml:space="preserve"><value>Atcelt drukas darbu un aizvērt priekšskatījuma logu.</value></data>
+  <data name="PreviewWindow.Previous"><value>Iepriekšējā</value></data>
+  <data name="PreviewWindow.Next"><value>Nākamā</value></data>
+  <data name="PreviewWindow.Fit"><value>Ietilpināt lapu</value></data>
+  <data name="PreviewWindow.Preparing" xml:space="preserve"><value>Sagatavo drukas darbu…</value></data>
+  <data name="PreviewWindow.Sending" xml:space="preserve"><value>Sūta datus printerim…</value></data>
+  <data name="PreviewWindow.Sent" xml:space="preserve"><value>Dati nosūtīti; fiziskā drukāšana var turpināties.</value></data>
+  <data name="PreviewWindow.Cancelled" xml:space="preserve"><value>Darbs atcelts.</value></data>
+  <data name="PreviewWindow.Failed" xml:space="preserve"><value>Darbs neizdevās.</value></data>
+  <data name="PreviewWindow.Measured" xml:space="preserve"><value>Soft Proof ar izvēlēto ICC. Pārbaudiet piesaisti labajā pusē.</value></data>
+  <data name="PreviewWindow.Approximate" xml:space="preserve"><value>Aptuvens Soft Proof pēc papīra kategorijas mērījumiem un aptuvenas nokrāsas.</value></data>
+  <data name="Preview.Enabled.Text"><value>Priekšskatījums — Iespējot (Softproofing)</value></data>
+  <data name="Preview.EnabledHelp"><value>Pirms drukāšanas atver priekšskatījuma logu. Ar ICC profilu atveido toņus, nokrāsu, papīra balto un izdrukas melno; bez profila atveidojums ir aptuvens. Nemaina drukas datus.</value></data>
+  <data name="Preview.Profile.Text"><value>ICC profils (neobligāts)</value></data>
+  <data name="Preview.WithOba.Content"><value>Papīrs ar OBA</value></data>
+  <data name="Preview.WithoutOba.Content"><value>Papīrs bez OBA</value></data>
+  <data name="Preview.WithObaHelp"><value>Aptuveni atveido papīra ar optiskajiem balinātājiem baltumu D50–D65 apgaismojumā. Ietekmē tikai priekšskatījumu.</value></data>
+  <data name="Preview.WithoutObaHelp"><value>Aptuveni atveido papīra bez optiskajiem balinātājiem baltumu. Ietekmē tikai priekšskatījumu.</value></data>
   <data name="AppDescription"><value>pyToneRIP drukas atbalsta lietotne</value></data>
   <data name="Auto.0163AD0F367D.Text"><value>Apvada .quad līknes, sajaukšanu, gamma un parasto tintes ierobežojumu. Šis printeris drukās tikai kalibrēšanas mērķus, līdz šis režīms tiks izslēgts un lietots.</value></data>
   <data name="Auto.043112257626.Text"><value>Loģiskajiem ID ir jāatbilst katram atlasītajam .quad profilam. Kartē katru loģisko tinti ar vienu atlasītā printera fizisko ceļu.</value></data>
@@ -308,4 +331,39 @@
   <data name="ResamplingHelp.bicubic"><value>Izmanto kubisku filtru, lai līdzsvarotu fotoattēlu asumu un vienmērīgas toņu pārejas. Saglabā vairāk detaļu nekā bilineārā metode, bet pie augsta kontrasta malām var rasties vieglas gaišas vai tumšas apmales.</value></data>
   <data name="ResamplingHelp.lanczos"><value>Labi saglabā smalkas detaļas, pielāgojot fotoattēlus rastrēšanas režģim, īpaši samazinot. Izvēlieties asākam rezultātam, bet pievērsiet uzmanību gaišām vai tumšām apmalēm pie augsta kontrasta malām.</value></data>
   <data name="ResamplingHelp.mitchell"><value>Līdzsvaro detaļas un vienmērīgas pārejas, radot mazāk malu apmaļu nekā Lanczos. Piemērots fotoattēliem, kuros apmales traucē, taču smalkas detaļas kļūst nedaudz maigākas un apstrāde ir lēnāka.</value></data>
+  <data name="Preview.IlluminantHelp" xml:space="preserve"><value>Aptuvens apskates apgaismojums: D50, D55, D60 vai D65. Maina tikai priekšskatījuma nokrāsu, nevis drukas datus. Bez spektrāliem mērījumiem OBA fluorescenci nevar paredzēt.</value></data>
+  <data name="PreviewWindow.PrintClose" xml:space="preserve"><value>Drukāt un aizvērt</value></data>
+  <data name="PreviewWindow.Rulers" xml:space="preserve"><value>Lineāli</value></data>
+  <data name="PreviewWindow.Printer" xml:space="preserve"><value>Printeris</value></data>
+  <data name="PreviewWindow.Paper" xml:space="preserve"><value>Papīrs</value></data>
+  <data name="PreviewWindow.Size" xml:space="preserve"><value>Izmērs</value></data>
+  <data name="PreviewWindow.Dither" xml:space="preserve"><value>Pustoņošana</value></data>
+  <data name="PreviewWindow.Mode" xml:space="preserve"><value>Režīms</value></data>
+  <data name="PreviewWindow.Curves" xml:space="preserve"><value>Līknes</value></data>
+  <data name="PreviewWindow.Resolution" xml:space="preserve"><value>Izšķirtspēja</value></data>
+  <data name="PreviewWindow.ProfileMatch" xml:space="preserve"><value>ICC piesaiste</value></data>
+  <data name="PreviewWindow.ProfileUnknown" xml:space="preserve"><value>ICC nosacījumi nav zināmi.</value></data>
+  <data name="PreviewWindow.ProfileAssigned" xml:space="preserve"><value>Lietotājs piesaistījis šiem iestatījumiem.</value></data>
+  <data name="PreviewWindow.ProfileMismatch" xml:space="preserve"><value>ICC atšķiras no saglabātajiem drukas nosacījumiem.</value></data>
+  <data name="PreviewWindow.PhysicalUnavailable" xml:space="preserve"><value>Printera fiziskais statuss nav pieejams.</value></data>
+  <data name="PreviewWindow.PhysicalUnconfirmed" xml:space="preserve"><value>Ierīces statuss neapstiprina šī darba pabeigšanu vai lapas izvadīšanu.</value></data>
+  <data name="PreviewWindow.DeviceOther" xml:space="preserve"><value>Printeris: cits statuss</value></data>
+  <data name="PreviewWindow.DeviceUnknown" xml:space="preserve"><value>Printeris: nezināms statuss</value></data>
+  <data name="PreviewWindow.DeviceIdle" xml:space="preserve"><value>Printeris: dīkstāve</value></data>
+  <data name="PreviewWindow.DevicePrinting" xml:space="preserve"><value>Printeris: drukā</value></data>
+  <data name="PreviewWindow.DeviceWarming" xml:space="preserve"><value>Printeris: iesilst</value></data>
+  <data name="PreviewWindow.EditSettings" xml:space="preserve"><value>Mainīt iestatījumus</value></data>
+  <data name="PreviewWindow.Editing" xml:space="preserve"><value>Atjaunina priekšskatījumu…</value></data>
+  <data name="PreviewWindow.ZoomHelp" xml:space="preserve"><value>Ctrl + peles ritenītis: tālummaiņa. Var ievadīt procentus.</value></data>
+  <data name="PreviewWindow.ActualSizeHelp" xml:space="preserve"><value>100%: viens rastra pikselis uz fizisku ekrāna pikseli. Vajadzīga zināma vienāda X/Y izšķirtspēja.</value></data>
+  <data name="PreviewWindow.SourceChanged" xml:space="preserve"><value>Avota līknes ir mainījušās. Atveriet Mainīt iestatījumus, lai atjauninātu priekšskatījumu.</value></data>
+  <data name="PreviewWindow.ICC" xml:space="preserve"><value>ICC</value></data>
+  <data name="PreviewWindow.PhotoPlacement" xml:space="preserve"><value>Foto novietojums</value></data>
+  <data name="PreviewWindow.PhotoFit" xml:space="preserve"><value>Ietilpināt foto</value></data>
+  <data name="PreviewWindow.PhotoReset" xml:space="preserve"><value>Atiestatīt foto</value></data>
+  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Velciet attēlu, lai to pārvietotu, un stūri, lai proporcionāli mainītu izmēru. Pagrieziet ar 90° pogām. Avota lietotnes piemales paliek attēla daļa.</value></data>
+  <data name="PreviewWindow.PhotoCenterHorizontal" xml:space="preserve"><value>Centrēt horizontāli</value></data>
+  <data name="PreviewWindow.PhotoCenterVertical" xml:space="preserve"><value>Centrēt vertikāli</value></data>
+  <data name="PreviewWindow.PrintStart" xml:space="preserve"><value>Drukāšanas sākums</value></data>
+  <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>Bultiņa norāda lapas malu, kas tiek drukāta pirmā.</value></data>
 </root>

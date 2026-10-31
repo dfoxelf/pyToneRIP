@@ -446,6 +446,38 @@ def validate_escp2_native(result: BackendRenderResult) -> NativeStreamValidation
                 and not (profile.identity == "ET8550" and native_format is not None)):
             expected_top += 1
         expected_bottom = expected_height + round(1300 * page_units / 1000) - 1
+    if result.model.catalog_package_id in {
+        "gp--escp2-p50", "gp--escp2-t50", "gp--escp2-t60",
+    } and page.borderless:
+        # Independent arithmetic from Gutenprint model_97/setup_page and
+        # escp2_set_margins. Full bleed has a 90 * 4 / 360 inch head span.
+        span = result.mode.nozzle_count * result.mode.nozzle_separation * page_units // result.model.base_separation_dpi
+        expected_width = int(page.width_points * page_units / 72)
+        expected_height = int(page.height_points * page_units / 72)
+        expected_top = -span
+        expected_bottom = int((page.height_points + 1) * page_units / 72) + span
+    if (result.model.catalog_package_id == "gp--escp2-artisan1430" and page.borderless
+            and result.input_source.medium_kind != "roll"):
+        # model_82 borderless=Yes: setup_page uses zeroMarginOffset=80
+        # at baseSeparation=360, not a full nozzle-height extension.
+        extra = 80 * page_units // 360
+        expected_width = int(page.width_points * page_units / 72)
+        expected_height = int(page.height_points * page_units / 72)
+        expected_top = -extra
+        expected_bottom = int((page.height_points + 1) * page_units / 72) + extra
+    if result.model.catalog_package_id == "gp--escp2-artisan1430" and result.input_source.medium_kind == "roll":
+        # Independent native 1500W roll headers: 1 inch transport extension,
+        # plus the descriptor's 200/300 mil borderless canvas where selected.
+        physical_mils = {0: (8268, 11693), 1: (8500, 11000), 3: (5846, 8268),
+                         4: (4134, 5827), 10: (4000, 6000), 12: (8000, 10000),
+                         15: (3500, 5000), 28: (5000, 7000), 61: (13000, 19000),
+                         62: (11693, 16535), 64: (11000, 17000)}
+        width_mils, height_mils = physical_mils.get(result.page.media_size_code,
+            (round(page.width_points * 1000 / 72), round(page.height_points * 1000 / 72)))
+        expected_width = round((width_mils + (200 if page.borderless else 0)) * page_units / 1000)
+        expected_height = round((height_mils + (1300 if page.borderless else 1000)) * page_units / 1000)
+        expected_top = 0 if page.borderless else round(120 * page_units / 1000)
+        expected_bottom = expected_height if page.borderless else round((height_mils + 880) * page_units / 1000)
     page_ok = bool(
         page_length
         and dimensions
@@ -458,6 +490,18 @@ def validate_escp2_native(result: BackendRenderResult) -> NativeStreamValidation
         == expected_bottom
     )
 
+    if (result.model.catalog_package_id == "gp--escp2-artisan1430"
+            and (page.borderless or result.input_source.medium_kind == "roll")):
+        # These controls are required in addition to expanded page geometry.
+        fp = [item.parameters.get("payload_hex") for item in records if item.name == "REMOTE_FP"]
+        us0 = [item.parameters.get("payload_hex") for item in records
+               if item.name == "REMOTE_US" and item.parameters.get("setting_selector") == 0]
+        roll = result.input_source.medium_kind == "roll"
+        page_ok = (page_ok and fp == ["00 b0 ff" if page.borderless else "00 00 00"]
+                   and us0 == ["00 00 01" if roll else "00 00 02"])
+        if roll:
+            ex = [item.parameters.get("payload_hex") for item in records if item.name == "REMOTE_EX"]
+            page_ok = page_ok and ex == ["00 00 00 00 05 01"] and not any(item.name == "FORM_FEED" for item in records)
     remote_pp = next((item for item in records if item.name == "REMOTE_PP"), None)
     remote_mi = next((item for item in records if item.name == "REMOTE_MI"), None)
     print_method = next((item for item in records if item.name == "PRINT_METHOD"), None)
@@ -496,12 +540,13 @@ def validate_escp2_native(result: BackendRenderResult) -> NativeStreamValidation
             for command, payload in init_commands
         )
         path_ok = expected_init in result.data
+    native_media_code = result.medium.media_code_for_source(result.input_source)
     media_command_ok = (
         remote_mi is None
-        if result.medium.media_code is None
+        if native_media_code is None
         else bool(
             remote_mi
-            and remote_mi.parameters.get("media_type") == result.medium.media_code
+            and remote_mi.parameters.get("media_type") == native_media_code
             and remote_mi.parameters.get("media_size")
             == (result.page.media_size_code if result.page.media_size_code is not None else 99)
         )

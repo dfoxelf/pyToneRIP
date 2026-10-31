@@ -1,5 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
+  <data name="PreviewWindow.Unsimulated" xml:space="preserve"><value>Gråtoner uden papirsimulering.</value></data>
+  <data name="PreviewWindow.Title" xml:space="preserve"><value>Forhåndsvisning - Soft Proof</value></data>
+  <data name="PreviewWindow.Print"><value>Udskriv</value></data>
+  <data name="PreviewWindow.Cancel"><value>Ophæve</value></data>
+  <data name="PreviewWindow.Close"><value>Tæt</value></data>
+  <data name="PreviewWindow.CancelCloseHelp" xml:space="preserve"><value>Annuller udskriftsjobbet, og luk eksempelvinduet.</value></data>
+  <data name="PreviewWindow.Previous"><value>Forrige</value></data>
+  <data name="PreviewWindow.Next"><value>Næste</value></data>
+  <data name="PreviewWindow.Fit"><value>Tilpas side</value></data>
+  <data name="PreviewWindow.Preparing" xml:space="preserve"><value>Forbereder udskriftsjob…</value></data>
+  <data name="PreviewWindow.Sending" xml:space="preserve"><value>Sender data til printeren…</value></data>
+  <data name="PreviewWindow.Sent" xml:space="preserve"><value>Data sendt; fysisk udskrivning kan fortsætte.</value></data>
+  <data name="PreviewWindow.Cancelled" xml:space="preserve"><value>Jobbet blev annulleret.</value></data>
+  <data name="PreviewWindow.Failed" xml:space="preserve"><value>Jobbet mislykkedes.</value></data>
+  <data name="PreviewWindow.Measured" xml:space="preserve"><value>Soft Proof med valgt ICC. Kontrollér tilknytningen til højre.</value></data>
+  <data name="PreviewWindow.Approximate" xml:space="preserve"><value>Omtrentlig Soft Proof med målinger for papirkategorien og anslået papirfarve.</value></data>
+  <data name="Preview.Enabled.Text"><value>Forhåndsvisning — Aktivér (Softproofing)</value></data>
+  <data name="Preview.EnabledHelp"><value>Åbner et eksempelvindue før udskrivning. Med en ICC-profil simuleres toner, farvestik, papir og sort i udskriften; uden profil er simuleringen omtrentlig. Ændrer ikke udskriftsdata.</value></data>
+  <data name="Preview.Profile.Text"><value>ICC-profil (valgfri)</value></data>
+  <data name="Preview.WithOba.Content"><value>Papir med OBA</value></data>
+  <data name="Preview.WithoutOba.Content"><value>Papir uden OBA</value></data>
+  <data name="Preview.WithObaHelp"><value>Simulerer omtrent hvidheden af papir med optisk hvidt under D50–D65-belysning. Påvirker kun forhåndsvisningen.</value></data>
+  <data name="Preview.WithoutObaHelp"><value>Simulerer omtrent hvidheden af papir uden optisk hvidt. Påvirker kun forhåndsvisningen.</value></data>
   <data name="AppDescription"><value>pyToneRIP-app til printerunderstøttelse</value></data>
   <data name="Auto.0163AD0F367D.Text"><value>Omgår .quad-kurver, blending, gamma og normal blækgrænse. Denne printer udskriver kun kalibreringsmål, indtil denne tilstand er slukket og anvendt.</value></data>
   <data name="Auto.043112257626.Text"><value>Logiske id&#x27;er skal matche alle valgte .quad-profiler. Tilknyt hver logisk blæk til én fysisk sti på den valgte printer.</value></data>
@@ -308,4 +331,39 @@
   <data name="ResamplingHelp.bicubic"><value>Bruger et kubisk filter til at afbalancere skarphed og jævne toneovergange i fotos. Bevarer flere detaljer end bilineær interpolation, men kan give svage glorier ved kanter med høj kontrast.</value></data>
   <data name="ResamplingHelp.lanczos"><value>Bevarer fine detaljer godt, når fotos omsamples til ditheringgitteret, især ved formindskelse. Vælg metoden for et skarpere resultat, men hold øje med lyse eller mørke glorier ved kanter med høj kontrast.</value></data>
   <data name="ResamplingHelp.mitchell"><value>Afbalancerer detaljer og jævne overgange med færre kantglorier end Lanczos. Velegnet til fotos, hvor glorier virker forstyrrende, på bekostning af lidt blødere fine detaljer og langsommere behandling.</value></data>
+  <data name="Preview.IlluminantHelp" xml:space="preserve"><value>Omtrentligt betragtningslys: D50, D55, D60 eller D65. Ændrer kun forhåndsvisningens farvetone, ikke udskriftsdata. Uden spektralmålinger kan OBA-fluorescens ikke forudsiges.</value></data>
+  <data name="PreviewWindow.PrintClose" xml:space="preserve"><value>Udskriv og luk</value></data>
+  <data name="PreviewWindow.Rulers" xml:space="preserve"><value>Linealer</value></data>
+  <data name="PreviewWindow.Printer" xml:space="preserve"><value>Printer</value></data>
+  <data name="PreviewWindow.Paper" xml:space="preserve"><value>Papir</value></data>
+  <data name="PreviewWindow.Size" xml:space="preserve"><value>Størrelse</value></data>
+  <data name="PreviewWindow.Dither" xml:space="preserve"><value>Dither</value></data>
+  <data name="PreviewWindow.Mode" xml:space="preserve"><value>Tilstand</value></data>
+  <data name="PreviewWindow.Curves" xml:space="preserve"><value>Kurver</value></data>
+  <data name="PreviewWindow.Resolution" xml:space="preserve"><value>Opløsning</value></data>
+  <data name="PreviewWindow.ProfileMatch" xml:space="preserve"><value>ICC-tilknytning</value></data>
+  <data name="PreviewWindow.ProfileUnknown" xml:space="preserve"><value>ICC-betingelserne er ukendte.</value></data>
+  <data name="PreviewWindow.ProfileAssigned" xml:space="preserve"><value>Tilknyttet disse indstillinger af brugeren.</value></data>
+  <data name="PreviewWindow.ProfileMismatch" xml:space="preserve"><value>ICC afviger fra de gemte udskriftsbetingelser.</value></data>
+  <data name="PreviewWindow.PhysicalUnavailable" xml:space="preserve"><value>Printerens fysiske status er ikke tilgængelig.</value></data>
+  <data name="PreviewWindow.PhysicalUnconfirmed" xml:space="preserve"><value>Enhedens status bekræfter ikke, at dette job er færdigt eller arket er ført ud.</value></data>
+  <data name="PreviewWindow.DeviceOther" xml:space="preserve"><value>Printer: anden tilstand</value></data>
+  <data name="PreviewWindow.DeviceUnknown" xml:space="preserve"><value>Printer: ukendt tilstand</value></data>
+  <data name="PreviewWindow.DeviceIdle" xml:space="preserve"><value>Printer: inaktiv</value></data>
+  <data name="PreviewWindow.DevicePrinting" xml:space="preserve"><value>Printer: udskriver</value></data>
+  <data name="PreviewWindow.DeviceWarming" xml:space="preserve"><value>Printer: opvarmning</value></data>
+  <data name="PreviewWindow.EditSettings" xml:space="preserve"><value>Skift indstillinger</value></data>
+  <data name="PreviewWindow.Editing" xml:space="preserve"><value>Opdaterer forhåndsvisningen…</value></data>
+  <data name="PreviewWindow.ZoomHelp" xml:space="preserve"><value>Ctrl + musehjul: zoom. Procent kan indtastes.</value></data>
+  <data name="PreviewWindow.ActualSizeHelp" xml:space="preserve"><value>100%: én rasterpixel pr. fysisk skærmpixel. Kræver kendt, ens X/Y-rasteropløsning.</value></data>
+  <data name="PreviewWindow.SourceChanged" xml:space="preserve"><value>Kildekurverne er ændret. Åbn Skift indstillinger for at opdatere forhåndsvisningen.</value></data>
+  <data name="PreviewWindow.ICC" xml:space="preserve"><value>ICC</value></data>
+  <data name="PreviewWindow.PhotoPlacement" xml:space="preserve"><value>Fotoplacering</value></data>
+  <data name="PreviewWindow.PhotoFit" xml:space="preserve"><value>Tilpas foto</value></data>
+  <data name="PreviewWindow.PhotoReset" xml:space="preserve"><value>Nulstil foto</value></data>
+  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Træk billedet for at flytte det og et hjørne for at ændre størrelse proportionalt. Drej med 90°-knapperne. Margener fra kildeprogrammet forbliver en del af billedet.</value></data>
+  <data name="PreviewWindow.PhotoCenterHorizontal" xml:space="preserve"><value>Centrér vandret</value></data>
+  <data name="PreviewWindow.PhotoCenterVertical" xml:space="preserve"><value>Centrér lodret</value></data>
+  <data name="PreviewWindow.PrintStart" xml:space="preserve"><value>Udskriftsstart</value></data>
+  <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>Pilen viser den kant af arket, der udskrives først.</value></data>
 </root>

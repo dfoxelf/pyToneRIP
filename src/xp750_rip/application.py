@@ -854,7 +854,7 @@ class MonoRipService:
             "media_backend": {
                 "id": medium.identity,
                 "gutenprint_name": medium.gutenprint_name,
-                "paper_media_code": medium.media_code,
+                "paper_media_code": medium.media_code_for_source(input_source),
                 "print_method": (
                     f"0x{manifest_print_method:02X}"
                     if manifest_print_method is not None

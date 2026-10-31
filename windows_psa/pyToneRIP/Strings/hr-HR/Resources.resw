@@ -1,5 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
+  <data name="PreviewWindow.Unsimulated" xml:space="preserve"><value>Sivi tonovi bez simulacije papira.</value></data>
+  <data name="PreviewWindow.Title" xml:space="preserve"><value>Pretpregled ispisa - Soft Proof</value></data>
+  <data name="PreviewWindow.Print"><value>Ispiši</value></data>
+  <data name="PreviewWindow.Cancel"><value>Otkazati</value></data>
+  <data name="PreviewWindow.Close"><value>Zatvoriti</value></data>
+  <data name="PreviewWindow.CancelCloseHelp" xml:space="preserve"><value>Otkaži zadatak ispisa i zatvori prozor pretpregleda.</value></data>
+  <data name="PreviewWindow.Previous"><value>Prethodna</value></data>
+  <data name="PreviewWindow.Next"><value>Sljedeća</value></data>
+  <data name="PreviewWindow.Fit"><value>Prilagodi stranicu</value></data>
+  <data name="PreviewWindow.Preparing" xml:space="preserve"><value>Priprema zadatka…</value></data>
+  <data name="PreviewWindow.Sending" xml:space="preserve"><value>Slanje podataka pisaču…</value></data>
+  <data name="PreviewWindow.Sent" xml:space="preserve"><value>Podaci su poslani; fizički ispis može se nastaviti.</value></data>
+  <data name="PreviewWindow.Cancelled" xml:space="preserve"><value>Zadatak je otkazan.</value></data>
+  <data name="PreviewWindow.Failed" xml:space="preserve"><value>Zadatak nije uspio.</value></data>
+  <data name="PreviewWindow.Measured" xml:space="preserve"><value>Soft Proof s odabranim ICC-om. Provjerite dodjelu desno.</value></data>
+  <data name="PreviewWindow.Approximate" xml:space="preserve"><value>Približni Soft Proof iz mjerenja kategorije papira i procijenjene nijanse.</value></data>
+  <data name="Preview.Enabled.Text"><value>Pretpregled — Omogući (Softproofing)</value></data>
+  <data name="Preview.EnabledHelp"><value>Otvara prozor pretpregleda prije ispisa. S ICC profilom simulira tonove, nijansu, bjelinu papira i crnu ispisa; bez profila simulacija je približna. Ne mijenja podatke za ispis.</value></data>
+  <data name="Preview.Profile.Text"><value>ICC profil (neobavezno)</value></data>
+  <data name="Preview.WithOba.Content"><value>Papir s OBA</value></data>
+  <data name="Preview.WithoutOba.Content"><value>Papir bez OBA</value></data>
+  <data name="Preview.WithObaHelp"><value>Približno simulira bjelinu papira s optičkim bjelilima pri osvjetljenju D50–D65. Utječe samo na pretpregled.</value></data>
+  <data name="Preview.WithoutObaHelp"><value>Približno simulira bjelinu papira bez optičkih bjelila. Utječe samo na pretpregled.</value></data>
   <data name="AppDescription"><value>pyToneRIP Aplikacija za podršku ispisu</value></data>
   <data name="Auto.0163AD0F367D.Text"><value>Zaobilazi .quad krivulje, miješanje, gamu i normalnu granicu tinte. Ovaj pisač će ispisivati ​​kalibracijske ciljeve samo dok se ovaj način ne isključi i ne primijeni.</value></data>
   <data name="Auto.043112257626.Text"><value>Logički ID-ovi moraju odgovarati svakom odabranom .quad profilu. Mapirajte svaku logičku tintu na jednu fizičku putanju odabranog pisača.</value></data>
@@ -308,4 +331,39 @@
   <data name="ResamplingHelp.bicubic"><value>Koristi kubični filtar za ravnotežu između oštrine i glatkih tonskih prijelaza na fotografijama. Čuva više detalja od bilinearne metode, ali može stvoriti blage svijetle ili tamne obrube uz rubove visokog kontrasta.</value></data>
   <data name="ResamplingHelp.lanczos"><value>Dobro čuva sitne detalje pri pretvorbi fotografija na mrežu rasteriranja, osobito pri smanjivanju. Odaberite ga za oštriji rezultat, ali pripazite na svijetle ili tamne obrube uz rubove visokog kontrasta.</value></data>
   <data name="ResamplingHelp.mitchell"><value>Uravnotežuje detalje i glatke prijelaze uz manje obruba oko rubova nego Lanczos. Prikladno za fotografije na kojima obrubi smetaju, uz cijenu malo mekših sitnih detalja i sporije obrade.</value></data>
+  <data name="Preview.IlluminantHelp" xml:space="preserve"><value>Približno svjetlo za pregled: D50, D55, D60 ili D65. Mijenja samo nijansu pretpregleda, ne podatke za ispis. Bez spektralnih mjerenja nije moguće predvidjeti fluorescenciju OBA.</value></data>
+  <data name="PreviewWindow.PrintClose" xml:space="preserve"><value>Ispiši i zatvori</value></data>
+  <data name="PreviewWindow.Rulers" xml:space="preserve"><value>Ravnala</value></data>
+  <data name="PreviewWindow.Printer" xml:space="preserve"><value>Pisač</value></data>
+  <data name="PreviewWindow.Paper" xml:space="preserve"><value>Papir</value></data>
+  <data name="PreviewWindow.Size" xml:space="preserve"><value>Veličina</value></data>
+  <data name="PreviewWindow.Dither" xml:space="preserve"><value>Dither</value></data>
+  <data name="PreviewWindow.Mode" xml:space="preserve"><value>Način</value></data>
+  <data name="PreviewWindow.Curves" xml:space="preserve"><value>Krivulje</value></data>
+  <data name="PreviewWindow.Resolution" xml:space="preserve"><value>Razlučivost</value></data>
+  <data name="PreviewWindow.ProfileMatch" xml:space="preserve"><value>Dodjela ICC-a</value></data>
+  <data name="PreviewWindow.ProfileUnknown" xml:space="preserve"><value>Uvjeti ICC-a nisu poznati.</value></data>
+  <data name="PreviewWindow.ProfileAssigned" xml:space="preserve"><value>Korisnik je dodijelio ovim postavkama.</value></data>
+  <data name="PreviewWindow.ProfileMismatch" xml:space="preserve"><value>ICC se razlikuje od spremljenih uvjeta ispisa.</value></data>
+  <data name="PreviewWindow.PhysicalUnavailable" xml:space="preserve"><value>Fizičko stanje pisača nije dostupno.</value></data>
+  <data name="PreviewWindow.PhysicalUnconfirmed" xml:space="preserve"><value>Stanje uređaja ne potvrđuje dovršetak ovog zadatka ili izlazak lista.</value></data>
+  <data name="PreviewWindow.DeviceOther" xml:space="preserve"><value>Pisač: drugo stanje</value></data>
+  <data name="PreviewWindow.DeviceUnknown" xml:space="preserve"><value>Pisač: nepoznato stanje</value></data>
+  <data name="PreviewWindow.DeviceIdle" xml:space="preserve"><value>Pisač: miruje</value></data>
+  <data name="PreviewWindow.DevicePrinting" xml:space="preserve"><value>Pisač: ispisuje</value></data>
+  <data name="PreviewWindow.DeviceWarming" xml:space="preserve"><value>Pisač: zagrijavanje</value></data>
+  <data name="PreviewWindow.EditSettings" xml:space="preserve"><value>Promijeni postavke</value></data>
+  <data name="PreviewWindow.Editing" xml:space="preserve"><value>Ažuriranje pretpregleda…</value></data>
+  <data name="PreviewWindow.ZoomHelp" xml:space="preserve"><value>Ctrl + kotačić miša: zumiranje. Možete upisati postotak.</value></data>
+  <data name="PreviewWindow.ActualSizeHelp" xml:space="preserve"><value>100%: jedan rasterski piksel po fizičkom pikselu zaslona. Potrebna je poznata jednaka X/Y razlučivost.</value></data>
+  <data name="PreviewWindow.SourceChanged" xml:space="preserve"><value>Izvorne krivulje su promijenjene. Otvorite Promijeni postavke za osvježavanje pretpregleda.</value></data>
+  <data name="PreviewWindow.ICC" xml:space="preserve"><value>ICC</value></data>
+  <data name="PreviewWindow.PhotoPlacement" xml:space="preserve"><value>Položaj fotografije</value></data>
+  <data name="PreviewWindow.PhotoFit" xml:space="preserve"><value>Prilagodi fotografiju</value></data>
+  <data name="PreviewWindow.PhotoReset" xml:space="preserve"><value>Vrati fotografiju</value></data>
+  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Povucite sliku za pomicanje, a kut za proporcionalnu promjenu veličine. Zakrećite tipkama 90°. Margine izvorne aplikacije ostaju dio slike.</value></data>
+  <data name="PreviewWindow.PhotoCenterHorizontal" xml:space="preserve"><value>Centriraj vodoravno</value></data>
+  <data name="PreviewWindow.PhotoCenterVertical" xml:space="preserve"><value>Centriraj okomito</value></data>
+  <data name="PreviewWindow.PrintStart" xml:space="preserve"><value>Početak ispisa</value></data>
+  <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>Strelica označava rub lista koji se prvi ispisuje.</value></data>
 </root>

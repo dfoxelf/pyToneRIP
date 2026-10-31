@@ -1,5 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
+  <data name="PreviewWindow.Unsimulated" xml:space="preserve"><value>Γκρι χωρίς προσομοίωση χαρτιού.</value></data>
+  <data name="PreviewWindow.Title" xml:space="preserve"><value>Προεπισκόπηση εκτύπωσης - Soft Proof</value></data>
+  <data name="PreviewWindow.Print"><value>Εκτύπωση</value></data>
+  <data name="PreviewWindow.Cancel"><value>Ματαίωση</value></data>
+  <data name="PreviewWindow.Close"><value>Κοντά</value></data>
+  <data name="PreviewWindow.CancelCloseHelp" xml:space="preserve"><value>Ακύρωση της εργασίας εκτύπωσης και κλείσιμο του παραθύρου προεπισκόπησης.</value></data>
+  <data name="PreviewWindow.Previous"><value>Προηγούμενη</value></data>
+  <data name="PreviewWindow.Next"><value>Επόμενη</value></data>
+  <data name="PreviewWindow.Fit"><value>Προσαρμογή σελίδας</value></data>
+  <data name="PreviewWindow.Preparing" xml:space="preserve"><value>Προετοιμασία εργασίας…</value></data>
+  <data name="PreviewWindow.Sending" xml:space="preserve"><value>Αποστολή δεδομένων στον εκτυπωτή…</value></data>
+  <data name="PreviewWindow.Sent" xml:space="preserve"><value>Τα δεδομένα στάλθηκαν· η φυσική εκτύπωση μπορεί να συνεχιστεί.</value></data>
+  <data name="PreviewWindow.Cancelled" xml:space="preserve"><value>Η εργασία ακυρώθηκε.</value></data>
+  <data name="PreviewWindow.Failed" xml:space="preserve"><value>Η εργασία απέτυχε.</value></data>
+  <data name="PreviewWindow.Measured" xml:space="preserve"><value>Soft Proof με το επιλεγμένο ICC. Ελέγξτε την αντιστοίχιση δεξιά.</value></data>
+  <data name="PreviewWindow.Approximate" xml:space="preserve"><value>Προσεγγιστικό Soft Proof από μετρήσεις κατηγορίας χαρτιού και εκτιμώμενη απόχρωση.</value></data>
+  <data name="Preview.Enabled.Text"><value>Προεπισκόπηση — Ενεργοποίηση (Softproofing)</value></data>
+  <data name="Preview.EnabledHelp"><value>Ανοίγει παράθυρο προεπισκόπησης πριν την εκτύπωση. Με προφίλ ICC προσομοιώνει τους τόνους, την απόχρωση, το χαρτί και το μαύρο της εκτύπωσης· χωρίς προφίλ η προσομοίωση είναι κατά προσέγγιση. Δεν αλλάζει τα δεδομένα εκτύπωσης.</value></data>
+  <data name="Preview.Profile.Text"><value>Προφίλ ICC (προαιρετικό)</value></data>
+  <data name="Preview.WithOba.Content"><value>Χαρτί με OBA</value></data>
+  <data name="Preview.WithoutOba.Content"><value>Χαρτί χωρίς OBA</value></data>
+  <data name="Preview.WithObaHelp"><value>Προσομοιώνει κατά προσέγγιση τη λευκότητα χαρτιού με οπτικά λευκαντικά υπό φωτισμό D50–D65. Επηρεάζει μόνο την προεπισκόπηση.</value></data>
+  <data name="Preview.WithoutObaHelp"><value>Προσομοιώνει κατά προσέγγιση τη λευκότητα χαρτιού χωρίς οπτικά λευκαντικά. Επηρεάζει μόνο την προεπισκόπηση.</value></data>
   <data name="AppDescription"><value>Εφαρμογή υποστήριξης εκτύπωσης pyToneRIP</value></data>
   <data name="Auto.0163AD0F367D.Text"><value>Παρακάμπτει τις καμπύλες .quad, την ανάμειξη, το όριο γάμμα και κανονικής μελάνης. Αυτός ο εκτυπωτής θα εκτυπώνει στόχους βαθμονόμησης μόνο μέχρι να απενεργοποιηθεί και να εφαρμοστεί αυτή η λειτουργία.</value></data>
   <data name="Auto.043112257626.Text"><value>Τα λογικά αναγνωριστικά πρέπει να ταιριάζουν με κάθε επιλεγμένο προφίλ .quad. Αντιστοιχίστε κάθε λογική μελάνη σε μία φυσική διαδρομή του επιλεγμένου εκτυπωτή.</value></data>
@@ -308,4 +331,39 @@
   <data name="ResamplingHelp.bicubic"><value>Χρησιμοποιεί κυβικό φίλτρο για ισορροπία ανάμεσα στην ευκρίνεια και τις ομαλές τονικές μεταβάσεις στις φωτογραφίες. Διατηρεί περισσότερες λεπτομέρειες από τη διγραμμική μέθοδο, αλλά μπορεί να δημιουργήσει ελαφρά φωτεινά ή σκοτεινά περιγράμματα σε ακμές υψηλής αντίθεσης.</value></data>
   <data name="ResamplingHelp.lanczos"><value>Διατηρεί καλά τις λεπτές λεπτομέρειες κατά τη μετατροπή φωτογραφιών στο πλέγμα dithering, ιδιαίτερα κατά τη σμίκρυνση. Επιλέξτε το για μεγαλύτερη ευκρίνεια, προσέχοντας πιθανά φωτεινά ή σκοτεινά περιγράμματα σε ακμές υψηλής αντίθεσης.</value></data>
   <data name="ResamplingHelp.mitchell"><value>Ισορροπεί τις λεπτομέρειες και τις ομαλές μεταβάσεις με λιγότερα ανεπιθύμητα περιγράμματα από το Lanczos. Κατάλληλο για φωτογραφίες όπου αυτά ενοχλούν, με αντάλλαγμα ελαφρώς πιο απαλές λεπτομέρειες και πιο αργή επεξεργασία.</value></data>
+  <data name="Preview.IlluminantHelp" xml:space="preserve"><value>Προσεγγιστικός φωτισμός προβολής: D50, D55, D60 ή D65. Αλλάζει μόνο την απόχρωση προεπισκόπησης, όχι τα δεδομένα εκτύπωσης. Χωρίς φασματικές μετρήσεις δεν προβλέπεται ο φθορισμός OBA.</value></data>
+  <data name="PreviewWindow.PrintClose" xml:space="preserve"><value>Εκτύπωση και κλείσιμο</value></data>
+  <data name="PreviewWindow.Rulers" xml:space="preserve"><value>Χάρακες</value></data>
+  <data name="PreviewWindow.Printer" xml:space="preserve"><value>Εκτυπωτής</value></data>
+  <data name="PreviewWindow.Paper" xml:space="preserve"><value>Χαρτί</value></data>
+  <data name="PreviewWindow.Size" xml:space="preserve"><value>Μέγεθος</value></data>
+  <data name="PreviewWindow.Dither" xml:space="preserve"><value>Dithering</value></data>
+  <data name="PreviewWindow.Mode" xml:space="preserve"><value>Λειτουργία</value></data>
+  <data name="PreviewWindow.Curves" xml:space="preserve"><value>Καμπύλες</value></data>
+  <data name="PreviewWindow.Resolution" xml:space="preserve"><value>Ανάλυση</value></data>
+  <data name="PreviewWindow.ProfileMatch" xml:space="preserve"><value>Αντιστοίχιση ICC</value></data>
+  <data name="PreviewWindow.ProfileUnknown" xml:space="preserve"><value>Άγνωστες συνθήκες ICC.</value></data>
+  <data name="PreviewWindow.ProfileAssigned" xml:space="preserve"><value>Αντιστοιχίστηκε σε αυτές τις ρυθμίσεις από τον χρήστη.</value></data>
+  <data name="PreviewWindow.ProfileMismatch" xml:space="preserve"><value>Το ICC διαφέρει από τις αποθηκευμένες συνθήκες εκτύπωσης.</value></data>
+  <data name="PreviewWindow.PhysicalUnavailable" xml:space="preserve"><value>Η φυσική κατάσταση εκτυπωτή δεν είναι διαθέσιμη.</value></data>
+  <data name="PreviewWindow.PhysicalUnconfirmed" xml:space="preserve"><value>Η κατάσταση συσκευής δεν επιβεβαιώνει ολοκλήρωση αυτής της εργασίας ή έξοδο του φύλλου.</value></data>
+  <data name="PreviewWindow.DeviceOther" xml:space="preserve"><value>Εκτυπωτής: άλλη κατάσταση</value></data>
+  <data name="PreviewWindow.DeviceUnknown" xml:space="preserve"><value>Εκτυπωτής: άγνωστη κατάσταση</value></data>
+  <data name="PreviewWindow.DeviceIdle" xml:space="preserve"><value>Εκτυπωτής: αδρανής</value></data>
+  <data name="PreviewWindow.DevicePrinting" xml:space="preserve"><value>Εκτυπωτής: εκτυπώνει</value></data>
+  <data name="PreviewWindow.DeviceWarming" xml:space="preserve"><value>Εκτυπωτής: προθέρμανση</value></data>
+  <data name="PreviewWindow.EditSettings" xml:space="preserve"><value>Αλλαγή ρυθμίσεων</value></data>
+  <data name="PreviewWindow.Editing" xml:space="preserve"><value>Ενημέρωση προεπισκόπησης…</value></data>
+  <data name="PreviewWindow.ZoomHelp" xml:space="preserve"><value>Ctrl + τροχός ποντικιού: μεγέθυνση. Δέχεται ποσοστό.</value></data>
+  <data name="PreviewWindow.ActualSizeHelp" xml:space="preserve"><value>100%: ένα εικονοστοιχείο ράστερ ανά φυσικό εικονοστοιχείο οθόνης. Απαιτεί γνωστή ίση ανάλυση X/Y.</value></data>
+  <data name="PreviewWindow.SourceChanged" xml:space="preserve"><value>Οι αρχικές καμπύλες άλλαξαν. Ανοίξτε την Αλλαγή ρυθμίσεων για ανανέωση προεπισκόπησης.</value></data>
+  <data name="PreviewWindow.ICC" xml:space="preserve"><value>ICC</value></data>
+  <data name="PreviewWindow.PhotoPlacement" xml:space="preserve"><value>Τοποθέτηση φωτογραφίας</value></data>
+  <data name="PreviewWindow.PhotoFit" xml:space="preserve"><value>Προσαρμογή φωτογραφίας</value></data>
+  <data name="PreviewWindow.PhotoReset" xml:space="preserve"><value>Επαναφορά φωτογραφίας</value></data>
+  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Σύρετε την εικόνα για μετακίνηση και μια γωνία για αναλογική αλλαγή μεγέθους. Περιστρέψτε με τα κουμπιά 90°. Τα περιθώρια της αρχικής εφαρμογής παραμένουν μέρος της εικόνας.</value></data>
+  <data name="PreviewWindow.PhotoCenterHorizontal" xml:space="preserve"><value>Οριζόντιο κεντράρισμα</value></data>
+  <data name="PreviewWindow.PhotoCenterVertical" xml:space="preserve"><value>Κατακόρυφο κεντράρισμα</value></data>
+  <data name="PreviewWindow.PrintStart" xml:space="preserve"><value>Αρχή εκτύπωσης</value></data>
+  <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>Το βέλος δείχνει την άκρη του φύλλου που εκτυπώνεται πρώτη.</value></data>
 </root>

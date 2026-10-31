@@ -1,5 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
+  <data name="PreviewWindow.Unsimulated" xml:space="preserve"><value>Grijswaarden zonder papiersimulatie.</value></data>
+  <data name="PreviewWindow.Title" xml:space="preserve"><value>Afdrukvoorbeeld - Soft Proof</value></data>
+  <data name="PreviewWindow.Print"><value>Afdrukken</value></data>
+  <data name="PreviewWindow.Cancel"><value>Annuleren</value></data>
+  <data name="PreviewWindow.Close"><value>Dichtbij</value></data>
+  <data name="PreviewWindow.CancelCloseHelp" xml:space="preserve"><value>Annuleer de afdruktaak en sluit het voorbeeldvenster.</value></data>
+  <data name="PreviewWindow.Previous"><value>Vorige</value></data>
+  <data name="PreviewWindow.Next"><value>Volgende</value></data>
+  <data name="PreviewWindow.Fit"><value>Pagina passend</value></data>
+  <data name="PreviewWindow.Preparing" xml:space="preserve"><value>Afdruktaak voorbereiden…</value></data>
+  <data name="PreviewWindow.Sending" xml:space="preserve"><value>Gegevens naar printer verzenden…</value></data>
+  <data name="PreviewWindow.Sent" xml:space="preserve"><value>Gegevens verzonden; fysiek afdrukken kan doorgaan.</value></data>
+  <data name="PreviewWindow.Cancelled" xml:space="preserve"><value>Afdruktaak geannuleerd.</value></data>
+  <data name="PreviewWindow.Failed" xml:space="preserve"><value>Afdruktaak mislukt.</value></data>
+  <data name="PreviewWindow.Measured" xml:space="preserve"><value>Soft Proof met het gekozen ICC. Controleer rechts de toewijzing.</value></data>
+  <data name="PreviewWindow.Approximate" xml:space="preserve"><value>Geschatte Soft Proof met metingen per papiercategorie en een geschatte papiertint.</value></data>
+  <data name="Preview.Enabled.Text"><value>Voorbeeld — Inschakelen (Softproofing)</value></data>
+  <data name="Preview.EnabledHelp"><value>Opent vóór het afdrukken een voorbeeldvenster. Met een ICC-profiel worden tonen, kleurzweem, papierwit en drukzwart gesimuleerd; zonder profiel is de simulatie bij benadering. Verandert de afdrukgegevens niet.</value></data>
+  <data name="Preview.Profile.Text"><value>ICC-profiel (optioneel)</value></data>
+  <data name="Preview.WithOba.Content"><value>Papier met OBA</value></data>
+  <data name="Preview.WithoutOba.Content"><value>Papier zonder OBA</value></data>
+  <data name="Preview.WithObaHelp"><value>Benadert het papierwit met optische witmakers onder D50–D65-verlichting. Heeft alleen invloed op het voorbeeld.</value></data>
+  <data name="Preview.WithoutObaHelp"><value>Benadert het papierwit zonder optische witmakers. Heeft alleen invloed op het voorbeeld.</value></data>
   <data name="AppDescription"><value>pyToneRIP Print Support-app</value></data>
   <data name="Auto.0163AD0F367D.Text"><value>Omzeilt .quad-curven, menging, gamma en de normale inktlimiet. Deze printer drukt alleen kalibratiedoelen af totdat deze modus wordt uitgeschakeld en toegepast.</value></data>
   <data name="Auto.043112257626.Text"><value>Logische ID&#x27;s moeten overeenkomen met elk geselecteerd .quad-profiel. Wijs elke logische inkt toe aan één fysiek pad van de geselecteerde printer.</value></data>
@@ -308,4 +331,39 @@
   <data name="ResamplingHelp.bicubic"><value>Gebruikt een kubisch filter voor een balans tussen scherpte en vloeiende toonovergangen in foto’s. Behoudt meer details dan bilineaire interpolatie, maar kan lichte halo’s rond contrastrijke randen veroorzaken.</value></data>
   <data name="ResamplingHelp.lanczos"><value>Behoudt fijne details goed bij het omrekenen van foto’s naar het ditheringraster, vooral bij verkleinen. Kies dit voor een scherper resultaat, maar let op lichte of donkere halo’s rond contrastrijke randen.</value></data>
   <data name="ResamplingHelp.mitchell"><value>Combineert details met vloeiende overgangen en geeft minder randhalo’s dan Lanczos. Geschikt voor foto’s waarbij halo’s storen, ten koste van iets zachtere fijne details en tragere verwerking.</value></data>
+  <data name="Preview.IlluminantHelp" xml:space="preserve"><value>Geschat kijklicht: D50, D55, D60 of D65. Wijzigt alleen de tint van het voorbeeld, niet de afdrukgegevens. Zonder spectrale metingen kan OBA-fluorescentie niet worden voorspeld.</value></data>
+  <data name="PreviewWindow.PrintClose" xml:space="preserve"><value>Afdrukken en sluiten</value></data>
+  <data name="PreviewWindow.Rulers" xml:space="preserve"><value>Linialen</value></data>
+  <data name="PreviewWindow.Printer" xml:space="preserve"><value>Printer</value></data>
+  <data name="PreviewWindow.Paper" xml:space="preserve"><value>Papier</value></data>
+  <data name="PreviewWindow.Size" xml:space="preserve"><value>Formaat</value></data>
+  <data name="PreviewWindow.Dither" xml:space="preserve"><value>Ditheren</value></data>
+  <data name="PreviewWindow.Mode" xml:space="preserve"><value>Modus</value></data>
+  <data name="PreviewWindow.Curves" xml:space="preserve"><value>Curven</value></data>
+  <data name="PreviewWindow.Resolution" xml:space="preserve"><value>Resolutie</value></data>
+  <data name="PreviewWindow.ProfileMatch" xml:space="preserve"><value>ICC-toewijzing</value></data>
+  <data name="PreviewWindow.ProfileUnknown" xml:space="preserve"><value>ICC-omstandigheden onbekend.</value></data>
+  <data name="PreviewWindow.ProfileAssigned" xml:space="preserve"><value>Door gebruiker aan deze instellingen toegewezen.</value></data>
+  <data name="PreviewWindow.ProfileMismatch" xml:space="preserve"><value>ICC wijkt af van de opgeslagen afdrukomstandigheden.</value></data>
+  <data name="PreviewWindow.PhysicalUnavailable" xml:space="preserve"><value>Fysieke printerstatus niet beschikbaar.</value></data>
+  <data name="PreviewWindow.PhysicalUnconfirmed" xml:space="preserve"><value>De apparaatstatus bevestigt niet dat deze taak of de papieruitvoer voltooid is.</value></data>
+  <data name="PreviewWindow.DeviceOther" xml:space="preserve"><value>Printer: andere status</value></data>
+  <data name="PreviewWindow.DeviceUnknown" xml:space="preserve"><value>Printer: onbekend</value></data>
+  <data name="PreviewWindow.DeviceIdle" xml:space="preserve"><value>Printer: inactief</value></data>
+  <data name="PreviewWindow.DevicePrinting" xml:space="preserve"><value>Printer: bezig met afdrukken</value></data>
+  <data name="PreviewWindow.DeviceWarming" xml:space="preserve"><value>Printer: opwarmen</value></data>
+  <data name="PreviewWindow.EditSettings" xml:space="preserve"><value>Instellingen wijzigen</value></data>
+  <data name="PreviewWindow.Editing" xml:space="preserve"><value>Afdrukvoorbeeld bijwerken…</value></data>
+  <data name="PreviewWindow.ZoomHelp" xml:space="preserve"><value>Ctrl + muiswiel: zoomen. Percentage kan worden ingevoerd.</value></data>
+  <data name="PreviewWindow.ActualSizeHelp" xml:space="preserve"><value>100%: één rasterpixel per fysieke schermpixel. Vereist bekende, gelijke X/Y-rasterresolutie.</value></data>
+  <data name="PreviewWindow.SourceChanged" xml:space="preserve"><value>De broncurven zijn gewijzigd. Open Instellingen wijzigen om het voorbeeld te vernieuwen.</value></data>
+  <data name="PreviewWindow.ICC" xml:space="preserve"><value>ICC</value></data>
+  <data name="PreviewWindow.PhotoPlacement" xml:space="preserve"><value>Foto plaatsen</value></data>
+  <data name="PreviewWindow.PhotoFit" xml:space="preserve"><value>Foto passend</value></data>
+  <data name="PreviewWindow.PhotoReset" xml:space="preserve"><value>Foto herstellen</value></data>
+  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Versleep de afbeelding om te verplaatsen en een hoek om proportioneel te schalen. Draaien met de 90°-knoppen. Marges uit de bronapp blijven deel van de afbeelding.</value></data>
+  <data name="PreviewWindow.PhotoCenterHorizontal" xml:space="preserve"><value>Horizontaal centreren</value></data>
+  <data name="PreviewWindow.PhotoCenterVertical" xml:space="preserve"><value>Verticaal centreren</value></data>
+  <data name="PreviewWindow.PrintStart" xml:space="preserve"><value>Begin van afdruk</value></data>
+  <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>De pijl markeert de rand van het vel die als eerste wordt bedrukt.</value></data>
 </root>

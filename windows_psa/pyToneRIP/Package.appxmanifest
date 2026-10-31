@@ -62,6 +62,7 @@
       <Extensions>
         <printsupport:Extension Category="windows.printSupportExtension" EntryPoint="pyToneRIP.Tasks.PrintSupportExtensionBackgroundTask" />
         <printsupport:Extension Category="windows.printSupportSettingsUI" EntryPoint="pyToneRIP.App" />
+        <printsupport:Extension Category="windows.printSupportJobUI" EntryPoint="pyToneRIP.App" />
         <printsupport2:Extension Category="windows.printSupportVirtualPrinterWorkflow" EntryPoint="pyToneRIP.Tasks.VirtualPrinterBackgroundTask">
           <printsupport2:PrintSupportVirtualPrinter DisplayName="pyToneRIP Workflow Bootstrap" PrinterUri="pytone-rip:workflow-bootstrap" PreferredInputFormat="application/oxps" PdcFile="Assets\PdcModels\model.XP750.pdc.xml" />
         </printsupport2:Extension>

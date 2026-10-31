@@ -30,6 +30,7 @@ namespace pyToneRIP.Shared
         public double? PageWidthMm { get; set; }
         public double? PageHeightMm { get; set; }
         public string OrientationOptionName { get; set; }
+        public string PageOrderOptionName { get; set; }
         public int? ResolutionX { get; set; }
         public int? ResolutionY { get; set; }
         public bool? Borderless { get; set; }
@@ -57,6 +58,7 @@ namespace pyToneRIP.Shared
         private static readonly IReadOnlyDictionary<string, string> StandardPageOptions =
             new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
             {
+                ["A2"] = "ISOA2",
                 ["A3"] = "ISOA3",
                 ["A4"] = "ISOA4",
                 ["A5"] = "ISOA5",
@@ -128,6 +130,7 @@ namespace pyToneRIP.Shared
                 PageWidthMm = MicronsToMillimeters(Value(page, "MediaSizeWidth")),
                 PageHeightMm = MicronsToMillimeters(Value(page, "MediaSizeHeight")),
                 OrientationOptionName = Name(Option("PageOrientation")),
+                PageOrderOptionName = Name(Option("JobPageOrder")),
                 ResolutionX = Value(resolution, "ResolutionX"),
                 ResolutionY = Value(resolution, "ResolutionY"),
                 Borderless = borderless == null ? (bool?)null

@@ -128,6 +128,7 @@ def export_capabilities(registry: PrinterRegistry | None = None) -> dict[str, ob
                     {
                         "id": item.identity,
                         "display_name": item.display_name,
+                        "preview_media_class": _preview_media_class(item),
                         "supported_modes": list(item.supported_modes),
                         **_option_status(
                             implemented=item.implemented,
@@ -145,6 +146,7 @@ def export_capabilities(registry: PrinterRegistry | None = None) -> dict[str, ob
                         ),
                         "width_mm": _windows_page_dimensions_mm(item)[0],
                         "height_mm": _windows_page_dimensions_mm(item)[1],
+                        **_preview_page_geometry(model, item),
                         "borderless": item.ppd.borderless,
                         **({"windows_media_size_name": item.windows_media_size_name}
                            if item.windows_media_size_name else {}),
@@ -240,6 +242,61 @@ def export_capabilities(registry: PrinterRegistry | None = None) -> dict[str, ob
     }
 
 
+def _preview_media_class(medium) -> str:
+    # Specific, stable substrate categories must survive PDR localization.
+    name = (medium.display_name + " " + (medium.gutenprint_name or "")).casefold().strip()
+    compact = name.replace(" ", "").replace("_", "").replace("-", "")
+    for category, words in (
+        ("watercolor", ("watercolor", "watercolour", "etching")),
+        ("canvas", ("canvas",)),
+        ("baryta", ("baryta",)),
+        ("luster", ("luster", "lustre", "pearl", "semigloss", "satin")),
+        ("fineart", ("fineart", "velvet", "photorag", "museum")),
+    ):
+        if any(word in compact for word in words):
+            return category
+    if medium.media_class in {"plain", "matte", "photo"}:
+        return medium.media_class
+    if "plain" in name or "normal paper" in name or name == "normal":
+        return "plain"
+    if any(word in name for word in ("matte", "fine art", "fineart", "canvas", "velvet")):
+        return "matte"
+    if any(word in name for word in ("photo", "gloss", "luster", "lustre", "semi")):
+        return "photo"
+    return "generic"
+
+
+def _preview_page_geometry(model, page) -> dict[str, object]:
+    """Export existing native margins as data for the C#/UWP preview only."""
+    def rectangle(ppd):
+        return (ppd.imageable_left_points, ppd.imageable_bottom_points,
+                ppd.imageable_right_points, ppd.imageable_top_points)
+
+    baseline = rectangle(page.ppd)
+    groups = {}
+    for feed in model.selectable_input_sources():
+        rectangles = {}
+        for mode in model.modes:
+            if not mode.implemented:
+                continue
+            try:
+                area = rectangle(model.native_page(page, mode, feed).ppd)
+            except (ValueError, KeyError):
+                continue
+            if area != baseline:
+                rectangles.setdefault(area, []).append(mode.identity)
+        for area, modes in rectangles.items():
+            groups.setdefault((area, tuple(modes)), []).append(feed.identity)
+    return {
+        "preview_paper_points": [page.ppd.width_points, page.ppd.height_points],
+        "preview_imageable_points": list(baseline),
+        "preview_regions": [
+            {"points": list(area), "modes": list(modes), "input_sources": sources}
+            for (area, modes), sources in groups.items()
+        ],
+    }
+
+
 def write_capability_export(path: Path, registry: PrinterRegistry | None = None) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
@@ -251,6 +308,7 @@ def write_capability_export(path: Path, registry: PrinterRegistry | None = None)
 _STANDARD_PAGE_OPTIONS = {
     # A standard Print Schema keyword must use the canonical media dimensions,
     # not the rounded PostScript-point dimensions found in some PPD files.
+    "A2": ("ISOA2", 420_000, 594_000),
     "A3": ("ISOA3", 297_000, 420_000),
     "A4": ("ISOA4", 210_000, 297_000),
     "A5": ("ISOA5", 148_000, 210_000),

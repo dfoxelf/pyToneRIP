@@ -36,6 +36,21 @@
     <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\pyToneRIP\Services\PreviewPageTransform.cs">
+      <Link>Services\PreviewPageTransform.cs</Link>
+    </Compile>
+    <Compile Include="..\pyToneRIP\Models\PreviewPhotoPlacement.cs">
+      <Link>Models\PreviewPhotoPlacement.cs</Link>
+    </Compile>
+    <Compile Include="..\pyToneRIP\Services\PreviewWorkflowStore.cs">
+      <Link>Services\PreviewWorkflowStore.cs</Link>
+    </Compile>
+    <Compile Include="..\pyToneRIP\Services\PreviewApprovalGate.cs">
+      <Link>Services\PreviewApprovalGate.cs</Link>
+    </Compile>
+    <Compile Include="..\pyToneRIP\Services\ExternalIccAccessStore.cs">
+      <Link>Services\ExternalIccAccessStore.cs</Link>
+    </Compile>
     <Compile Include="..\pyToneRIP\Models\RipRuntimeContract.cs">
       <Link>Models\RipRuntimeContract.cs</Link>
     </Compile>

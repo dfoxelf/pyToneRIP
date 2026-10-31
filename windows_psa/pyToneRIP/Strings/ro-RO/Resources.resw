@@ -1,5 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
+  <data name="PreviewWindow.Unsimulated" xml:space="preserve"><value>Tonuri de gri fără simularea hârtiei.</value></data>
+  <data name="PreviewWindow.Title" xml:space="preserve"><value>Previzualizare - Soft Proof</value></data>
+  <data name="PreviewWindow.Print"><value>Imprimă</value></data>
+  <data name="PreviewWindow.Cancel"><value>Anula</value></data>
+  <data name="PreviewWindow.Close"><value>Aproape</value></data>
+  <data name="PreviewWindow.CancelCloseHelp" xml:space="preserve"><value>Anulează lucrarea de imprimare și închide fereastra de previzualizare.</value></data>
+  <data name="PreviewWindow.Previous"><value>Anterioară</value></data>
+  <data name="PreviewWindow.Next"><value>Următoare</value></data>
+  <data name="PreviewWindow.Fit"><value>Încadrează pagina</value></data>
+  <data name="PreviewWindow.Preparing" xml:space="preserve"><value>Pregătirea lucrării…</value></data>
+  <data name="PreviewWindow.Sending" xml:space="preserve"><value>Se trimit date la imprimantă…</value></data>
+  <data name="PreviewWindow.Sent" xml:space="preserve"><value>Date trimise; imprimarea fizică poate continua.</value></data>
+  <data name="PreviewWindow.Cancelled" xml:space="preserve"><value>Lucrare anulată.</value></data>
+  <data name="PreviewWindow.Failed" xml:space="preserve"><value>Lucrare eșuată.</value></data>
+  <data name="PreviewWindow.Measured" xml:space="preserve"><value>Soft Proof cu ICC-ul ales. Verificați asocierea din dreapta.</value></data>
+  <data name="PreviewWindow.Approximate" xml:space="preserve"><value>Soft Proof aproximativ din măsurători pe categorii de hârtie și nuanță estimată.</value></data>
+  <data name="Preview.Enabled.Text"><value>Previzualizare — Activare (Softproofing)</value></data>
+  <data name="Preview.EnabledHelp"><value>Deschide o fereastră de previzualizare înainte de imprimare. Cu un profil ICC simulează tonurile, tenta, albul hârtiei și negrul imprimat; fără profil simularea este aproximativă. Nu modifică datele de imprimare.</value></data>
+  <data name="Preview.Profile.Text"><value>Profil ICC (opțional)</value></data>
+  <data name="Preview.WithOba.Content"><value>Hârtie cu OBA</value></data>
+  <data name="Preview.WithoutOba.Content"><value>Hârtie fără OBA</value></data>
+  <data name="Preview.WithObaHelp"><value>Simulează aproximativ albul hârtiei cu înălbitori optici sub iluminare D50–D65. Afectează doar previzualizarea.</value></data>
+  <data name="Preview.WithoutObaHelp"><value>Simulează aproximativ albul hârtiei fără înălbitori optici. Afectează doar previzualizarea.</value></data>
   <data name="AppDescription"><value>Aplicația de asistență pentru imprimare pyToneRIP</value></data>
   <data name="Auto.0163AD0F367D.Text"><value>Ocolește curbele .quad, amestecarea, gama și limita de cerneală normală. Această imprimantă va imprima ținte de calibrare numai până când acest mod este oprit și aplicat.</value></data>
   <data name="Auto.043112257626.Text"><value>ID-urile logice trebuie să se potrivească cu fiecare profil .quad selectat. Mapați fiecare cerneală logică pe o cale fizică a imprimantei selectate.</value></data>
@@ -308,4 +331,39 @@
   <data name="ResamplingHelp.bicubic"><value>Folosește un filtru cubic pentru a echilibra claritatea și tranzițiile tonale line din fotografii. Păstrează mai multe detalii decât metoda biliniară, dar poate crea halouri ușoare în jurul marginilor cu contrast ridicat.</value></data>
   <data name="ResamplingHelp.lanczos"><value>Păstrează bine detaliile fine la adaptarea fotografiilor la grila de dithering, mai ales la micșorare. Alegeți-l pentru rezultate mai clare, dar urmăriți halourile luminoase sau întunecate din jurul marginilor cu contrast ridicat.</value></data>
   <data name="ResamplingHelp.mitchell"><value>Echilibrează detaliile și tranzițiile line, producând mai puține halouri la margini decât Lanczos. Potrivit pentru fotografii în care halourile deranjează, cu prețul unor detalii fine puțin mai moi și al unei procesări mai lente.</value></data>
+  <data name="Preview.IlluminantHelp" xml:space="preserve"><value>Lumină de vizualizare aproximativă: D50, D55, D60 sau D65. Schimbă doar nuanța previzualizării, nu datele de imprimare. Fără măsurători spectrale nu se poate prezice fluorescența OBA.</value></data>
+  <data name="PreviewWindow.PrintClose" xml:space="preserve"><value>Imprimă și închide</value></data>
+  <data name="PreviewWindow.Rulers" xml:space="preserve"><value>Rigle</value></data>
+  <data name="PreviewWindow.Printer" xml:space="preserve"><value>Imprimantă</value></data>
+  <data name="PreviewWindow.Paper" xml:space="preserve"><value>Hârtie</value></data>
+  <data name="PreviewWindow.Size" xml:space="preserve"><value>Dimensiune</value></data>
+  <data name="PreviewWindow.Dither" xml:space="preserve"><value>Dither</value></data>
+  <data name="PreviewWindow.Mode" xml:space="preserve"><value>Mod</value></data>
+  <data name="PreviewWindow.Curves" xml:space="preserve"><value>Curbe</value></data>
+  <data name="PreviewWindow.Resolution" xml:space="preserve"><value>Rezoluție</value></data>
+  <data name="PreviewWindow.ProfileMatch" xml:space="preserve"><value>Asociere ICC</value></data>
+  <data name="PreviewWindow.ProfileUnknown" xml:space="preserve"><value>Condițiile ICC sunt necunoscute.</value></data>
+  <data name="PreviewWindow.ProfileAssigned" xml:space="preserve"><value>Asociat acestor setări de utilizator.</value></data>
+  <data name="PreviewWindow.ProfileMismatch" xml:space="preserve"><value>ICC diferă de condițiile de imprimare salvate.</value></data>
+  <data name="PreviewWindow.PhysicalUnavailable" xml:space="preserve"><value>Starea fizică a imprimantei nu este disponibilă.</value></data>
+  <data name="PreviewWindow.PhysicalUnconfirmed" xml:space="preserve"><value>Starea dispozitivului nu confirmă terminarea acestei lucrări sau ieșirea foii.</value></data>
+  <data name="PreviewWindow.DeviceOther" xml:space="preserve"><value>Imprimantă: altă stare</value></data>
+  <data name="PreviewWindow.DeviceUnknown" xml:space="preserve"><value>Imprimantă: stare necunoscută</value></data>
+  <data name="PreviewWindow.DeviceIdle" xml:space="preserve"><value>Imprimantă: inactivă</value></data>
+  <data name="PreviewWindow.DevicePrinting" xml:space="preserve"><value>Imprimantă: imprimă</value></data>
+  <data name="PreviewWindow.DeviceWarming" xml:space="preserve"><value>Imprimantă: încălzire</value></data>
+  <data name="PreviewWindow.EditSettings" xml:space="preserve"><value>Modifică setările</value></data>
+  <data name="PreviewWindow.Editing" xml:space="preserve"><value>Actualizarea previzualizării…</value></data>
+  <data name="PreviewWindow.ZoomHelp" xml:space="preserve"><value>Ctrl + rotița mouse-ului: zoom. Se poate introduce un procent.</value></data>
+  <data name="PreviewWindow.ActualSizeHelp" xml:space="preserve"><value>100%: un pixel raster pe pixel fizic al ecranului. Necesită rezoluție X/Y cunoscută și egală.</value></data>
+  <data name="PreviewWindow.SourceChanged" xml:space="preserve"><value>Curbele sursă s-au schimbat. Deschideți Modifică setările pentru a actualiza previzualizarea.</value></data>
+  <data name="PreviewWindow.ICC" xml:space="preserve"><value>ICC</value></data>
+  <data name="PreviewWindow.PhotoPlacement" xml:space="preserve"><value>Poziționare fotografie</value></data>
+  <data name="PreviewWindow.PhotoFit" xml:space="preserve"><value>Încadrează fotografia</value></data>
+  <data name="PreviewWindow.PhotoReset" xml:space="preserve"><value>Resetează fotografia</value></data>
+  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Trageți imaginea pentru mutare și un colț pentru redimensionare proporțională. Rotiți cu butoanele 90°. Marginile aplicației sursă rămân parte din imagine.</value></data>
+  <data name="PreviewWindow.PhotoCenterHorizontal" xml:space="preserve"><value>Centrează orizontal</value></data>
+  <data name="PreviewWindow.PhotoCenterVertical" xml:space="preserve"><value>Centrează vertical</value></data>
+  <data name="PreviewWindow.PrintStart" xml:space="preserve"><value>Începutul imprimării</value></data>
+  <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>Săgeata indică marginea foii care este imprimată prima.</value></data>
 </root>

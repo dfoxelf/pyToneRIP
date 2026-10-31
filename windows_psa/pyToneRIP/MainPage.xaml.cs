@@ -80,6 +80,7 @@ namespace pyToneRIP
             {
                 managerPageLoaded = true;
                 managerSuspended = false;
+                WidenFrenchManagerWindow();
                 Window.Current.Activated += WindowActivated;
                 Application.Current.Suspending += QueueWatcherSuspending;
                 Application.Current.Resuming += QueueWatcherResuming;
@@ -98,6 +99,23 @@ namespace pyToneRIP
                 Application.Current.Resuming -= QueueWatcherResuming;
                 ManagerLogger.LineWritten -= OnManagerLogLineWritten;
             };
+        }
+
+        private static void WidenFrenchManagerWindow()
+        {
+            var language = LocalizationService.CurrentLanguage;
+            if (string.IsNullOrWhiteSpace(language))
+                language = Windows.Globalization.ApplicationLanguages.Languages.FirstOrDefault();
+            if (!(language == "fr" || language?.StartsWith("fr-", StringComparison.OrdinalIgnoreCase) == true))
+                return;
+            var bounds = Window.Current.Bounds;
+            var width = 1500d;
+            var display = Windows.Graphics.Display.DisplayInformation.GetForCurrentView();
+            if (display.ScreenWidthInRawPixels > 0 && display.RawPixelsPerViewPixel > 0)
+                width = Math.Min(width, display.ScreenWidthInRawPixels/display.RawPixelsPerViewPixel-32);
+            if (width > bounds.Width)
+                Windows.UI.ViewManagement.ApplicationView.GetForCurrentView()
+                    .TryResizeView(new Windows.Foundation.Size(width, bounds.Height));
         }
 
         internal static void PrepareNextInstanceForAppStartup()

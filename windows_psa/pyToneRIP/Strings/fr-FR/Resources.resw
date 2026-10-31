@@ -1,5 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
+  <data name="PreviewWindow.Unsimulated" xml:space="preserve"><value>Niveaux de gris sans simulation du papier.</value></data>
+  <data name="PreviewWindow.Title" xml:space="preserve"><value>Aperçu avant impression - Soft Proof</value></data>
+  <data name="PreviewWindow.Print"><value>Imprimer</value></data>
+  <data name="PreviewWindow.Cancel"><value>Annuler</value></data>
+  <data name="PreviewWindow.Close"><value>Fermer</value></data>
+  <data name="PreviewWindow.CancelCloseHelp" xml:space="preserve"><value>Annuler la tâche d’impression et fermer la fenêtre d’aperçu.</value></data>
+  <data name="PreviewWindow.Previous"><value>Précédente</value></data>
+  <data name="PreviewWindow.Next"><value>Suivante</value></data>
+  <data name="PreviewWindow.Fit"><value>Ajuster la page</value></data>
+  <data name="PreviewWindow.Preparing" xml:space="preserve"><value>Préparation du travail…</value></data>
+  <data name="PreviewWindow.Sending" xml:space="preserve"><value>Envoi des données à l’imprimante…</value></data>
+  <data name="PreviewWindow.Sent" xml:space="preserve"><value>Données envoyées ; l’impression physique peut continuer.</value></data>
+  <data name="PreviewWindow.Cancelled" xml:space="preserve"><value>Travail annulé.</value></data>
+  <data name="PreviewWindow.Failed" xml:space="preserve"><value>Échec du travail.</value></data>
+  <data name="PreviewWindow.Measured" xml:space="preserve"><value>Soft Proof avec l’ICC choisi. Vérifiez son association à droite.</value></data>
+  <data name="PreviewWindow.Approximate" xml:space="preserve"><value>Soft Proof approximatif selon les mesures de la catégorie de papier et une teinte estimée.</value></data>
+  <data name="Preview.Enabled.Text"><value>Aperçu — Activer (Softproofing)</value></data>
+  <data name="Preview.EnabledHelp"><value>Ouvre une fenêtre d’aperçu avant impression. Avec un profil ICC, simule les tons, la dominante, le blanc du papier et le noir imprimé ; sans profil, la simulation est approximative. Ne modifie pas les données d’impression.</value></data>
+  <data name="Preview.Profile.Text"><value>Profil ICC (facultatif)</value></data>
+  <data name="Preview.WithOba.Content"><value>Papier avec OBA</value></data>
+  <data name="Preview.WithoutOba.Content"><value>Papier sans OBA</value></data>
+  <data name="Preview.WithObaHelp"><value>Simule approximativement le blanc du papier avec azurants optiques sous un éclairage D50–D65. Affecte uniquement l’aperçu.</value></data>
+  <data name="Preview.WithoutObaHelp"><value>Simule approximativement le blanc du papier sans azurants optiques. Affecte uniquement l’aperçu.</value></data>
   <data name="AppDescription"><value>Application de support d&#x27;impression pyToneRIP</value></data>
   <data name="Auto.0163AD0F367D.Text"><value>Contourne les courbes .quad, le mélange, le gamma et la limite d&#x27;encre normale. Cette imprimante imprimera les cibles d&#x27;étalonnage uniquement jusqu&#x27;à ce que ce mode soit désactivé et appliqué.</value></data>
   <data name="Auto.043112257626.Text"><value>Les ID logiques doivent correspondre à chaque profil .quad sélectionné. Mappez chaque encre logique à un chemin physique de l’imprimante sélectionnée.</value></data>
@@ -308,4 +331,39 @@
   <data name="ResamplingHelp.bicubic"><value>Utilise un filtre cubique pour équilibrer la netteté et les transitions tonales douces des photos. Préserve davantage de détails que la méthode bilinéaire, mais peut créer de légers halos sur les contours très contrastés.</value></data>
   <data name="ResamplingHelp.lanczos"><value>Préserve bien les détails fins lors de la conversion des photos vers la grille de tramage, surtout en réduction. À choisir pour un rendu plus net, en surveillant les halos clairs ou sombres sur les contours très contrastés.</value></data>
   <data name="ResamplingHelp.mitchell"><value>Équilibre les détails et les transitions douces avec moins de halos sur les contours que Lanczos. Adapté aux photos où les halos sont gênants, au prix de détails fins légèrement plus doux et d’un traitement plus lent.</value></data>
+  <data name="Preview.IlluminantHelp" xml:space="preserve"><value>Éclairage de visualisation approximatif : D50, D55, D60 ou D65. Modifie uniquement la teinte de l’aperçu, pas les données d’impression. Sans mesures spectrales, la fluorescence des azurants ne peut pas être prédite.</value></data>
+  <data name="PreviewWindow.PrintClose" xml:space="preserve"><value>Imprimer et fermer</value></data>
+  <data name="PreviewWindow.Rulers" xml:space="preserve"><value>Règles</value></data>
+  <data name="PreviewWindow.Printer" xml:space="preserve"><value>Imprimante</value></data>
+  <data name="PreviewWindow.Paper" xml:space="preserve"><value>Papier</value></data>
+  <data name="PreviewWindow.Size" xml:space="preserve"><value>Format</value></data>
+  <data name="PreviewWindow.Dither" xml:space="preserve"><value>Tramage</value></data>
+  <data name="PreviewWindow.Mode" xml:space="preserve"><value>Mode</value></data>
+  <data name="PreviewWindow.Curves" xml:space="preserve"><value>Courbes</value></data>
+  <data name="PreviewWindow.Resolution" xml:space="preserve"><value>Résolution</value></data>
+  <data name="PreviewWindow.ProfileMatch" xml:space="preserve"><value>Association ICC</value></data>
+  <data name="PreviewWindow.ProfileUnknown" xml:space="preserve"><value>Conditions ICC inconnues.</value></data>
+  <data name="PreviewWindow.ProfileAssigned" xml:space="preserve"><value>Associé à ces réglages par l’utilisateur.</value></data>
+  <data name="PreviewWindow.ProfileMismatch" xml:space="preserve"><value>L’ICC diffère des conditions d’impression enregistrées.</value></data>
+  <data name="PreviewWindow.PhysicalUnavailable" xml:space="preserve"><value>État physique de l’imprimante indisponible.</value></data>
+  <data name="PreviewWindow.PhysicalUnconfirmed" xml:space="preserve"><value>L’état de l’appareil ne confirme ni la fin de ce travail ni la sortie de la feuille.</value></data>
+  <data name="PreviewWindow.DeviceOther" xml:space="preserve"><value>Imprimante : autre état</value></data>
+  <data name="PreviewWindow.DeviceUnknown" xml:space="preserve"><value>Imprimante : état inconnu</value></data>
+  <data name="PreviewWindow.DeviceIdle" xml:space="preserve"><value>Imprimante : au repos</value></data>
+  <data name="PreviewWindow.DevicePrinting" xml:space="preserve"><value>Imprimante : impression</value></data>
+  <data name="PreviewWindow.DeviceWarming" xml:space="preserve"><value>Imprimante : préchauffage</value></data>
+  <data name="PreviewWindow.EditSettings" xml:space="preserve"><value>Modifier les réglages</value></data>
+  <data name="PreviewWindow.Editing" xml:space="preserve"><value>Actualisation de l’aperçu…</value></data>
+  <data name="PreviewWindow.ZoomHelp" xml:space="preserve"><value>Ctrl + molette : zoom. Pourcentage saisissable.</value></data>
+  <data name="PreviewWindow.ActualSizeHelp" xml:space="preserve"><value>100 % : un pixel de trame par pixel physique d’écran. Résolution X/Y connue et identique requise.</value></data>
+  <data name="PreviewWindow.SourceChanged" xml:space="preserve"><value>Les courbes sources ont changé. Ouvrez « Modifier les réglages » pour actualiser l’aperçu.</value></data>
+  <data name="PreviewWindow.ICC" xml:space="preserve"><value>ICC</value></data>
+  <data name="PreviewWindow.PhotoPlacement" xml:space="preserve"><value>Placement photo</value></data>
+  <data name="PreviewWindow.PhotoFit" xml:space="preserve"><value>Ajuster la photo</value></data>
+  <data name="PreviewWindow.PhotoReset" xml:space="preserve"><value>Réinitialiser la photo</value></data>
+  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Faites glisser l’image pour la déplacer et un coin pour la redimensionner proportionnellement. Rotation avec les boutons 90°. Les marges de l’application source font partie de l’image.</value></data>
+  <data name="PreviewWindow.PhotoCenterHorizontal" xml:space="preserve"><value>Centrer horizontalement</value></data>
+  <data name="PreviewWindow.PhotoCenterVertical" xml:space="preserve"><value>Centrer verticalement</value></data>
+  <data name="PreviewWindow.PrintStart" xml:space="preserve"><value>Début d’impression</value></data>
+  <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>La flèche indique le bord de la feuille imprimé en premier.</value></data>
 </root>

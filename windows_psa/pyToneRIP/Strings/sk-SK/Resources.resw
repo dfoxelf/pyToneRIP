@@ -1,5 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
+  <data name="PreviewWindow.Unsimulated" xml:space="preserve"><value>Odtiene sivej bez simulácie papiera.</value></data>
+  <data name="PreviewWindow.Title" xml:space="preserve"><value>Náhľad tlače - Soft Proof</value></data>
+  <data name="PreviewWindow.Print"><value>Tlačiť</value></data>
+  <data name="PreviewWindow.Cancel"><value>Zrušiť</value></data>
+  <data name="PreviewWindow.Close"><value>Zavrieť</value></data>
+  <data name="PreviewWindow.CancelCloseHelp" xml:space="preserve"><value>Zrušiť tlačovú úlohu a zavrieť okno náhľadu.</value></data>
+  <data name="PreviewWindow.Previous"><value>Predchádzajúca</value></data>
+  <data name="PreviewWindow.Next"><value>Ďalšia</value></data>
+  <data name="PreviewWindow.Fit"><value>Prispôsobiť stranu</value></data>
+  <data name="PreviewWindow.Preparing" xml:space="preserve"><value>Príprava úlohy…</value></data>
+  <data name="PreviewWindow.Sending" xml:space="preserve"><value>Odosielanie údajov do tlačiarne…</value></data>
+  <data name="PreviewWindow.Sent" xml:space="preserve"><value>Údaje odoslané; fyzická tlač môže pokračovať.</value></data>
+  <data name="PreviewWindow.Cancelled" xml:space="preserve"><value>Úloha zrušená.</value></data>
+  <data name="PreviewWindow.Failed" xml:space="preserve"><value>Úloha zlyhala.</value></data>
+  <data name="PreviewWindow.Measured" xml:space="preserve"><value>Soft Proof s vybraným ICC. Skontrolujte priradenie vpravo.</value></data>
+  <data name="PreviewWindow.Approximate" xml:space="preserve"><value>Približný Soft Proof z meraní kategórie papiera a odhadu odtieňa.</value></data>
+  <data name="Preview.Enabled.Text"><value>Náhľad — Zapnúť (Softproofing)</value></data>
+  <data name="Preview.EnabledHelp"><value>Pred tlačou otvorí okno náhľadu. S ICC profilom simuluje tóny, odtieň, belosť papiera a čiernu výtlačku; bez profilu je simulácia približná. Nemení tlačové údaje.</value></data>
+  <data name="Preview.Profile.Text"><value>ICC profil (voliteľný)</value></data>
+  <data name="Preview.WithOba.Content"><value>Papier s OBA</value></data>
+  <data name="Preview.WithoutOba.Content"><value>Papier bez OBA</value></data>
+  <data name="Preview.WithObaHelp"><value>Približne simuluje belosť papiera s optickými zjasňovačmi pri osvetlení D50–D65. Ovplyvňuje iba náhľad.</value></data>
+  <data name="Preview.WithoutObaHelp"><value>Približne simuluje belosť papiera bez optických zjasňovačov. Ovplyvňuje iba náhľad.</value></data>
   <data name="AppDescription"><value>Aplikácia podpory tlače pyToneRIP</value></data>
   <data name="Auto.0163AD0F367D.Text"><value>Obchádza .quad krivky, prelínanie, gama a normálny limit atramentu. Táto tlačiareň bude tlačiť kalibračné ciele len dovtedy, kým sa tento režim nevypne a nepoužije.</value></data>
   <data name="Auto.043112257626.Text"><value>Logické ID sa musia zhodovať s každým vybratým profilom .quad. Mapujte každý logický atrament na jednu fyzickú cestu vybranej tlačiarne.</value></data>
@@ -308,4 +331,39 @@
   <data name="ResamplingHelp.bicubic"><value>Používa kubický filter na vyváženie ostrosti a plynulých tónových prechodov vo fotografiách. Zachováva viac detailov než bilineárna metóda, ale pri kontrastných hranách môže vytvárať jemné svetlé či tmavé lemy.</value></data>
   <data name="ResamplingHelp.lanczos"><value>Dobre zachováva drobné detaily pri prevode fotografií na mriežku ditheringu, najmä pri zmenšovaní. Zvoľte ho pre ostrejší výsledok, ale sledujte svetlé či tmavé lemy pri kontrastných hranách.</value></data>
   <data name="ResamplingHelp.mitchell"><value>Vyvažuje detaily a plynulé prechody s menšími lemami pri hranách než Lanczos. Vhodný pre fotografie, kde lemy rušia, za cenu mierne jemnejších drobných detailov a pomalšieho spracovania.</value></data>
+  <data name="Preview.IlluminantHelp" xml:space="preserve"><value>Približné svetlo na prezeranie: D50, D55, D60 alebo D65. Mení iba odtieň náhľadu, nie tlačové údaje. Bez spektrálnych meraní nemožno predpovedať fluorescenciu OBA.</value></data>
+  <data name="PreviewWindow.PrintClose" xml:space="preserve"><value>Tlačiť a zavrieť</value></data>
+  <data name="PreviewWindow.Rulers" xml:space="preserve"><value>Pravítka</value></data>
+  <data name="PreviewWindow.Printer" xml:space="preserve"><value>Tlačiareň</value></data>
+  <data name="PreviewWindow.Paper" xml:space="preserve"><value>Papier</value></data>
+  <data name="PreviewWindow.Size" xml:space="preserve"><value>Veľkosť</value></data>
+  <data name="PreviewWindow.Dither" xml:space="preserve"><value>Dither</value></data>
+  <data name="PreviewWindow.Mode" xml:space="preserve"><value>Režim</value></data>
+  <data name="PreviewWindow.Curves" xml:space="preserve"><value>Krivky</value></data>
+  <data name="PreviewWindow.Resolution" xml:space="preserve"><value>Rozlíšenie</value></data>
+  <data name="PreviewWindow.ProfileMatch" xml:space="preserve"><value>Priradenie ICC</value></data>
+  <data name="PreviewWindow.ProfileUnknown" xml:space="preserve"><value>Podmienky ICC nie sú známe.</value></data>
+  <data name="PreviewWindow.ProfileAssigned" xml:space="preserve"><value>Priradené k týmto nastaveniam používateľom.</value></data>
+  <data name="PreviewWindow.ProfileMismatch" xml:space="preserve"><value>ICC sa líši od uložených podmienok tlače.</value></data>
+  <data name="PreviewWindow.PhysicalUnavailable" xml:space="preserve"><value>Fyzický stav tlačiarne nie je dostupný.</value></data>
+  <data name="PreviewWindow.PhysicalUnconfirmed" xml:space="preserve"><value>Stav zariadenia nepotvrdzuje dokončenie tejto úlohy ani vysunutie hárka.</value></data>
+  <data name="PreviewWindow.DeviceOther" xml:space="preserve"><value>Tlačiareň: iný stav</value></data>
+  <data name="PreviewWindow.DeviceUnknown" xml:space="preserve"><value>Tlačiareň: neznámy stav</value></data>
+  <data name="PreviewWindow.DeviceIdle" xml:space="preserve"><value>Tlačiareň: nečinná</value></data>
+  <data name="PreviewWindow.DevicePrinting" xml:space="preserve"><value>Tlačiareň: tlačí</value></data>
+  <data name="PreviewWindow.DeviceWarming" xml:space="preserve"><value>Tlačiareň: zahrievanie</value></data>
+  <data name="PreviewWindow.EditSettings" xml:space="preserve"><value>Zmeniť nastavenia</value></data>
+  <data name="PreviewWindow.Editing" xml:space="preserve"><value>Aktualizácia náhľadu…</value></data>
+  <data name="PreviewWindow.ZoomHelp" xml:space="preserve"><value>Ctrl + koliesko myši: zoom. Možno zadať percentá.</value></data>
+  <data name="PreviewWindow.ActualSizeHelp" xml:space="preserve"><value>100 %: jeden rastrový pixel na fyzický pixel obrazovky. Vyžaduje známe, rovnaké rozlíšenie X/Y.</value></data>
+  <data name="PreviewWindow.SourceChanged" xml:space="preserve"><value>Zdrojové krivky sa zmenili. Otvorte Zmeniť nastavenia na obnovenie náhľadu.</value></data>
+  <data name="PreviewWindow.ICC" xml:space="preserve"><value>ICC</value></data>
+  <data name="PreviewWindow.PhotoPlacement" xml:space="preserve"><value>Umiestnenie fotografie</value></data>
+  <data name="PreviewWindow.PhotoFit" xml:space="preserve"><value>Prispôsobiť fotografiu</value></data>
+  <data name="PreviewWindow.PhotoReset" xml:space="preserve"><value>Obnoviť fotografiu</value></data>
+  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Presuňte obrázok ťahaním; ťahaním rohu zmeníte veľkosť so zachovaním pomeru strán. Otáčajte tlačidlami 90°. Okraje zdrojovej aplikácie zostávajú súčasťou obrázka.</value></data>
+  <data name="PreviewWindow.PhotoCenterHorizontal" xml:space="preserve"><value>Vycentrovať vodorovne</value></data>
+  <data name="PreviewWindow.PhotoCenterVertical" xml:space="preserve"><value>Vycentrovať zvisle</value></data>
+  <data name="PreviewWindow.PrintStart" xml:space="preserve"><value>Začiatok tlače</value></data>
+  <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>Šípka označuje okraj hárka, ktorý sa tlačí ako prvý.</value></data>
 </root>

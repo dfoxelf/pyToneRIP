@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace pyToneRIP.Services
 {
+    internal enum PrinterReportedState { Other = 1, Unknown = 2, Idle = 3, Printing = 4, Warming = 5 }
     internal sealed class PrinterInkLevel
     {
         public string Name { get; set; }
@@ -27,6 +28,19 @@ namespace pyToneRIP.Services
         private static readonly int[] SupplyColumns = { 3, 5, 6, 8, 9 };
         private static readonly int[] EssentialSupplyColumns = { 5, 6, 8, 9 };
         private static int nextRequestId = 100;
+
+        internal static async Task<PrinterReportedState?> ReadReportedStateAsync(string host)
+        {
+            if (string.IsNullOrWhiteSpace(host)) return null;
+            foreach (var version in new[] { 0, 1 })
+            {
+                var values = await QueryAsync(host, version, 0xa1, PrinterStatusOid);
+                var value = values?.FirstOrDefault(item => item.Oid.StartsWith(
+                    PrinterStatusOid + ".", StringComparison.Ordinal))?.AsInteger();
+                if (value >= 1 && value <= 5) return (PrinterReportedState)value.Value;
+            }
+            return null;
+        }
 
         internal static async Task<PrinterNetworkState?> ReadStatusAsync(string host)
         {

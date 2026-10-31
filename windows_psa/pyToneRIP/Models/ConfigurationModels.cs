@@ -19,6 +19,20 @@ namespace pyToneRIP.Models
         // retains the complete native validation gate before any TCP connect.
         [DataMember(Name = "delivery_mode", Order = 10, EmitDefaultValue = false)]
         public string DeliveryMode { get; set; } = "online";
+        // UI preferences only; excluded from the RIP job configuration.
+        [DataMember(Name = "preview", Order = 11, EmitDefaultValue = false)]
+        public PreviewSelection Preview { get; set; }
+    }
+
+    [DataContract]
+    public sealed class PreviewSelection
+    {
+        [DataMember(Name = "enabled", Order = 1)] public bool Enabled { get; set; }
+        [DataMember(Name = "icc_path", Order = 2, EmitDefaultValue = false)] public string IccPath { get; set; }
+        [DataMember(Name = "paper_with_oba", Order = 3)] public bool PaperWithOba { get; set; }
+        [DataMember(Name = "illuminant_step", Order = 4)] public int IlluminantStep { get; set; }
+        [DataMember(Name = "condition_fingerprint", Order = 5, EmitDefaultValue = false)] public string ConditionFingerprint { get; set; }
+        [DataMember(Name = "icc_sha256", Order = 6, EmitDefaultValue = false)] public string IccSha256 { get; set; }
     }
 
     [DataContract]
