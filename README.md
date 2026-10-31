@@ -33,7 +33,7 @@ Get-FileHash .\pyToneRIP-Setup-1.0.0.244-Beta.exe -Algorithm SHA256
 
 Changes below are relative to public beta 229.
 
-- **Optional Soft Proof preview:** enable the preview in printer settings, inspect the pages, and approve or cancel the print job before transmission. Select an optional print ICC profile; without one, use the paper/OBA approximation and the D50–D65 viewing-light control. The preview uses the system display-color settings. These options affect the preview, not the selected `.quad` printing curves.
+- **Optional Soft Proof preview:** enable the preview in printer settings, inspect the pages, and approve or cancel the print job before transmission. Use a print ICC profile or the built-in paper and viewing-light simulations to compare paper appearance with and without optical brighteners under D50–D65 lighting. The preview uses the system display-color settings. These options affect the preview, not the selected `.quad` printing curves.
 - **Page inspection and placement:** page thumbnails, printer/paper/mode/curve/ICC details, the selected dithering algorithm, zoom controls and Ctrl + mouse wheel, a numerical zoom, rulers in millimetres or inches, and an indication of the leading print edge. Photo Placement supports dragging, resizing, rotation, fitting the photo to the sheet, and horizontal/vertical centering. Fit Page controls the view separately. Rulers are enabled by default.
 - **Settings and print controls in preview:** edit the job settings and return to the preview, print, print and close, or cancel and close. The cancel/close button explains its action in a tooltip. Preview controls and explanations are localized in all 27 application languages.
 - **Printing after preview edits:** XPS rewriting now uses a forward-only ZIP-writing path compatible with the Windows conversion stream, addressing the `NotImplementedException` after updating an edited job. Placement/settings refresh fixes preserve the Photo Placement selection, orientation and OBA settings, avoid misleading rotation errors, and reduce visible placement rollback. The 8-bit and 16-bit processing paths remain independent.
@@ -45,11 +45,17 @@ Changes below are relative to public beta 229.
 
 Experimental 16-bit processing, bounded large-page preparation, buffered USB delivery, paired-channel dithering, and independent resampling controls remain available. An 8-bit source cannot regain missing tonal information simply by enabling 16-bit processing.
 
-## Beta limitations
+## Soft Proof preview and viewing simulation
 
-This is a **prerelease**. Automated checks and native-stream comparisons do not replace physical testing of every printer, paper, feed and borderless combination. The inherited wide-format vertical page geometry is retained from the previously tested 7890 path; a complete physical qualification of every SureColor variant is not claimed. Violet printing in Commercial Edition is not implemented.
+Explore paper appearance before printing, with or without a dedicated print ICC profile. The built-in paper models use measurements grouped by paper category to estimate paper white and black levels. Select paper with or without optical brighteners and compare D50, D55, D60 and D65 viewing light, with chromatic adaptation accounting for the change in illumination.
 
-Soft proofing without a measured print ICC profile is an approximation. The paper/OBA and viewing-light controls do not reproduce every paper's fluorescence or the user's actual viewing booth. Print progress covers preparation and transmission; confirmation of physical sheet completion depends on available printer status. A preview approves one Windows print job; reprinting after completion requires a new job.
+These controls provide a practical visual comparison of paper tone, contrast and lighting choices even when a print ICC profile is unavailable. For a measured printing condition, select its ICC profile. Both approaches use the system display-color settings and leave the selected `.quad` printing curves unchanged.
+
+## Beta status and printer support
+
+This is a **prerelease**. Validation includes automated checks, native-stream comparisons and physical testing on selected printer setups. Wide-format vertical page geometry follows the previously tested 7890 path. Additional printer, paper, feed and borderless combinations continue to be validated. Violet printing in Commercial Edition is not implemented.
+
+Print progress covers preparation and transmission; confirmation of physical sheet completion depends on available printer status. Each preview approves one Windows print job; start a new job to print again after completion.
 
 The P900 catalog has 21 physical sheet sizes and 7 named borderless variants. Five sizes present in the Epson driver remain omitted: 5 x 8 inch, 16:9 Wide (101.6 x 180.6 mm), 11 x 14 inch, 12 x 12 inch and 16 x 20 inch. The original P900 configuration failure on the tester's machine is not confirmed fixed; recovery and diagnostic improvements still need confirmation there. Support reports are created locally and are not uploaded automatically; review them before sharing.
 
