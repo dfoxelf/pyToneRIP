@@ -31,7 +31,7 @@ Get-FileHash .\pyToneRIP-Setup-1.0.0.244-Beta.exe -Algorithm SHA256
 
 ## Changes in beta 244
 
-Changes below are relative to public beta 229.
+The following changes are included in **1.0.0.244 Beta**.
 
 - **Optional Soft Proof preview:** enable the preview in printer settings, inspect the pages, and approve or cancel the print job before transmission. Use a print ICC profile or the built-in paper and viewing-light simulations to compare paper appearance with and without optical brighteners under D50–D65 lighting. The preview uses the system display-color settings. These options affect the preview, not the selected `.quad` printing curves.
 - **Page inspection and placement:** page thumbnails, printer/paper/mode/curve/ICC details, the selected dithering algorithm, zoom controls and Ctrl + mouse wheel, a numerical zoom, rulers in millimetres or inches, and an indication of the leading print edge. Photo Placement supports dragging, resizing, rotation, fitting the photo to the sheet, and horizontal/vertical centering. Fit Page controls the view separately. Rulers are enabled by default.
