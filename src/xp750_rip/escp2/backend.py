@@ -41,6 +41,8 @@ from xp750_rip.printers.xp750 import (
 )
 from xp750_rip.raster import (
     NamedRasterPlane,
+    PhysicalRasterBand,
+    RasterBandPlane,
     PhysicalRasterSet,
     StreamingPhysicalRasterSet,
 )
@@ -252,6 +254,51 @@ _P50_FAMILY_PACKAGES = frozenset({
     "gp--escp2-p50", "gp--escp2-t50", "gp--escp2-t60",
 })
 
+# Independently audited native heads. This is separate from the model-97/R
+# compatibility switch: each keeps its own command grid and feed origin.
+_NATIVE_EDGE_PLANNING_PACKAGES = frozenset({
+    "pf--Epson_EcoTank_ET14000", "pf--Epson_EcoTank_ET14100",
+    "pf--Epson_EcoTank_ET8500", "pf--Epson_EcoTank_ET8550",
+    "pf--Epson_L8160", "pf--Epson_L8180", "pf--Epson_SureColorF500",
+    "pf--Epson_EcoTank_ET18100", "pf--Epson_L18050", "pf--Epson_L8050",
+})
+
+# Audited host-weave models. Keep this explicit: other families have their
+# own captured feed origins and must not inherit an unverified edge change.
+_ABSOLUTE_WEAVE_EDGE_PACKAGES = _P50_FAMILY_PACKAGES | frozenset({
+    "gp--escp2-r200", "gp--escp2-r300", "gp--escp2-r260",
+    "gp--escp2-r280", "gp--escp2-r380", "gp--escp2-r800",
+    "gp--escp2-r1800", "gp--escp2-r1900", "gp--escp2-r2000",
+    "gp--escp2-r2400", "gp--escp2-r2880", "gp--escp2-r3000",
+})
+
+
+def _profile_uses_absolute_weave_edges(
+    model: PrinterModel, native_mode: EpsonEscp2ModeParameters,
+) -> bool:
+    # Firmware-weave descriptors use a one-nozzle transport raster. Their
+    # device-owned leading/trailing passes must never use the host edge fix.
+    if (model.catalog_package_id not in _ABSOLUTE_WEAVE_EDGE_PACKAGES
+            or native_mode.nozzle_count <= 1):
+        return False
+    # Reordering passes must preserve actual wire coordinates. Some older
+    # imported modes have fractional feed rows or a fixed ESC (D pitch that
+    # differs from their host descriptor. Keep their existing stream until
+    # that separate geometry mismatch has been independently qualified.
+    if native_mode.vertical_units % native_mode.printed_vertical_dpi:
+        return False
+    profile = model.escp2_profile
+    if profile is None or profile.mode_derived_units:
+        scale = native_mode.resolution_scale
+        pitch = native_mode.printhead_vertical_unit
+    elif profile.identity in {"P700RIP", "ET8550", "L8050Photo"}:
+        scale, pitch = 180, 1
+    else:
+        payload = profile.printhead_resolution_payload
+        scale, pitch = int.from_bytes(payload[:2], "little"), payload[2]
+    return (native_mode.effective_nozzle_separation*scale
+            == native_mode.printed_vertical_dpi*pitch)
+
 
 def _is_p50_borderless(model: PrinterModel, page: PageCapability) -> bool:
     return model.catalog_package_id in _P50_FAMILY_PACKAGES and page.ppd.borderless
@@ -324,6 +371,26 @@ def _profile_imageable_origin_offsets(
     """Locate the cropped PPD imageable raster on the physical sheet."""
 
     ppd = page.ppd
+    if model.catalog_package_id == "pf--Epson_SureColorT5400":
+        # Own T3100 setup and T5400 sheet/roll captures: the command origin
+        # includes the 1333 mil head allowance and the 120 mil printable top.
+        units = native_mode.vertical_units
+        origin = round(1333*units/1000)+round(120*units/1000)
+        return origin*native_mode.printed_vertical_dpi//units, 0
+    if model.catalog_package_id == "pf--Epson_EcoTank_ET14000":
+        # Own B1100 captures place Y at 1120 mil minus one command unit.
+        # C/K are two 60-nozzle banks earlier; M is one bank earlier.
+        units = native_mode.vertical_units
+        origin = round(1120*units/1000)-1-2*units//3
+        return origin*native_mode.printed_vertical_dpi//units, 0
+    if model.catalog_package_id == "pf--Epson_EcoTank_ET14100":
+        if input_source is not None and input_source.medium_kind == "roll":
+            return 0, 0
+        units = native_mode.vertical_units
+        origin = round((900 if ppd.borderless else 1120)*units/1000)-1
+        top = origin*native_mode.printed_vertical_dpi//units
+        top -= 272*native_mode.printed_vertical_dpi//300
+        return top, 0
     if model.catalog_package_id in {"gp--escp2-p6000", "gp--escp2-p8000",
                                     "gp--escp2-p7000", "gp--escp2-p9000",
                                     "gp--escp2-p7000c", "gp--escp2-p9000c"}:
@@ -339,6 +406,12 @@ def _profile_imageable_origin_offsets(
         # print-escp2.c setup_page: (zeroMarginOffset - microLeftMargin)
         # * micro_units / baseSeparation. model_97 supplies 80 and 42.
         return 0, 38 * native_mode.horizontal_units // model.base_separation_dpi
+    if model.catalog_package_id in _P50_FAMILY_PACKAGES:
+        # The cropped Windows raster begins at the PPD imageable top. Model 97's
+        # ESC (c does not encode that inset; place it in the weave coordinates.
+        # X is relative to the printer's printable left, as in its native stream.
+        return round((ppd.height_points - ppd.imageable_top_points)
+                     * native_mode.printed_vertical_dpi / 72), 0
     if model.escp2_command_set == "Pro":
         # Pro profiles place the top margin in ESC (c page format.
         return 0, left
@@ -370,6 +443,30 @@ def _profile_initial_feed_offset_rows(
     an offset between colour channels.
     """
 
+    if model.catalog_package_id in {
+        "pf--Epson_EcoTank_ET8500", "pf--Epson_EcoTank_ET8550",
+        "pf--Epson_L8160", "pf--Epson_L8180",
+    }:
+        if input_source is not None and input_source.medium_kind == "roll":
+            return 0
+        # Own ET8550 setup and full-height captures locate the primary bank
+        # at 1120 mil on sheets, 900 mil on borderless, minus one command unit.
+        units = native_mode.vertical_units
+        mils = 900 if page is not None and page.ppd.borderless else 1120
+        return (round(mils*units/1000)-1)*native_mode.printed_vertical_dpi//units
+
+    if model.escp2_profile is not None and model.escp2_profile.identity == "L8050Photo":
+        # Independent photo-family captures locate the K/M/C origin near
+        # 1120 mil on sheets (900 mil borderless), with Y/LC/LM one 360-dpi
+        # row ahead. Continuous feed has no one-inch sheet travel.
+        units = native_mode.vertical_units
+        if input_source is not None and input_source.medium_kind == "roll":
+            return native_mode.printed_vertical_dpi // 360
+        if native_mode.printed_vertical_dpi == 180:
+            return 201 if page is None or not page.ppd.borderless else 161
+        origin_mils = 900 if page is not None and page.ppd.borderless else 1120
+        origin = round(origin_mils * units / 1000) - 1 - units // 360
+        return origin * native_mode.printed_vertical_dpi // units
     if (model.catalog_package_id == "gp--escp2-artisan1430"
             and input_source is not None and input_source.medium_kind == "roll"):
         # Both captured roll modes start marked K dots at wire Y=0.
@@ -464,7 +561,7 @@ def _profile_borderless_bottom_extension_mils(
     # Captured sheet limits extend by 935 units at 720/in and 1871 at 1440/in.
     if (
         model.escp2_profile is not None
-        and (model.escp2_profile.identity in {"ET8550", "P700RIP"}
+        and (model.escp2_profile.identity in {"ET8550", "P700RIP", "L8050Photo"}
              or model.catalog_package_id == "gp--escp2-r2880")
         and input_source.medium_kind != "roll"
     ):
@@ -475,8 +572,10 @@ def _profile_borderless_bottom_extension_mils(
 def _profile_top_margin_mils(
     model: PrinterModel, page: PageCapability, input_source: InputSourceCapability,
 ) -> int | None:
-    if (model.escp2_profile is not None and model.escp2_profile.identity == "ET8550"
+    if (model.escp2_profile is not None and model.escp2_profile.identity in {"ET8550", "L8050Photo"}
             and input_source.medium_kind == "roll"):
+        if model.escp2_profile.identity == "L8050Photo" and page.ppd.borderless:
+            return 0
         return 120
     if (
         model.catalog_package_id in {
@@ -739,18 +838,77 @@ def _et8550_mode_setup(mode: PrinterMode) -> tuple[bytes, bytes]:
     return units, head
 
 
+_T7200_FIRMWARE_PACKAGES = frozenset({
+    "pf--Epson_SureColorT3200", "pf--Epson_SureColorT5200", "pf--Epson_SureColorT7200",
+})
+
+
+def _t7200_mode_setup(mode: PrinterMode) -> tuple[bytes, bytes]:
+    # Native T3200/T5200/T7200 captures: host row grid is the transport DPI,
+    # while the minimum command grid remains 720 units per inch.
+    horizontal = max(720, mode.physical_horizontal_dpi)
+    vertical = max(720, mode.physical_vertical_dpi)
+    scale = max(1440, horizontal)
+    units = bytes((scale//vertical, scale//vertical, scale//horizontal)) + scale.to_bytes(2, "little")
+    head = scale.to_bytes(2, "little") + bytes((scale//mode.physical_vertical_dpi,
+                                               scale//mode.physical_horizontal_dpi))
+    return units, head
+
+
+def _b1100_mode_setup(mode: PrinterMode) -> tuple[bytes, bytes]:
+    horizontal = max(720, mode.physical_horizontal_dpi,
+                     2880 if mode.physical_horizontal_dpi >= 1440 else 0)
+    vertical = max(720, mode.physical_vertical_dpi)
+    scale = max(1440, horizontal)
+    units = bytes((scale//vertical, scale//vertical, scale//horizontal)) + scale.to_bytes(2, "little")
+    return units, scale.to_bytes(2, "little")+bytes((scale//180, scale//360))
+
+
+def _et14100_mode_setup(mode: PrinterMode) -> tuple[bytes, bytes]:
+    return bytes.fromhex("010101b004"), bytes((0xB0, 4, 4, 2 if mode.dot_size == 0x11 else 4))
+
+
+_T3100_NATIVE_GRID_PACKAGES = frozenset({
+    "pf--Epson_SureColorF500", "pf--Epson_SureColorT5400",
+})
+
+
+def _t3100_mode_setup(mode: PrinterMode) -> tuple[bytes, bytes]:
+    # Own F500/T5400 captures: 300 dpi nozzle pitch, 600 dpi bank grid.
+    horizontal = 2400 if mode.physical_horizontal_dpi >= 2400 else 1200
+    vertical = 1200
+    units = bytes((horizontal//vertical, horizontal//vertical, 1)) + horizontal.to_bytes(2, "little")
+    return units, horizontal.to_bytes(2, "little") + bytes((horizontal//300, horizontal//600))
+
+
 def _profile_mode(mode: PrinterMode, model: PrinterModel) -> EpsonEscp2ModeParameters:
     """Translate normalized capabilities into the reusable weave mechanics."""
 
     profile = model.escp2_profile
     command_vertical_units = None
     command_horizontal_units = None
-    if profile is not None and profile.identity == "P700RIP":
+    if model.catalog_package_id in _T3100_NATIVE_GRID_PACKAGES:
+        units = _t3100_mode_setup(mode)[0]
+        scale = int.from_bytes(units[3:5], "little")
+        command_vertical_units = scale//units[1]
+        command_horizontal_units = scale//units[2]
+    elif profile is not None and profile.identity in {"B1100", "ET14100"}:
+        units = (_b1100_mode_setup(mode) if profile.identity == "B1100"
+                 else _et14100_mode_setup(mode))[0]
+        scale = int.from_bytes(units[3:5], "little")
+        command_vertical_units = scale//units[1]
+        command_horizontal_units = scale//units[2]
+    elif model.catalog_package_id in _T7200_FIRMWARE_PACKAGES:
+        units = _t7200_mode_setup(mode)[0]
+        scale = int.from_bytes(units[3:5], "little")
+        command_vertical_units = scale//units[1]
+        command_horizontal_units = scale//units[2]
+    elif profile is not None and profile.identity == "P700RIP":
         units = _p700_mode_setup(mode)[0]
         scale = int.from_bytes(units[3:5], "little")
         command_vertical_units = scale // units[1]
         command_horizontal_units = scale // units[2]
-    elif profile is not None and profile.identity == "ET8550":
+    elif profile is not None and profile.identity in {"ET8550", "L8050Photo"}:
         payload = _et8550_mode_setup(mode)[0]
         scale = int.from_bytes(payload[3:5], "little")
         command_vertical_units = scale // payload[1]
@@ -764,7 +922,13 @@ def _profile_mode(mode: PrinterMode, model: PrinterModel) -> EpsonEscp2ModeParam
         command_vertical_units = scale // divisor
     return EpsonEscp2ModeParameters(
         identity=mode.identity,
-        physical_horizontal_dpi=mode.physical_horizontal_dpi,
+        physical_horizontal_dpi=(
+            command_horizontal_units
+            if model.catalog_package_id in _T3100_NATIVE_GRID_PACKAGES
+            or model.catalog_package_id in _NATIVE_EDGE_PLANNING_PACKAGES
+            or profile is not None and profile.identity in {"L8050Photo", "B1100", "ET14100"}
+            else mode.physical_horizontal_dpi
+        ),
         physical_vertical_dpi=mode.physical_vertical_dpi,
         printed_horizontal_dpi=mode.horizontal_dpi,
         printed_vertical_dpi=mode.vertical_dpi,
@@ -784,12 +948,13 @@ def _profile_mode(mode: PrinterMode, model: PrinterModel) -> EpsonEscp2ModeParam
         base_separation_dpi=model.base_separation_dpi,
         command_vertical_units=command_vertical_units,
         command_horizontal_units=command_horizontal_units,
-        # P700/P900 Super consumes 720 dpi rows while its command grid is
-        # 1440 dpi. Express nozzle pitch and head offsets in the source-row
-        # grid; ESC (U / ESC (D retain their independently captured values.
+        # These photo modes can consume 720 dpi rows on a 1440 dpi device
+        # grid. Express nozzle pitch and head offsets in source rows;
+        # ESC (U / ESC (D retain their independently captured values.
         weave_vertical_dpi=(
             mode.vertical_dpi
-            if profile is not None and profile.identity == "P700RIP"
+            if model.catalog_package_id in _T3100_NATIVE_GRID_PACKAGES
+            or profile is not None and profile.identity in {"P700RIP", "L8050Photo", "ET8550", "ET14100"}
             else None
         ),
     )
@@ -798,9 +963,11 @@ def _profile_mode(mode: PrinterMode, model: PrinterModel) -> EpsonEscp2ModeParam
 def _profile_page_units(model: PrinterModel, mode: EpsonEscp2ModeParameters) -> int:
     profile = model.escp2_profile
     assert profile is not None
-    if profile.identity == "P700RIP":
+    if (model.catalog_package_id in _T3100_NATIVE_GRID_PACKAGES
+            or model.catalog_package_id in _T7200_FIRMWARE_PACKAGES
+            or profile.identity in {"P700RIP", "B1100", "ET14100"}):
         return mode.page_management_units
-    if profile.identity == "ET8550":
+    if profile.identity in {"ET8550", "L8050Photo"}:
         return mode.page_management_units
     if profile.mode_derived_units:
         return mode.page_management_units
@@ -809,6 +976,28 @@ def _profile_page_units(model: PrinterModel, mode: EpsonEscp2ModeParameters) -> 
     if divisor == 0 or scale == 0:
         raise ValueError(f"Invalid ESC (U payload for {model.identity}")
     return scale // divisor
+
+
+def _profile_weave_page_height(
+    model: PrinterModel, page: PageCapability, mode: EpsonEscp2ModeParameters,
+    input_source: InputSourceCapability,
+) -> int:
+    height = round((page.ppd.height_points+10)*mode.printed_vertical_dpi/72)
+    if model.catalog_package_id in _NATIVE_EDGE_PLANNING_PACKAGES:
+        top, _ = _profile_imageable_origin_offsets(model, page, mode, input_source=input_source)
+        initial = _profile_initial_feed_offset_rows(model, mode, page=page, input_source=input_source)
+        # Native builddown lets the empty part of the head travel past the
+        # final marked row. The latest staggered bank, not just the earliest
+        # channel or the physical paper length, determines this internal bound.
+        last = (top+initial+round(page.ppd.printable_height_points*mode.printed_vertical_dpi/72)
+                + max(mode.effective_head_offset(p.head_offset) for p in model.physical_paths))
+        return max(height+initial, last+mode.nozzle_count*mode.effective_nozzle_separation+1)
+    if model.catalog_package_id == "pf--Epson_SureColorT5400":
+        # This head allowance is already in first_line. Let empty nozzle rows
+        # travel beyond the image's trailing limit while marked rows stay put.
+        height += (round(1333*mode.printed_vertical_dpi/1000)
+                   + mode.nozzle_count*mode.effective_nozzle_separation)
+    return height
 
 
 def _selected_device_commands(
@@ -834,6 +1023,39 @@ def _selected_device_commands(
                 commands.remote_payload(choice.remote_command, choice.remote_payload)
             )
     return tuple(commands_to_send)
+
+
+def _clip_et14100_bleed(
+    model: PrinterModel, mode: PrinterMode, page: PageCapability,
+    input_source: InputSourceCapability, vertical_offset_rows: int,
+    rasters: PhysicalRasterSet | StreamingPhysicalRasterSet,
+) -> PhysicalRasterSet | StreamingPhysicalRasterSet:
+    if model.catalog_package_id != "pf--Epson_EcoTank_ET14100" or not page.ppd.borderless:
+        return rasters
+    native = _profile_mode(mode, model)
+    top, _ = _profile_imageable_origin_offsets(model, page, native, input_source=input_source)
+    skips = {p.identity: max(0, -top-vertical_offset_rows-native.effective_head_offset(p.head_offset))
+             for p in model.physical_paths}
+    if not any(skips.get(path, 0) for path in rasters.identities):
+        return rasters
+    if isinstance(rasters, PhysicalRasterSet):
+        zero = bytes(rasters.width_pixels//8)
+        return PhysicalRasterSet(tuple(NamedRasterPlane(plane.identity, plane.width_pixels,
+            tuple((zero,)*min(skips[plane.identity], len(rows))+rows[min(skips[plane.identity], len(rows)):]
+                  for rows in plane.bit_plane_rows)) for plane in rasters.planes))
+
+    def bands():
+        for band in rasters.iter_bands():
+            planes = []
+            for plane in band.planes:
+                count = min(band.height_rows, max(0, skips[plane.identity]-band.start_row))
+                pixels = plane.bit_planes
+                if count:
+                    pixels = pixels.copy(); pixels[:, :count, :] = 0
+                planes.append(RasterBandPlane(plane.identity, pixels))
+            yield PhysicalRasterBand(band.start_row, tuple(planes))
+    return StreamingPhysicalRasterSet(rasters.width_pixels, rasters.height_rows,
+                                      rasters.bit_depth, rasters.identities, bands)
 
 
 def _append_p700_remote_setup(
@@ -892,7 +1114,9 @@ def _append_et8550_remote_setup(
     # The borderless FP offset and continuous EX flag were captured explicitly.
     platen_commands = _selected_device_commands(model, selected)
     output.extend(commands.remote_payload("DP", bytes.fromhex("0000")))
-    output.extend(commands.remote_payload("US", bytes((0, 0, 2 if page.ppd.borderless else 1))))
+    borderless_sheet = page.ppd.borderless and not (
+        model.escp2_profile.identity == "L8050Photo" and input_source.medium_kind == "roll")
+    output.extend(commands.remote_payload("US", bytes((0, 0, 2 if borderless_sheet else 1))))
     output.extend(commands.remote_payload("US", bytes.fromhex("000100")))
     output.extend(commands.remote_payload("US", bytes.fromhex("000200")))
     output.extend(commands.remote_payload("FP", bytes.fromhex("00b0ff" if page.ppd.borderless else "000000")))
@@ -995,6 +1219,24 @@ def resolve_profile_print_method(
     )
 
 
+def _append_t5400_remote_setup(
+    output: bytearray, model: PrinterModel, input_source: InputSourceCapability,
+    selected: dict[str, str] | None,
+) -> None:
+    # Own T5400 captures use AC for the cutter, not the older 360-dpi CO
+    # page-height command. Preserve the order of cutter, path and roll saving.
+    if input_source.medium_kind == "roll":
+        output.extend(commands.remote_payload("AC", bytes((0, 0 if input_source.roll_cut_mode == "none" else 1))))
+    output.extend(commands.remote_paper_path(path_type=input_source.path_type,
+                                             path_number=input_source.path_number))
+    for command in _selected_device_commands(model, selected, skip=("Save_Paper_Roll_Paper",)):
+        output.extend(command)
+    output.extend(commands.remote_payload("EX", bytes.fromhex("000000001400")))
+    setting = next(s for s in model.device_settings if s.identity == "Save_Paper_Roll_Paper")
+    choice = setting.choice((selected or {}).get(setting.identity, setting.default_choice))
+    output.extend(commands.remote_payload(choice.remote_command, choice.remote_payload))
+
+
 def _encode_profile_stream(
     *,
     model: PrinterModel,
@@ -1032,9 +1274,11 @@ def _encode_profile_stream(
         )
     for medium_command in _medium_mechanical_commands(medium):
         output.extend(medium_command)
-    if profile.identity == "P700RIP":
+    if model.catalog_package_id == "pf--Epson_SureColorT5400":
+        _append_t5400_remote_setup(output, model, input_source, device_settings)
+    elif profile.identity == "P700RIP":
         _append_p700_remote_setup(output, model, page, input_source, device_settings)
-    elif profile.identity == "ET8550":
+    elif profile.identity in {"ET8550", "L8050Photo"}:
         _append_et8550_remote_setup(output, model, page, input_source, device_settings)
     elif model.catalog_package_id in {"gp--escp2-r2880", "gp--escp2-r3000"}:
         _append_r2880_remote_setup(output, model, page, input_source, device_settings)
@@ -1070,12 +1314,13 @@ def _encode_profile_stream(
                 save_roll.identity, save_roll.default_choice))
             # Captured AC is applied after the physical PP path selection.
             output.extend(commands.remote_payload(choice.remote_command, choice.remote_payload))
-    _append_roll_mechanics(
-        output,
-        input_source=input_source,
-        page=page,
-        base_separation_dpi=model.base_separation_dpi,
-    )
+    if model.catalog_package_id != "pf--Epson_SureColorT5400":
+        _append_roll_mechanics(
+            output,
+            input_source=input_source,
+            page=page,
+            base_separation_dpi=model.base_separation_dpi,
+        )
     wide_surecolor = model.catalog_package_id in {
         "gp--escp2-p6000", "gp--escp2-p8000",
         "gp--escp2-p7000", "gp--escp2-p9000",
@@ -1113,9 +1358,13 @@ def _encode_profile_stream(
         )
     else:
         units_payload = (
-            _p700_mode_setup(mode)[0]
+            _t3100_mode_setup(mode)[0]
+            if model.catalog_package_id in _T3100_NATIVE_GRID_PACKAGES else _et14100_mode_setup(mode)[0]
+            if profile.identity == "ET14100" else _b1100_mode_setup(mode)[0]
+            if profile.identity == "B1100" else _t7200_mode_setup(mode)[0]
+            if model.catalog_package_id in _T7200_FIRMWARE_PACKAGES else _p700_mode_setup(mode)[0]
             if profile.identity == "P700RIP" else _et8550_mode_setup(mode)[0]
-            if profile.identity == "ET8550" else profile.units_payload
+            if profile.identity in {"ET8550", "L8050Photo"} else profile.units_payload
         )
         output.extend(commands.extended_payload("U", units_payload))
     output.extend(commands.gray_mode(2))
@@ -1143,9 +1392,13 @@ def _encode_profile_stream(
                 horizontal=native_mode.printhead_horizontal_unit,
             )
         )
-    elif profile.identity != "ET8550":
+    elif profile.identity not in {"ET8550", "L8050Photo"}:
         head_payload = (
-            _p700_mode_setup(mode)[1]
+            _t3100_mode_setup(mode)[1]
+            if model.catalog_package_id in _T3100_NATIVE_GRID_PACKAGES else _et14100_mode_setup(mode)[1]
+            if profile.identity == "ET14100" else _b1100_mode_setup(mode)[1]
+            if profile.identity == "B1100" else _t7200_mode_setup(mode)[1]
+            if model.catalog_package_id in _T7200_FIRMWARE_PACKAGES else _p700_mode_setup(mode)[1]
             if profile.identity == "P700RIP" else _et8550_mode_setup(mode)[1]
             if profile.identity == "ET8550" else profile.printhead_resolution_payload
         )
@@ -1163,7 +1416,7 @@ def _encode_profile_stream(
             geometry.height_page_units,
         )
     )
-    if profile.identity == "ET8550":
+    if profile.identity in {"ET8550", "L8050Photo"}:
         # Reference streams set ESC (D after the page geometry.
         output.extend(commands.extended_payload("D", _et8550_mode_setup(mode)[1]))
     print_method = resolve_profile_print_method(
@@ -1237,6 +1490,7 @@ class EpsonEscp2Backend:
         profile_path = model.escp2_profile is not None and model.backend_family != self.family
         if profile_path:
             page = model.native_page(page, mode, input_source)
+            rasters = _clip_et14100_bleed(model, mode, page, input_source, vertical_offset_rows, rasters)
             # Factory ink roles describe the original ink set. Explicit raster
             # routing also supports refilled channels, independently of paper.
             native_mode = _profile_mode(mode, model)
@@ -1244,7 +1498,9 @@ class EpsonEscp2Backend:
                 model, page, native_mode, input_source=input_source,
             )
             first_line = top_offset + vertical_offset_rows
-            page_height_rows = round((page.ppd.height_points + 10) * mode.vertical_dpi / 72)
+            if model.catalog_package_id in _NATIVE_EDGE_PLANNING_PACKAGES:
+                first_line += _profile_initial_feed_offset_rows(model, native_mode, page=page, input_source=input_source)
+            page_height_rows = _profile_weave_page_height(model, page, native_mode, input_source)
             left_units = (
                 left_offset
                 + horizontal_offset_pixels * native_mode.horizontal_units // mode.horizontal_dpi
@@ -1263,7 +1519,7 @@ class EpsonEscp2Backend:
                     _profile_borderless_bottom_extension_mils(model, input_source)
                 ),
                 borderless_top_extra_unit=(model.catalog_package_id != "gp--escp2-r2880"
-                    and not (model.escp2_profile.identity in {"ET8550", "P700RIP"} and page.native_page_format_mils)),
+                    and not (model.escp2_profile.identity in {"ET8550", "P700RIP", "L8050Photo"} and page.native_page_format_mils)),
             )
             geometry = _p50_borderless_geometry(model, page, native_mode, geometry)
             geometry = _artisan1430_page_geometry(model, page, native_mode, geometry, input_source)
@@ -1374,10 +1630,12 @@ class EpsonEscp2Backend:
             first_line=first_line,
             page_height_rows=page_height_rows,
             left_position_units=left_units,
-            initial_feed_offset_rows=_profile_initial_feed_offset_rows(
+            initial_feed_offset_rows=0 if model.catalog_package_id in _NATIVE_EDGE_PLANNING_PACKAGES else _profile_initial_feed_offset_rows(
                 model, native_mode, page=page, input_source=input_source,
             ),
             path_definitions=path_definitions,
+            absolute_page_edges=_profile_uses_absolute_weave_edges(model, native_mode),
+            clip_negative_rows=model.catalog_package_id == "pf--Epson_EcoTank_ET14100" and page.ppd.borderless,
             pass_sink=emit_pass,
             cancel_check=cancel_check,
         )
@@ -1429,6 +1687,7 @@ class EpsonEscp2Backend:
             )
         if model.escp2_profile is not None and model.backend_family != self.family:
             page = model.native_page(page, mode, input_source)
+            rasters = _clip_et14100_bleed(model, mode, page, input_source, vertical_offset_rows, rasters)
             # Paper selection does not restrict explicitly routed ink channels.
             native_mode = _profile_mode(mode, model)
             # Raster rows and placement offsets are relative to the imageable
@@ -1438,9 +1697,9 @@ class EpsonEscp2Backend:
                 model, page, native_mode, input_source=input_source,
             )
             first_line = top_offset + vertical_offset_rows
-            page_height_rows = round(
-                (page.ppd.height_points + 10) * mode.vertical_dpi / 72
-            )
+            if model.catalog_package_id in _NATIVE_EDGE_PLANNING_PACKAGES:
+                first_line += _profile_initial_feed_offset_rows(model, native_mode, page=page, input_source=input_source)
+            page_height_rows = _profile_weave_page_height(model, page, native_mode, input_source)
             left_units = (
                 left_offset
                 + horizontal_offset_pixels
@@ -1455,10 +1714,12 @@ class EpsonEscp2Backend:
                     first_line=first_line,
                     page_height_rows=page_height_rows,
                     left_position_units=left_units,
-                    initial_feed_offset_rows=_profile_initial_feed_offset_rows(
+                    initial_feed_offset_rows=0 if model.catalog_package_id in _NATIVE_EDGE_PLANNING_PACKAGES else _profile_initial_feed_offset_rows(
                         model, native_mode, page=page, input_source=input_source,
                     ),
                     path_definitions=model.physical_paths,
+                    absolute_page_edges=_profile_uses_absolute_weave_edges(model, native_mode),
+                    clip_negative_rows=model.catalog_package_id == "pf--Epson_EcoTank_ET14100" and page.ppd.borderless,
                 )
             else:
                 with trace.stage("weave scheduling"):
@@ -1468,10 +1729,12 @@ class EpsonEscp2Backend:
                         first_line=first_line,
                         page_height_rows=page_height_rows,
                         left_position_units=left_units,
-                        initial_feed_offset_rows=_profile_initial_feed_offset_rows(
+                        initial_feed_offset_rows=0 if model.catalog_package_id in _NATIVE_EDGE_PLANNING_PACKAGES else _profile_initial_feed_offset_rows(
                             model, native_mode, page=page, input_source=input_source,
                         ),
                         path_definitions=model.physical_paths,
+                        absolute_page_edges=_profile_uses_absolute_weave_edges(model, native_mode),
+                        clip_negative_rows=model.catalog_package_id == "pf--Epson_EcoTank_ET14100" and page.ppd.borderless,
                         trace=trace,
                         timings=timings,
                     )
@@ -1509,7 +1772,7 @@ class EpsonEscp2Backend:
                     _profile_borderless_bottom_extension_mils(model, input_source)
                 ),
                 borderless_top_extra_unit=(model.catalog_package_id != "gp--escp2-r2880"
-                    and not (model.escp2_profile.identity in {"ET8550", "P700RIP"} and page.native_page_format_mils)),
+                    and not (model.escp2_profile.identity in {"ET8550", "P700RIP", "L8050Photo"} and page.native_page_format_mils)),
             )
             geometry = _p50_borderless_geometry(model, page, native_mode, geometry)
             geometry = _artisan1430_page_geometry(model, page, native_mode, geometry, input_source)

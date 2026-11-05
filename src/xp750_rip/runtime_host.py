@@ -341,7 +341,28 @@ def _output_transport(configuration, connection_state=None, job_dir: Path | None
 
     return WindowsUsbInterfaceTransport(
         device_id, connection_state=connection_state, statistics=statistics,
+        abort_payload=_usb_abort_payload(configuration),
     )
+
+
+def _usb_abort_payload(configuration: dict) -> bytes:
+    """Finalization for the explicitly audited P50 and L8050 photo families."""
+    printer = configuration.get("printer") or {}
+    if printer.get("model") not in {
+        "Stylus_Photo_P50", "Stylus_Photo_T50", "Stylus_Photo_T60",
+        "EcoTank_ET18100", "L18050", "L8050",
+    }:
+        return b""
+    from xp750_rip.escp2 import commands
+
+    # The ReferenceDriver Epson abort handler returns EJL packet-mode exit
+    # followed by two ESC @ commands (31 verified bytes). Finalize after it:
+    # Gutenprint emits FF unless DontEject, then ESC @ / REMOTE1 LD / job end.
+    eject = b"" if printer.get("input_source") == "Roll_Paper" else commands.form_feed()
+    return (commands.ejl_packet_mode_exit() + commands.reset() + commands.reset()
+            + eject + commands.reset() + commands.remote_mode_enter()
+            + commands.remote_load_defaults() + commands.remote_job_end(0)
+            + commands.remote_mode_exit())
 
 
 def _transport_destination(transport: StreamingTransport) -> str:

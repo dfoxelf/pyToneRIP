@@ -14,6 +14,7 @@ from threading import Condition, Event, Lock, Thread, get_native_id
 from time import monotonic
 
 _LOGGER = logging.getLogger(__name__)
+_ABORT_TIMEOUT_SECONDS = 5.0
 
 
 @dataclass(frozen=True, slots=True)
@@ -53,6 +54,7 @@ class BufferedUsbSender:
         connection: Callable[[bool], None], cancel_check: Callable[[], None] | None,
         progress: Callable[[int], None] | None,
         statistics: Callable[[dict], None] | None,
+        abort: Callable[[object, object], bool] | None = None,
     ) -> None:
         self.device_id = device_id
         self.api_factory = api_factory
@@ -61,6 +63,10 @@ class BufferedUsbSender:
         self.cancel_check = cancel_check
         self.progress = progress
         self.statistics = statistics
+        self.abort = abort
+        self.abort_attempted = False
+        self.abort_succeeded = False
+        self.cleanup_started: float | None = None
         self.condition = Condition()
         self.cancel_lock = Lock()
         self.finished = Event()
@@ -237,6 +243,20 @@ class BufferedUsbSender:
             self._fail(error)
         finally:
             if handle is not None:
+                # Finalize only after the failed write has returned, using the
+                # same owning thread. The callback supplies the model's abort
+                # sequence before page/job finalization controls.
+                if self.failure is not None and self.write_calls and self.abort is not None:
+                    with self.condition:
+                        self.abort_attempted = True
+                        self.cleanup_started = monotonic()
+                    try:
+                        self.abort_succeeded = bool(self.abort(api, handle))
+                    except Exception:
+                        _LOGGER.warning("USB device abort/finalization failed", exc_info=True)
+                    finally:
+                        with self.condition:
+                            self.cleanup_started = None
                 try:
                     api.close(handle)
                 except BaseException as error:  # noqa: BLE001 - join workers before propagating
@@ -266,7 +286,10 @@ class BufferedUsbSender:
                     self._fail(TimeoutError("USB printer stopped accepting PRN data"))
                 if self.finished.is_set():
                     return
-                if self.failure is not None and self.api is not None and self.sender_id is not None:
+                cleanup_grace = (self.cleanup_started is not None
+                                 and monotonic() - self.cleanup_started < _ABORT_TIMEOUT_SECONDS)
+                if (self.failure is not None and not cleanup_grace
+                        and self.api is not None and self.sender_id is not None):
                     # Repeat to cover cancellation between the pre-write check
                     # and entry into the synchronous kernel call. Keep the
                     # sender alive until OpenThread/CancelSynchronousIo return.
@@ -295,6 +318,8 @@ class BufferedUsbSender:
             "native_write_seconds": round(self.write_seconds, 6),
             "max_native_write_seconds": round(self.max_write_seconds, 6),
             "native_cancel_requests": self.cancel_requests,
+            "abort_attempted": self.abort_attempted,
+            "abort_succeeded": self.abort_succeeded,
             "elapsed_seconds": round(monotonic() - self.started, 6),
         }
 

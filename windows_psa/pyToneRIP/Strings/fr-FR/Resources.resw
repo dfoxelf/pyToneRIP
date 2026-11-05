@@ -361,9 +361,11 @@
   <data name="PreviewWindow.PhotoPlacement" xml:space="preserve"><value>Placement photo</value></data>
   <data name="PreviewWindow.PhotoFit" xml:space="preserve"><value>Ajuster la photo</value></data>
   <data name="PreviewWindow.PhotoReset" xml:space="preserve"><value>Réinitialiser la photo</value></data>
-  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Faites glisser l’image pour la déplacer et un coin pour la redimensionner proportionnellement. Rotation avec les boutons 90°. Les marges de l’application source font partie de l’image.</value></data>
+  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Faites glisser l’image pour la déplacer et un coin pour la redimensionner proportionnellement. Rotation avec les boutons 90°. Les marges de l’application source font partie de l’image. Faites glisser les poignées blanches au milieu des côtés pour recadrer ; tirez vers l’extérieur pour restaurer. Les poignées des coins changent la taille.</value></data>
   <data name="PreviewWindow.PhotoCenterHorizontal" xml:space="preserve"><value>Centrer horizontalement</value></data>
   <data name="PreviewWindow.PhotoCenterVertical" xml:space="preserve"><value>Centrer verticalement</value></data>
   <data name="PreviewWindow.PrintStart" xml:space="preserve"><value>Début d’impression</value></data>
   <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>La flèche indique le bord de la feuille imprimé en premier.</value></data>
+  <data name="PreviewWindow.PhotoCrop" xml:space="preserve"><value>Faites glisser les poignées blanches au milieu des côtés pour recadrer ; tirez vers l’extérieur pour restaurer. Les poignées des coins changent la taille.</value></data>
+  <data name="PreviewWindow.PhotoFill" xml:space="preserve"><value>Remplir la page</value></data>
 </root>

@@ -27,6 +27,7 @@ namespace pyToneRIP
         private readonly Button photoLeft = new Button { Content = "↶ 90°", IsEnabled = false };
         private readonly Button photoRight = new Button { Content = "↷ 90°", IsEnabled = false };
         private readonly Button photoFit = new Button { IsEnabled = false };
+        private readonly Button photoFill = new Button { IsEnabled = false };
         private readonly Button photoReset = new Button { IsEnabled = false };
         private readonly Button photoCenterHorizontal = new Button { IsEnabled = false };
         private readonly Button photoCenterVertical = new Button { IsEnabled = false };
@@ -38,6 +39,7 @@ namespace pyToneRIP
         private readonly Border photoFrame = new Border { BorderBrush = new SolidColorBrush(Colors.DodgerBlue),
             Background = new SolidColorBrush(Colors.Transparent), ManipulationMode = ManipulationModes.None };
         private readonly List<Border> photoCorners = new List<Border>();
+        private readonly List<Border> photoCropHandles = new List<Border>();
         private PreviewPhotoPlacement photoPlacement, photoCommitted, photoStart;
         private Size photoSourceSize, photoPaperSize;
         private Point photoPointerStart;
@@ -49,7 +51,13 @@ namespace pyToneRIP
 
         private void AddPhotoTools(StackPanel toolbar)
         {
-            photoMode.Content = Text("PhotoPlacement"); photoFit.Content = Text("PhotoFit"); photoReset.Content = Text("PhotoReset");
+            photoMode.Content = Text("PhotoPlacement"); photoReset.Content = Text("PhotoReset");
+            photoFit.Content = CreatePhotoPageIcon(false);
+            ToolTipService.SetToolTip(photoFit, Text("PhotoFit"));
+            Windows.UI.Xaml.Automation.AutomationProperties.SetName(photoFit, Text("PhotoFit"));
+            photoFill.Content = CreatePhotoPageIcon(true);
+            ToolTipService.SetToolTip(photoFill, Text("PhotoFill"));
+            Windows.UI.Xaml.Automation.AutomationProperties.SetName(photoFill, Text("PhotoFill"));
             photoCenterHorizontal.Content = CreatePhotoCenterIcon(true);
             photoCenterVertical.Content = CreatePhotoCenterIcon(false);
             ToolTipService.SetToolTip(photoCenterHorizontal, Text("PhotoCenterHorizontal"));
@@ -58,16 +66,26 @@ namespace pyToneRIP
             Windows.UI.Xaml.Automation.AutomationProperties.SetName(photoCenterVertical, Text("PhotoCenterVertical"));
             ToolTipService.SetToolTip(photoMode, Text("PhotoHelp"));
             toolbar.Children.Add(photoMode); toolbar.Children.Add(photoLeft); toolbar.Children.Add(photoRight);
-            toolbar.Children.Add(photoFit); toolbar.Children.Add(photoReset);
+            toolbar.Children.Add(photoFit); toolbar.Children.Add(photoFill); toolbar.Children.Add(photoReset);
             toolbar.Children.Add(photoCenterHorizontal); toolbar.Children.Add(photoCenterVertical); toolbar.Children.Add(photoSize);
             photoMode.Checked += async (_, __) => { if (!changingPhotoMode) await SetPhotoModeAsync(true); };
             photoMode.Unchecked += async (_, __) => { if (!changingPhotoMode) await SetPhotoModeAsync(false); };
             photoLeft.Click += async (_, __) => await ChangePhotoAsync(-1);
             photoRight.Click += async (_, __) => await ChangePhotoAsync(1);
             photoFit.Click += async (_, __) => await FitPhotoToPageAsync();
+            photoFill.Click += async (_, __) => await FitPhotoToPageAsync(true);
             photoReset.Click += async (_, __) => await ChangePhotoAsync(2);
             photoCenterHorizontal.Click += async (_, __) => await CenterPhotoAsync(true);
             photoCenterVertical.Click += async (_, __) => await CenterPhotoAsync(false);
+        }
+
+        private static PathIcon CreatePhotoPageIcon(bool fill)
+        {
+            var geometry = new GeometryGroup { FillRule = FillRule.EvenOdd };
+            geometry.Children.Add(new RectangleGeometry { Rect = new Rect(0, 0, 18, 18) });
+            geometry.Children.Add(new RectangleGeometry { Rect = new Rect(1.5, 1.5, 15, 15) });
+            geometry.Children.Add(new RectangleGeometry { Rect = fill ? new Rect(3, 3, 12, 12) : new Rect(3, 5, 12, 8) });
+            return new PathIcon { Data = geometry, Width = 18, Height = 18 };
         }
 
         private static PathIcon CreatePhotoCenterIcon(bool horizontal)
@@ -92,6 +110,14 @@ namespace pyToneRIP
                     BorderBrush = new SolidColorBrush(Colors.White), ManipulationMode = ManipulationModes.None };
                 photoCorners.Add(handle); photoLayer.Children.Add(handle); WirePhotoPointer(handle, corner);
             }
+            for (var edge = 0; edge < 4; edge++)
+            {
+                var handle = new Border { Background = new SolidColorBrush(Colors.White),
+                    BorderBrush = new SolidColorBrush(Colors.DodgerBlue), ManipulationMode = ManipulationModes.None };
+                ToolTipService.SetToolTip(handle, Text("PhotoCrop"));
+                Windows.UI.Xaml.Automation.AutomationProperties.SetName(handle, Text("PhotoCrop"));
+                photoCropHandles.Add(handle); photoLayer.Children.Add(handle); WirePhotoPointer(handle, 4+edge);
+            }
             surface.Children.Add(photoLayer);
             viewer.AddHandler(UIElement.PointerMovedEvent, new PointerEventHandler((_, args) =>
             {
@@ -111,7 +137,7 @@ namespace pyToneRIP
             var ready = renderer != null && previewValid && !approved && !approving && !terminal && !editing && !rendering && !applyingPhoto && !photoDragging;
             photoMode.IsEnabled = ready;
             var selected = ready && photoMode.IsChecked == true && photoPlacement != null;
-            photoLeft.IsEnabled = photoRight.IsEnabled = photoFit.IsEnabled = photoReset.IsEnabled = selected;
+            photoLeft.IsEnabled = photoRight.IsEnabled = photoFit.IsEnabled = photoFill.IsEnabled = photoReset.IsEnabled = selected;
             photoCenterHorizontal.IsEnabled = selected && photoPlacement.Width < photoPaperSize.Width-.01;
             photoCenterVertical.IsEnabled = selected && photoPlacement.Height < photoPaperSize.Height-.01;
             RefreshPhotoCursor();
@@ -122,7 +148,7 @@ namespace pyToneRIP
             if (!enabled)
             {
                 photoDragging = false;
-                photoFrame.ReleasePointerCaptures(); foreach (var corner in photoCorners) corner.ReleasePointerCaptures();
+                photoFrame.ReleasePointerCaptures(); foreach (var handle in photoCorners.Concat(photoCropHandles)) handle.ReleasePointerCaptures();
                 if (photoCommitted != null) photoPlacement = photoCommitted.Copy();
                 ShowPhotoWorking(false); photoLayer.Visibility = Visibility.Collapsed; photoSize.Text = "";
                 await ClosePhotoSourceAsync(); RefreshPhotoActions(); return;
@@ -190,8 +216,8 @@ namespace pyToneRIP
             photoPaper.Source = renderer.PhotoProofPaperImage;
             var printable = renderer.PhotoPrintableArea;
             var paperToSurface = surface.Width/(photoPaperSize.Width*96/25.4);
-            photoVisual.Clip = new RectangleGeometry { Rect = new Rect(printable.X*paperToSurface, printable.Y*paperToSurface,
-                printable.Width*paperToSurface, printable.Height*paperToSurface) };
+            var clip = new Rect(printable.X*paperToSurface, printable.Y*paperToSurface,
+                printable.Width*paperToSurface, printable.Height*paperToSurface);
             var sx = surface.Width/photoPaperSize.Width; var sy = surface.Height/photoPaperSize.Height;
             var matrix = photoPlacement.Matrix(photoSourceSize.Width, photoSourceSize.Height, 1);
             photoBitmap.Width = photoSourceSize.Width; photoBitmap.Height = photoSourceSize.Height;
@@ -199,6 +225,8 @@ namespace pyToneRIP
                 matrix[2]*sx, matrix[3]*sy, matrix[4]*sx, matrix[5]*sy) };
             var x = photoPlacement.X*sx; var y = photoPlacement.Y*sy;
             var width = photoPlacement.Width*sx; var height = photoPlacement.Height*sy;
+            clip.Intersect(new Rect(x, y, width, height));
+            photoVisual.Clip = new RectangleGeometry { Rect = clip.Width > 0 && clip.Height > 0 ? clip : new Rect(0, 0, 0, 0) };
             photoFrame.Width = width; photoFrame.Height = height; photoFrame.BorderThickness = new Thickness(1/viewer.ZoomFactor);
             Canvas.SetLeft(photoFrame, x); Canvas.SetTop(photoFrame, y);
             var handleSize = 12/viewer.ZoomFactor;
@@ -208,6 +236,15 @@ namespace pyToneRIP
                 handle.BorderThickness = new Thickness(1/viewer.ZoomFactor);
                 Canvas.SetLeft(handle, Math.Max(0, Math.Min(surface.Width-handleSize, x+((i&1) != 0 ? width : 0)-handleSize/2)));
                 Canvas.SetTop(handle, Math.Max(0, Math.Min(surface.Height-handleSize, y+((i&2) != 0 ? height : 0)-handleSize/2)));
+            }
+            for (var edge = 0; edge < photoCropHandles.Count; edge++)
+            {
+                var handle = photoCropHandles[edge]; handle.Width = handle.Height = handleSize;
+                handle.BorderThickness = new Thickness(1/viewer.ZoomFactor);
+                var hx = edge == 0 ? x : edge == 2 ? x+width : x+width/2;
+                var hy = edge == 1 ? y : edge == 3 ? y+height : y+height/2;
+                Canvas.SetLeft(handle, Math.Max(0, Math.Min(surface.Width-handleSize, hx-handleSize/2)));
+                Canvas.SetTop(handle, Math.Max(0, Math.Min(surface.Height-handleSize, hy-handleSize/2)));
             }
             photoSize.Text = string.Format(CultureInfo.CurrentCulture, "{0:0.#} × {1:0.#} mm · X {2:0.#} · Y {3:0.#} · {4}°",
                 photoPlacement.Width, photoPlacement.Height, photoPlacement.X, photoPlacement.Y, photoPlacement.Rotation);
@@ -224,7 +261,12 @@ namespace pyToneRIP
                 else if (photoHoverPosition.HasValue)
                 {
                     var point = photoHoverPosition.Value;
-                    for (var i = 0; i < photoCorners.Count; i++)
+                    for (var i = 0; i < photoCropHandles.Count; i++)
+                    {
+                        var handle = photoCropHandles[i];
+                        if (new Rect(Canvas.GetLeft(handle), Canvas.GetTop(handle), handle.Width, handle.Height).Contains(point)) { corner = 4+i; break; }
+                    }
+                    for (var i = 0; corner == -2 && i < photoCorners.Count; i++)
                     {
                         var handle = photoCorners[i];
                         if (new Rect(Canvas.GetLeft(handle), Canvas.GetTop(handle), handle.Width, handle.Height).Contains(point)) { corner = i; break; }
@@ -232,6 +274,7 @@ namespace pyToneRIP
                     if (corner == -2 && new Rect(Canvas.GetLeft(photoFrame), Canvas.GetTop(photoFrame), photoFrame.Width, photoFrame.Height).Contains(point)) corner = -1;
                 }
                 if (corner == -1) cursor = CoreCursorType.SizeAll;
+                else if (corner >= 4) cursor = (corner-4)%2 == 0 ? CoreCursorType.SizeWestEast : CoreCursorType.SizeNorthSouth;
                 else if (corner >= 0) cursor = corner == 0 || corner == 3 ? CoreCursorType.SizeNorthwestSoutheast : CoreCursorType.SizeNortheastSouthwest;
             }
             Window.Current.CoreWindow.PointerCursor = new CoreCursor(cursor, 0);
@@ -266,6 +309,7 @@ namespace pyToneRIP
                 var dy = (point.Y-photoPointerStart.Y)*photoPaperSize.Height/surface.Height;
                 photoPlacement = photoStart.Copy();
                 if (photoCorner < 0) photoPlacement.Move(dx, dy, photoPaperSize.Width, photoPaperSize.Height);
+                else if (photoCorner >= 4) photoPlacement.Crop(photoCorner-4, dx, dy, photoPaperSize.Width, photoPaperSize.Height);
                 else photoPlacement.Resize(photoCorner, dx, dy, photoPaperSize.Width, photoPaperSize.Height);
                 UpdatePhotoOverlay(); args.Handled = true;
             };
@@ -289,7 +333,7 @@ namespace pyToneRIP
             ScheduleDetail();
         }
 
-        private async Task FitPhotoToPageAsync()
+        private async Task FitPhotoToPageAsync(bool fill = false)
         {
             if (renderer == null || !previewValid || approved || approving || terminal || editing || rendering
                 || applyingPhoto || photoDragging || photoLoading || closed.Task.IsCompleted) return;
@@ -302,17 +346,19 @@ namespace pyToneRIP
             }
             if (photoMode.IsChecked != true || photoBitmap.Source == null || photoPlacement == null
                 || approved || approving || terminal || editing || rendering || closed.Task.IsCompleted) return;
-            await ChangePhotoAsync(0);
+            await ChangePhotoAsync(fill ? 3 : 0);
         }
 
         private async Task ChangePhotoAsync(int operation)
         {
             if (photoPlacement == null || applyingPhoto || editing || rendering || approved || terminal) return;
             if (operation == 2) photoPlacement = renderer.InitialPhotoPlacement(pageIndex, true, true);
+            else if (operation == 3) photoPlacement.FillPage(photoPaperSize.Width, photoPaperSize.Height);
             else if (operation == 0)
             {
                 var aspect = photoSourceSize.Width/photoSourceSize.Height;
                 if (photoPlacement.Rotation == 90 || photoPlacement.Rotation == 270) aspect = 1/aspect;
+                aspect *= photoPlacement.VisibleWidth/photoPlacement.VisibleHeight;
                 photoPlacement.Width = Math.Min(photoPaperSize.Width, photoPaperSize.Height*aspect);
                 photoPlacement.Height = photoPlacement.Width/aspect;
                 photoPlacement.X = (photoPaperSize.Width-photoPlacement.Width)/2;

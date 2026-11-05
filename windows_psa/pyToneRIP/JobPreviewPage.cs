@@ -359,7 +359,8 @@ namespace pyToneRIP
         private async Task RenderAsync(bool invalidate = false)
         {
             if (renderer == null || editing || closed.Task.IsCompleted) return;
-            if (!applyingPhoto && photoMode.IsChecked == true && (invalidate || photoPlacement?.PageIndex != renderer.SourcePageIndex(pageIndex)))
+            // A colour refresh keeps placement active on the same source page.
+            if (!applyingPhoto && photoMode.IsChecked == true && photoPlacement?.PageIndex != renderer.SourcePageIndex(pageIndex))
                 await DisablePhotoModeAsync();
             invalidateProof |= invalidate;
             if (rendering) { renderAgain = true; return; }
@@ -382,6 +383,9 @@ namespace pyToneRIP
                     var index = pageIndex; var simulation = proof.IsChecked == true;
                     var revision = renderRevision;
                     var bitmap = await renderer.RenderAsync(index, simulation, requestedEdge);
+                    // Refresh the editor's source too, including before any placement edit.
+                    if (photoMode.IsChecked == true)
+                        await renderer.RenderPhotoSourceAsync(index, simulation);
                     if (closed.Task.IsCompleted) return;
                     if (index != pageIndex || simulation != (proof.IsChecked == true) || revision != renderRevision || invalidateProof) continue;
                     image.Source = bitmap;

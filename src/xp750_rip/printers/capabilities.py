@@ -375,13 +375,16 @@ class PrinterModel:
             if original is not None:
                 return replace(page, native_page_format_mils=(
                     original[0] + 200, original[1] + 300, 0))
-        if self.escp2_profile is not None and self.escp2_profile.identity == "ET8550":
+        if self.escp2_profile is not None and self.escp2_profile.identity in {"ET8550", "L8050Photo"}:
             if feed.medium_kind == "roll":
                 # Captured continuous jobs include one inch of leading sheet
                 # travel. Always derive from the original page: native_page is
                 # used by both the application and the backend.
                 original = self.page(page.ppd.name).native_page_format_mils
                 if original is not None:
+                    if self.escp2_profile.identity == "L8050Photo" and page.ppd.borderless:
+                        return replace(page, native_page_format_mils=(
+                            original[0] + 200, original[1] + 1300, 0))
                     page = replace(page, native_page_format_mils=(
                         original[0], original[1] + 1000, original[2]))
             rear_slot = feed.path_type == 2 and feed.path_number == 0

@@ -361,9 +361,11 @@
   <data name="PreviewWindow.PhotoPlacement" xml:space="preserve"><value>Položaj fotografije</value></data>
   <data name="PreviewWindow.PhotoFit" xml:space="preserve"><value>Prilagodi fotografiju</value></data>
   <data name="PreviewWindow.PhotoReset" xml:space="preserve"><value>Vrati fotografiju</value></data>
-  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Povucite sliku za pomicanje, a kut za proporcionalnu promjenu veličine. Zakrećite tipkama 90°. Margine izvorne aplikacije ostaju dio slike.</value></data>
+  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Povucite sliku za pomicanje, a kut za proporcionalnu promjenu veličine. Zakrećite tipkama 90°. Margine izvorne aplikacije ostaju dio slike. Povucite bijele ručice na sredini stranica za obrezivanje; povucite prema van za vraćanje. Kutne ručice mijenjaju veličinu.</value></data>
   <data name="PreviewWindow.PhotoCenterHorizontal" xml:space="preserve"><value>Centriraj vodoravno</value></data>
   <data name="PreviewWindow.PhotoCenterVertical" xml:space="preserve"><value>Centriraj okomito</value></data>
   <data name="PreviewWindow.PrintStart" xml:space="preserve"><value>Početak ispisa</value></data>
   <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>Strelica označava rub lista koji se prvi ispisuje.</value></data>
+  <data name="PreviewWindow.PhotoCrop" xml:space="preserve"><value>Povucite bijele ručice na sredini stranica za obrezivanje; povucite prema van za vraćanje. Kutne ručice mijenjaju veličinu.</value></data>
+  <data name="PreviewWindow.PhotoFill" xml:space="preserve"><value>Ispuni stranicu</value></data>
 </root>

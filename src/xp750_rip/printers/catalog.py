@@ -171,6 +171,11 @@ _BACKEND_DATA_DRIVERS = {
 }
 
 _PROTOCOL_OVERRIDES = {
+    "pf--Epson_EcoTank_ET14000": ("escp2-esci", "B1100"),
+    "pf--Epson_EcoTank_ET14100": ("escp2-esci", "ET14100"),
+    "pf--Epson_EcoTank_ET18100": ("escp2-esci", "L8050Photo"),
+    "pf--Epson_L18050": ("escp2-esci", "L8050Photo"),
+    "pf--Epson_L8050": ("escp2-esci", "L8050Photo"),
     "pf--Epson_SureColorT3200": ("escp2-esci", "T7200"),
     "pf--Epson_SureColorT5200": ("escp2-esci", "T7200"),
     "pf--Epson_SureColorT5400": ("escp2-esci", "SC-T5400"),

@@ -361,9 +361,11 @@
   <data name="PreviewWindow.PhotoPlacement" xml:space="preserve"><value>Fénykép elhelyezése</value></data>
   <data name="PreviewWindow.PhotoFit" xml:space="preserve"><value>Fénykép igazítása</value></data>
   <data name="PreviewWindow.PhotoReset" xml:space="preserve"><value>Fénykép alaphelyzetbe</value></data>
-  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Húzza a képet az áthelyezéshez, a sarkát az arányos átméretezéshez. Forgatás a 90°-os gombokkal. A forrásprogram margói a kép részei maradnak.</value></data>
+  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Húzza a képet az áthelyezéshez, a sarkát az arányos átméretezéshez. Forgatás a 90°-os gombokkal. A forrásprogram margói a kép részei maradnak. A vágáshoz húzza az oldalak közepén lévő fehér fogantyúkat; a visszaállításhoz húzza kifelé. A sarokfogantyúk a méretet változtatják.</value></data>
   <data name="PreviewWindow.PhotoCenterHorizontal" xml:space="preserve"><value>Vízszintes középre igazítás</value></data>
   <data name="PreviewWindow.PhotoCenterVertical" xml:space="preserve"><value>Függőleges középre igazítás</value></data>
   <data name="PreviewWindow.PrintStart" xml:space="preserve"><value>Nyomtatás kezdete</value></data>
   <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>A nyíl a lap elsőként nyomtatott szélét jelöli.</value></data>
+  <data name="PreviewWindow.PhotoCrop" xml:space="preserve"><value>A vágáshoz húzza az oldalak közepén lévő fehér fogantyúkat; a visszaállításhoz húzza kifelé. A sarokfogantyúk a méretet változtatják.</value></data>
+  <data name="PreviewWindow.PhotoFill" xml:space="preserve"><value>Oldal kitöltése</value></data>
 </root>

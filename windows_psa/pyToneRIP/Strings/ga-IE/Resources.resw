@@ -361,9 +361,11 @@
   <data name="PreviewWindow.PhotoPlacement" xml:space="preserve"><value>Suíomh grianghraif</value></data>
   <data name="PreviewWindow.PhotoFit" xml:space="preserve"><value>Oiriúnaigh grianghraf</value></data>
   <data name="PreviewWindow.PhotoReset" xml:space="preserve"><value>Athshocraigh grianghraf</value></data>
-  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Tarraing an íomhá chun í a bhogadh agus cúinne chun a méid a athrú go comhréireach. Rothlaigh leis na cnaipí 90°. Fanann imeall an fheidhmchláir fhoinseach mar chuid den íomhá.</value></data>
+  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Tarraing an íomhá chun í a bhogadh agus cúinne chun a méid a athrú go comhréireach. Rothlaigh leis na cnaipí 90°. Fanann imeall an fheidhmchláir fhoinseach mar chuid den íomhá. Tarraing na hanlaí bána i lár gach taoibh chun bearradh; tarraing amach chun athchóiriú. Athraíonn na hanlaí cúinne an méid.</value></data>
   <data name="PreviewWindow.PhotoCenterHorizontal" xml:space="preserve"><value>Láraigh go cothrománach</value></data>
   <data name="PreviewWindow.PhotoCenterVertical" xml:space="preserve"><value>Láraigh go hingearach</value></data>
   <data name="PreviewWindow.PrintStart" xml:space="preserve"><value>Tús priontála</value></data>
   <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>Léiríonn an tsaighead imeall an leathanaigh a phriontáiltear ar dtús.</value></data>
+  <data name="PreviewWindow.PhotoCrop" xml:space="preserve"><value>Tarraing na hanlaí bána i lár gach taoibh chun bearradh; tarraing amach chun athchóiriú. Athraíonn na hanlaí cúinne an méid.</value></data>
+  <data name="PreviewWindow.PhotoFill" xml:space="preserve"><value>Líon an leathanach</value></data>
 </root>

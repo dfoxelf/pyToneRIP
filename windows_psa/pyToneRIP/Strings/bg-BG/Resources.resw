@@ -361,9 +361,11 @@
   <data name="PreviewWindow.PhotoPlacement" xml:space="preserve"><value>Разполагане на снимка</value></data>
   <data name="PreviewWindow.PhotoFit" xml:space="preserve"><value>Побиране на снимката</value></data>
   <data name="PreviewWindow.PhotoReset" xml:space="preserve"><value>Нулиране на снимката</value></data>
-  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Плъзнете изображението за преместване и ъгловия маркер за пропорционално оразмеряване. Завъртайте с бутоните 90°. Полетата от изходната програма остават част от изображението.</value></data>
+  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Плъзнете изображението за преместване и ъгловия маркер за пропорционално оразмеряване. Завъртайте с бутоните 90°. Полетата от изходната програма остават част от изображението. Плъзнете белите маркери в средата на страните за изрязване; плъзнете навън за възстановяване. Ъгловите маркери променят размера.</value></data>
   <data name="PreviewWindow.PhotoCenterHorizontal" xml:space="preserve"><value>Центриране хоризонтално</value></data>
   <data name="PreviewWindow.PhotoCenterVertical" xml:space="preserve"><value>Центриране вертикално</value></data>
   <data name="PreviewWindow.PrintStart" xml:space="preserve"><value>Начало на печата</value></data>
   <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>Стрелката показва края на листа, който се отпечатва първи.</value></data>
+  <data name="PreviewWindow.PhotoCrop" xml:space="preserve"><value>Плъзнете белите маркери в средата на страните за изрязване; плъзнете навън за възстановяване. Ъгловите маркери променят размера.</value></data>
+  <data name="PreviewWindow.PhotoFill" xml:space="preserve"><value>Запълни страницата</value></data>
 </root>

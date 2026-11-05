@@ -583,6 +583,7 @@ _PAGE_EDGE_RASTER_ORIGIN_PACKAGES = {
 
 _REFERENCE_DRIVER_400_HEAD_PACKAGES = {
     "pf--Epson_SureColorF500",
+    "pf--Epson_SureColorT5400",
     "pf--Epson_SureColorT3100",
     "pf--Epson_SureColorT3100X",
     "pf--Epson_SureColorT5100",
@@ -879,7 +880,13 @@ def _vendor_modes(
             f"mode_{index}",
         )
         if mode_id in used:
-            continue
+            if (source.get("identity") or {}).get("name") != "Epson_SureColorT5400":
+                continue
+            # Its glossy table names both 1200 and 4800 dpi qualities Super,
+            # with the same ApplicationDPI but distinct native grids.
+            mode_id += f"_{physical[0]}x{physical[1]}"
+            if mode_id in used:
+                continue
         used.add(mode_id)
         escp2 = item.get("escp2") or {}
         weave = escp2.get("software_weave") or {}
@@ -931,6 +938,16 @@ def _vendor_modes(
             raise ValueError(f"Invalid ReferenceDriver drop levels in {mode_id}: {levels}")
         drop_sizes = tuple(value / 100.0 for value in levels[1:]) if levels else (0.4, 0.6, 1.0)
         bit_depth = int(item.get("raster_bit_depth") or 2)
+        codes = tuple(int(value) for value in item.get("drop_level_codes") or ())
+        if codes:
+            if (len(codes) != len(levels) or codes[0] != 0
+                    or any(a >= b for a, b in zip(codes, codes[1:]))
+                    or codes[-1] >= (1 << bit_depth)):
+                raise ValueError(f"Invalid drop level codes in {mode_id}: {codes}")
+            # Zero-sized endpoints are already supported by all dithering paths:
+            # retain the wire code when a small physical drop is disabled.
+            by_code = dict(zip(codes[1:], drop_sizes, strict=True))
+            drop_sizes = tuple(by_code.get(code, 0.0) for code in range(1, codes[-1] + 1))
         if len(drop_sizes) > (1 << bit_depth) - 1:
             raise ValueError(f"ReferenceDriver drop levels exceed raster bit depth in {mode_id}")
         mode_resolution = f"{output_resolution[0]} x {output_resolution[1]} DPI"
@@ -1412,10 +1429,12 @@ def _pages(
                 _identifier(item.label, "").casefold(),
                 by_name.get(_identifier(item.name, "").casefold()),
             )
-            et_driver = (source.get("driver") or {}).get("id") == "ET8550"
+            et_driver = ((source.get("driver") or {}).get("id") == "ET8550"
+                         or (source.get("protocol") or {}).get("family") == "L8050Photo")
+            t5400 = source_name == "Epson_SureColorT5400"
             et_borderless = et_driver and item.borderless
             tolerance_points = 5 if et_driver else 1
-            if descriptor is not None and et_driver:
+            if descriptor is not None and (et_driver or t5400):
                 # A3+ normalizes to "A3" as an identifier. A name collision
                 # must not send A3's MI size code to a 13x19-inch sheet.
                 if (
@@ -1430,7 +1449,7 @@ def _pages(
                 ):
                     descriptor = None
             if descriptor is None and (
-                match_size_by_dimensions or et_driver
+                match_size_by_dimensions or et_driver or t5400
             ):
                 # ET-8500/8550 ReferenceDriver borderless Size entries describe an
                 # enlarged canvas (200 mil wider, 300 mil taller) while the
@@ -1459,6 +1478,10 @@ def _pages(
                 if len(codes) == 1:
                     descriptor = matching[0]
             media_size_code, geometry_class, special_selector, native_format, physical_size = page_fields(descriptor)
+            if t5400 and descriptor is not None:
+                # Own Size margins and sheet/roll captures: -1333 mil feed
+                # origin and 788 mil trailing limit, not the generic 120 mil.
+                native_format = (int(descriptor["width_mils"]), int(descriptor["height_mils"]), 788)
             p700_rip = source_name in {"Epson_SureColorP700_RIP", "Epson_SureColorP900_RIP"}
             if (et_driver or p700_rip) and descriptor is not None:
                 # Exact command canvas from the descriptor; Windows keeps its
@@ -2824,6 +2847,29 @@ def load_catalog_model(
         )
     if not modes:
         raise ValueError(f"Imported printer has no resolution modes: {package.package_id}")
+    if package.package_id == "pf--Epson_EcoTank_ET14100":
+        modes = tuple(replace(mode, nozzle_count=128, nozzle_separation=1,
+            base_resolution_dpi=600 if mode.dot_size == 0x11 else 300,
+            horizontal_passes=max(1, mode.horizontal_dpi//(600 if mode.dot_size == 0x11 else 300)),
+        ) for mode in modes)
+    if package.package_id in {"pf--Epson_SureColorT3200", "pf--Epson_SureColorT5200",
+                              "pf--Epson_SureColorT7200"}:
+        # Own T7200-family descriptions and native captures use ESC (i 01 00
+        # 00 with single-row transport. The device owns the 720-nozzle head.
+        # Rasterize on its actual transport grid before dithering; duplicating
+        # already-quantized application pixels would change ink deposition.
+        # Original ApplicationDPI/PrinterDPI remain separate in runtime-source.
+        modes = tuple(replace(mode,
+            horizontal_dpi=mode.physical_horizontal_dpi,
+            vertical_dpi=mode.physical_vertical_dpi,
+            base_resolution_dpi=mode.physical_horizontal_dpi,
+            nozzle_count=1, nozzle_separation=1, horizontal_passes=1, vertical_passes=1,
+            escp2_printer_weave_mode=1, escp2_printer_weave_variant=0,
+            display_name=mode.display_name.replace(
+                f"raster {mode.horizontal_dpi} x {mode.vertical_dpi}",
+                f"raster {mode.physical_horizontal_dpi} x {mode.physical_vertical_dpi}"),
+        ) for mode in modes)
+        profile = replace(profile, rows_per_pass=1)
     page_source = source
     if not source.get("media_sizes") and reference_driver_source.get("media_sizes"):
         page_source = {**source, "media_sizes": reference_driver_source["media_sizes"]}
@@ -2833,7 +2879,8 @@ def load_catalog_model(
         backend_runtime,
         match_size_by_dimensions=(page_source is not source
                                   or package.package_id == "pf--Epson_EcoTank_ET2550"),
-        allow_synthetic_wide_pages=package.ppd_source != "vendor.ppd",
+        allow_synthetic_wide_pages=(package.ppd_source != "vendor.ppd"
+                                    and package.protocol_family != "L8050Photo"),
         trust_ppd_imageable_area=package.ppd_source == "vendor.ppd",
         include_unmatched_native_pages=package.package_id == "pf--Epson_EcoTank_ET2550",
     )
@@ -2868,6 +2915,33 @@ def load_catalog_model(
             PpdPage("Roll13x19", "13 \u00d7 19 in (roll)", 936.0, 1368.0,
                     9.0, 0.0, 927.0, 1368.0),
             True, True, media_size_code=61, sheet_geometry_class="roll"),)
+    if package.protocol_family == "L8050Photo":
+        # Epson's physical A3+ sheet is 329 x 483 mm. Keep the independently
+        # captured 13000 x 19000 mil command canvas separate from that sheet.
+        corrected = []
+        for page in pages:
+            if page.ppd.name in {"A3Plus", "A3PlusBorderless"}:
+                old = page.ppd
+                width, height = 329 * 72 / 25.4, 483 * 72 / 25.4
+                page = replace(page, physical_media_size_mm=(329.0, 483.0),
+                    ppd=replace(old, width_points=width, height_points=height,
+                        # The 164-mil inset already includes the difference
+                        # between the 13-inch canvas and the 329-mm sheet.
+                        imageable_right_points=(width if old.borderless else old.imageable_right_points),
+                        imageable_top_points=height - (old.height_points - old.imageable_top_points)))
+            corrected.append(page)
+        pages = tuple(corrected)
+        widths = (210.0, 329.0) if package.model_id != "L8050" else (210.0, 215.9)
+        for width_mm in widths:
+            width_pt, height_pt = width_mm * 72 / 25.4, 2000 * 72 / 25.4
+            pages += (PageCapability(
+                PpdPage(f"LongSheet{width_mm:g}x2000", f"{width_mm:g} × 2000 mm",
+                    width_pt, height_pt, 120 * .072, 120 * .072,
+                    width_pt - 120 * .072, height_pt - 120 * .072),
+                True, True, media_size_code=99, sheet_geometry_class="long_sheet",
+                physical_media_size_mm=(width_mm, 2000.0),
+                native_page_format_mils=(round(width_mm * 1000 / 25.4),
+                                         round(2000 * 1000 / 25.4), 120)),)
     if package.package_id == "gp--escp2-3880":
         pages = _pro3880_sheet_pages(pages)
     if package.package_id in {"gp--escp2-p7000", "gp--escp2-p7000c"}:
@@ -2907,6 +2981,8 @@ def load_catalog_model(
         # instead has 144 nozzles at a different pitch.
         modes = tuple(replace(mode, nozzle_count=400, nozzle_separation=1)
                       for mode in modes)
+        if package.package_id == "pf--Epson_SureColorT5400":
+            profile = replace(profile, rows_per_pass=400)
     elif package.package_id == "pf--Epson_SureColorF100":
         # F100 has 128 colour nozzles at 300 dpi and a 400-nozzle black bank.
         # Use the colour bank for host weave; the black bank starts 272 nozzle
@@ -2922,6 +2998,19 @@ def load_catalog_model(
         raise ValueError(f"Imported printer has no page sizes: {package.package_id}")
     driver_mechanics = (source.get("driver") or {}).get("driver_mechanics") or {}
     physical_paths = _physical_paths(package, source, backend_runtime)
+    if package.package_id == "pf--Epson_EcoTank_ET14100":
+        offsets = {0: 0, 2: 0, 1: 136, 4: 272}
+        physical_paths = tuple(replace(path, head_offset=offsets[path.escp2_selector])
+                               for path in physical_paths)
+    if package.package_id == "pf--Epson_EcoTank_ET14000":
+        # Own B1100 setup and captures: C/M/Y banks are 1/3 inch apart.
+        # Native plain-paper output also confirms direct K=00. Keep Pn IDs.
+        offsets = {0: 0, 2: 0, 1: 120, 4: 240}
+        physical_paths = tuple(replace(path,
+            escp2_selector=0 if path.identity.value == "P0" else path.escp2_selector,
+            additional_escp2_selectors=(),
+            head_offset=offsets[0 if path.identity.value == "P0" else path.escp2_selector],
+        ) for path in physical_paths)
     if package.package_id in {"gp--escp2-p7000c", "gp--escp2-p9000c"}:
         # Commercial Edition replaces LLK with Violet. The exact Gutenprint
         # model explicitly marks Violet unsupported, yet inherits an LLK
@@ -3024,7 +3113,7 @@ def load_catalog_model(
         ),
         base_separation_dpi=(
             300 if package.package_id in _REFERENCE_DRIVER_400_HEAD_PACKAGES
-            or package.package_id == "pf--Epson_SureColorF100"
+            or package.package_id in {"pf--Epson_SureColorF100", "pf--Epson_EcoTank_ET14100"}
             else int(backend_runtime.get("base_separation_dpi", 360))
         ),
         escp2_command_set=backend_runtime.get("command_set"),

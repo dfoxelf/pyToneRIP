@@ -44,8 +44,22 @@ namespace pyToneRIP.Models
             // USBPRINT model tokens may have a CRC after the SERIES suffix.
             text = Regex.Replace(text, @"SERIES[0-9A-F]{0,4}$", "");
             text = Regex.Replace(text, "[^A-Z0-9]", "");
-            foreach (var prefix in new[] { "EPSON", "SURECOLOR", "STYLUSPHOTO", "STYLUSPRO", "STYLUS", "ECOTANK", "WORKFORCE", "EXPRESSIONPHOTO", "EXPRESSIONPREMIUM", "EXPRESSIONHOME" })
-                if (text.StartsWith(prefix, StringComparison.Ordinal)) text = text.Substring(prefix.Length);
+            var prefixes = new[] { "EPSON", "SURECOLOR", "STYLUSPHOTO", "STYLUSPRO", "STYLUS", "ECOTANK", "WORKFORCE", "EXPRESSIONPHOTO", "EXPRESSIONPREMIUM", "EXPRESSIONHOME" };
+            // Some USBPRINT IDs repeat the manufacturer, e.g.
+            // EPSONEPSON_STYLUS_PHOTO_P50. Strip complete leading names until
+            // the model token remains; keep the token itself an exact match.
+            bool removedPrefix;
+            do
+            {
+                removedPrefix = false;
+                foreach (var prefix in prefixes)
+                {
+                    if (!text.StartsWith(prefix, StringComparison.Ordinal)) continue;
+                    text = text.Substring(prefix.Length);
+                    removedPrefix = true;
+                    break;
+                }
+            } while (removedPrefix);
             if (text.StartsWith("SC", StringComparison.Ordinal)) text = text.Substring(2);
             return text.EndsWith("SERIES", StringComparison.Ordinal)
                 ? text.Substring(0, text.Length - 6) : text;

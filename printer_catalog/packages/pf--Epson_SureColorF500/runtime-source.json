@@ -24,7 +24,8 @@
           "unknown_high_bits": 0
         },
         "print_method": {
-          "default": 96
+          "default": 96,
+          "payload_length": 4
         },
         "software_weave": {
           "encoding": "packed_nibbles",
@@ -70,7 +71,8 @@
           "unknown_high_bits": 0
         },
         "print_method": {
-          "default": 112
+          "default": 112,
+          "payload_length": 4
         },
         "software_weave": {
           "encoding": "packed_nibbles",
@@ -102,6 +104,14 @@
         "media_scope": "all_non_default_media"
       },
       "display_name": "Photo",
+      "drop_level_codes": [
+        0,
+        1
+      ],
+      "drop_levels_percent": [
+        0,
+        100
+      ],
       "escp2": {
         "direction_and_layout": {
           "default_direction": "bidirectional",
@@ -111,7 +121,8 @@
           "unknown_high_bits": 0
         },
         "print_method": {
-          "default": 192
+          "default": 192,
+          "payload_length": 4
         },
         "software_weave": {
           "encoding": "packed_nibbles",
@@ -130,6 +141,7 @@
         "vertical": 2400
       },
       "quality_rank": 5,
+      "raster_bit_depth": 1,
       "variant_index": 2
     },
     {
@@ -142,6 +154,14 @@
         "media_scope": "all_non_default_media"
       },
       "display_name": "Super",
+      "drop_level_codes": [
+        0,
+        1
+      ],
+      "drop_levels_percent": [
+        0,
+        100
+      ],
       "escp2": {
         "direction_and_layout": {
           "default_direction": "bidirectional",
@@ -151,7 +171,8 @@
           "unknown_high_bits": 0
         },
         "print_method": {
-          "default": 192
+          "default": 192,
+          "payload_length": 4
         },
         "software_weave": {
           "encoding": "packed_nibbles",
@@ -170,6 +191,7 @@
         "vertical": 2400
       },
       "quality_rank": 6,
+      "raster_bit_depth": 1,
       "variant_index": 3
     }
   ],

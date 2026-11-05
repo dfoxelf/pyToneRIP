@@ -361,9 +361,11 @@
   <data name="PreviewWindow.PhotoPlacement" xml:space="preserve"><value>Τοποθέτηση φωτογραφίας</value></data>
   <data name="PreviewWindow.PhotoFit" xml:space="preserve"><value>Προσαρμογή φωτογραφίας</value></data>
   <data name="PreviewWindow.PhotoReset" xml:space="preserve"><value>Επαναφορά φωτογραφίας</value></data>
-  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Σύρετε την εικόνα για μετακίνηση και μια γωνία για αναλογική αλλαγή μεγέθους. Περιστρέψτε με τα κουμπιά 90°. Τα περιθώρια της αρχικής εφαρμογής παραμένουν μέρος της εικόνας.</value></data>
+  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Σύρετε την εικόνα για μετακίνηση και μια γωνία για αναλογική αλλαγή μεγέθους. Περιστρέψτε με τα κουμπιά 90°. Τα περιθώρια της αρχικής εφαρμογής παραμένουν μέρος της εικόνας. Σύρετε τις λευκές λαβές στο μέσο των πλευρών για περικοπή· σύρετε προς τα έξω για επαναφορά. Οι γωνιακές λαβές αλλάζουν το μέγεθος.</value></data>
   <data name="PreviewWindow.PhotoCenterHorizontal" xml:space="preserve"><value>Οριζόντιο κεντράρισμα</value></data>
   <data name="PreviewWindow.PhotoCenterVertical" xml:space="preserve"><value>Κατακόρυφο κεντράρισμα</value></data>
   <data name="PreviewWindow.PrintStart" xml:space="preserve"><value>Αρχή εκτύπωσης</value></data>
   <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>Το βέλος δείχνει την άκρη του φύλλου που εκτυπώνεται πρώτη.</value></data>
+  <data name="PreviewWindow.PhotoCrop" xml:space="preserve"><value>Σύρετε τις λευκές λαβές στο μέσο των πλευρών για περικοπή· σύρετε προς τα έξω για επαναφορά. Οι γωνιακές λαβές αλλάζουν το μέγεθος.</value></data>
+  <data name="PreviewWindow.PhotoFill" xml:space="preserve"><value>Γέμισμα σελίδας</value></data>
 </root>

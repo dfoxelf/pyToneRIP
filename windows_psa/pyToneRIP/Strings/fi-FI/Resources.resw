@@ -361,9 +361,11 @@
   <data name="PreviewWindow.PhotoPlacement" xml:space="preserve"><value>Kuvan sijoittelu</value></data>
   <data name="PreviewWindow.PhotoFit" xml:space="preserve"><value>Sovita kuva</value></data>
   <data name="PreviewWindow.PhotoReset" xml:space="preserve"><value>Palauta kuva</value></data>
-  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Siirrä kuvaa vetämällä ja muuta kokoa suhteellisesti kulmasta vetämällä. Kierrä 90°-painikkeilla. Lähdesovelluksen reunukset pysyvät kuvan osana.</value></data>
+  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Siirrä kuvaa vetämällä ja muuta kokoa suhteellisesti kulmasta vetämällä. Kierrä 90°-painikkeilla. Lähdesovelluksen reunukset pysyvät kuvan osana. Rajaa vetämällä sivujen keskellä olevia valkoisia kahvoja; palauta vetämällä ulospäin. Kulmakahvat muuttavat kokoa.</value></data>
   <data name="PreviewWindow.PhotoCenterHorizontal" xml:space="preserve"><value>Keskitä vaakasuunnassa</value></data>
   <data name="PreviewWindow.PhotoCenterVertical" xml:space="preserve"><value>Keskitä pystysuunnassa</value></data>
   <data name="PreviewWindow.PrintStart" xml:space="preserve"><value>Tulostuksen alku</value></data>
   <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>Nuoli osoittaa arkin reunan, joka tulostetaan ensimmäisenä.</value></data>
+  <data name="PreviewWindow.PhotoCrop" xml:space="preserve"><value>Rajaa vetämällä sivujen keskellä olevia valkoisia kahvoja; palauta vetämällä ulospäin. Kulmakahvat muuttavat kokoa.</value></data>
+  <data name="PreviewWindow.PhotoFill" xml:space="preserve"><value>Täytä sivu</value></data>
 </root>

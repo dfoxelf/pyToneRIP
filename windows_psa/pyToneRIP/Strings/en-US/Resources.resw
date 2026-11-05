@@ -361,9 +361,11 @@
   <data name="PreviewWindow.PhotoPlacement" xml:space="preserve"><value>Photo placement</value></data>
   <data name="PreviewWindow.PhotoFit" xml:space="preserve"><value>Fit photo</value></data>
   <data name="PreviewWindow.PhotoReset" xml:space="preserve"><value>Reset photo</value></data>
-  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Drag the picture to move it; drag a corner to resize proportionally. Rotate with the 90° buttons. The captured page includes any margins added by the source application.</value></data>
+  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Drag the picture to move it; drag a corner to resize proportionally. Rotate with the 90° buttons. The captured page includes any margins added by the source application. Drag the white handles at the middle of each side to crop; drag outward to restore. Corner handles resize the picture.</value></data>
   <data name="PreviewWindow.PhotoCenterHorizontal" xml:space="preserve"><value>Center horizontally</value></data>
   <data name="PreviewWindow.PhotoCenterVertical" xml:space="preserve"><value>Center vertically</value></data>
   <data name="PreviewWindow.PrintStart" xml:space="preserve"><value>Print start</value></data>
   <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>The arrow marks the edge of the sheet that is printed first.</value></data>
+  <data name="PreviewWindow.PhotoCrop" xml:space="preserve"><value>Drag the white handles at the middle of each side to crop; drag outward to restore. Corner handles resize the picture.</value></data>
+  <data name="PreviewWindow.PhotoFill" xml:space="preserve"><value>Fill page</value></data>
 </root>

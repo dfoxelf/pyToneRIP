@@ -361,9 +361,11 @@
   <data name="PreviewWindow.PhotoPlacement" xml:space="preserve"><value>Foto paigutus</value></data>
   <data name="PreviewWindow.PhotoFit" xml:space="preserve"><value>Mahuta foto</value></data>
   <data name="PreviewWindow.PhotoReset" xml:space="preserve"><value>Lähtesta foto</value></data>
-  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Lohistage pilti liigutamiseks ja nurka proportsionaalseks suuruse muutmiseks. Pöörake 90° nuppudega. Lähterakenduse veerised jäävad pildi osaks.</value></data>
+  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Lohistage pilti liigutamiseks ja nurka proportsionaalseks suuruse muutmiseks. Pöörake 90° nuppudega. Lähterakenduse veerised jäävad pildi osaks. Kärpimiseks lohistage külgede keskel olevaid valgeid pidemeid; taastamiseks lohistage väljapoole. Nurgapidemed muudavad suurust.</value></data>
   <data name="PreviewWindow.PhotoCenterHorizontal" xml:space="preserve"><value>Tsentreeri horisontaalselt</value></data>
   <data name="PreviewWindow.PhotoCenterVertical" xml:space="preserve"><value>Tsentreeri vertikaalselt</value></data>
   <data name="PreviewWindow.PrintStart" xml:space="preserve"><value>Printimise algus</value></data>
   <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>Nool tähistab lehe serva, mis prinditakse esimesena.</value></data>
+  <data name="PreviewWindow.PhotoCrop" xml:space="preserve"><value>Kärpimiseks lohistage külgede keskel olevaid valgeid pidemeid; taastamiseks lohistage väljapoole. Nurgapidemed muudavad suurust.</value></data>
+  <data name="PreviewWindow.PhotoFill" xml:space="preserve"><value>Täida leht</value></data>
 </root>

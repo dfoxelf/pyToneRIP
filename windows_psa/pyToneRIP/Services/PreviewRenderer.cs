@@ -508,6 +508,7 @@ namespace pyToneRIP.Services
             {
                 draw.DrawImage(photoProofPaper, new Rect(0, 0, width, height), new Rect(0, 0, 1, 1), 1, CanvasImageInterpolation.NearestNeighbor);
                 var printable = PrintableArea(PageSize(index)); printable.Intersect(region);
+                printable.Intersect(new Rect(pose.X*96/25.4, pose.Y*96/25.4, pose.Width*96/25.4, pose.Height*96/25.4));
                 if (printable.Width > 0 && printable.Height > 0)
                 {
                     var sx = width/region.Width; var sy = height/region.Height;

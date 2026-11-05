@@ -196,9 +196,12 @@ namespace pyToneRIP.Shared
             }
             if (placement != null)
             {
+                var crop = placement.SourceCropRectangle(sourceWidth, sourceHeight);
+                var left = Number(crop[0]); var top = Number(crop[1]);
+                var right = Number(crop[0]+crop[2]); var bottom = Number(crop[1]+crop[3]);
                 var canvas = new XElement(page.Name.Namespace+"Canvas",
                     new XAttribute("RenderTransform", string.Join(",", placement.Matrix(sourceWidth, sourceHeight, 96/25.4).Select(Number))),
-                    new XAttribute("Clip", "M0,0 L"+Number(sourceWidth)+",0 "+Number(sourceWidth)+","+Number(sourceHeight)+" 0,"+Number(sourceHeight)+" Z"));
+                    new XAttribute("Clip", "M"+left+","+top+" L"+right+","+top+" "+right+","+bottom+" "+left+","+bottom+" Z"));
                 foreach (var visual in page.Elements().Where(item => !item.Name.LocalName.Contains(".")).ToList())
                 { visual.Remove(); canvas.Add(visual); }
                 page.Add(canvas);

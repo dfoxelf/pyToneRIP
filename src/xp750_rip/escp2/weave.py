@@ -14,7 +14,7 @@ from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field, replace
 from math import gcd
 from time import perf_counter
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
 
@@ -857,6 +857,8 @@ def schedule_model96_softweave(
     page_height_rows: int,
     left_position_units: int = 0,
     initial_feed_offset_rows: int = 0,
+    absolute_page_edges: bool = False,
+    clip_negative_rows: bool = False,
     path_definitions: tuple[PhysicalPathDefinition, ...] | None = None,
     trace: PerformanceTrace | None = None,
     timings: WeaveStageTimings | None = None,
@@ -872,6 +874,16 @@ def schedule_model96_softweave(
         raise ValueError("initial feed offset cannot be negative")
     if mode.nozzle_count == 1 and initial_feed_offset_rows:
         raise ValueError("initial feed offset requires a host-weave printhead")
+    if absolute_page_edges:
+        # Plan the edge passes in the same coordinates that reach the device.
+        # Adding the head origin only when emitting feeds makes the leading
+        # map collapse passes onto row zero although the head has room to build
+        # up. The trailing map also needs the physical head travel: only marked
+        # rows, not the head's empty remainder, are limited by the page bottom.
+        first_line += initial_feed_offset_rows
+        page_height_rows += (initial_feed_offset_rows
+                             + mode.nozzle_count * mode.effective_nozzle_separation)
+        initial_feed_offset_rows = 0
     if path_definitions is None:
         definitions = {
             path: PhysicalPathDefinition(
@@ -926,7 +938,8 @@ def schedule_model96_softweave(
         jets=mode.nozzle_count,
         oversampling=mode.oversample,
     )
-    cooked = _CookedWeave(raw, first_line, last_line, page_height_rows)
+    cooked = _CookedWeave(raw, max(0, first_line) if clip_negative_rows else first_line,
+                          last_line, page_height_rows)
     # Horizontal/vertical subpasses may share a logical pass number. Keeping
     # the subpass in the key prevents two independently positioned raster rows
     # from colliding on the same nozzle (notably one-nozzle large-format
@@ -942,6 +955,18 @@ def schedule_model96_softweave(
         weave_split_1bit_kernel,
         weave_unpack_split_fold_kernel,
     )
+
+    def assign_rows(row_start: int, height: int, head_offset: int, *args: Any) -> np.ndarray:
+        # A staggered bank can begin before the physical leading edge during
+        # borderless printing. Never give negative rows to the cooked map.
+        skip = min(height, max(0, -row_start-head_offset)) if clip_negative_rows else 0
+        if not skip:
+            return weave_assignment_kernel(row_start, height, head_offset, *args)
+        padding = np.full((skip, subpass_count, 6), -1, dtype=np.int64)
+        if skip == height:
+            return padding
+        actual = weave_assignment_kernel(row_start+skip, height-skip, head_offset, *args)
+        return np.concatenate((padding, actual), axis=0)
 
     pre_base, pre_map, pre_stagger = _dense_mapping(cooked.premap, cooked.prestagger)
     post_base, post_map, post_stagger = _dense_mapping(cooked.postmap, cooked.poststagger)
@@ -959,7 +984,7 @@ def schedule_model96_softweave(
             pre_height = min(preflight_band_rows, rasters.height_rows - pre_start)
             minimum: int | None = None
             for path in rasters.identities:
-                values = weave_assignment_kernel(
+                values = assign_rows(
                     first_line + pre_start,
                     pre_height,
                     mode.effective_head_offset(definitions[path].head_offset),
@@ -1064,7 +1089,7 @@ def schedule_model96_softweave(
             descriptor = definitions[path]
             offset = mode.effective_head_offset(descriptor.head_offset)
             started = perf_counter()
-            assignments[path] = weave_assignment_kernel(
+            assignments[path] = assign_rows(
                 first_line + band_start,
                 band_height,
                 offset,
@@ -1110,6 +1135,8 @@ def schedule_model96_softweave(
                     values = plane_assignments[band_index, subpass]
                     row_assignment_count += 1
                     pass_index = int(values[0])
+                    if clip_negative_rows and pass_index < 0:
+                        continue
                     nozzle = int(values[1])
                     micro_offset = left_position_units + (subpass & (hpasses - 1)) * (
                         mode.physical_horizontal_dpi // mode.printed_horizontal_dpi

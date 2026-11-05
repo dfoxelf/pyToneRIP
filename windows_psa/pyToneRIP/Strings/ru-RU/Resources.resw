@@ -361,9 +361,11 @@
   <data name="PreviewWindow.PhotoPlacement" xml:space="preserve"><value>Размещение фото</value></data>
   <data name="PreviewWindow.PhotoFit" xml:space="preserve"><value>Фото по листу</value></data>
   <data name="PreviewWindow.PhotoReset" xml:space="preserve"><value>Сбросить фото</value></data>
-  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Перетаскивайте изображение мышью; тяните угловой маркер для изменения размера с сохранением пропорций. Поворот — кнопками 90°. Поля, добавленные исходной программой, остаются частью изображения.</value></data>
+  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Перетаскивайте изображение мышью; тяните угловой маркер для изменения размера с сохранением пропорций. Поворот — кнопками 90°. Поля, добавленные исходной программой, остаются частью изображения. Тяните белые маркеры посередине сторон для обрезки; потяните наружу, чтобы вернуть скрытую часть. Угловые маркеры изменяют размер фото.</value></data>
   <data name="PreviewWindow.PhotoCenterHorizontal" xml:space="preserve"><value>Центрировать по горизонтали</value></data>
   <data name="PreviewWindow.PhotoCenterVertical" xml:space="preserve"><value>Центрировать по вертикали</value></data>
   <data name="PreviewWindow.PrintStart" xml:space="preserve"><value>Начало печати</value></data>
   <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>Стрелка указывает край листа, который печатается первым.</value></data>
+  <data name="PreviewWindow.PhotoCrop" xml:space="preserve"><value>Тяните белые маркеры посередине сторон для обрезки; потяните наружу, чтобы вернуть скрытую часть. Угловые маркеры изменяют размер фото.</value></data>
+  <data name="PreviewWindow.PhotoFill" xml:space="preserve"><value>Заполнить страницу</value></data>
 </root>

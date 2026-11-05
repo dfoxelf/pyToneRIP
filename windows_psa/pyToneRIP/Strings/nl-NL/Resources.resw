@@ -361,9 +361,11 @@
   <data name="PreviewWindow.PhotoPlacement" xml:space="preserve"><value>Foto plaatsen</value></data>
   <data name="PreviewWindow.PhotoFit" xml:space="preserve"><value>Foto passend</value></data>
   <data name="PreviewWindow.PhotoReset" xml:space="preserve"><value>Foto herstellen</value></data>
-  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Versleep de afbeelding om te verplaatsen en een hoek om proportioneel te schalen. Draaien met de 90°-knoppen. Marges uit de bronapp blijven deel van de afbeelding.</value></data>
+  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Versleep de afbeelding om te verplaatsen en een hoek om proportioneel te schalen. Draaien met de 90°-knoppen. Marges uit de bronapp blijven deel van de afbeelding. Sleep de witte grepen in het midden van de zijkanten om bij te snijden; sleep naar buiten om te herstellen. Hoekgrepen wijzigen de grootte.</value></data>
   <data name="PreviewWindow.PhotoCenterHorizontal" xml:space="preserve"><value>Horizontaal centreren</value></data>
   <data name="PreviewWindow.PhotoCenterVertical" xml:space="preserve"><value>Verticaal centreren</value></data>
   <data name="PreviewWindow.PrintStart" xml:space="preserve"><value>Begin van afdruk</value></data>
   <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>De pijl markeert de rand van het vel die als eerste wordt bedrukt.</value></data>
+  <data name="PreviewWindow.PhotoCrop" xml:space="preserve"><value>Sleep de witte grepen in het midden van de zijkanten om bij te snijden; sleep naar buiten om te herstellen. Hoekgrepen wijzigen de grootte.</value></data>
+  <data name="PreviewWindow.PhotoFill" xml:space="preserve"><value>Pagina vullen</value></data>
 </root>

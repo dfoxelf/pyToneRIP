@@ -361,9 +361,11 @@
   <data name="PreviewWindow.PhotoPlacement" xml:space="preserve"><value>Fotoplacering</value></data>
   <data name="PreviewWindow.PhotoFit" xml:space="preserve"><value>Anpassa foto</value></data>
   <data name="PreviewWindow.PhotoReset" xml:space="preserve"><value>Återställ foto</value></data>
-  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Dra bilden för att flytta den och dra ett hörn för att ändra storlek proportionellt. Rotera med 90°-knapparna. Marginaler från källappen förblir en del av bilden.</value></data>
+  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Dra bilden för att flytta den och dra ett hörn för att ändra storlek proportionellt. Rotera med 90°-knapparna. Marginaler från källappen förblir en del av bilden. Dra de vita handtagen mitt på sidorna för att beskära; dra utåt för att återställa. Hörnhandtagen ändrar storleken.</value></data>
   <data name="PreviewWindow.PhotoCenterHorizontal" xml:space="preserve"><value>Centrera vågrätt</value></data>
   <data name="PreviewWindow.PhotoCenterVertical" xml:space="preserve"><value>Centrera lodrätt</value></data>
   <data name="PreviewWindow.PrintStart" xml:space="preserve"><value>Utskriftsstart</value></data>
   <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>Pilen markerar den kant av arket som skrivs ut först.</value></data>
+  <data name="PreviewWindow.PhotoCrop" xml:space="preserve"><value>Dra de vita handtagen mitt på sidorna för att beskära; dra utåt för att återställa. Hörnhandtagen ändrar storleken.</value></data>
+  <data name="PreviewWindow.PhotoFill" xml:space="preserve"><value>Fyll sidan</value></data>
 </root>

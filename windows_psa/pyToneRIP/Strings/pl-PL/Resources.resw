@@ -361,9 +361,11 @@
   <data name="PreviewWindow.PhotoPlacement" xml:space="preserve"><value>Położenie zdjęcia</value></data>
   <data name="PreviewWindow.PhotoFit" xml:space="preserve"><value>Dopasuj zdjęcie</value></data>
   <data name="PreviewWindow.PhotoReset" xml:space="preserve"><value>Resetuj zdjęcie</value></data>
-  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Przeciągnij obraz, aby go przesunąć, lub narożnik, aby proporcjonalnie zmienić rozmiar. Obracaj przyciskami 90°. Marginesy programu źródłowego pozostają częścią obrazu.</value></data>
+  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Przeciągnij obraz, aby go przesunąć, lub narożnik, aby proporcjonalnie zmienić rozmiar. Obracaj przyciskami 90°. Marginesy programu źródłowego pozostają częścią obrazu. Przeciągnij białe uchwyty pośrodku boków, aby przyciąć; przeciągnij na zewnątrz, aby przywrócić. Uchwyty narożne zmieniają rozmiar.</value></data>
   <data name="PreviewWindow.PhotoCenterHorizontal" xml:space="preserve"><value>Wyśrodkuj w poziomie</value></data>
   <data name="PreviewWindow.PhotoCenterVertical" xml:space="preserve"><value>Wyśrodkuj w pionie</value></data>
   <data name="PreviewWindow.PrintStart" xml:space="preserve"><value>Początek drukowania</value></data>
   <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>Strzałka wskazuje krawędź arkusza drukowaną jako pierwszą.</value></data>
+  <data name="PreviewWindow.PhotoCrop" xml:space="preserve"><value>Przeciągnij białe uchwyty pośrodku boków, aby przyciąć; przeciągnij na zewnątrz, aby przywrócić. Uchwyty narożne zmieniają rozmiar.</value></data>
+  <data name="PreviewWindow.PhotoFill" xml:space="preserve"><value>Wypełnij stronę</value></data>
 </root>

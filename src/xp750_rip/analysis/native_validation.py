@@ -11,6 +11,7 @@ from hashlib import sha256
 from xp750_rip.analysis.escp2_parser import EvidenceClass, StreamRecord, parse_stream
 from xp750_rip.escp2.backend import (
     BackendRenderResult, _p700_mode_setup, _et8550_mode_setup, _profile_leading_feed_offset_mils,
+    _T7200_FIRMWARE_PACKAGES, _t7200_mode_setup, _b1100_mode_setup, _et14100_mode_setup, _t3100_mode_setup, _T3100_NATIVE_GRID_PACKAGES,
 )
 from xp750_rip.escp2.mode import XP750_MODEL96_MODE_BY_ID
 from xp750_rip.printers.xp750 import XP750_PHYSICAL_PATH_BY_ID
@@ -333,9 +334,17 @@ def validate_escp2_native(result: BackendRenderResult) -> NativeStreamValidation
     else:
         units_payload = profile.units_payload
         head_payload = profile.printhead_resolution_payload
-        if profile.identity == "P700RIP":
+        if result.model.catalog_package_id in _T3100_NATIVE_GRID_PACKAGES:
+            units_payload, head_payload = _t3100_mode_setup(result.mode)
+        elif profile.identity == "ET14100":
+            units_payload, head_payload = _et14100_mode_setup(result.mode)
+        elif profile.identity == "B1100":
+            units_payload, head_payload = _b1100_mode_setup(result.mode)
+        elif result.model.catalog_package_id in _T7200_FIRMWARE_PACKAGES:
+            units_payload, head_payload = _t7200_mode_setup(result.mode)
+        elif profile.identity == "P700RIP":
             units_payload, head_payload, _ = _p700_mode_setup(result.mode)
-        elif profile.identity == "ET8550":
+        elif profile.identity in {"ET8550", "L8050Photo"}:
             units_payload, head_payload = _et8550_mode_setup(result.mode)
         divisor = units_payload[0]
         scale = int.from_bytes(units_payload[3:5], "little")
@@ -401,10 +410,10 @@ def validate_escp2_native(result: BackendRenderResult) -> NativeStreamValidation
     elif native_format is not None:
         expected_top += 1
         expected_bottom = expected_height - round(native_format[2] * page_units / 1000)
-        if (profile.identity in {"P700RIP", "ET8550"}
+        if (profile.identity in {"P700RIP", "ET8550", "L8050Photo"}
                 or result.model.catalog_package_id == "gp--escp2-r2880") \
                 and result.input_source.medium_kind == "roll":
-            expected_top = (0 if profile.identity == "P700RIP" and page.borderless
+            expected_top = (0 if profile.identity in {"P700RIP", "L8050Photo"} and page.borderless
                             else round(120 * page_units / 1000))
     elif (
         ((result.model.catalog_package_id or "").startswith("pf--")
@@ -434,7 +443,7 @@ def validate_escp2_native(result: BackendRenderResult) -> NativeStreamValidation
                 and result.input_source.medium_kind == "roll":
             expected_top = round(120 * page_units / 1000)
     if (
-        (profile.identity in {"ET8550", "P700RIP"}
+        (profile.identity in {"ET8550", "P700RIP", "L8050Photo"}
          or result.model.catalog_package_id == "gp--escp2-r2880")
         and page.borderless
         and result.input_source.medium_kind != "roll"
@@ -443,7 +452,7 @@ def validate_escp2_native(result: BackendRenderResult) -> NativeStreamValidation
         # at 720/1440 page units, respectively.
         if (expected_top < 0 and result.model.catalog_package_id != "gp--escp2-r2880"
                     and profile.identity != "P700RIP"
-                and not (profile.identity == "ET8550" and native_format is not None)):
+                and not (profile.identity in {"ET8550", "L8050Photo"} and native_format is not None)):
             expected_top += 1
         expected_bottom = expected_height + round(1300 * page_units / 1000) - 1
     if result.model.catalog_package_id in {

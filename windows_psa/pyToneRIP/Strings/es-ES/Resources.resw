@@ -361,9 +361,11 @@
   <data name="PreviewWindow.PhotoPlacement" xml:space="preserve"><value>Colocar foto</value></data>
   <data name="PreviewWindow.PhotoFit" xml:space="preserve"><value>Ajustar foto</value></data>
   <data name="PreviewWindow.PhotoReset" xml:space="preserve"><value>Restablecer foto</value></data>
-  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Arrastre la imagen para moverla y una esquina para cambiar su tamaño proporcionalmente. Gire con los botones de 90°. Los márgenes de la aplicación original forman parte de la imagen.</value></data>
+  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Arrastre la imagen para moverla y una esquina para cambiar su tamaño proporcionalmente. Gire con los botones de 90°. Los márgenes de la aplicación original forman parte de la imagen. Arrastre los tiradores blancos del centro de cada lado para recortar; arrastre hacia fuera para restaurar. Los tiradores de las esquinas cambian el tamaño.</value></data>
   <data name="PreviewWindow.PhotoCenterHorizontal" xml:space="preserve"><value>Centrar horizontalmente</value></data>
   <data name="PreviewWindow.PhotoCenterVertical" xml:space="preserve"><value>Centrar verticalmente</value></data>
   <data name="PreviewWindow.PrintStart" xml:space="preserve"><value>Inicio de impresión</value></data>
   <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>La flecha indica el borde de la hoja que se imprime primero.</value></data>
+  <data name="PreviewWindow.PhotoCrop" xml:space="preserve"><value>Arrastre los tiradores blancos del centro de cada lado para recortar; arrastre hacia fuera para restaurar. Los tiradores de las esquinas cambian el tamaño.</value></data>
+  <data name="PreviewWindow.PhotoFill" xml:space="preserve"><value>Rellenar página</value></data>
 </root>

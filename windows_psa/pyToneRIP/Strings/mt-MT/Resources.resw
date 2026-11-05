@@ -361,9 +361,11 @@
   <data name="PreviewWindow.PhotoPlacement" xml:space="preserve"><value>Pożizzjoni tar-ritratt</value></data>
   <data name="PreviewWindow.PhotoFit" xml:space="preserve"><value>Waħħal ir-ritratt</value></data>
   <data name="PreviewWindow.PhotoReset" xml:space="preserve"><value>Irrisettja r-ritratt</value></data>
-  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Iġbed l-immaġni biex iċċaqlaqha u kantuniera biex tbiddel id-daqs proporzjonalment. Dawwar bil-buttuni 90°. Il-marġini tal-applikazzjoni tas-sors jibqgħu parti mill-immaġni.</value></data>
+  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Iġbed l-immaġni biex iċċaqlaqha u kantuniera biex tbiddel id-daqs proporzjonalment. Dawwar bil-buttuni 90°. Il-marġini tal-applikazzjoni tas-sors jibqgħu parti mill-immaġni. Iġbed il-pumi bojod f’nofs kull naħa biex taqta’; iġbed ’il barra biex tirrestawra. Il-pumi tal-kantunieri jibdlu d-daqs.</value></data>
   <data name="PreviewWindow.PhotoCenterHorizontal" xml:space="preserve"><value>Iċċentra orizzontalment</value></data>
   <data name="PreviewWindow.PhotoCenterVertical" xml:space="preserve"><value>Iċċentra vertikalment</value></data>
   <data name="PreviewWindow.PrintStart" xml:space="preserve"><value>Bidu tal-istampar</value></data>
   <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>Il-vleġġa tindika t-tarf tal-folja li jiġi stampat l-ewwel.</value></data>
+  <data name="PreviewWindow.PhotoCrop" xml:space="preserve"><value>Iġbed il-pumi bojod f’nofs kull naħa biex taqta’; iġbed ’il barra biex tirrestawra. Il-pumi tal-kantunieri jibdlu d-daqs.</value></data>
+  <data name="PreviewWindow.PhotoFill" xml:space="preserve"><value>Imla l-paġna</value></data>
 </root>

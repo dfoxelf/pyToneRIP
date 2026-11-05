@@ -361,9 +361,11 @@
   <data name="PreviewWindow.PhotoPlacement" xml:space="preserve"><value>Foto platzieren</value></data>
   <data name="PreviewWindow.PhotoFit" xml:space="preserve"><value>Foto einpassen</value></data>
   <data name="PreviewWindow.PhotoReset" xml:space="preserve"><value>Foto zurücksetzen</value></data>
-  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Bild zum Verschieben ziehen; Ecke zum proportionalen Skalieren ziehen. Drehung mit den 90°-Tasten. Ränder der Quellanwendung bleiben Teil des Bildes.</value></data>
+  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Bild zum Verschieben ziehen; Ecke zum proportionalen Skalieren ziehen. Drehung mit den 90°-Tasten. Ränder der Quellanwendung bleiben Teil des Bildes. Zum Zuschneiden die weißen Griffe in der Mitte der Seiten ziehen; nach außen ziehen, um Bereiche wiederherzustellen. Eckgriffe ändern die Größe.</value></data>
   <data name="PreviewWindow.PhotoCenterHorizontal" xml:space="preserve"><value>Horizontal zentrieren</value></data>
   <data name="PreviewWindow.PhotoCenterVertical" xml:space="preserve"><value>Vertikal zentrieren</value></data>
   <data name="PreviewWindow.PrintStart" xml:space="preserve"><value>Druckbeginn</value></data>
   <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>Der Pfeil markiert die Blattkante, die zuerst bedruckt wird.</value></data>
+  <data name="PreviewWindow.PhotoCrop" xml:space="preserve"><value>Zum Zuschneiden die weißen Griffe in der Mitte der Seiten ziehen; nach außen ziehen, um Bereiche wiederherzustellen. Eckgriffe ändern die Größe.</value></data>
+  <data name="PreviewWindow.PhotoFill" xml:space="preserve"><value>Seite füllen</value></data>
 </root>

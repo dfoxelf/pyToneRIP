@@ -361,9 +361,11 @@
   <data name="PreviewWindow.PhotoPlacement" xml:space="preserve"><value>Posicionar foto</value></data>
   <data name="PreviewWindow.PhotoFit" xml:space="preserve"><value>Ajustar foto</value></data>
   <data name="PreviewWindow.PhotoReset" xml:space="preserve"><value>Repor foto</value></data>
-  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Arraste a imagem para a mover e um canto para redimensionar proporcionalmente. Rode com os botões de 90°. As margens da aplicação de origem continuam a fazer parte da imagem.</value></data>
+  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Arraste a imagem para a mover e um canto para redimensionar proporcionalmente. Rode com os botões de 90°. As margens da aplicação de origem continuam a fazer parte da imagem. Arraste as pegas brancas a meio dos lados para recortar; arraste para fora para restaurar. As pegas dos cantos alteram o tamanho.</value></data>
   <data name="PreviewWindow.PhotoCenterHorizontal" xml:space="preserve"><value>Centrar horizontalmente</value></data>
   <data name="PreviewWindow.PhotoCenterVertical" xml:space="preserve"><value>Centrar verticalmente</value></data>
   <data name="PreviewWindow.PrintStart" xml:space="preserve"><value>Início da impressão</value></data>
   <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>A seta indica a margem da folha que é impressa primeiro.</value></data>
+  <data name="PreviewWindow.PhotoCrop" xml:space="preserve"><value>Arraste as pegas brancas a meio dos lados para recortar; arraste para fora para restaurar. As pegas dos cantos alteram o tamanho.</value></data>
+  <data name="PreviewWindow.PhotoFill" xml:space="preserve"><value>Preencher página</value></data>
 </root>

@@ -361,9 +361,11 @@
   <data name="PreviewWindow.PhotoPlacement" xml:space="preserve"><value>Poziționare fotografie</value></data>
   <data name="PreviewWindow.PhotoFit" xml:space="preserve"><value>Încadrează fotografia</value></data>
   <data name="PreviewWindow.PhotoReset" xml:space="preserve"><value>Resetează fotografia</value></data>
-  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Trageți imaginea pentru mutare și un colț pentru redimensionare proporțională. Rotiți cu butoanele 90°. Marginile aplicației sursă rămân parte din imagine.</value></data>
+  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Trageți imaginea pentru mutare și un colț pentru redimensionare proporțională. Rotiți cu butoanele 90°. Marginile aplicației sursă rămân parte din imagine. Trageți mânerele albe din mijlocul laturilor pentru decupare; trageți spre exterior pentru restaurare. Mânerele din colțuri schimbă dimensiunea.</value></data>
   <data name="PreviewWindow.PhotoCenterHorizontal" xml:space="preserve"><value>Centrează orizontal</value></data>
   <data name="PreviewWindow.PhotoCenterVertical" xml:space="preserve"><value>Centrează vertical</value></data>
   <data name="PreviewWindow.PrintStart" xml:space="preserve"><value>Începutul imprimării</value></data>
   <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>Săgeata indică marginea foii care este imprimată prima.</value></data>
+  <data name="PreviewWindow.PhotoCrop" xml:space="preserve"><value>Trageți mânerele albe din mijlocul laturilor pentru decupare; trageți spre exterior pentru restaurare. Mânerele din colțuri schimbă dimensiunea.</value></data>
+  <data name="PreviewWindow.PhotoFill" xml:space="preserve"><value>Umple pagina</value></data>
 </root>

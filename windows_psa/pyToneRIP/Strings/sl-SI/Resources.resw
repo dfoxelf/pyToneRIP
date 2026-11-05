@@ -361,9 +361,11 @@
   <data name="PreviewWindow.PhotoPlacement" xml:space="preserve"><value>Položaj fotografije</value></data>
   <data name="PreviewWindow.PhotoFit" xml:space="preserve"><value>Prilagodi fotografijo</value></data>
   <data name="PreviewWindow.PhotoReset" xml:space="preserve"><value>Ponastavi fotografijo</value></data>
-  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Povlecite sliko za premik in vogal za sorazmerno spremembo velikosti. Zavrtite z gumboma 90°. Robovi izvorne aplikacije ostanejo del slike.</value></data>
+  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Povlecite sliko za premik in vogal za sorazmerno spremembo velikosti. Zavrtite z gumboma 90°. Robovi izvorne aplikacije ostanejo del slike. Za obrezovanje povlecite bele ročice na sredini stranic; za obnovitev povlecite navzven. Kotne ročice spreminjajo velikost.</value></data>
   <data name="PreviewWindow.PhotoCenterHorizontal" xml:space="preserve"><value>Sredinsko vodoravno</value></data>
   <data name="PreviewWindow.PhotoCenterVertical" xml:space="preserve"><value>Sredinsko navpično</value></data>
   <data name="PreviewWindow.PrintStart" xml:space="preserve"><value>Začetek tiskanja</value></data>
   <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>Puščica označuje rob lista, ki se natisne prvi.</value></data>
+  <data name="PreviewWindow.PhotoCrop" xml:space="preserve"><value>Za obrezovanje povlecite bele ročice na sredini stranic; za obnovitev povlecite navzven. Kotne ročice spreminjajo velikost.</value></data>
+  <data name="PreviewWindow.PhotoFill" xml:space="preserve"><value>Zapolni stran</value></data>
 </root>

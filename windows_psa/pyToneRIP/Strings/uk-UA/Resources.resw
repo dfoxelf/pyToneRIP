@@ -361,9 +361,11 @@
   <data name="PreviewWindow.PhotoPlacement" xml:space="preserve"><value>Розміщення фото</value></data>
   <data name="PreviewWindow.PhotoFit" xml:space="preserve"><value>Вписати фото</value></data>
   <data name="PreviewWindow.PhotoReset" xml:space="preserve"><value>Скинути фото</value></data>
-  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Перетягуйте зображення мишею; тягніть кутовий маркер для зміни розміру зі збереженням пропорцій. Поворот — кнопками 90°. Поля початкової програми залишаються частиною зображення.</value></data>
+  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Перетягуйте зображення мишею; тягніть кутовий маркер для зміни розміру зі збереженням пропорцій. Поворот — кнопками 90°. Поля початкової програми залишаються частиною зображення. Тягніть білі маркери посередині сторін для обрізання; потягніть назовні, щоб повернути приховану частину. Кутові маркери змінюють розмір фото.</value></data>
   <data name="PreviewWindow.PhotoCenterHorizontal" xml:space="preserve"><value>Центрувати по горизонталі</value></data>
   <data name="PreviewWindow.PhotoCenterVertical" xml:space="preserve"><value>Центрувати по вертикалі</value></data>
   <data name="PreviewWindow.PrintStart" xml:space="preserve"><value>Початок друку</value></data>
   <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>Стрілка вказує край аркуша, який друкується першим.</value></data>
+  <data name="PreviewWindow.PhotoCrop" xml:space="preserve"><value>Тягніть білі маркери посередині сторін для обрізання; потягніть назовні, щоб повернути приховану частину. Кутові маркери змінюють розмір фото.</value></data>
+  <data name="PreviewWindow.PhotoFill" xml:space="preserve"><value>Заповнити сторінку</value></data>
 </root>

@@ -361,9 +361,11 @@
   <data name="PreviewWindow.PhotoPlacement" xml:space="preserve"><value>Foto novietojums</value></data>
   <data name="PreviewWindow.PhotoFit" xml:space="preserve"><value>Ietilpināt foto</value></data>
   <data name="PreviewWindow.PhotoReset" xml:space="preserve"><value>Atiestatīt foto</value></data>
-  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Velciet attēlu, lai to pārvietotu, un stūri, lai proporcionāli mainītu izmēru. Pagrieziet ar 90° pogām. Avota lietotnes piemales paliek attēla daļa.</value></data>
+  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Velciet attēlu, lai to pārvietotu, un stūri, lai proporcionāli mainītu izmēru. Pagrieziet ar 90° pogām. Avota lietotnes piemales paliek attēla daļa. Velciet baltos rokturus malu vidū, lai apgrieztu; velciet uz āru, lai atjaunotu. Stūru rokturi maina izmēru.</value></data>
   <data name="PreviewWindow.PhotoCenterHorizontal" xml:space="preserve"><value>Centrēt horizontāli</value></data>
   <data name="PreviewWindow.PhotoCenterVertical" xml:space="preserve"><value>Centrēt vertikāli</value></data>
   <data name="PreviewWindow.PrintStart" xml:space="preserve"><value>Drukāšanas sākums</value></data>
   <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>Bultiņa norāda lapas malu, kas tiek drukāta pirmā.</value></data>
+  <data name="PreviewWindow.PhotoCrop" xml:space="preserve"><value>Velciet baltos rokturus malu vidū, lai apgrieztu; velciet uz āru, lai atjaunotu. Stūru rokturi maina izmēru.</value></data>
+  <data name="PreviewWindow.PhotoFill" xml:space="preserve"><value>Aizpildīt lapu</value></data>
 </root>

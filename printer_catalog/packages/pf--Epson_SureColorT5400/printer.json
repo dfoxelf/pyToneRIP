@@ -22,20 +22,18 @@
     }
   ],
   "device_features": [
-    "paper_suction",
-    "paper_thickness",
-    "save_roll_paper",
-    "scan_drying_time"
+    "platen_gap",
+    "save_roll_paper"
   ],
   "driver": {
     "driver_mechanics": {
       "command_level": 21,
-      "leading_feed_offset_mils": 0,
-      "mechanical_feature_set": 7
+      "leading_feed_offset_mils": -1333,
+      "mechanical_feature_set": 2
     },
-    "id": "PRO7600",
+    "id": "T3100",
     "module": "Epson",
-    "number": "481"
+    "number": "611"
   },
   "feeds": [
     {
@@ -55,7 +53,7 @@
       "feed_mechanics": {
         "medium_kind": "automatic_cut_sheet",
         "remote_paper_path": {
-          "number": 255,
+          "number": 0,
           "type": 1
         },
         "roll_cut_mode": "none",
@@ -68,7 +66,7 @@
       "feed_mechanics": {
         "medium_kind": "selected_cut_sheet_path",
         "remote_paper_path": {
-          "number": 1,
+          "number": 0,
           "type": 2
         },
         "roll_cut_mode": "none",
@@ -81,7 +79,7 @@
       "feed_mechanics": {
         "medium_kind": "roll",
         "remote_paper_path": {
-          "number": 1,
+          "number": 0,
           "type": 3
         },
         "roll_cut_mode": "none",
@@ -94,7 +92,7 @@
       "feed_mechanics": {
         "medium_kind": "roll",
         "remote_paper_path": {
-          "number": 1,
+          "number": 0,
           "type": 3
         },
         "roll_cut_mode": "cut_each_page",
@@ -102,24 +100,11 @@
       },
       "idx": 4,
       "name": "Roll Paper (cut)"
-    },
-    {
-      "feed_mechanics": {
-        "medium_kind": "roll",
-        "remote_paper_path": {
-          "number": 1,
-          "type": 3
-        },
-        "roll_cut_mode": "cut_last_page",
-        "suppress_form_feed_after_page": false
-      },
-      "idx": 5,
-      "name": "Roll Paper (double cut)"
     }
   ],
   "identity": {
     "manufacturer": "Epson",
-    "marketing": "SureColorT5400",
+    "marketing": "SureColor T5400",
     "name": "Epson_SureColorT5400"
   },
   "media": [
@@ -140,31 +125,44 @@
       "idx": 1,
       "match": "epson_inkjet",
       "media_mechanics": {
-        "legacy_media_type_code": 29,
+        "legacy_media_type_code": 128,
         "physical_raster_layout_variant": 0,
-        "remote_media_type_code": 29,
+        "remote_media_type_code": 128,
         "special_media": {
           "kind": "none"
         }
       },
-      "name": "Inkjet Paper"
+      "name": "Single Weight Matte"
     },
     {
       "idx": 2,
-      "match": "epson_inkjet",
+      "match": "matte_heavy",
       "media_mechanics": {
-        "legacy_media_type_code": 29,
+        "legacy_media_type_code": 130,
         "physical_raster_layout_variant": 0,
-        "remote_media_type_code": 29,
+        "remote_media_type_code": 130,
         "special_media": {
           "kind": "none"
         }
       },
-      "name": "Epson Inkjet Paper"
+      "name": "Double Weight Matte"
     },
     {
       "idx": 3,
-      "match": "epson_inkjet",
+      "match": "matte_heavy",
+      "media_mechanics": {
+        "legacy_media_type_code": 178,
+        "physical_raster_layout_variant": 0,
+        "remote_media_type_code": 178,
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "name": "Enhanced Matte"
+    },
+    {
+      "idx": 4,
+      "match": "matte_heavy",
       "media_mechanics": {
         "legacy_media_type_code": 15,
         "physical_raster_layout_variant": 0,
@@ -173,23 +171,62 @@
           "kind": "none"
         }
       },
-      "name": "Epson Matte Heavy"
-    },
-    {
-      "idx": 4,
-      "match": "premium_glossy",
-      "media_mechanics": {
-        "legacy_media_type_code": 11,
-        "physical_raster_layout_variant": 0,
-        "remote_media_type_code": 11,
-        "special_media": {
-          "kind": "none"
-        }
-      },
-      "name": "Epson Photo Glossy"
+      "name": "Archival Matte"
     },
     {
       "idx": 5,
+      "match": "epson_inkjet",
+      "media_mechanics": {
+        "legacy_media_type_code": 29,
+        "physical_raster_layout_variant": 0,
+        "remote_media_type_code": 29,
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "name": "Photo Quality Inkjet"
+    },
+    {
+      "idx": 6,
+      "match": "matte_heavy",
+      "media_mechanics": {
+        "legacy_media_type_code": 176,
+        "physical_raster_layout_variant": 0,
+        "remote_media_type_code": 176,
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "name": "Coated Generic"
+    },
+    {
+      "idx": 7,
+      "match": "premium_glossy",
+      "media_mechanics": {
+        "legacy_media_type_code": 140,
+        "physical_raster_layout_variant": 0,
+        "remote_media_type_code": 140,
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "name": "Premium Glossy 170"
+    },
+    {
+      "idx": 8,
+      "match": "premium_glossy",
+      "media_mechanics": {
+        "legacy_media_type_code": 141,
+        "physical_raster_layout_variant": 0,
+        "remote_media_type_code": 141,
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "name": "Premium Semigloss 170"
+    },
+    {
+      "idx": 9,
       "match": "premium_glossy",
       "media_mechanics": {
         "legacy_media_type_code": 11,
@@ -199,10 +236,10 @@
           "kind": "none"
         }
       },
-      "name": "Epson Premium Glossy"
+      "name": "Premium Glossy"
     },
     {
-      "idx": 6,
+      "idx": 10,
       "match": "premium_glossy",
       "media_mechanics": {
         "legacy_media_type_code": 12,
@@ -212,44 +249,133 @@
           "kind": "none"
         }
       },
-      "name": "Epson Durabrite"
+      "name": "Premium Semigloss"
     },
     {
-      "idx": 7,
-      "match": "epson_transparency",
+      "idx": 11,
+      "match": "premium_glossy",
       "media_mechanics": {
-        "legacy_media_type_code": 9,
+        "legacy_media_type_code": 13,
         "physical_raster_layout_variant": 0,
-        "remote_media_type_code": 9,
+        "remote_media_type_code": 13,
         "special_media": {
           "kind": "none"
         }
       },
-      "name": "Transparency"
+      "name": "Premium Luster"
+    },
+    {
+      "idx": 12,
+      "match": "premium_glossy",
+      "media_mechanics": {
+        "legacy_media_type_code": 52,
+        "physical_raster_layout_variant": 0,
+        "remote_media_type_code": 52,
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "name": "Photo Paper Glossy"
+    },
+    {
+      "idx": 13,
+      "match": "premium_glossy",
+      "media_mechanics": {
+        "legacy_media_type_code": 175,
+        "physical_raster_layout_variant": 0,
+        "remote_media_type_code": 175,
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "name": "Photo Paper Generic"
+    },
+    {
+      "idx": 14,
+      "match": "matte_heavy",
+      "media_mechanics": {
+        "legacy_media_type_code": 151,
+        "physical_raster_layout_variant": 0,
+        "remote_media_type_code": 151,
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "name": "Transparent Paper"
+    },
+    {
+      "idx": 15,
+      "match": "epson_inkjet",
+      "media_mechanics": {
+        "legacy_media_type_code": 167,
+        "physical_raster_layout_variant": 0,
+        "remote_media_type_code": 167,
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "name": "Transparent Paper Light"
+    },
+    {
+      "idx": 16,
+      "match": "matte_heavy",
+      "media_mechanics": {
+        "legacy_media_type_code": 177,
+        "physical_raster_layout_variant": 0,
+        "remote_media_type_code": 177,
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "name": "Matte Film"
+    },
+    {
+      "idx": 17,
+      "match": "matte_heavy",
+      "media_mechanics": {
+        "legacy_media_type_code": 136,
+        "physical_raster_layout_variant": 0,
+        "remote_media_type_code": 136,
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "name": "Enhanced Adhesive Synthetic"
+    },
+    {
+      "idx": 18,
+      "match": "matte_heavy",
+      "media_mechanics": {
+        "legacy_media_type_code": 182,
+        "physical_raster_layout_variant": 0,
+        "remote_media_type_code": 182,
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "name": "Enhanced Low Adhesive Synthetic"
+    },
+    {
+      "idx": 19,
+      "match": "matte_heavy",
+      "media_mechanics": {
+        "legacy_media_type_code": 134,
+        "physical_raster_layout_variant": 0,
+        "remote_media_type_code": 134,
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "name": "Heavy Weight Polyester Banner"
     }
   ],
   "media_sizes": [
     {
-      "anumber": null,
-      "height_mils": 590550,
-      "idx": 0,
-      "name": "Custom",
-      "page_mechanics": {
-        "media_size_code": 0,
-        "sheet_geometry_class": "standard_sheet",
-        "special_media": {
-          "kind": "none"
-        }
-      },
-      "width_mils": 36020
-    },
-    {
-      "anumber": null,
       "height_mils": 11000,
       "idx": 1,
       "name": "US-Letter",
       "page_mechanics": {
-        "media_size_code": 0,
+        "media_size_code": 1,
         "sheet_geometry_class": "standard_sheet",
         "special_media": {
           "kind": "none"
@@ -258,12 +384,11 @@
       "width_mils": 8500
     },
     {
-      "anumber": null,
       "height_mils": 14000,
       "idx": 2,
       "name": "US-Legal",
       "page_mechanics": {
-        "media_size_code": 0,
+        "media_size_code": 2,
         "sheet_geometry_class": "standard_sheet",
         "special_media": {
           "kind": "none"
@@ -272,7 +397,6 @@
       "width_mils": 8500
     },
     {
-      "anumber": null,
       "height_mils": 11693,
       "idx": 3,
       "name": "A4",
@@ -286,12 +410,11 @@
       "width_mils": 8268
     },
     {
-      "anumber": null,
       "height_mils": 16535,
       "idx": 4,
       "name": "A3",
       "page_mechanics": {
-        "media_size_code": 0,
+        "media_size_code": 62,
         "sheet_geometry_class": "standard_sheet",
         "special_media": {
           "kind": "none"
@@ -300,12 +423,11 @@
       "width_mils": 11693
     },
     {
-      "anumber": null,
       "height_mils": 19000,
       "idx": 5,
       "name": "A3+ / US B+",
       "page_mechanics": {
-        "media_size_code": 0,
+        "media_size_code": 61,
         "sheet_geometry_class": "standard_sheet",
         "special_media": {
           "kind": "none"
@@ -314,7 +436,6 @@
       "width_mils": 13000
     },
     {
-      "anumber": null,
       "height_mils": 23386,
       "idx": 6,
       "name": "A2",
@@ -328,7 +449,6 @@
       "width_mils": 16535
     },
     {
-      "anumber": null,
       "height_mils": 33110,
       "idx": 7,
       "name": "A1",
@@ -342,7 +462,6 @@
       "width_mils": 23386
     },
     {
-      "anumber": null,
       "height_mils": 36000,
       "idx": 8,
       "name": "Super A1",
@@ -356,12 +475,37 @@
       "width_mils": 24000
     },
     {
-      "anumber": null,
-      "height_mils": 14331,
+      "height_mils": 46811,
       "idx": 9,
-      "name": "B4",
+      "name": "A0",
       "page_mechanics": {
         "media_size_code": 0,
+        "sheet_geometry_class": "standard_sheet",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "width_mils": 33110
+    },
+    {
+      "height_mils": 50866,
+      "idx": 10,
+      "name": "Super A0",
+      "page_mechanics": {
+        "media_size_code": 0,
+        "sheet_geometry_class": "standard_sheet",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "width_mils": 35984
+    },
+    {
+      "height_mils": 14331,
+      "idx": 11,
+      "name": "B4",
+      "page_mechanics": {
+        "media_size_code": 63,
         "sheet_geometry_class": "standard_sheet",
         "special_media": {
           "kind": "none"
@@ -370,9 +514,8 @@
       "width_mils": 10118
     },
     {
-      "anumber": null,
       "height_mils": 20236,
-      "idx": 10,
+      "idx": 12,
       "name": "B3",
       "page_mechanics": {
         "media_size_code": 0,
@@ -384,9 +527,8 @@
       "width_mils": 14431
     },
     {
-      "anumber": null,
       "height_mils": 28661,
-      "idx": 11,
+      "idx": 13,
       "name": "B2",
       "page_mechanics": {
         "media_size_code": 0,
@@ -398,12 +540,24 @@
       "width_mils": 20276
     },
     {
-      "anumber": null,
-      "height_mils": 17000,
-      "idx": 12,
-      "name": "US B",
+      "height_mils": 40551,
+      "idx": 14,
+      "name": "B1",
       "page_mechanics": {
         "media_size_code": 0,
+        "sheet_geometry_class": "standard_sheet",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "width_mils": 28661
+    },
+    {
+      "height_mils": 17000,
+      "idx": 15,
+      "name": "US B",
+      "page_mechanics": {
+        "media_size_code": 64,
         "sheet_geometry_class": "standard_sheet",
         "special_media": {
           "kind": "none"
@@ -412,9 +566,8 @@
       "width_mils": 11000
     },
     {
-      "anumber": null,
       "height_mils": 22000,
-      "idx": 13,
+      "idx": 16,
       "name": "US C",
       "page_mechanics": {
         "media_size_code": 0,
@@ -426,9 +579,8 @@
       "width_mils": 17000
     },
     {
-      "anumber": null,
       "height_mils": 34000,
-      "idx": 14,
+      "idx": 17,
       "name": "US D",
       "page_mechanics": {
         "media_size_code": 0,
@@ -440,12 +592,24 @@
       "width_mils": 22000
     },
     {
-      "anumber": null,
-      "height_mils": 10000,
-      "idx": 15,
-      "name": "8x10\"",
+      "height_mils": 44000,
+      "idx": 18,
+      "name": "US E",
       "page_mechanics": {
         "media_size_code": 0,
+        "sheet_geometry_class": "standard_sheet",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "width_mils": 34000
+    },
+    {
+      "height_mils": 10000,
+      "idx": 19,
+      "name": "8x10\"",
+      "page_mechanics": {
+        "media_size_code": 12,
         "sheet_geometry_class": "standard_sheet",
         "special_media": {
           "kind": "none"
@@ -454,9 +618,8 @@
       "width_mils": 8000
     },
     {
-      "anumber": null,
       "height_mils": 14000,
-      "idx": 16,
+      "idx": 20,
       "name": "11x14\"",
       "page_mechanics": {
         "media_size_code": 0,
@@ -468,9 +631,8 @@
       "width_mils": 11000
     },
     {
-      "anumber": null,
       "height_mils": 20000,
-      "idx": 17,
+      "idx": 21,
       "name": "16x20\"",
       "page_mechanics": {
         "media_size_code": 0,
@@ -482,9 +644,8 @@
       "width_mils": 16000
     },
     {
-      "anumber": null,
       "height_mils": 15748,
-      "idx": 18,
+      "idx": 22,
       "name": "30x40cm",
       "page_mechanics": {
         "media_size_code": 0,
@@ -496,9 +657,8 @@
       "width_mils": 11811
     },
     {
-      "anumber": null,
       "height_mils": 23622,
-      "idx": 19,
+      "idx": 23,
       "name": "40x60cm",
       "page_mechanics": {
         "media_size_code": 0,
@@ -508,124 +668,23 @@
         }
       },
       "width_mils": 15748
-    },
-    {
-      "anumber": null,
-      "height_mils": 28961,
-      "idx": 20,
-      "name": "B2 borderless",
-      "page_mechanics": {
-        "media_size_code": 0,
-        "sheet_geometry_class": "standard_sheet",
-        "special_media": {
-          "kind": "none"
-        }
-      },
-      "width_mils": 20476
-    },
-    {
-      "anumber": null,
-      "height_mils": 36300,
-      "idx": 21,
-      "name": "Super A1 borderless",
-      "page_mechanics": {
-        "media_size_code": 0,
-        "sheet_geometry_class": "standard_sheet",
-        "special_media": {
-          "kind": "none"
-        }
-      },
-      "width_mils": 24200
-    },
-    {
-      "anumber": null,
-      "height_mils": 33410,
-      "idx": 22,
-      "name": "A1 borderless",
-      "page_mechanics": {
-        "media_size_code": 0,
-        "sheet_geometry_class": "standard_sheet",
-        "special_media": {
-          "kind": "none"
-        }
-      },
-      "width_mils": 23586
-    },
-    {
-      "anumber": null,
-      "height_mils": 19300,
-      "idx": 23,
-      "name": "A3+ / US B+ borderless",
-      "page_mechanics": {
-        "media_size_code": 0,
-        "sheet_geometry_class": "standard_sheet",
-        "special_media": {
-          "kind": "none"
-        }
-      },
-      "width_mils": 13200
-    },
-    {
-      "anumber": null,
-      "height_mils": 22300,
-      "idx": 24,
-      "name": "US C borderless",
-      "page_mechanics": {
-        "media_size_code": 0,
-        "sheet_geometry_class": "standard_sheet",
-        "special_media": {
-          "kind": "none"
-        }
-      },
-      "width_mils": 17200
-    },
-    {
-      "anumber": null,
-      "height_mils": 20300,
-      "idx": 25,
-      "name": "16x20\" borderless",
-      "page_mechanics": {
-        "media_size_code": 0,
-        "sheet_geometry_class": "standard_sheet",
-        "special_media": {
-          "kind": "none"
-        }
-      },
-      "width_mils": 16200
-    },
-    {
-      "anumber": null,
-      "height_mils": 16048,
-      "idx": 26,
-      "name": "30x40cm borderless",
-      "page_mechanics": {
-        "media_size_code": 0,
-        "sheet_geometry_class": "standard_sheet",
-        "special_media": {
-          "kind": "none"
-        }
-      },
-      "width_mils": 12011
-    },
-    {
-      "anumber": null,
-      "height_mils": 23922,
-      "idx": 27,
-      "name": "40x60cm borderless",
-      "page_mechanics": {
-        "media_size_code": 0,
-        "sheet_geometry_class": "standard_sheet",
-        "special_media": {
-          "kind": "none"
-        }
-      },
-      "width_mils": 15948
     }
   ],
   "protocol": {
     "cls": "escp2-esci",
-    "family": "SC-T5400",
-    "note": "SC-T5400 direct ESC i stream captured"
+    "family": "SC-T5400"
   },
-  "schema": "rip-printer-v1"
+  "schema": "rip-printer-v1.2",
+  "unimplemented_device_features": [
+    {
+      "display_name": "Microweave Quality",
+      "identity": "microweave_quality",
+      "status": "NATIVE_ENCODING_NOT_IMPLEMENTED"
+    },
+    {
+      "display_name": "Print Separation Line",
+      "identity": "print_separation_line",
+      "status": "NATIVE_ENCODING_NOT_IMPLEMENTED"
+    }
+  ]
 }

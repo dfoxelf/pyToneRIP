@@ -361,9 +361,11 @@
   <data name="PreviewWindow.PhotoPlacement" xml:space="preserve"><value>Umiestnenie fotografie</value></data>
   <data name="PreviewWindow.PhotoFit" xml:space="preserve"><value>Prispôsobiť fotografiu</value></data>
   <data name="PreviewWindow.PhotoReset" xml:space="preserve"><value>Obnoviť fotografiu</value></data>
-  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Presuňte obrázok ťahaním; ťahaním rohu zmeníte veľkosť so zachovaním pomeru strán. Otáčajte tlačidlami 90°. Okraje zdrojovej aplikácie zostávajú súčasťou obrázka.</value></data>
+  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Presuňte obrázok ťahaním; ťahaním rohu zmeníte veľkosť so zachovaním pomeru strán. Otáčajte tlačidlami 90°. Okraje zdrojovej aplikácie zostávajú súčasťou obrázka. Ťahaním bielych úchytov v strede strán obrázok orežete; ťahaním von ho obnovíte. Rohové úchyty menia veľkosť.</value></data>
   <data name="PreviewWindow.PhotoCenterHorizontal" xml:space="preserve"><value>Vycentrovať vodorovne</value></data>
   <data name="PreviewWindow.PhotoCenterVertical" xml:space="preserve"><value>Vycentrovať zvisle</value></data>
   <data name="PreviewWindow.PrintStart" xml:space="preserve"><value>Začiatok tlače</value></data>
   <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>Šípka označuje okraj hárka, ktorý sa tlačí ako prvý.</value></data>
+  <data name="PreviewWindow.PhotoCrop" xml:space="preserve"><value>Ťahaním bielych úchytov v strede strán obrázok orežete; ťahaním von ho obnovíte. Rohové úchyty menia veľkosť.</value></data>
+  <data name="PreviewWindow.PhotoFill" xml:space="preserve"><value>Vyplniť stranu</value></data>
 </root>

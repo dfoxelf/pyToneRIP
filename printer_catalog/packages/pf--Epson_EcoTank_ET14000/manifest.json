@@ -1,5 +1,5 @@
 {
-  "backend_family": "epson_escp2_wf7610",
+  "backend_family": "epson_escp2_b1100",
   "backend_runtime_file": null,
   "backend_runtime_sha256": null,
   "backend_source_file": null,
@@ -12,7 +12,7 @@
   "ppd_sha256": "63bb5eb9710ada80a530f4b6ae60e75bb901436410cc9f8eb969b14f6823fa5b",
   "ppd_source": "printer.ppd",
   "protocol_class": "escp2-esci",
-  "protocol_family": "WF7610",
+  "protocol_family": "B1100",
   "runtime_source_file": "runtime-source.json",
   "runtime_source_sha256": "1b062e70eaf1b106ae9016663a3ac313ad07230969964db892f1bec2c856c000",
   "schema": "pytone-rip.printer-support-package",

@@ -1,5 +1,5 @@
 {
-  "count": 187,
+  "count": 190,
   "packages": [
     {
       "backend_status": "IMPLEMENTED",
@@ -584,6 +584,13 @@
     },
     {
       "backend_status": "IMPLEMENTED",
+      "display_name": "Epson EcoTank ET-18100",
+      "model_id": "EcoTank_ET18100",
+      "package_id": "pf--Epson_EcoTank_ET18100",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
       "display_name": "Epson EcoTank ET-2500",
       "model_id": "EcoTank_ET2500",
       "package_id": "pf--Epson_EcoTank_ET2500",
@@ -857,6 +864,13 @@
     },
     {
       "backend_status": "IMPLEMENTED",
+      "display_name": "Epson L18050",
+      "model_id": "L18050",
+      "package_id": "pf--Epson_L18050",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
       "display_name": "Epson L3110",
       "model_id": "L3110",
       "package_id": "pf--Epson_L3110",
@@ -867,6 +881,13 @@
       "display_name": "Epson L7180",
       "model_id": "L7180",
       "package_id": "pf--Epson_L7180",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson L8050",
+      "model_id": "L8050",
+      "package_id": "pf--Epson_L8050",
       "visible": true
     },
     {

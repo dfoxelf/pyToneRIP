@@ -216,6 +216,17 @@ class _WindowsUsbPrintApi:
     def close(self, handle: wintypes.HANDLE) -> None:
         self.kernel.CloseHandle(handle)
 
+    def abort(self, handle: wintypes.HANDLE, trailer: bytes) -> bool:
+        # The model-scoped payload starts with the independently verified Epson
+        # abort sequence, before any page/job finalization commands.
+        remaining = memoryview(trailer)
+        while remaining:
+            written = self.write(handle, remaining)
+            if not 0 < written <= len(remaining):
+                raise OSError("USB abort trailer returned an invalid byte count")
+            remaining = remaining[written:]
+        return True
+
     def cancel(self, thread_id: int) -> bool:
         # CancelSynchronousIo requires THREAD_TERMINATE access to the issuing
         # thread. This requests I/O cancellation; it never terminates a thread.
@@ -241,6 +252,7 @@ class WindowsUsbInterfaceTransport:
     api_factory: Callable = field(default=_WindowsUsbPrintApi, repr=False, compare=False)
     buffer_policy: UsbBufferPolicy = field(default_factory=UsbBufferPolicy)
     statistics: Callable[[dict], None] | None = field(default=None, repr=False, compare=False)
+    abort_payload: bytes = field(default=b"", repr=False)
 
     def __post_init__(self) -> None:
         if not self.device_id.strip().casefold().startswith("usbprint\\"):
@@ -262,6 +274,8 @@ class WindowsUsbInterfaceTransport:
             device_id=self.device_id, api_factory=self.api_factory, policy=self.buffer_policy,
             connection=connection, cancel_check=cancel_check, progress=progress,
             statistics=self.statistics,
+            abort=((lambda api, handle: api.abort(handle, self.abort_payload))
+                   if self.abort_payload else None),
         )
         try:
             sent = session.run(producer)
@@ -270,6 +284,7 @@ class WindowsUsbInterfaceTransport:
             raise TransportTransmissionError(
                 f"Windows USBPRINT write failed after {session.sent} bytes: {error}",
                 bytes_sent=session.sent, destination=self.destination,
+                abort_attempted=session.abort_attempted, abort_succeeded=session.abort_succeeded,
             ) from error
 
     def send_chunks(self, chunks: Iterable[bytes], *, cancel_check=None, progress=None) -> TransmissionReceipt:

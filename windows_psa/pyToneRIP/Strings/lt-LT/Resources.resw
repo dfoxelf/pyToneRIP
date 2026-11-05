@@ -361,9 +361,11 @@
   <data name="PreviewWindow.PhotoPlacement" xml:space="preserve"><value>Nuotraukos padėtis</value></data>
   <data name="PreviewWindow.PhotoFit" xml:space="preserve"><value>Talpinti nuotrauką</value></data>
   <data name="PreviewWindow.PhotoReset" xml:space="preserve"><value>Atkurti nuotrauką</value></data>
-  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Vilkite vaizdą, kad perkeltumėte, ir kampą, kad proporcingai pakeistumėte dydį. Sukite 90° mygtukais. Pradinės programos paraštės lieka vaizdo dalimi.</value></data>
+  <data name="PreviewWindow.PhotoHelp" xml:space="preserve"><value>Vilkite vaizdą, kad perkeltumėte, ir kampą, kad proporcingai pakeistumėte dydį. Sukite 90° mygtukais. Pradinės programos paraštės lieka vaizdo dalimi. Apkirpkite vilkdami baltas rankenėles kraštinių viduryje; atkurkite vilkdami į išorę. Kampinės rankenėlės keičia dydį.</value></data>
   <data name="PreviewWindow.PhotoCenterHorizontal" xml:space="preserve"><value>Centruoti horizontaliai</value></data>
   <data name="PreviewWindow.PhotoCenterVertical" xml:space="preserve"><value>Centruoti vertikaliai</value></data>
   <data name="PreviewWindow.PrintStart" xml:space="preserve"><value>Spausdinimo pradžia</value></data>
   <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>Rodyklė žymi lapo kraštą, kuris spausdinamas pirmiausia.</value></data>
+  <data name="PreviewWindow.PhotoCrop" xml:space="preserve"><value>Apkirpkite vilkdami baltas rankenėles kraštinių viduryje; atkurkite vilkdami į išorę. Kampinės rankenėlės keičia dydį.</value></data>
+  <data name="PreviewWindow.PhotoFill" xml:space="preserve"><value>Užpildyti puslapį</value></data>
 </root>

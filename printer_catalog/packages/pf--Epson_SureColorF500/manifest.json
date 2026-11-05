@@ -14,7 +14,7 @@
   "protocol_class": "escp2-esci",
   "protocol_family": "SC-T5400",
   "runtime_source_file": "runtime-source.json",
-  "runtime_source_sha256": "35adeed214efb7f2132cf7d4ac3a469bcc0812c12e92d710a784b1c6163e9cc6",
+  "runtime_source_sha256": "58425522d0992fd44684ba1dda5ba45775b1e23149295ac71d85be86b60f45f4",
   "schema": "pytone-rip.printer-support-package",
   "source_sha256": "43e55365c0bbfe8561d75ed63ca5db543ee8d6f0b1fb0523098634d614f5cad6",
   "version": 1,

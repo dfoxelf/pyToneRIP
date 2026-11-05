@@ -35,9 +35,15 @@ def _profile(
 # Это протокольные payload, а не сходство названий принтеров: профиль выбирается
 # строго по family из экспортированного .tpp.
 ESCP2_FAMILY_PROFILES = {
+    # ET-14000's own B1100 driver: sixty-row staggered banks at 180 dpi.
+    "B1100": _profile("B1100", "020202a005", "a0050804", 60, 0x13, 0xA0),
+    "ET14100": _profile("ET14100", "010101b004", "b0040404", 128, 0x12, 0xB0),
     "PX700W": _profile("PX700W", "020201400b", "400b1004", 180, 0x25, 0xB2),
     "STP950": _profile("STP950", "020202a005", "a0050804", 96, 0x11, None),
     "L8050": _profile("L8050", "020201400b", "400b1004", 180, 0x13, 0xB0),
+    # Own L8050/L18050 photo descriptors: mode-dependent command grids.
+    # Keep the older L8050 profile used by four-colour models unchanged.
+    "L8050Photo": _profile("L8050Photo", "020201400b", "400b1004", 180, 0x13, 0xB0),
     "ET8550": _profile("ET8550", "020201400b", "400b1004", 180, 0x13, 0xB0),
     "R2400": _profile("R2400", "020201400b", "400b1004", 180, 0x12, 0x90),
     "R2880": _profile("R2880", "020201400b", "400b1004", 180, 0x12, 0xA0),

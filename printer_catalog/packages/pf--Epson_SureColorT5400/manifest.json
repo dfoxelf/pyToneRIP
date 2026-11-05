@@ -9,17 +9,18 @@
   "model_id": "SureColorT5400",
   "package_id": "pf--Epson_SureColorT5400",
   "ppd_file": "printer.ppd",
-  "ppd_sha256": "e2668a7944048682f295e7b25327158eaa0bae34330d21c499c979121327d872",
+  "ppd_sha256": "38d0c12cfcd2e955995c7322d8e065fc3e67f259d8023695a13d9124cabf7e67",
   "ppd_source": "printer.ppd",
   "protocol_class": "escp2-esci",
   "protocol_family": "SC-T5400",
   "runtime_source_file": "runtime-source.json",
-  "runtime_source_sha256": "039ea7f0b1e08441b138540655717f39ffb90bb6597b145d3475e7b1f7576555",
+  "runtime_source_sha256": "7ff60ddb492aa4d4bb14c65011ebdad8cf6cee3bc2eedc0d56b34665d283bde1",
   "schema": "pytone-rip.printer-support-package",
-  "source_sha256": "8dd45297daf0caad5c85270080bd2022de48f8382f2fe7c2c2f3f4c967ec729d",
+  "source_sha256": "e80a91f0dec320596af7de92915b9d37e4be4c77bbedfaeb6db7ce23f94bfe32",
   "version": 1,
   "visible": true,
   "warnings": [
-    "SYNTHETIC_PPD: no exact Epson PPD in the local source corpus; ReferenceDriver technical driver id PRO7600; no manufacturer paper list inherited"
+    "SOURCE_CORRECTION: protocol family resolved by an explicit compatible driver descriptor",
+    "SYNTHETIC_PPD: no Epson manufacturer PPD supplied; technical source ReferenceDriver driver T3100"
   ]
 }

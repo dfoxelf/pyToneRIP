@@ -1,0 +1,26 @@
+{
+  "backend_family": "epson_escp2_l8050photo",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson EcoTank ET-18100",
+  "model_id": "EcoTank_ET18100",
+  "package_id": "pf--Epson_EcoTank_ET18100",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "1a1b599210e1767096e552d9551421961959e969c4d55151d6c5b94e669345d8",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "L8050Photo",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "d6e25fb8ac6a3ee0f8aa338308fc3ec9a62e47f771217d6c2fbc0e27f5e7850f",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "7431c8cadaa22d34c1bb505862e49bab116f7b964c88f7a9bc18780818648df5",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "SOURCE_CORRECTION: protocol family resolved by an explicit compatible driver descriptor",
+    "SYNTHETIC_PPD: no Epson manufacturer PPD supplied; technical source ReferenceDriver driver L8050"
+  ]
+}

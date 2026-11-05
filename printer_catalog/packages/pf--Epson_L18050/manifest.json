@@ -1,0 +1,26 @@
+{
+  "backend_family": "epson_escp2_l8050photo",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson L18050",
+  "model_id": "L18050",
+  "package_id": "pf--Epson_L18050",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "d5c8dd40d3e09d38f9e0bc766e46a389eedefeee901294ac670b7f3a0e65f219",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "L8050Photo",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "d6e25fb8ac6a3ee0f8aa338308fc3ec9a62e47f771217d6c2fbc0e27f5e7850f",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "1c268c1b01cc5cd2194426ebb0a557654ff872c5ab74a80a6566197b08b8f2be",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "SOURCE_CORRECTION: protocol family resolved by an explicit compatible driver descriptor",
+    "SYNTHETIC_PPD: no Epson manufacturer PPD supplied; technical source ReferenceDriver driver L8050"
+  ]
+}
