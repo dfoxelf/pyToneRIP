@@ -84,6 +84,12 @@ en_US.LanguageName=English (United States)
 LanguageSetupFailed=pyToneRIP was installed, but its interface language could not be saved. Select the language in the application settings. Details:
 ru_RU.LanguageSetupFailed=pyToneRIP установлен, но язык интерфейса не удалось сохранить. Выберите язык в настройках программы. Подробности:
 de_DE.LanguageSetupFailed=pyToneRIP wurde installiert, aber die Sprache der Benutzeroberfläche konnte nicht gespeichert werden. Wählen Sie die Sprache in den Programmeinstellungen. Details:
+ManagerInUse=Close the previous version of pyToneRIP and its print settings, then click Retry.
+ru_RU.ManagerInUse=Закройте предыдущую версию pyToneRIP и её окна настроек печати, затем нажмите «Повторить».
+de_DE.ManagerInUse=Schließen Sie die vorherige Version von pyToneRIP und ihre Druckeinstellungen und klicken Sie dann auf „Wiederholen“.
+ManagerInstallCancelled=The pyToneRIP update was cancelled. Installation log:
+ru_RU.ManagerInstallCancelled=Обновление pyToneRIP отменено. Журнал установки:
+de_DE.ManagerInstallCancelled=Die Aktualisierung von pyToneRIP wurde abgebrochen. Installationsprotokoll:
 PrivacyTitle=Privacy and support logs
 PrivacyDescription=How diagnostic logs are handled
 PrivacyBody=pyToneRIP never sends logs or personal data to the developer or a support server. The Prepare log files button creates a ZIP archive on your desktop containing only technical error codes, categories, counts and Windows event IDs. The ZIP contains no personal data: original log text, names, file paths, IP addresses and document data are excluded. The app does not send this archive; only you can share it outside the app.
@@ -96,12 +102,15 @@ de_DE.PrivacyBody=pyToneRIP sendet niemals Protokolle oder personenbezogene Date
 UninstallReportQuestion=Would you like to create a ZIP of the available pyToneRIP logs on your desktop?
 UninstallReportCreated=A ZIP with available logs was created on your desktop (pyToneRIP-logs-*.zip).
 UninstallReportFailed=The log archive could not be created. The cleanup log remains here:
+UninstallElevationCancelled=The Windows administrator prompt was cancelled. Click Retry, then confirm the Windows prompt to continue uninstalling pyToneRIP.
 ru_RU.UninstallReportQuestion=Создать ZIP-архив доступных журналов pyToneRIP на рабочем столе?
 ru_RU.UninstallReportCreated=ZIP-архив доступных журналов создан на рабочем столе (pyToneRIP-logs-*.zip).
 ru_RU.UninstallReportFailed=Не удалось создать архив журналов. Журнал удаления остаётся здесь:
+ru_RU.UninstallElevationCancelled=Запрос Windows на права администратора был отменён. Нажмите «Повторить» и подтвердите запрос Windows, чтобы продолжить удаление pyToneRIP.
 de_DE.UninstallReportQuestion=Möchten Sie eine ZIP-Datei mit den verfügbaren pyToneRIP-Protokollen auf dem Desktop erstellen?
 de_DE.UninstallReportCreated=Eine ZIP-Datei mit verfügbaren Protokollen wurde auf dem Desktop erstellt (pyToneRIP-logs-*.zip).
 de_DE.UninstallReportFailed=Das Protokollarchiv konnte nicht erstellt werden. Das Bereinigungsprotokoll befindet sich hier:
+de_DE.UninstallElevationCancelled=Die Windows-Abfrage nach Administratorrechten wurde abgebrochen. Klicken Sie auf „Wiederholen“ und bestätigen Sie die Windows-Abfrage, um pyToneRIP zu deinstallieren.
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
@@ -145,6 +154,10 @@ Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\pyToneRIP"; Filena
 Filename: "{win}\explorer.exe"; Parameters: "shell:AppsFolder\pyToneRIP.Manager_qg4mjaqw0qctt!App"; Description: "{cm:LaunchProgram,pyToneRIP}"; Flags: postinstall nowait skipifsilent runasoriginaluser; Check: CanLaunchManager
 
 [Code]
+const
+  ManagerInUseExitCode = 42;
+  UninstallElevationCancelledExitCode = 43;
+
 var
   ManagerInstalled: Boolean;
 
@@ -174,9 +187,25 @@ begin
     ExpandConstant('{app}\Payload\Install-ModuleSet-Manager.ps1') +
     '" -ModuleSetRoot "' + ExpandConstant('{app}\Payload') +
     '" -LogPath "' + ExpandConstant('{app}\install-msix.log') + '"';
-  if not ShellExec('runas', ExpandConstant('{sys}\WindowsPowerShell\v1.0\powershell.exe'),
-    Parameters, ExpandConstant('{app}'), SW_HIDE, ewWaitUntilTerminated,
-    ResultCode) or (ResultCode <> 0) then
+  repeat
+    if not ShellExec('runas', ExpandConstant('{sys}\WindowsPowerShell\v1.0\powershell.exe'),
+      Parameters, ExpandConstant('{app}'), SW_HIDE, ewWaitUntilTerminated, ResultCode) then
+      RaiseException('Could not start the pyToneRIP MSIX installer. Windows error: ' +
+        IntToStr(ResultCode));
+    if ResultCode <> ManagerInUseExitCode then
+      break;
+    Log('pyToneRIP MSIX deployment reported packages in use (0x80073D02).');
+    if WizardSilent then
+      RaiseException(ExpandConstant('{cm:ManagerInUse}') + #13#10 +
+        ExpandConstant('{app}\install-msix.log'));
+    if SuppressibleMsgBox(ExpandConstant('{cm:ManagerInUse}'), mbInformation,
+      MB_RETRYCANCEL, IDCANCEL) <> IDRETRY then
+      RaiseException(ExpandConstant('{cm:ManagerInstallCancelled}') + #13#10 +
+        ExpandConstant('{app}\install-msix.log'));
+    if Pos(' -AppendLog', Parameters) = 0 then
+      Parameters := Parameters + ' -AppendLog';
+  until False;
+  if ResultCode <> 0 then
     RaiseException('pyToneRIP MSIX installation failed. See ' +
       ExpandConstant('{app}\install-msix.log') + ' for details.');
   ManagerInstalled := True;
@@ -200,6 +229,7 @@ procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
 var
   ResultCode: Integer;
   Parameters: string;
+  CleanupStarted: Boolean;
 begin
   if CurUninstallStep <> usUninstall then
     exit;
@@ -209,9 +239,19 @@ begin
     ExpandConstant('{app}\Payload\Uninstall-pyToneRIP.ps1') + '" -LogPath "' +
     ExpandConstant('{app}\Payload\uninstall-cleanup.log') + '"';
   { The script records this user's SID before elevating its worker through UAC. }
-  if not Exec(ExpandConstant('{sys}\WindowsPowerShell\v1.0\powershell.exe'),
-    Parameters, ExpandConstant('{app}'), SW_HIDE, ewWaitUntilTerminated,
-    ResultCode) or (ResultCode <> 0) then
+  repeat
+    CleanupStarted := Exec(ExpandConstant('{sys}\WindowsPowerShell\v1.0\powershell.exe'),
+      Parameters, ExpandConstant('{app}'), SW_HIDE, ewWaitUntilTerminated, ResultCode);
+    if not CleanupStarted or (ResultCode <> UninstallElevationCancelledExitCode) then
+      break;
+    Log('pyToneRIP uninstall elevation was cancelled (Windows error 1223).');
+    if UninstallSilent then
+      Abort;
+    if SuppressibleMsgBox(ExpandConstant('{cm:UninstallElevationCancelled}'),
+      mbInformation, MB_RETRYCANCEL, IDCANCEL) <> IDRETRY then
+      Abort;
+  until False;
+  if not CleanupStarted or (ResultCode <> 0) then
   begin
     MsgBox('pyToneRIP could not be completely removed. Installer files were kept. Cleanup log:' + #13#10 +
       ExpandConstant('{app}\Payload\uninstall-cleanup.log'), mbError, MB_OK);

@@ -11,6 +11,7 @@
     <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <QueueWindowsSdkVersion>10.0.26100.0</QueueWindowsSdkVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <OutputPath>bin\x64\Debug\</OutputPath>
@@ -35,6 +36,11 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Management" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Runtime.WindowsRuntime" />
+    <Reference Include="Windows">
+      <HintPath>$(MSBuildProgramFiles32)\Windows Kits\10\UnionMetadata\$(QueueWindowsSdkVersion)\Windows.winmd</HintPath>
+      <Private>false</Private>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Printing" />
     <Reference Include="ReachFramework" />
@@ -42,14 +48,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
+    <Compile Include="QueueAppServiceHost.cs" />
+    <Compile Include="..\pyToneRIP\Services\QueueAppServiceProtocol.cs"><Link>QueueAppServiceProtocol.cs</Link></Compile>
     <Compile Include="ConfigurationTicketXmlReader.cs" />
     <Compile Include="..\pyToneRIP\Services\PrintSettingsContext.cs"><Link>Diagnostics\PrintSettingsContext.cs</Link></Compile>
     <Compile Include="PrintQueueCancellationMonitor.cs" />
     <Compile Include="RipRequestProcessor.cs" />
     <Compile Include="UsbPrinterDiscovery.cs" />
     <Compile Include="UsbPrinterStatusReader.cs" />
+    <Compile Include="WindowsQueueInkReader.cs" />
     <Compile Include="UsbRawJobCleanup.cs" />
+    <Compile Include="DeliveredPrintCancellation.cs" />
+    <Compile Include="EpsonNetworkCancellation.cs" />
     <Compile Include="..\pyToneRIP\Models\UsbPrinterModels.cs"><Link>Models\UsbPrinterModels.cs</Link></Compile>
+    <Compile Include="..\pyToneRIP\Models\PrinterInformation.cs"><Link>Models\PrinterInformation.cs</Link></Compile>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

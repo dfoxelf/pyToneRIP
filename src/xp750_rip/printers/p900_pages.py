@@ -4,8 +4,7 @@
 """P900 physical sheets measured from the native Windows driver capabilities.
 
 DC_PAPERS and PrintCapabilities agreed on 26 native fixed sizes. This catalog
-exposes the 21 with exact public Print Schema names; the five requiring private
-options are intentionally omitted. Each native selection survived DEVMODE ->
+exposes all 26; five use stable private Print Schema options. Each native selection survived DEVMODE ->
 PrintTicket -> DEVMODE. Windows driver paper IDs are deliberately omitted: they
 are not ESC/P2 firmware selectors. No installed driver is needed at runtime.
 Borderless is a separate feature; named variants expose it in paper-size lists
@@ -41,10 +40,28 @@ P900_NATIVE_SHEETS = (
     ("L", "L (89 × 127 mm)", 89.0, 127.0, "JapanLPhoto"),
     ("4x6", "4 × 6 in (101.6 × 152.4 mm)", 101.6, 152.4, "NorthAmerica4x6"),
     ("5x7", "2L (127 × 177.9 mm)", 127.0, 177.9, "Japan2LPhoto"),
+    ("5x8", "5 × 8 in", 127.0, 203.2, None),
+    ("4x7", "16:9 wide (101.6 × 180.6 mm)", 101.6, 180.6, None),
     ("8x10", "8 × 10 in", 203.2, 254.0, "NorthAmerica8x10"),
     ("10x12", "10 × 12 in", 254.0, 304.8, "NorthAmerica10x12"),
+    ("11x14", "11 × 14 in", 279.4, 355.6, None),
+    ("12x12", "12 × 12 in", 304.8, 304.8, None),
     ("14x17", "14 × 17 in", 355.6, 431.8, "NorthAmerica14x17"),
+    ("16x20", "16 × 20 in", 406.4, 508.0, None),
 )
+
+
+def additional_p700_pages(pages, ppd):
+    """Restore native platform sheets that fit P700, keeping existing IDs."""
+    native, _ = native_p900_pages(pages, ppd)
+    additions = tuple(page for page in native if not page.ppd.borderless
+                      and page.media_width_mm <= 329
+                      and not any(old.ppd.name == page.ppd.name or (
+                          not old.ppd.borderless
+                          and abs(old.media_width_mm - page.media_width_mm) < .2
+                          and abs(old.media_height_mm - page.media_height_mm) < .2)
+                          for old in pages))
+    return _with_pages((*pages, *additions), ppd)
 
 
 def native_p900_pages(
@@ -90,7 +107,7 @@ def native_p900_pages(
                 height - top,
             ),
             physical_media_size_mm=(width_mm, height_mm),
-            windows_media_size_name=keyword,
+            windows_media_size_name=keyword or "Page_" + base_id,
             native_page_format_mils=(
                 round(width_mm * 1000 / 25.4),
                 round(height_mm * 1000 / 25.4),
@@ -108,7 +125,10 @@ def native_p900_pages(
         base_id = old.ppd.name.removeprefix("Borderless").removesuffix("borderless")
         if base_id in definitions:
             result.append(page_for(old.ppd.name, base_id, True))
-    updated = tuple(result)
+    return _with_pages(tuple(result), ppd)
+
+
+def _with_pages(updated, ppd):
     choices = tuple(
         PpdChoice(
             page.ppd.name,

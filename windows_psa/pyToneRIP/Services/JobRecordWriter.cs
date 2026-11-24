@@ -640,6 +640,8 @@ namespace pyToneRIP.Tasks.Services
             if (!Same("kind", "network")) return false;
             if (Value(first, "kind", "network") == "network")
                 return Same("host") && LayoutNumber(first, "port", 9100) == LayoutNumber(second, "port", 9100);
+            if (Value(first, "kind") == "windows_queue")
+                return Same("printer_queue") && Same("printer_queue_driver");
             return Same("usb_device_id") && Same("usb_port") && Same("printer_queue") && Same("usb_transport_mode", "usbprint");
         }
 

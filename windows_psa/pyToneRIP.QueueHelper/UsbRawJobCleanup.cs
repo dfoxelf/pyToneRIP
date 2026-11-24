@@ -20,40 +20,99 @@ namespace pyToneRIP.QueueHelper
             Task.Run(() => Cancel(jobFolder)).Wait(TimeSpan.FromSeconds(3));
         }
 
-        private static void Cancel(string jobFolder)
+        internal static void CancelDelivered(string jobFolder, string queue, string device, string driver = null)
+        {
+            Cancel(jobFolder, true, queue, device, driver);
+        }
+
+        internal static bool HasActiveJob(string jobFolder, string queue, string device, string driver = null)
+        {
+            var path = Path.Combine(jobFolder, "physical-print-job.json");
+            if (!File.Exists(path) || new FileInfo(path).Length > 16384
+                || (File.GetAttributes(path) & FileAttributes.ReparsePoint) != 0) return false;
+            PhysicalJob job;
+            try
+            {
+                using (var stream = File.OpenRead(path))
+                    job = (PhysicalJob)new DataContractJsonSerializer(typeof(PhysicalJob)).ReadObject(stream);
+            }
+            catch (SerializationException) { return false; }
+            Guid token;
+            if (job == null || job.Schema != "pytone-rip.physical-print-job" || job.Version != 1
+                || job.JobId == 0 || job.QueueName != queue || job.DeviceId != device || job.DriverName != driver
+                || (job.State != "ACTIVE" && job.State != "SPOOLED" && job.State != "ABORT_FAILED")
+                || job.DocumentName == null || !job.DocumentName.StartsWith("pyToneRIP ", StringComparison.Ordinal)
+                || !Guid.TryParseExact(job.DocumentName.Substring(10), "N", out token)
+                || FindDestination(job) == null) return false;
+            return PrintQueueCancellationMonitor.HasMatchingJob(queue, job.JobId, job.DocumentName);
+        }
+
+        private static QueueDescriptor FindDestination(PhysicalJob job)
+        {
+            if (job.DriverName != null)
+                return PrinterApi.ListPrinters().FirstOrDefault(item => item.IsEpsonRawDestination
+                    && item.Name == job.QueueName
+                    && string.Equals(item.DriverName, job.DriverName, StringComparison.OrdinalIgnoreCase));
+            if (job.PortName == null || !Regex.IsMatch(job.PortName, @"^USB\d+$", RegexOptions.IgnoreCase))
+                return null;
+            return PrinterApi.ListLocalPrinters().FirstOrDefault(item => item.Name == job.QueueName
+                && string.Equals(item.PortName, job.PortName, StringComparison.OrdinalIgnoreCase)
+                && !item.Name.StartsWith("pyToneRIP", StringComparison.OrdinalIgnoreCase)
+                && item.DriverName != "Microsoft Virtual Print Class Driver");
+        }
+
+        private static void Cancel(string jobFolder, bool strict = false, string expectedQueue = null,
+            string expectedDevice = null, string expectedDriver = null)
         {
             try
             {
                 var path = Path.Combine(jobFolder, "physical-print-job.json");
-                if (!File.Exists(path)) return;
+                if (!File.Exists(path)) { if (strict) throw new InvalidDataException("Missing physical job identity."); return; }
                 PhysicalJob job;
                 using (var stream = File.OpenRead(path))
                     job = (PhysicalJob)new DataContractJsonSerializer(typeof(PhysicalJob)).ReadObject(stream);
                 Guid token;
                 if (job == null || job.Schema != "pytone-rip.physical-print-job" || job.Version != 1
-                    || (job.State != "ACTIVE" && job.State != "ABORT_FAILED") || job.JobId == 0
+                    || (job.State != "ACTIVE" && job.State != "ABORT_FAILED" && !(strict && job.State == "SPOOLED")) || job.JobId == 0
                     || job.DocumentName == null || !job.DocumentName.StartsWith("pyToneRIP ", StringComparison.Ordinal)
-                    || !Guid.TryParseExact(job.DocumentName.Substring(10), "N", out token)
-                    || job.PortName == null || !Regex.IsMatch(job.PortName, @"^USB\d+$", RegexOptions.IgnoreCase)) return;
-                var queue = PrinterApi.ListLocalPrinters().FirstOrDefault(item => item.Name == job.QueueName
-                    && string.Equals(item.PortName, job.PortName, StringComparison.OrdinalIgnoreCase)
-                    && !item.Name.StartsWith("pyToneRIP", StringComparison.OrdinalIgnoreCase)
-                    && item.DriverName != "Microsoft Virtual Print Class Driver");
-                if (queue == null) return;
+                    || !Guid.TryParseExact(job.DocumentName.Substring(10), "N", out token))
+                { if (strict) throw new InvalidDataException("Invalid physical job identity."); return; }
+                if (strict && (job.QueueName != expectedQueue || job.DeviceId != expectedDevice || job.DriverName != expectedDriver))
+                    throw new InvalidDataException("Physical job target changed.");
+                var queue = FindDestination(job);
+                if (queue == null) { if (strict) throw new InvalidDataException("Physical queue target changed."); return; }
                 IntPtr handle;
-                if (!OpenPrinterW(queue.Name, out handle, IntPtr.Zero)) return;
+                if (!OpenPrinterW(queue.Name, out handle, IntPtr.Zero)) { if (strict) throw new System.ComponentModel.Win32Exception(Marshal.GetLastWin32Error()); return; }
                 try
                 {
                     uint needed;
                     GetJobW(handle, job.JobId, 1, IntPtr.Zero, 0, out needed);
-                    if (needed == 0 || needed > 1024 * 1024) return;
+                    if (needed == 0)
+                    {
+                        int error = Marshal.GetLastWin32Error();
+                        if (strict && error != 87 && error != 2 && error != 259)
+                            throw new System.ComponentModel.Win32Exception(error);
+                        if (strict && job.DriverName != null)
+                            throw new InvalidOperationException("This print job is no longer in the Windows queue.");
+                        return; // An already delivered spool job can be gone.
+                    }
+                    if (needed > 1024 * 1024) throw new InvalidDataException("Invalid physical job buffer size.");
                     var buffer = Marshal.AllocHGlobal((int)needed);
                     try
                     {
-                        if (!GetJobW(handle, job.JobId, 1, buffer, needed, out needed)) return;
+                        if (!GetJobW(handle, job.JobId, 1, buffer, needed, out needed)) { if (strict) throw new System.ComponentModel.Win32Exception(Marshal.GetLastWin32Error()); return; }
                         var actual = (JobInfoPrefix)Marshal.PtrToStructure(buffer, typeof(JobInfoPrefix));
                         if (actual.Id == job.JobId && actual.Document == job.DocumentName)
-                            SetJobW(handle, job.JobId, 0, IntPtr.Zero, 5);
+                        {
+                            var deleted = SetJobW(handle, job.JobId, 0, IntPtr.Zero, 5);
+                            if (!deleted && strict)
+                                throw new System.ComponentModel.Win32Exception(Marshal.GetLastWin32Error());
+                            // Supervisor fallback after a blocked RIP is terminated.
+                            // Stop the verified spool job before resetting its interface.
+                            if (deleted && !strict && job.DriverName == null && File.Exists(Path.Combine(jobFolder, "cancel.requested")))
+                                UsbPrinterStatusReader.CancelPrint(job.DeviceId);
+                        }
+                        else if (strict) throw new InvalidDataException("Physical job ID was reused by another document.");
                     }
                     finally { Marshal.FreeHGlobal(buffer); }
                 }
@@ -61,6 +120,7 @@ namespace pyToneRIP.QueueHelper
             }
             catch (Exception error)
             {
+                if (strict) throw;
                 System.Diagnostics.Trace.WriteLine("USB job cleanup failed: " + error.Message);
             }
         }
@@ -75,6 +135,8 @@ namespace pyToneRIP.QueueHelper
             [DataMember(Name = "document_name")] public string DocumentName { get; set; }
             [DataMember(Name = "port_name")] public string PortName { get; set; }
             [DataMember(Name = "state")] public string State { get; set; }
+            [DataMember(Name = "device_id")] public string DeviceId { get; set; }
+            [DataMember(Name = "driver_name")] public string DriverName { get; set; }
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]

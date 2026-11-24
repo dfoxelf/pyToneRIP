@@ -1,7 +1,7 @@
 # Copyright (C) 2026 Alexander Eichhorn
 # SPDX-License-Identifier: GPL-3.0-only
 
-"""Progressive RAW delivery through an existing Windows USB printer queue.
+"""Progressive RAW delivery through an existing Windows printer queue.
 
 Only the desktop runtime calls this module. Windows keeps ownership of USB.
 Successful writes mean spooler acceptance, not completed physical printing.
@@ -60,7 +60,8 @@ class _WindowsPrinterApi:
         error = ctypes.WinError(ctypes.get_last_error())
         return OSError(error.winerror, operation + ": " + str(error))
 
-    def open(self, queue: str, port: str, device_id: str) -> wintypes.HANDLE:
+    def open(self, queue: str, port: str | None, device_id: str | None, expected_driver: str | None = None) -> wintypes.HANDLE:
+        self.device_id = None
         handle = wintypes.HANDLE()
         if not self.dll.OpenPrinterW(queue, ctypes.byref(handle), None):
             raise self._error("OpenPrinter")
@@ -73,16 +74,27 @@ class _WindowsPrinterApi:
             if not self.dll.GetPrinterW(handle, 2, buffer, len(buffer), ctypes.byref(needed)):
                 raise self._error("GetPrinter")
             info = ctypes.cast(buffer, ctypes.POINTER(_PrinterInfo)).contents
-            if (info.port or "").casefold() != port.casefold():
+            if port and (info.port or "").casefold() != port.casefold():
                 raise ValueError("Physical queue no longer uses the selected USB port")
             if (info.driver or "").casefold() in {
                 "microsoft virtual print class driver", "microsoft ipp class driver", "microsoft print to pdf",
             } or (info.name or "").casefold().startswith("pytonerip"):
                 raise ValueError("Select a physical RAW USB queue, not a virtual or IPP queue")
             if (info.processor or "").casefold() != "winprint" or (info.datatype or "").casefold() != "raw":
-                raise ValueError("USB queue must use winprint and RAW without appended form feeds")
+                raise ValueError("Printer queue must use winprint and RAW without appended form feeds")
             if info.separator or info.attributes & 2:
-                raise ValueError("USB queue must spool without separator pages")
+                raise ValueError("Printer queue must spool without separator pages")
+            if expected_driver is not None:
+                if (info.driver or "").casefold() != expected_driver.casefold():
+                    raise ValueError("The installed Windows queue driver has changed")
+                excluded = (
+                    "pytone-rip:", "pytonerip.", "file:", "portprompt:", "nul:",
+                    "wdp", "wsd", "ipp:", "ipps:",
+                )
+                ports = [name.strip() for name in (info.port or "").casefold().split(",")]
+                if info.status & 4 or any(not name or name.startswith(excluded) for name in ports):
+                    raise ValueError("The Windows queue is not on a supported physical printer port")
+                return handle
             cfg = ctypes.WinDLL("cfgmgr32.dll")
             locate = cfg.CM_Locate_DevNodeW
             locate.argtypes = [ctypes.POINTER(wintypes.DWORD), wintypes.LPWSTR, wintypes.ULONG]
@@ -90,6 +102,7 @@ class _WindowsPrinterApi:
             node = wintypes.DWORD()
             if locate(ctypes.byref(node), device_id, 0) != 0:
                 raise OSError("Selected USB printer is disconnected")
+            self.device_id = device_id
             return handle
         except Exception:
             self.dll.ClosePrinter(handle)
@@ -114,10 +127,20 @@ class _WindowsPrinterApi:
             raise self._error("EndDocPrinter")
 
     def abort(self, handle: wintypes.HANDLE, job_id: int) -> bool:
-        if self.dll.AbortPrinter(handle):
+        # Stop the owned spool job before resetting data already at the device.
+        deleted = bool(self.dll.AbortPrinter(handle))
+        deleted = bool(self.dll.SetJobW(handle, job_id, 0, None, 5)) or deleted
+        if not deleted:
+            return False
+        if self.device_id is None:
             return True
-        # Delete only this job. Never purge a physical queue or send a second job.
-        return bool(self.dll.SetJobW(handle, job_id, 0, None, 5))
+        from xp750_rip.windows_usb_transport import _WindowsUsbPrintApi
+        usb = _WindowsUsbPrintApi()
+        device = usb.open(self.device_id)
+        try:
+            return usb.abort(device, b"")
+        finally:
+            usb.close(device)
 
     def close(self, handle: wintypes.HANDLE) -> None:
         self.dll.ClosePrinter(handle)
@@ -126,15 +149,24 @@ class _WindowsPrinterApi:
 @dataclass(frozen=True, slots=True)
 class WindowsPrinterTransport:
     queue_name: str
-    usb_port: str
-    device_id: str
+    usb_port: str | None = None
+    device_id: str | None = None
     connection_state: Callable[[bool], None] | None = field(default=None, repr=False, compare=False)
     job_state: Callable[[int, str, str], None] | None = field(default=None, repr=False, compare=False)
     api_factory: Callable = field(default=_WindowsPrinterApi, repr=False, compare=False)
+    expected_driver: str | None = None
 
     def __post_init__(self) -> None:
         if not self.queue_name.strip() or self.queue_name.casefold().startswith("pytonerip"):
             raise ValueError("A physical Windows queue is required")
+        if self.expected_driver is not None:
+            if not self.expected_driver.strip().casefold().startswith("epson "):
+                raise ValueError("An installed Epson Windows queue is required")
+            if self.usb_port is not None or self.device_id is not None:
+                raise ValueError("Windows queue delivery cannot open a USB interface")
+            return
+        if self.usb_port is None or self.device_id is None:
+            raise ValueError("A Windows USB port and device instance are required")
         if not re.fullmatch(r"USB\d+", self.usb_port, re.IGNORECASE):
             raise ValueError("A Windows USB printer port is required")
         if not self.device_id.casefold().startswith("usbprint\\"):
@@ -177,7 +209,10 @@ class WindowsPrinterTransport:
                     raise ValueError("live PRN producer must yield non-empty bytes")
                 if handle is None:
                     api = self.api_factory()
-                    handle = api.open(self.queue_name, self.usb_port, self.device_id)
+                    if self.expected_driver is None:
+                        handle = api.open(self.queue_name, self.usb_port, self.device_id)
+                    else:
+                        handle = api.open(self.queue_name, None, None, self.expected_driver)
                     job_id = api.start(handle, name)
                     state("ACTIVE")
                     connection(True)

@@ -1,0 +1,25 @@
+{
+  "backend_family": "unsupported_escpr_rgb",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTATION_REQUIRES_PROTOCOL_PROFILE",
+  "display_name": "Epson WorkForcePro_WF4830",
+  "model_id": "WorkForcePro_WF4830",
+  "package_id": "pf--Epson_WorkForcePro_WF4830",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "09a7128b7d95a2aa2b03db00256cdf3bf8a44b96a2828aefd38ae054321f3c4d",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escpr-rgb",
+  "protocol_family": "escpr",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "e111b520aaff019117eec066fbabd8bfbc9c1e90cc49123ac4e4d9636c30726b",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "d829bdf113dd66f545ec7cd1423c5768c833456071bc44b9a82756572331a5d0",
+  "version": 1,
+  "visible": false,
+  "warnings": [
+    "SYNTHETIC_PPD: no Epson manufacturer PPD supplied; technical source ReferenceDriver driver WF100"
+  ]
+}

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using pyToneRIP.Models;
 using pyToneRIP.Services;
@@ -36,6 +37,7 @@ namespace pyToneRIP
         private DateTimeOffset nextTransportActivityRead = DateTimeOffset.MinValue;
         private bool defaultPrinterCheckRunning;
         private bool printerLifecycleRunning;
+        private bool defaultPrinterChangeRunning;
         private DeviceWatcher windowsQueueWatcher;
         private bool windowsQueueEnumerationCompleted;
         private bool windowsQueueRefreshPending;
@@ -473,7 +475,8 @@ namespace pyToneRIP
                     case "remove": item.Text = LocalizationService.Get("MainPage.Remove.Label"); break;
                     case "default":
                         item.Text = LocalizationService.Get("MainPage.SetDefault.Label");
-                        item.IsEnabled = !printerLifecycleRunning;
+                        item.IsEnabled = CanSetDefaultPrinter(selected);
+                        item.Icon = selected.IsSystemDefault ? new SymbolIcon(Symbol.Accept) : null;
                         break;
                     case "cancel-job":
                         item.Text = LocalizationService.Get("MainPage.Context.CancelJob.Text");
@@ -488,11 +491,11 @@ namespace pyToneRIP
                                 string.Equals(activity.QueueName, selected.QueueName,
                                     StringComparison.OrdinalIgnoreCase)
                                 && activity.State != "Queued");
-                            var windowsJob = await QueueHelperClient.HasCurrentJobAsync(
+                            var windowsJob = await QueueHelperClient.HasCancelableJobAsync(
                                 selected.QueueName);
                             if (ReferenceEquals(menu.Target, target))
-                                item.IsEnabled = windowsJob || ripJobs == 1
-                                    || runningRipJobs == 1;
+                                item.IsEnabled = !printCancellationRunning && (windowsJob || ripJobs == 1
+                                    || runningRipJobs == 1);
                         }
                         catch (Exception error)
                         {
@@ -504,12 +507,52 @@ namespace pyToneRIP
             }
         }
 
+        private bool printCancellationRunning;
+        private bool cancellationCheckRunning;
+
         private void UpdateSelectedPrinterActions()
         {
             var selected = PrinterList.SelectedItem as PrinterInstanceRecord;
             OpenJobsButton.IsEnabled = selected != null;
-            SetDefaultPrinterButton.IsEnabled = selected != null
-                && !printerLifecycleRunning;
+            CancelJobButton.IsEnabled = false;
+            _ = RefreshCancelJobAvailabilityAsync();
+            SetDefaultPrinterButton.IsEnabled = CanSetDefaultPrinter(selected);
+        }
+
+        private bool CanSetDefaultPrinter(PrinterInstanceRecord printer)
+        {
+            return printer != null && !printer.IsSystemDefault
+                && !printerLifecycleRunning && !defaultPrinterChangeRunning;
+        }
+
+        private async Task RefreshCancelJobAvailabilityAsync()
+        {
+            if (cancellationCheckRunning || printCancellationRunning) return;
+            cancellationCheckRunning = true;
+            PrinterInstanceRecord selected = null;
+            try
+            {
+                selected = PrinterList.SelectedItem as PrinterInstanceRecord;
+                if (selected == null) { CancelJobButton.IsEnabled = false; return; }
+                var activities = await JobProgressReader.ReadActiveJobActivitiesAsync();
+                var matching = activities.Where(activity => string.Equals(activity.QueueName,
+                    selected.QueueName, StringComparison.OrdinalIgnoreCase)).ToList();
+                var available = matching.Count == 1 || matching.Count(activity => activity.State != "Queued") == 1;
+                available |= await QueueHelperClient.HasCancelableJobAsync(selected.QueueName);
+                if (ReferenceEquals(PrinterList.SelectedItem, selected))
+                    CancelJobButton.IsEnabled = available && !printCancellationRunning;
+            }
+            catch (Exception error)
+            {
+                if (ReferenceEquals(PrinterList.SelectedItem, selected)) CancelJobButton.IsEnabled = false;
+                ManagerLogger.WriteException("Checking current print job", error);
+            }
+            finally
+            {
+                cancellationCheckRunning = false;
+                if (!ReferenceEquals(PrinterList.SelectedItem, selected))
+                    _ = RefreshCancelJobAvailabilityAsync();
+            }
         }
 
         private void ShowLogChanged(object sender, RoutedEventArgs args)
@@ -798,7 +841,7 @@ namespace pyToneRIP
                 }
                 JobProgressPanel.Visibility = Visibility.Visible;
                 JobProgressTitle.Text = LocalizationService.Format("Code.Job", progress.JobId, progress.Stage);
-                JobProgressMessage.Text = progress.Message;
+                JobProgressMessage.Text = LocalizationService.PrintFailureMessage(progress.Message);
                 JobProgressBar.Value = progress.Percent;
                 JobProgressPercent.Text = progress.Percent + "%";
                 foreach (var line in await JobProgressReader.ReadNewStageLinesAsync(
@@ -837,6 +880,7 @@ namespace pyToneRIP
                 }
                 activeTransmissionHosts = current;
                 activeJobActivities = activities;
+                _ = RefreshCancelJobAvailabilityAsync();
                 if (ended) _ = RefreshNetworkStatesAsync();
                 if (registry.Instances.Any(item => item.IsWindowsQueueMissing))
                 {
@@ -899,7 +943,7 @@ namespace pyToneRIP
                 // visible while awaiting the next discovery, instead of
                 // briefly replacing Online with Unknown on every poll.
                 foreach (var item in registry.Instances.Except(available).Where(item =>
-                    !string.Equals(item.ConnectionKind, "usb", StringComparison.OrdinalIgnoreCase)))
+                    string.Equals(item.ConnectionKind, "network", StringComparison.OrdinalIgnoreCase)))
                     item.NetworkStatus = PrinterNetworkState.Unknown.ToString();
 
                 // Several Windows queues can point to one physical Epson.
@@ -976,6 +1020,13 @@ namespace pyToneRIP
                     if (managerSuspended || !managerPageLoaded)
                         return;
                     ApplyDefaultPrinterState(queues);
+                    foreach (var item in currentRegistry.Instances.Where(item => item.ConnectionKind == "windows_queue"))
+                    {
+                        var target = queues.FirstOrDefault(queue => queue.MatchesDestination(item.PhysicalQueueName, item.PhysicalQueueDriver));
+                        item.NetworkStatus = target == null || target.IsOffline ? "Offline"
+                            : GetBusyState(item, activeTransmissionHosts, activeJobActivities)
+                                ?? (target.IsPrinting ? "Printing" : "Online");
+                    }
                     await RemoveMissingWindowsQueuesAsync();
                     UpdateSelectedPrinterActions();
                 } while (windowsQueueRefreshPending);
@@ -1094,19 +1145,248 @@ namespace pyToneRIP
                 Content = LocalizationService.Get("Auto.9B6A601A9FC7.Content"),
                 GroupName = "AddPrinterConnection", IsChecked = true,
             };
-            var usbChoice = new RadioButton { Content = "USB", GroupName = "AddPrinterConnection" };
+            var searchNetwork = new Button
+            {
+                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Center,
+            };
+            ConfigureNetworkSearchButton(searchNetwork);
+            var networkRow = new Grid { ColumnSpacing = 10 };
+            networkRow.ColumnDefinitions.Add(new ColumnDefinition());
+            networkRow.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+            Grid.SetColumn(searchNetwork, 1);
+            networkRow.Children.Add(networkChoice);
+            networkRow.Children.Add(searchNetwork);
+            var networkCount = new TextBlock();
+            var networkDevices = new ComboBox
+            {
+                Header = new StackPanel
+                {
+                    Spacing = 4,
+                    Children =
+                    {
+                        networkCount,
+                        new TextBlock { Text = LocalizationService.Get("Network.Device") },
+                    },
+                },
+                PlaceholderText = LocalizationService.Get("Network.Choose"),
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                HorizontalContentAlignment = HorizontalAlignment.Stretch,
+                Visibility = Visibility.Collapsed,
+            };
+            ToolTipService.SetToolTip(networkDevices, LocalizationService.Get("Network.DeviceHint"));
+            var networkStatus = new TextBlock
+            {
+                TextWrapping = TextWrapping.Wrap,
+                Visibility = Visibility.Collapsed,
+            };
+            var usbChoice = new RadioButton
+            {
+                Content = LocalizationService.Get("Usb.DirectPrint"), GroupName = "AddPrinterConnection",
+            };
+            ToolTipService.SetToolTip(usbChoice, new ToolTip
+            {
+                Content = new TextBlock { Text = LocalizationService.Get("Usb.DirectPrintHint"), TextWrapping = TextWrapping.Wrap, MaxWidth = 320 },
+            });
             var usbDevices = new ComboBox
             {
-                Header = LocalizationService.Get("Usb.Device"), IsEnabled = false,
+                Header = LocalizationService.Get("Usb.Device"),
                 HorizontalAlignment = HorizontalAlignment.Stretch,
             };
             var usbStatus = new TextBlock { TextWrapping = TextWrapping.Wrap };
             var refreshUsb = new Button { Content = LocalizationService.Get("Usb.Refresh") };
-            var connectionChosen = false;
+            var usbPanel = new StackPanel { Spacing = 4, Visibility = Visibility.Collapsed };
+            usbPanel.Children.Add(usbDevices);
+            usbPanel.Children.Add(refreshUsb);
+            usbPanel.Children.Add(usbStatus);
+            var windowsQueueChoice = new RadioButton
+            {
+                Content = LocalizationService.Get("Queue.Title"), GroupName = "AddPrinterConnection",
+            };
+            var windowsQueueBox = new ComboBox
+            {
+                Header = LocalizationService.Get("Queue.Select"),
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+            };
+            var windowsQueueStatus = new TextBlock { TextWrapping = TextWrapping.Wrap };
+            var windowsQueuePanel = new StackPanel { Spacing = 4, Visibility = Visibility.Collapsed };
+            windowsQueuePanel.Children.Add(windowsQueueBox);
+            windowsQueuePanel.Children.Add(windowsQueueStatus);
+            var queueModels = new Dictionary<WindowsQueueDescriptor, PrinterCapability>();
+            var windowsQueueNeedsDriver = false;
+            CancellationTokenSource networkSearchCancellation = null;
             var refreshingUsb = false;
-            networkChoice.Click += (_, __) => connectionChosen = true;
-            usbChoice.Click += (_, __) => connectionChosen = true;
-            networkChoice.Checked += (_, __) => usbDevices.IsEnabled = false;
+            var networkSearchStarted = false;
+            string networkSummary = null;
+            var networkMatches = new Dictionary<NetworkPrinterDescriptor, List<PrinterCapability>>();
+
+            void SelectWindowsQueueModel()
+            {
+                windowsQueuePanel.Visibility = windowsQueueChoice.IsChecked == true
+                    ? Visibility.Visible : Visibility.Collapsed;
+                if (windowsQueueChoice.IsChecked != true) return;
+                if (windowsQueueBox.SelectedItem is WindowsQueueDescriptor queue
+                    && queueModels.TryGetValue(queue, out var model))
+                {
+                    modelBox.SelectedItem = model;
+                    modelBox.IsEnabled = false;
+                    windowsQueueStatus.Text = LocalizationService.Get(queue.IsOffline ? "Choice.Offline"
+                        : queue.IsPrinting ? "Choice.Printing" : "Choice.Online");
+                }
+            }
+
+            async Task RefreshWindowsQueuesAsync()
+            {
+                if (!windowsQueueBox.IsEnabled) return;
+                windowsQueueBox.IsEnabled = false;
+                windowsQueueStatus.Text = LocalizationService.Get("Queue.Searching");
+                try
+                {
+                    var previous = (windowsQueueBox.SelectedItem as WindowsQueueDescriptor)?.Name;
+                    var queues = (await QueueHelperClient.ListAsync())
+                        .Where(queue => queue.IsEpsonRawDestination || queue.RequiresRawDriver);
+                    queueModels.Clear();
+                    windowsQueueNeedsDriver = false;
+                    foreach (var queue in queues)
+                    {
+                        var matches = available.Where(model => queue.MatchesModel(model, allowHqFallback: false)).ToList();
+                        if (matches.Count == 0)
+                            matches = available.Where(model => queue.MatchesModel(model)).ToList();
+                        if (matches.Count != 1) continue;
+                        if (queue.RequiresRawDriver) windowsQueueNeedsDriver = true;
+                        else queueModels.Add(queue, matches[0]);
+                    }
+                    var choices = queueModels.Keys.OrderBy(queue => queue.Name, StringComparer.CurrentCultureIgnoreCase).ToList();
+                    windowsQueueBox.ItemsSource = choices;
+                    windowsQueueBox.SelectedItem = choices.FirstOrDefault(queue =>
+                        string.Equals(queue.Name, previous, StringComparison.OrdinalIgnoreCase))
+                        ?? choices.FirstOrDefault(queue => PrinterInstanceStore.FindPhysicalQueueConflict(registry, queue.Name) == null)
+                        ?? choices.FirstOrDefault();
+                    if (choices.Count == 0)
+                        windowsQueueStatus.Text = LocalizationService.Get(windowsQueueNeedsDriver ? "Queue.RawDriverRequired" : "Queue.None");
+                    SelectWindowsQueueModel();
+                }
+                catch (Exception error)
+                {
+                    ManagerLogger.WriteException("Finding Epson Windows queues", error);
+                    windowsQueueStatus.Text = LocalizationService.Get("Queue.SearchFailed");
+                }
+                finally { windowsQueueBox.IsEnabled = true; }
+            }
+
+            NetworkPrinterDescriptor SelectedNetworkDevice() =>
+                (networkDevices.SelectedItem as ComboBoxItem)?.Tag as NetworkPrinterDescriptor;
+
+            bool NetworkAddressIsAssigned(NetworkPrinterDescriptor printer) =>
+                PrinterInstanceStore.FindNetworkHostConflict(registry, printer.Host) != null;
+
+            void SelectNetworkModel()
+            {
+                searchNetwork.Visibility = networkChoice.IsChecked == true ? Visibility.Visible : Visibility.Collapsed;
+                var showNetwork = networkChoice.IsChecked == true && networkSearchStarted;
+                modelBox.IsEnabled = true;
+                networkStatus.Visibility = showNetwork ? Visibility.Visible : Visibility.Collapsed;
+                networkDevices.Visibility = showNetwork && networkDevices.Items.Count > 1
+                    ? Visibility.Visible : Visibility.Collapsed;
+                if (!showNetwork) return;
+
+                var printer = SelectedNetworkDevice();
+                if (printer == null)
+                {
+                    networkStatus.Text = networkSummary;
+                    if (string.IsNullOrEmpty(networkSummary))
+                        networkStatus.Visibility = Visibility.Collapsed;
+                    return;
+                }
+                var matches = networkMatches[printer];
+                if (matches.Count == 1)
+                {
+                    modelBox.SelectedItem = matches[0];
+                    modelBox.IsEnabled = false;
+                }
+                if (NetworkAddressIsAssigned(printer))
+                    networkStatus.Text = LocalizationService.Format("Network.AddressAssigned", printer.Host);
+                else if (matches.Count == 0)
+                    networkStatus.Text = LocalizationService.Get(string.IsNullOrEmpty(printer.ModelName)
+                        ? "Network.UnknownModel" : "Network.UnsupportedModel");
+                else if (!printer.RawPortReachable)
+                    networkStatus.Text = LocalizationService.Get("Network.RawUnavailable");
+                else
+                    networkStatus.Text = matches.Count > 1 ? LocalizationService.Get("Network.ChooseModel") : "";
+                networkStatus.Visibility = string.IsNullOrEmpty(networkStatus.Text)
+                    ? Visibility.Collapsed : Visibility.Visible;
+            }
+
+            async Task SearchNetworkAsync()
+            {
+                if (networkSearchCancellation != null) return;
+                networkChoice.IsChecked = true;
+                networkSearchStarted = true;
+                searchNetwork.IsEnabled = false;
+                networkSummary = LocalizationService.Get("Network.Searching");
+                networkDevices.Items.Clear();
+                networkMatches.Clear();
+                SelectNetworkModel();
+                var cancellation = new CancellationTokenSource();
+                networkSearchCancellation = cancellation;
+                try
+                {
+                    var printers = await EpsonNetworkDiscovery.DiscoverAsync(cancellation.Token);
+                    if (cancellation.IsCancellationRequested) return;
+                    networkSummary = printers.Count == 0 ? LocalizationService.Get("Network.None") : "";
+                    networkCount.Text = LocalizationService.Format("Network.FoundCount", printers.Count);
+                    ComboBoxItem firstAvailable = null;
+                    foreach (var printer in printers)
+                    {
+                        var matches = available.Where(model => EpsonNetworkDiscovery.MatchesModel(
+                            model, printer.ModelName, allowHqFallback: false)).ToList();
+                        if (matches.Count == 0)
+                            matches = available.Where(model => EpsonNetworkDiscovery.MatchesModel(model, printer.ModelName)).ToList();
+                        networkMatches.Add(printer, matches);
+                        var label = matches.Count == 1 ? matches[0].DisplayName : printer.ModelName;
+                        var option = NetworkPrinterOption(printer, string.IsNullOrWhiteSpace(label) ? "Epson" : label);
+                        networkDevices.Items.Add(option);
+                        if (firstAvailable == null && matches.Count == 1 && printer.RawPortReachable
+                            && !NetworkAddressIsAssigned(printer))
+                            firstAvailable = option;
+                    }
+                    networkDevices.Items.Add(new ComboBoxItem
+                    {
+                        Content = LocalizationService.Get("Network.Manual"),
+                    });
+                    networkDevices.SelectedItem = firstAvailable ?? networkDevices.Items[0];
+                    SelectNetworkModel();
+                }
+                catch (OperationCanceledException) when (cancellation.IsCancellationRequested) { }
+                catch (Exception error)
+                {
+                    ManagerLogger.WriteException("Discovering network printers", error);
+                    networkSummary = LocalizationService.Get("Network.SearchFailed");
+                    SelectNetworkModel();
+                }
+                finally
+                {
+                    searchNetwork.IsEnabled = true;
+                    networkSearchCancellation = null;
+                    cancellation.Dispose();
+                }
+            }
+
+            searchNetwork.Click += async (_, __) => await SearchNetworkAsync();
+            networkDevices.SelectionChanged += (_, __) => SelectNetworkModel();
+            void UpdateConnectionOptions()
+            {
+                usbPanel.Visibility = usbChoice.IsChecked == true ? Visibility.Visible : Visibility.Collapsed;
+                SelectNetworkModel();
+                SelectWindowsQueueModel();
+            }
+            networkChoice.Checked += (_, __) => UpdateConnectionOptions();
+            windowsQueueChoice.Checked += async (_, __) =>
+            {
+                UpdateConnectionOptions();
+                await RefreshWindowsQueuesAsync();
+            };
+            windowsQueueBox.SelectionChanged += (_, __) => SelectWindowsQueueModel();
             void SelectUsbModel()
             {
                 var detected = usbDevices.SelectedItem as UsbPrinterDescriptor;
@@ -1116,7 +1396,11 @@ namespace pyToneRIP
                 if (matches.Count == 1) modelBox.SelectedItem = matches[0];
                 usbStatus.Text = detected.ToString();
             }
-            usbChoice.Checked += (_, __) => { usbDevices.IsEnabled = true; SelectUsbModel(); };
+            usbChoice.Checked += (_, __) =>
+            {
+                UpdateConnectionOptions();
+                SelectUsbModel();
+            };
             usbDevices.SelectionChanged += (_, __) => SelectUsbModel();
             async Task RefreshUsbAsync()
             {
@@ -1133,7 +1417,6 @@ namespace pyToneRIP
                         ? detected.FirstOrDefault(device => device.DeviceInstanceId == previous)
                         : detected.FirstOrDefault(device => available.Any(model => UsbPrinterModelMatcher.Matches(
                             model.Id, model.DisplayName, device)));
-                    if (!connectionChosen && selection != null) usbChoice.IsChecked = true;
                     usbDevices.SelectedItem = selection;
                     if (detected.Count == 0) usbStatus.Text = LocalizationService.Get("Usb.None");
                 }
@@ -1145,26 +1428,81 @@ namespace pyToneRIP
                 finally { refreshUsb.IsEnabled = true; refreshingUsb = false; }
             }
             refreshUsb.Click += async (_, __) => await RefreshUsbAsync();
-            content.Children.Add(networkChoice);
+            content.Children.Add(networkRow);
+            content.Children.Add(networkDevices);
+            content.Children.Add(networkStatus);
+            content.Children.Add(windowsQueueChoice);
+            content.Children.Add(new TextBlock
+            {
+                Text = LocalizationService.Get("Queue.Recommended"), TextWrapping = TextWrapping.Wrap,
+                Margin = new Thickness(28, -7, 0, 0),
+            });
+            content.Children.Add(windowsQueuePanel);
             content.Children.Add(usbChoice);
-            content.Children.Add(usbDevices);
-            content.Children.Add(refreshUsb);
-            content.Children.Add(usbStatus);
+            content.Children.Add(new TextBlock
+            {
+                Text = LocalizationService.Get("Usb.DirectPrintRecommendation"), TextWrapping = TextWrapping.Wrap,
+                Margin = new Thickness(28, -7, 0, 0),
+            });
+            content.Children.Add(usbPanel);
             content.Children.Add(modelBox);
             content.Children.Add(nameBox);
             content.Children.Add(details);
             var dialog = new ContentDialog
             {
                 Title = LocalizationService.Get("Code.AddPrinter"),
-                Content = content,
+                Content = new ScrollViewer { Content = content, VerticalScrollBarVisibility = ScrollBarVisibility.Auto },
                 PrimaryButtonText = LocalizationService.Get("Code.Continue"),
                 CloseButtonText = LocalizationService.Get("Code.Cancel"),
             };
             dialog.PrimaryButtonClick += (_, clickArgs) =>
             {
-                connectionChosen = true;
                 var detected = usbDevices.SelectedItem as UsbPrinterDescriptor;
                 var selectedModel = modelBox.SelectedItem as PrinterCapability;
+                if (windowsQueueChoice.IsChecked == true)
+                {
+                    var target = windowsQueueBox.SelectedItem as WindowsQueueDescriptor;
+                    if (!windowsQueueBox.IsEnabled || target == null || !target.MatchesModel(selectedModel))
+                    {
+                        windowsQueueStatus.Text = LocalizationService.Get(windowsQueueNeedsDriver && windowsQueueBox.Items.Count == 0
+                            ? "Queue.RawDriverRequired" : "Queue.Select");
+                        clickArgs.Cancel = true;
+                        return;
+                    }
+                    if (PrinterInstanceStore.FindPhysicalQueueConflict(registry, target.Name) != null)
+                    {
+                        windowsQueueStatus.Text = LocalizationService.Format("Queue.Assigned", target.Name);
+                        clickArgs.Cancel = true;
+                        return;
+                    }
+                }
+                if (networkChoice.IsChecked == true)
+                {
+                    var printer = SelectedNetworkDevice();
+                    if (printer != null && NetworkAddressIsAssigned(printer))
+                    {
+                        SelectNetworkModel();
+                        clickArgs.Cancel = true;
+                        return;
+                    }
+                    if (networkSearchCancellation != null || (networkDevices.Items.Count > 1 && networkDevices.SelectedIndex < 0)
+                        || (printer != null && (!printer.RawPortReachable || !networkMatches[printer].Contains(selectedModel))))
+                    {
+                        SelectNetworkModel();
+                        if (printer == null && networkSearchCancellation == null)
+                        {
+                            networkDevices.Focus(FocusState.Programmatic);
+                            networkDevices.IsDropDownOpen = true;
+                        }
+                        else if (printer != null && printer.RawPortReachable && networkMatches[printer].Count > 0)
+                        {
+                            networkStatus.Text = LocalizationService.Get("Network.ChooseModel");
+                            networkStatus.Visibility = Visibility.Visible;
+                        }
+                        clickArgs.Cancel = true;
+                        return;
+                    }
+                }
                 if (usbChoice.IsChecked == true && (detected == null || selectedModel == null
                     || !UsbPrinterModelMatcher.Matches(selectedModel.Id, selectedModel.DisplayName, detected)))
                 {
@@ -1185,12 +1523,18 @@ namespace pyToneRIP
                     clickArgs.Cancel = true;
                 }
             };
+            dialog.Opened += (_, __) => networkChoice.Focus(FocusState.Programmatic);
             var addDialogOperation = dialog.ShowAsync();
             _ = RefreshUsbAsync();
-            if (await addDialogOperation != ContentDialogResult.Primary)
+            var addResult = await addDialogOperation;
+            networkSearchCancellation?.Cancel();
+            if (addResult != ContentDialogResult.Primary)
                 return;
             var selectedUsb = usbChoice.IsChecked == true
                 ? usbDevices.SelectedItem as UsbPrinterDescriptor : null;
+            var selectedNetwork = networkChoice.IsChecked == true ? SelectedNetworkDevice() : null;
+            var selectedWindowsQueue = windowsQueueChoice.IsChecked == true
+                ? windowsQueueBox.SelectedItem as WindowsQueueDescriptor : null;
             var selected = modelBox.SelectedItem as PrinterCapability;
             var queueName = nameBox.Text?.Trim();
             if (selected == null || string.IsNullOrWhiteSpace(queueName))
@@ -1231,6 +1575,15 @@ namespace pyToneRIP
             PrinterInstanceRecord installedPrinter = null;
             try
             {
+                if (selectedWindowsQueue != null)
+                {
+                    var destinations = await QueueHelperClient.ListAsync();
+                    if (destinations.Any(destination => destination.RequiresRawDriver &&
+                        string.Equals(destination.Name, selectedWindowsQueue.Name, StringComparison.OrdinalIgnoreCase)))
+                        throw new InvalidOperationException(LocalizationService.Get("Queue.RawDriverRequired"));
+                    if (!destinations.Any(destination => destination.MatchesDestination(selectedWindowsQueue.Name, selectedWindowsQueue.DriverName)))
+                        throw new InvalidOperationException(LocalizationService.Get("Queue.None"));
+                }
                 var printerUri = VirtualPrinterManagementService.CreatePrinterUri(selected.Id);
                 installationStatus.Text = LocalizationService.Get("Code.CreatingTheWindowsVirtualPrinterWithItsModelPDC");
                 await VirtualPrinterManagementService.InstallAsync(
@@ -1246,11 +1599,14 @@ namespace pyToneRIP
                     ModelName = selected.DisplayName,
                     ModelCapability = (await CapabilityCatalog.LoadForModelAsync(selected.Id))
                         .Printers.Single(),
-                    ConnectionKind = selectedUsb == null ? "network" : "usb",
+                    ConnectionKind = selectedWindowsQueue != null ? "windows_queue" : selectedUsb == null ? "network" : "usb",
                     UsbDeviceId = selectedUsb?.DeviceInstanceId,
                     UsbPort = selectedUsb?.PortName,
-                    PhysicalQueueName = selectedUsb?.QueueNames.Count == 1 ? selectedUsb.QueueNames[0] : null,
-                    Port = PrinterInstanceStore.RawTcpPort,
+                    PhysicalQueueName = selectedWindowsQueue?.Name
+                        ?? (selectedUsb?.QueueNames.Count == 1 ? selectedUsb.QueueNames[0] : null),
+                    PhysicalQueueDriver = selectedWindowsQueue?.DriverName,
+                    Host = selectedNetwork?.Host,
+                    Port = selectedWindowsQueue == null ? PrinterInstanceStore.RawTcpPort : 0,
                     Configured = false,
                     IsSystemDefault = queue?.IsDefault == true,
                 };
@@ -1306,6 +1662,52 @@ namespace pyToneRIP
                         StringComparison.OrdinalIgnoreCase)
                         || string.IsNullOrWhiteSpace(installedPrinter.UsbDeviceId),
                 });
+        }
+
+        internal static void ConfigureNetworkSearchButton(Button button)
+        {
+            var label = LocalizationService.Get("Network.Search");
+            button.Content = new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                Spacing = 6,
+                Children =
+                {
+                    new FontIcon
+                    {
+                        FontFamily = new FontFamily("Segoe MDL2 Assets"),
+                        Glyph = "\uEDA5",
+                        FontSize = 14,
+                        VerticalAlignment = VerticalAlignment.Center,
+                    },
+                    new TextBlock { Text = label, VerticalAlignment = VerticalAlignment.Center },
+                },
+            };
+            Windows.UI.Xaml.Automation.AutomationProperties.SetName(button, label);
+            ToolTipService.SetToolTip(button, LocalizationService.Get("Network.SearchHint"));
+        }
+
+        internal static ComboBoxItem NetworkPrinterOption(NetworkPrinterDescriptor printer, string label)
+        {
+            var row = new Grid { ColumnSpacing = 8, HorizontalAlignment = HorizontalAlignment.Stretch };
+            row.ColumnDefinitions.Add(new ColumnDefinition());
+            row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+            row.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(115) });
+            var name = new TextBlock { Text = label, TextTrimming = TextTrimming.CharacterEllipsis };
+            ToolTipService.SetToolTip(name, label);
+            row.Children.Add(name);
+            var separator = new TextBlock { Text = "|", Opacity = 0.55 };
+            Grid.SetColumn(separator, 1);
+            row.Children.Add(separator);
+            var address = new TextBlock { Text = printer.Host, TextAlignment = TextAlignment.Right };
+            Grid.SetColumn(address, 2);
+            row.Children.Add(address);
+            var option = new ComboBoxItem
+            {
+                Content = row, Tag = printer, HorizontalContentAlignment = HorizontalAlignment.Stretch,
+            };
+            Windows.UI.Xaml.Automation.AutomationProperties.SetName(option, label + " | " + printer.Host);
+            return option;
         }
 
         private async Task<WindowsQueueDescriptor> WaitForWindowsQueueAsync(
@@ -1646,6 +2048,9 @@ namespace pyToneRIP
             var selected = PrinterList.SelectedItem as PrinterInstanceRecord;
             if (selected == null)
                 return;
+            if (printCancellationRunning) return;
+            printCancellationRunning = true;
+            CancelJobButton.IsEnabled = false;
             var item = sender as MenuFlyoutItem;
             if (item != null)
                 item.IsEnabled = false;
@@ -1657,10 +2062,6 @@ namespace pyToneRIP
                 var running = activities.Where(activity => activity.State != "Queued").ToList();
                 var current = activities.Count == 1 ? activities[0]
                     : running.Count == 1 ? running[0] : null;
-                var hasWindowsJob = await QueueHelperClient.HasCurrentJobAsync(
-                    selected.QueueName);
-                if (!hasWindowsJob && current == null)
-                    throw new InvalidOperationException("The selected printer has no active print job.");
                 if (current != null)
                 {
                     var jobs = await Shared.SharedApplicationStorage.Root.GetFolderAsync("jobs");
@@ -1670,9 +2071,16 @@ namespace pyToneRIP
                     await FileIO.WriteTextAsync(marker,
                         DateTimeOffset.UtcNow.ToString("O") + Environment.NewLine
                         + "Cancelled from pyToneRIP Manager." + Environment.NewLine);
+                    // The exact workflow owns cancellation until transport finishes.
+                    // A queue-level lookup here could select the next Windows job.
+                    if (await folder.TryGetItemAsync("transport-result.json") is StorageFile)
+                        await QueueHelperClient.RequestPhysicalCancellationAsync(current.JobFolderName);
                 }
-                if (hasWindowsJob)
-                    await QueueHelperClient.CancelCurrentJobAsync(selected.QueueName);
+                else if (!await QueueHelperClient.CancelCurrentJobAsync(selected.QueueName))
+                {
+                    StatusText.Text = LocalizationService.Get("MainPage.NoActiveJob");
+                    return;
+                }
                 StatusText.Text = LocalizationService.Get("MainPage.Context.CancelJob.Text")
                     + ": " + selected.QueueName;
                 ManagerLogger.Write("Current print job cancellation requested for "
@@ -1683,17 +2091,24 @@ namespace pyToneRIP
             {
                 ManagerLogger.WriteException(
                     "Cancelling current print job for " + selected.QueueName, error);
+                StatusText.Text = LocalizationService.Get("MainPage.CancelJobFailed");
                 await MessageAsync(LocalizationService.Get("MainPage.Context.CancelJob.Text"),
-                    error.Message);
+                    LocalizationService.Get("MainPage.CancelJobFailed"));
+            }
+            finally
+            {
+                printCancellationRunning = false;
+                UpdateSelectedPrinterActions();
             }
         }
 
         private async void SetDefaultPrinter(object sender, RoutedEventArgs args)
         {
             var selected = PrinterList.SelectedItem as PrinterInstanceRecord;
-            if (selected == null)
+            if (!CanSetDefaultPrinter(selected))
                 return;
 
+            defaultPrinterChangeRunning = true;
             SetDefaultPrinterButton.IsEnabled = false;
             ManagerLogger.Write("Setting Windows default printer: " + selected.QueueName);
             try
@@ -1716,6 +2131,7 @@ namespace pyToneRIP
             }
             finally
             {
+                defaultPrinterChangeRunning = false;
                 UpdateSelectedPrinterActions();
             }
         }

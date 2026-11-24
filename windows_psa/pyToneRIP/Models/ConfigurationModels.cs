@@ -118,6 +118,7 @@ namespace pyToneRIP.Models
         [DataMember(Name = "usb_device_id", Order = 5, EmitDefaultValue = false)] public string UsbDeviceId { get; set; }
         [DataMember(Name = "printer_queue", Order = 6, EmitDefaultValue = false)] public string PhysicalQueueName { get; set; }
         [DataMember(Name = "usb_transport_mode", Order = 7, EmitDefaultValue = false)] public string UsbTransportMode { get; set; } = "usbprint";
+        [DataMember(Name = "printer_queue_driver", Order = 8, EmitDefaultValue = false)] public string PhysicalQueueDriver { get; set; }
     }
 
     [DataContract]

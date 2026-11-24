@@ -1,0 +1,4697 @@
+{
+  "modes": [
+    {
+      "app_raster_dpi": {
+        "horizontal": 600,
+        "vertical": 600
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_scope": "all_non_default_media"
+      },
+      "display_name": "High",
+      "dither_raster_dpi": {
+        "horizontal": 1200,
+        "vertical": 600
+      },
+      "drop_level_codes": [
+        0,
+        2,
+        3
+      ],
+      "drop_levels_percent": [
+        0,
+        63,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 83
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 2,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 17
+      },
+      "explicit_weave_sequence": [],
+      "native_geometry": {
+        "bank_geometry_source": {
+          "capture_sha256": "7f26fb7fdd51fd87d0b1b85ceb186d131a8b41f302ec00cf49b21f3473293b78",
+          "kind": "single_bank_capture",
+          "row_selection_function": "0x1400500d0",
+          "setup_function": "0x1400551e0"
+        },
+        "black_geometry_source": {
+          "capture_sha256": "4759d537cd55814a9e688db96a977cf1b8a329277757fc6a84c9b9f07dbe0802",
+          "kind": "same_descriptor_primary_bank"
+        },
+        "black_only_channel_offset": 1088,
+        "black_only_registration_unavailable": "native three-colour mode has no K",
+        "command_grid_supported": true,
+        "full_head_banks": [
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 0,
+            "row_group": 1,
+            "selector": 0
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 1,
+            "row_group": 1,
+            "selector": 1
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 2,
+            "row_group": 1,
+            "selector": 2
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 4,
+            "row_group": 1,
+            "selector": 4
+          }
+        ],
+        "full_head_channel_offsets": [
+          {
+            "offset_command_units": 1088,
+            "selector": 0
+          },
+          {
+            "offset_command_units": 544,
+            "selector": 1
+          },
+          {
+            "offset_command_units": 0,
+            "selector": 2
+          },
+          {
+            "offset_command_units": 1088,
+            "selector": 4
+          }
+        ],
+        "full_head_geometry_source": "native colour windows and separately registered full black bank origin",
+        "full_head_origin_vertical_units": 654,
+        "head_banks": [
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 0,
+            "row_group": 1,
+            "selector": 0
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 1,
+            "row_group": 1,
+            "selector": 1
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 2,
+            "row_group": 1,
+            "selector": 2
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 4,
+            "row_group": 1,
+            "selector": 4
+          }
+        ],
+        "native_bit_depth": 2,
+        "observed_primary_bank_grid_dpi": {
+          "horizontal": 1200,
+          "vertical": 600
+        },
+        "primary_channel_offsets": [
+          {
+            "offset_command_units": 0,
+            "selector": 0
+          },
+          {
+            "offset_command_units": 544,
+            "selector": 1
+          },
+          {
+            "offset_command_units": 0,
+            "selector": 2
+          },
+          {
+            "offset_command_units": 1088,
+            "selector": 4
+          }
+        ],
+        "primary_nozzle_count": 128,
+        "raster_dpi": {
+          "horizontal": 1200,
+          "vertical": 600
+        },
+        "reference_top_margin_mils": 120,
+        "registration_capture_sha256": "7f26fb7fdd51fd87d0b1b85ceb186d131a8b41f302ec00cf49b21f3473293b78",
+        "registration_fit": {
+          "1": 0.990679,
+          "2": 0.984937,
+          "4": 0.988212
+        },
+        "resolution_payload_hex": "b0040402",
+        "sheet_origin_vertical_units": 654,
+        "units_payload_hex": "010101b004"
+      },
+      "nominal_output_dpi": {
+        "horizontal": 600,
+        "vertical": 600
+      },
+      "printer_color_coordinate_dpi": {
+        "horizontal": 1200,
+        "vertical": 600
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 1200,
+        "vertical": 600
+      },
+      "quality_rank": 4,
+      "raster_bit_depth": 2,
+      "variant_index": 0
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 600,
+        "vertical": 1200
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_scope": "all_non_default_media"
+      },
+      "display_name": "Super",
+      "dither_raster_dpi": {
+        "horizontal": 600,
+        "vertical": 1200
+      },
+      "drop_levels_percent": [
+        0,
+        23,
+        43,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 96
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 2,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 18
+      },
+      "explicit_weave_sequence": [],
+      "native_geometry": {
+        "bank_geometry_source": {
+          "capture_sha256": "6522b1892c73de2eae2dbdd854d120a10eca6e5298862a1fc941f40603c73f4b",
+          "kind": "single_bank_capture",
+          "row_selection_function": "0x1400500d0",
+          "setup_function": "0x1400551e0"
+        },
+        "black_geometry_source": {
+          "capture_sha256": "e7b1840a23c97a805c8e06bb2ee2d6a5ea5542f0e9097f708c98c745d99b7bdc",
+          "kind": "same_descriptor_primary_bank"
+        },
+        "black_only_channel_offset": 1088,
+        "black_only_registration_unavailable": "native three-colour mode has no K",
+        "command_grid_supported": true,
+        "full_head_banks": [
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 0,
+            "row_group": 1,
+            "selector": 0
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 1,
+            "row_group": 1,
+            "selector": 1
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 2,
+            "row_group": 1,
+            "selector": 2
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 4,
+            "row_group": 1,
+            "selector": 4
+          }
+        ],
+        "full_head_channel_offsets": [
+          {
+            "offset_command_units": 1088,
+            "selector": 0
+          },
+          {
+            "offset_command_units": 544,
+            "selector": 1
+          },
+          {
+            "offset_command_units": 0,
+            "selector": 2
+          },
+          {
+            "offset_command_units": 1088,
+            "selector": 4
+          }
+        ],
+        "full_head_geometry_source": "native colour windows and separately registered full black bank origin",
+        "full_head_origin_vertical_units": 655,
+        "head_banks": [
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 0,
+            "row_group": 1,
+            "selector": 0
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 1,
+            "row_group": 1,
+            "selector": 1
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 2,
+            "row_group": 1,
+            "selector": 2
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 4,
+            "row_group": 1,
+            "selector": 4
+          }
+        ],
+        "native_bit_depth": 2,
+        "observed_primary_bank_grid_dpi": {
+          "horizontal": 600,
+          "vertical": 1200
+        },
+        "primary_channel_offsets": [
+          {
+            "offset_command_units": 0,
+            "selector": 0
+          },
+          {
+            "offset_command_units": 544,
+            "selector": 1
+          },
+          {
+            "offset_command_units": 0,
+            "selector": 2
+          },
+          {
+            "offset_command_units": 1088,
+            "selector": 4
+          }
+        ],
+        "primary_nozzle_count": 128,
+        "raster_dpi": {
+          "horizontal": 600,
+          "vertical": 1200
+        },
+        "reference_top_margin_mils": 120,
+        "registration_capture_sha256": "6522b1892c73de2eae2dbdd854d120a10eca6e5298862a1fc941f40603c73f4b",
+        "registration_fit": {
+          "1": 0.979891,
+          "2": 0.963119,
+          "4": 0.974001
+        },
+        "resolution_payload_hex": "b0040404",
+        "sheet_origin_vertical_units": 655,
+        "units_payload_hex": "010101b004"
+      },
+      "nominal_output_dpi": {
+        "horizontal": 2400,
+        "vertical": 1200
+      },
+      "printer_color_coordinate_dpi": {
+        "horizontal": 600,
+        "vertical": 1200
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 600,
+        "vertical": 1200
+      },
+      "quality_rank": 5,
+      "raster_bit_depth": 2,
+      "variant_index": 1
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 1200,
+        "vertical": 1200
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_scope": "all_non_default_media"
+      },
+      "display_name": "Photo",
+      "dither_raster_dpi": {
+        "horizontal": 1200,
+        "vertical": 1200
+      },
+      "drop_levels_percent": [
+        0,
+        23,
+        43,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 176
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 4,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 18
+      },
+      "explicit_weave_sequence": [],
+      "native_geometry": {
+        "bank_geometry_source": {
+          "capture_sha256": "d968be36c8659a725aa7a735814b476e70a3878483230a41ad88d11d4997c17b",
+          "kind": "single_bank_capture",
+          "row_selection_function": "0x1400500d0",
+          "setup_function": "0x1400551e0"
+        },
+        "black_geometry_source": {
+          "capture_sha256": "e7b1840a23c97a805c8e06bb2ee2d6a5ea5542f0e9097f708c98c745d99b7bdc",
+          "kind": "same_descriptor_primary_bank"
+        },
+        "black_only_channel_offset": 1088,
+        "black_only_registration_unavailable": "native three-colour mode has no K",
+        "command_grid_supported": true,
+        "full_head_banks": [
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 0,
+            "row_group": 1,
+            "selector": 0
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 1,
+            "row_group": 1,
+            "selector": 1
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 2,
+            "row_group": 1,
+            "selector": 2
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 4,
+            "row_group": 1,
+            "selector": 4
+          }
+        ],
+        "full_head_channel_offsets": [
+          {
+            "offset_command_units": 1088,
+            "selector": 0
+          },
+          {
+            "offset_command_units": 544,
+            "selector": 1
+          },
+          {
+            "offset_command_units": 0,
+            "selector": 2
+          },
+          {
+            "offset_command_units": 1088,
+            "selector": 4
+          }
+        ],
+        "full_head_geometry_source": "native colour windows and separately registered full black bank origin",
+        "full_head_origin_vertical_units": 655,
+        "head_banks": [
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 0,
+            "row_group": 1,
+            "selector": 0
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 1,
+            "row_group": 1,
+            "selector": 1
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 2,
+            "row_group": 1,
+            "selector": 2
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 4,
+            "row_group": 1,
+            "selector": 4
+          }
+        ],
+        "native_bit_depth": 2,
+        "observed_primary_bank_grid_dpi": {
+          "horizontal": 1200,
+          "vertical": 1200
+        },
+        "primary_channel_offsets": [
+          {
+            "offset_command_units": 0,
+            "selector": 0
+          },
+          {
+            "offset_command_units": 544,
+            "selector": 1
+          },
+          {
+            "offset_command_units": 0,
+            "selector": 2
+          },
+          {
+            "offset_command_units": 1088,
+            "selector": 4
+          }
+        ],
+        "primary_nozzle_count": 128,
+        "raster_dpi": {
+          "horizontal": 1200,
+          "vertical": 1200
+        },
+        "reference_top_margin_mils": 120,
+        "registration_capture_sha256": "d968be36c8659a725aa7a735814b476e70a3878483230a41ad88d11d4997c17b",
+        "registration_fit": {
+          "1": 0.991759,
+          "2": 0.98661,
+          "4": 0.990378
+        },
+        "resolution_payload_hex": "b0040404",
+        "sheet_origin_vertical_units": 655,
+        "units_payload_hex": "010101b004"
+      },
+      "nominal_output_dpi": {
+        "horizontal": 4800,
+        "vertical": 1200
+      },
+      "printer_color_coordinate_dpi": {
+        "horizontal": 1200,
+        "vertical": 1200
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 1200,
+        "vertical": 1200
+      },
+      "quality_rank": 6,
+      "raster_bit_depth": 2,
+      "variant_index": 2
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 600,
+        "vertical": 300
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_index": 0,
+        "media_scope": "one_media"
+      },
+      "display_name": "Draft",
+      "dither_raster_dpi": {
+        "horizontal": 600,
+        "vertical": 300
+      },
+      "drop_level_codes": [
+        0,
+        2,
+        3
+      ],
+      "drop_levels_percent": [
+        0,
+        57,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 80
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 1,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 17
+      },
+      "explicit_weave_sequence": [],
+      "native_geometry": {
+        "bank_geometry_source": {
+          "capture_sha256": "ab470b0670dd6543b9d456fe38aa55ad0ca3708e4e31f29d91d5658ab178559f",
+          "kind": "single_bank_capture",
+          "row_selection_function": "0x1400500d0",
+          "setup_function": "0x1400551e0"
+        },
+        "black_only_channel_offset": 1088,
+        "black_only_registration": {
+          "capture_sha256": "970e64f5f2d45e9cdc7b12adf76663edfcb795742ae566bc932ffaac99e63d69",
+          "fit": 0.991247,
+          "origin_vertical_units": 1740
+        },
+        "command_grid_supported": true,
+        "full_head_banks": [
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 0,
+            "row_group": 1,
+            "selector": 0
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 1,
+            "row_group": 1,
+            "selector": 1
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 2,
+            "row_group": 1,
+            "selector": 2
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 4,
+            "row_group": 1,
+            "selector": 4
+          }
+        ],
+        "full_head_channel_offsets": [
+          {
+            "offset_command_units": 1088,
+            "selector": 0
+          },
+          {
+            "offset_command_units": 544,
+            "selector": 1
+          },
+          {
+            "offset_command_units": 0,
+            "selector": 2
+          },
+          {
+            "offset_command_units": 1088,
+            "selector": 4
+          }
+        ],
+        "full_head_geometry_source": "native colour windows and separately registered full black bank origin",
+        "full_head_origin_vertical_units": 652,
+        "head_banks": [
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 0,
+            "row_group": 1,
+            "selector": 0
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 1,
+            "row_group": 1,
+            "selector": 1
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 2,
+            "row_group": 1,
+            "selector": 2
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 4,
+            "row_group": 1,
+            "selector": 4
+          }
+        ],
+        "native_bit_depth": 2,
+        "observed_primary_bank_grid_dpi": {
+          "horizontal": 600,
+          "vertical": 300
+        },
+        "primary_channel_offsets": [
+          {
+            "offset_command_units": 0,
+            "selector": 0
+          },
+          {
+            "offset_command_units": 544,
+            "selector": 1
+          },
+          {
+            "offset_command_units": 0,
+            "selector": 2
+          },
+          {
+            "offset_command_units": 1088,
+            "selector": 4
+          }
+        ],
+        "primary_nozzle_count": 128,
+        "raster_dpi": {
+          "horizontal": 600,
+          "vertical": 300
+        },
+        "reference_top_margin_mils": 120,
+        "registration_capture_sha256": "ab470b0670dd6543b9d456fe38aa55ad0ca3708e4e31f29d91d5658ab178559f",
+        "registration_fit": {
+          "0": 1.0,
+          "1": 0.975716,
+          "2": 0.948722,
+          "4": 0.967605
+        },
+        "resolution_payload_hex": "b0040402",
+        "sheet_origin_vertical_units": 652,
+        "units_payload_hex": "010101b004"
+      },
+      "nominal_output_dpi": {
+        "horizontal": 300,
+        "vertical": 300
+      },
+      "printer_color_coordinate_dpi": {
+        "horizontal": 600,
+        "vertical": 300
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 600,
+        "vertical": 300
+      },
+      "quality_rank": 1,
+      "raster_bit_depth": 2,
+      "variant_index": 0
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 600,
+        "vertical": 600
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_index": 0,
+        "media_scope": "one_media"
+      },
+      "display_name": "Medium",
+      "dither_raster_dpi": {
+        "horizontal": 600,
+        "vertical": 600
+      },
+      "drop_level_codes": [
+        0,
+        2,
+        3
+      ],
+      "drop_levels_percent": [
+        0,
+        57,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 80
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 1,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 17
+      },
+      "explicit_weave_sequence": [],
+      "native_geometry": {
+        "bank_geometry_source": {
+          "capture_sha256": "4759d537cd55814a9e688db96a977cf1b8a329277757fc6a84c9b9f07dbe0802",
+          "kind": "single_bank_capture",
+          "row_selection_function": "0x1400500d0",
+          "setup_function": "0x1400551e0"
+        },
+        "black_only_channel_offset": 1088,
+        "black_only_registration": {
+          "capture_sha256": "e46aa6a5c8751fd5d046ed79609c3bb635156ce0ea7e561bff02f892f727865c",
+          "fit": 0.991915,
+          "origin_vertical_units": 1742
+        },
+        "command_grid_supported": true,
+        "full_head_banks": [
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 0,
+            "row_group": 1,
+            "selector": 0
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 1,
+            "row_group": 1,
+            "selector": 1
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 2,
+            "row_group": 1,
+            "selector": 2
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 4,
+            "row_group": 1,
+            "selector": 4
+          }
+        ],
+        "full_head_channel_offsets": [
+          {
+            "offset_command_units": 1088,
+            "selector": 0
+          },
+          {
+            "offset_command_units": 544,
+            "selector": 1
+          },
+          {
+            "offset_command_units": 0,
+            "selector": 2
+          },
+          {
+            "offset_command_units": 1088,
+            "selector": 4
+          }
+        ],
+        "full_head_geometry_source": "native colour windows and separately registered full black bank origin",
+        "full_head_origin_vertical_units": 654,
+        "head_banks": [
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 0,
+            "row_group": 1,
+            "selector": 0
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 1,
+            "row_group": 1,
+            "selector": 1
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 2,
+            "row_group": 1,
+            "selector": 2
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 4,
+            "row_group": 1,
+            "selector": 4
+          }
+        ],
+        "native_bit_depth": 2,
+        "observed_primary_bank_grid_dpi": {
+          "horizontal": 600,
+          "vertical": 600
+        },
+        "primary_channel_offsets": [
+          {
+            "offset_command_units": 0,
+            "selector": 0
+          },
+          {
+            "offset_command_units": 544,
+            "selector": 1
+          },
+          {
+            "offset_command_units": 0,
+            "selector": 2
+          },
+          {
+            "offset_command_units": 1088,
+            "selector": 4
+          }
+        ],
+        "primary_nozzle_count": 128,
+        "raster_dpi": {
+          "horizontal": 600,
+          "vertical": 600
+        },
+        "reference_top_margin_mils": 120,
+        "registration_capture_sha256": "4759d537cd55814a9e688db96a977cf1b8a329277757fc6a84c9b9f07dbe0802",
+        "registration_fit": {
+          "0": 1.0,
+          "1": 0.979522,
+          "2": 0.947276,
+          "4": 0.977661
+        },
+        "resolution_payload_hex": "b0040402",
+        "sheet_origin_vertical_units": 654,
+        "units_payload_hex": "010101b004"
+      },
+      "nominal_output_dpi": {
+        "horizontal": 600,
+        "vertical": 600
+      },
+      "printer_color_coordinate_dpi": {
+        "horizontal": 600,
+        "vertical": 600
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 600,
+        "vertical": 600
+      },
+      "quality_rank": 3,
+      "raster_bit_depth": 2,
+      "variant_index": 1
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 600,
+        "vertical": 600
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_index": 0,
+        "media_scope": "one_media"
+      },
+      "display_name": "High",
+      "dither_raster_dpi": {
+        "horizontal": 600,
+        "vertical": 1200
+      },
+      "drop_level_codes": [
+        0,
+        2,
+        3
+      ],
+      "drop_levels_percent": [
+        0,
+        57,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 112
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 1,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 17
+      },
+      "explicit_weave_sequence": [],
+      "native_geometry": {
+        "bank_geometry_source": {
+          "capture_sha256": "cfd9869782f82e76e1fc119b66c41a6defcb50bf5f11e77b7d7ddcf6adf3d71a",
+          "kind": "single_bank_capture",
+          "row_selection_function": "0x1400500d0",
+          "setup_function": "0x1400551e0"
+        },
+        "black_only_channel_offset": 1088,
+        "black_only_registration": {
+          "capture_sha256": "d3df0654b6283b0ec1412fc5fe32ea9522dd29699acd45e3a2434f4825625026",
+          "fit": 0.989517,
+          "origin_vertical_units": 1743
+        },
+        "command_grid_supported": true,
+        "full_head_banks": [
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 0,
+            "row_group": 1,
+            "selector": 0
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 1,
+            "row_group": 1,
+            "selector": 1
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 2,
+            "row_group": 1,
+            "selector": 2
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 4,
+            "row_group": 1,
+            "selector": 4
+          }
+        ],
+        "full_head_channel_offsets": [
+          {
+            "offset_command_units": 1088,
+            "selector": 0
+          },
+          {
+            "offset_command_units": 544,
+            "selector": 1
+          },
+          {
+            "offset_command_units": 0,
+            "selector": 2
+          },
+          {
+            "offset_command_units": 1088,
+            "selector": 4
+          }
+        ],
+        "full_head_geometry_source": "native colour windows and separately registered full black bank origin",
+        "full_head_origin_vertical_units": 655,
+        "head_banks": [
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 0,
+            "row_group": 1,
+            "selector": 0
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 1,
+            "row_group": 1,
+            "selector": 1
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 2,
+            "row_group": 1,
+            "selector": 2
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 4,
+            "row_group": 1,
+            "selector": 4
+          }
+        ],
+        "native_bit_depth": 2,
+        "observed_primary_bank_grid_dpi": {
+          "horizontal": 600,
+          "vertical": 1200
+        },
+        "primary_channel_offsets": [
+          {
+            "offset_command_units": 0,
+            "selector": 0
+          },
+          {
+            "offset_command_units": 544,
+            "selector": 1
+          },
+          {
+            "offset_command_units": 0,
+            "selector": 2
+          },
+          {
+            "offset_command_units": 1088,
+            "selector": 4
+          }
+        ],
+        "primary_nozzle_count": 128,
+        "raster_dpi": {
+          "horizontal": 600,
+          "vertical": 1200
+        },
+        "reference_top_margin_mils": 120,
+        "registration_capture_sha256": "cfd9869782f82e76e1fc119b66c41a6defcb50bf5f11e77b7d7ddcf6adf3d71a",
+        "registration_fit": {
+          "0": 1.0,
+          "1": 0.971699,
+          "2": 0.920699,
+          "4": 0.970155
+        },
+        "resolution_payload_hex": "b0040402",
+        "sheet_origin_vertical_units": 655,
+        "units_payload_hex": "010101b004"
+      },
+      "nominal_output_dpi": {
+        "horizontal": 1200,
+        "vertical": 1200
+      },
+      "printer_color_coordinate_dpi": {
+        "horizontal": 600,
+        "vertical": 1200
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 600,
+        "vertical": 1200
+      },
+      "quality_rank": 4,
+      "raster_bit_depth": 2,
+      "variant_index": 2
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 600,
+        "vertical": 1200
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_index": 0,
+        "media_scope": "one_media"
+      },
+      "display_name": "Super",
+      "dither_raster_dpi": {
+        "horizontal": 600,
+        "vertical": 1200
+      },
+      "drop_levels_percent": [
+        0,
+        23,
+        43,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 112
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 2,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 18
+      },
+      "explicit_weave_sequence": [],
+      "native_geometry": {
+        "bank_geometry_source": {
+          "capture_sha256": "e7b1840a23c97a805c8e06bb2ee2d6a5ea5542f0e9097f708c98c745d99b7bdc",
+          "kind": "single_bank_capture",
+          "row_selection_function": "0x1400500d0",
+          "setup_function": "0x1400551e0"
+        },
+        "black_only_channel_offset": 1088,
+        "black_only_registration": {
+          "capture_sha256": "f11bf418d1936f5027b49552cf7ff5057bde120d2fcf8df9194ef9b246b19ae1",
+          "fit": 0.984587,
+          "origin_vertical_units": 1743
+        },
+        "command_grid_supported": true,
+        "full_head_banks": [
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 0,
+            "row_group": 1,
+            "selector": 0
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 1,
+            "row_group": 1,
+            "selector": 1
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 2,
+            "row_group": 1,
+            "selector": 2
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 4,
+            "row_group": 1,
+            "selector": 4
+          }
+        ],
+        "full_head_channel_offsets": [
+          {
+            "offset_command_units": 1088,
+            "selector": 0
+          },
+          {
+            "offset_command_units": 544,
+            "selector": 1
+          },
+          {
+            "offset_command_units": 0,
+            "selector": 2
+          },
+          {
+            "offset_command_units": 1088,
+            "selector": 4
+          }
+        ],
+        "full_head_geometry_source": "native colour windows and separately registered full black bank origin",
+        "full_head_origin_vertical_units": 655,
+        "head_banks": [
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 0,
+            "row_group": 1,
+            "selector": 0
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 1,
+            "row_group": 1,
+            "selector": 1
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 2,
+            "row_group": 1,
+            "selector": 2
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 4,
+            "row_group": 1,
+            "selector": 4
+          }
+        ],
+        "native_bit_depth": 2,
+        "observed_primary_bank_grid_dpi": {
+          "horizontal": 600,
+          "vertical": 1200
+        },
+        "primary_channel_offsets": [
+          {
+            "offset_command_units": 0,
+            "selector": 0
+          },
+          {
+            "offset_command_units": 544,
+            "selector": 1
+          },
+          {
+            "offset_command_units": 0,
+            "selector": 2
+          },
+          {
+            "offset_command_units": 1088,
+            "selector": 4
+          }
+        ],
+        "primary_nozzle_count": 128,
+        "raster_dpi": {
+          "horizontal": 600,
+          "vertical": 1200
+        },
+        "reference_top_margin_mils": 120,
+        "registration_capture_sha256": "e7b1840a23c97a805c8e06bb2ee2d6a5ea5542f0e9097f708c98c745d99b7bdc",
+        "registration_fit": {
+          "0": 1.0,
+          "1": 0.972674,
+          "2": 0.917396,
+          "4": 0.969489
+        },
+        "resolution_payload_hex": "b0040404",
+        "sheet_origin_vertical_units": 655,
+        "units_payload_hex": "010101b004"
+      },
+      "nominal_output_dpi": {
+        "horizontal": 2400,
+        "vertical": 1200
+      },
+      "printer_color_coordinate_dpi": {
+        "horizontal": 600,
+        "vertical": 1200
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 600,
+        "vertical": 1200
+      },
+      "quality_rank": 5,
+      "raster_bit_depth": 2,
+      "variant_index": 3
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 600,
+        "vertical": 600
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_index": 1,
+        "media_scope": "one_media"
+      },
+      "display_name": "Medium",
+      "dither_raster_dpi": {
+        "horizontal": 600,
+        "vertical": 600
+      },
+      "drop_level_codes": [
+        0,
+        2,
+        3
+      ],
+      "drop_levels_percent": [
+        0,
+        63,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 83
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 1,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 17
+      },
+      "explicit_weave_sequence": [],
+      "native_geometry": {
+        "bank_geometry_source": {
+          "capture_sha256": "d6bfe19a8996d6c16d0489c22c9f4a846d56b97ca58e6635ee0ca0d46b06ba05",
+          "kind": "single_bank_capture",
+          "row_selection_function": "0x1400500d0",
+          "setup_function": "0x1400551e0"
+        },
+        "black_only_channel_offset": 1088,
+        "black_only_registration": {
+          "capture_sha256": "6540970d52c1dbb9d96f76c387b8acc5b4d63b578ccbb7193a487939c285b7f1",
+          "fit": 0.991363,
+          "origin_vertical_units": 1742
+        },
+        "command_grid_supported": true,
+        "full_head_banks": [
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 0,
+            "row_group": 1,
+            "selector": 0
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 1,
+            "row_group": 1,
+            "selector": 1
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 2,
+            "row_group": 1,
+            "selector": 2
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 4,
+            "row_group": 1,
+            "selector": 4
+          }
+        ],
+        "full_head_channel_offsets": [
+          {
+            "offset_command_units": 1088,
+            "selector": 0
+          },
+          {
+            "offset_command_units": 544,
+            "selector": 1
+          },
+          {
+            "offset_command_units": 0,
+            "selector": 2
+          },
+          {
+            "offset_command_units": 1088,
+            "selector": 4
+          }
+        ],
+        "full_head_geometry_source": "native colour windows and separately registered full black bank origin",
+        "full_head_origin_vertical_units": 654,
+        "head_banks": [
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 0,
+            "row_group": 1,
+            "selector": 0
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 1,
+            "row_group": 1,
+            "selector": 1
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 2,
+            "row_group": 1,
+            "selector": 2
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 4,
+            "row_group": 1,
+            "selector": 4
+          }
+        ],
+        "native_bit_depth": 2,
+        "observed_primary_bank_grid_dpi": {
+          "horizontal": 600,
+          "vertical": 600
+        },
+        "primary_channel_offsets": [
+          {
+            "offset_command_units": 0,
+            "selector": 0
+          },
+          {
+            "offset_command_units": 544,
+            "selector": 1
+          },
+          {
+            "offset_command_units": 0,
+            "selector": 2
+          },
+          {
+            "offset_command_units": 1088,
+            "selector": 4
+          }
+        ],
+        "primary_nozzle_count": 128,
+        "raster_dpi": {
+          "horizontal": 600,
+          "vertical": 600
+        },
+        "reference_top_margin_mils": 120,
+        "registration_capture_sha256": "d6bfe19a8996d6c16d0489c22c9f4a846d56b97ca58e6635ee0ca0d46b06ba05",
+        "registration_fit": {
+          "0": 1.0,
+          "1": 0.986866,
+          "2": 0.980759,
+          "4": 0.984916
+        },
+        "resolution_payload_hex": "b0040402",
+        "sheet_origin_vertical_units": 654,
+        "units_payload_hex": "010101b004"
+      },
+      "nominal_output_dpi": {
+        "horizontal": 600,
+        "vertical": 600
+      },
+      "printer_color_coordinate_dpi": {
+        "horizontal": 600,
+        "vertical": 600
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 600,
+        "vertical": 600
+      },
+      "quality_rank": 3,
+      "raster_bit_depth": 2,
+      "variant_index": 0
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 600,
+        "vertical": 600
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_index": 1,
+        "media_scope": "one_media"
+      },
+      "display_name": "High",
+      "dither_raster_dpi": {
+        "horizontal": 600,
+        "vertical": 1200
+      },
+      "drop_level_codes": [
+        0,
+        2,
+        3
+      ],
+      "drop_levels_percent": [
+        0,
+        63,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 112
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 1,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 17
+      },
+      "explicit_weave_sequence": [],
+      "native_geometry": {
+        "bank_geometry_source": {
+          "capture_sha256": "c9b98b08906882512387dfe99890254f89d4ed7b3edebe99dcaf681c7e2a5ca2",
+          "kind": "single_bank_capture",
+          "row_selection_function": "0x1400500d0",
+          "setup_function": "0x1400551e0"
+        },
+        "black_only_channel_offset": 1088,
+        "black_only_registration": {
+          "capture_sha256": "8559e5f9dc2dce5d4075e0f12aafd08536b061fef37e97957b9bb99d31c230b9",
+          "fit": 0.984971,
+          "origin_vertical_units": 1743
+        },
+        "command_grid_supported": true,
+        "full_head_banks": [
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 0,
+            "row_group": 1,
+            "selector": 0
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 1,
+            "row_group": 1,
+            "selector": 1
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 2,
+            "row_group": 1,
+            "selector": 2
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 4,
+            "row_group": 1,
+            "selector": 4
+          }
+        ],
+        "full_head_channel_offsets": [
+          {
+            "offset_command_units": 1088,
+            "selector": 0
+          },
+          {
+            "offset_command_units": 544,
+            "selector": 1
+          },
+          {
+            "offset_command_units": 0,
+            "selector": 2
+          },
+          {
+            "offset_command_units": 1088,
+            "selector": 4
+          }
+        ],
+        "full_head_geometry_source": "native colour windows and separately registered full black bank origin",
+        "full_head_origin_vertical_units": 655,
+        "head_banks": [
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 0,
+            "row_group": 1,
+            "selector": 0
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 1,
+            "row_group": 1,
+            "selector": 1
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 2,
+            "row_group": 1,
+            "selector": 2
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 4,
+            "row_group": 1,
+            "selector": 4
+          }
+        ],
+        "native_bit_depth": 2,
+        "observed_primary_bank_grid_dpi": {
+          "horizontal": 600,
+          "vertical": 1200
+        },
+        "primary_channel_offsets": [
+          {
+            "offset_command_units": 0,
+            "selector": 0
+          },
+          {
+            "offset_command_units": 544,
+            "selector": 1
+          },
+          {
+            "offset_command_units": 0,
+            "selector": 2
+          },
+          {
+            "offset_command_units": 1088,
+            "selector": 4
+          }
+        ],
+        "primary_nozzle_count": 128,
+        "raster_dpi": {
+          "horizontal": 600,
+          "vertical": 1200
+        },
+        "reference_top_margin_mils": 120,
+        "registration_capture_sha256": "c9b98b08906882512387dfe99890254f89d4ed7b3edebe99dcaf681c7e2a5ca2",
+        "registration_fit": {
+          "0": 1.0,
+          "1": 0.977591,
+          "2": 0.968777,
+          "4": 0.975365
+        },
+        "resolution_payload_hex": "b0040402",
+        "sheet_origin_vertical_units": 655,
+        "units_payload_hex": "010101b004"
+      },
+      "nominal_output_dpi": {
+        "horizontal": 1200,
+        "vertical": 1200
+      },
+      "printer_color_coordinate_dpi": {
+        "horizontal": 600,
+        "vertical": 1200
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 600,
+        "vertical": 1200
+      },
+      "quality_rank": 4,
+      "raster_bit_depth": 2,
+      "variant_index": 1
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 600,
+        "vertical": 1200
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_index": 1,
+        "media_scope": "one_media"
+      },
+      "display_name": "Super",
+      "dither_raster_dpi": {
+        "horizontal": 600,
+        "vertical": 1200
+      },
+      "drop_levels_percent": [
+        0,
+        23,
+        43,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 96
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 2,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 18
+      },
+      "explicit_weave_sequence": [],
+      "native_geometry": {
+        "bank_geometry_source": {
+          "capture_sha256": "8f00fc62e79a581799531aed9d24f13e62120b741c142a4232fc8693f358c8a8",
+          "kind": "single_bank_capture",
+          "row_selection_function": "0x1400500d0",
+          "setup_function": "0x1400551e0"
+        },
+        "black_only_channel_offset": 1088,
+        "black_only_registration": {
+          "capture_sha256": "a7d2fda966d4e20b6b7d01ec888ff46f24a90d4ffa0f9c0c448102a7eef1c232",
+          "fit": 0.981227,
+          "origin_vertical_units": 1743
+        },
+        "command_grid_supported": true,
+        "full_head_banks": [
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 0,
+            "row_group": 1,
+            "selector": 0
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 1,
+            "row_group": 1,
+            "selector": 1
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 2,
+            "row_group": 1,
+            "selector": 2
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 4,
+            "row_group": 1,
+            "selector": 4
+          }
+        ],
+        "full_head_channel_offsets": [
+          {
+            "offset_command_units": 1088,
+            "selector": 0
+          },
+          {
+            "offset_command_units": 544,
+            "selector": 1
+          },
+          {
+            "offset_command_units": 0,
+            "selector": 2
+          },
+          {
+            "offset_command_units": 1088,
+            "selector": 4
+          }
+        ],
+        "full_head_geometry_source": "native colour windows and separately registered full black bank origin",
+        "full_head_origin_vertical_units": 655,
+        "head_banks": [
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 0,
+            "row_group": 1,
+            "selector": 0
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 1,
+            "row_group": 1,
+            "selector": 1
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 2,
+            "row_group": 1,
+            "selector": 2
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 4,
+            "row_group": 1,
+            "selector": 4
+          }
+        ],
+        "native_bit_depth": 2,
+        "observed_primary_bank_grid_dpi": {
+          "horizontal": 600,
+          "vertical": 1200
+        },
+        "primary_channel_offsets": [
+          {
+            "offset_command_units": 0,
+            "selector": 0
+          },
+          {
+            "offset_command_units": 544,
+            "selector": 1
+          },
+          {
+            "offset_command_units": 0,
+            "selector": 2
+          },
+          {
+            "offset_command_units": 1088,
+            "selector": 4
+          }
+        ],
+        "primary_nozzle_count": 128,
+        "raster_dpi": {
+          "horizontal": 600,
+          "vertical": 1200
+        },
+        "reference_top_margin_mils": 120,
+        "registration_capture_sha256": "8f00fc62e79a581799531aed9d24f13e62120b741c142a4232fc8693f358c8a8",
+        "registration_fit": {
+          "0": 1.0,
+          "1": 0.98031,
+          "2": 0.969698,
+          "4": 0.975994
+        },
+        "resolution_payload_hex": "b0040404",
+        "sheet_origin_vertical_units": 655,
+        "units_payload_hex": "010101b004"
+      },
+      "nominal_output_dpi": {
+        "horizontal": 2400,
+        "vertical": 1200
+      },
+      "printer_color_coordinate_dpi": {
+        "horizontal": 600,
+        "vertical": 1200
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 600,
+        "vertical": 1200
+      },
+      "quality_rank": 5,
+      "raster_bit_depth": 2,
+      "variant_index": 2
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 1200,
+        "vertical": 1200
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_index": 1,
+        "media_scope": "one_media"
+      },
+      "display_name": "Photo",
+      "dither_raster_dpi": {
+        "horizontal": 1200,
+        "vertical": 1200
+      },
+      "drop_levels_percent": [
+        0,
+        23,
+        43,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 176
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 4,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 18
+      },
+      "explicit_weave_sequence": [],
+      "native_geometry": {
+        "bank_geometry_source": {
+          "capture_sha256": "cec19dae485fbaa676cfff94929be0b49d612b3b36dbcd222716d845175f7b58",
+          "kind": "single_bank_capture",
+          "row_selection_function": "0x1400500d0",
+          "setup_function": "0x1400551e0"
+        },
+        "black_only_channel_offset": 1088,
+        "black_only_registration": {
+          "capture_sha256": "0b585a6012c0a1ccb447ddf94f6221e779355655db9bd548fecf8ba90d75ccb4",
+          "fit": 0.993636,
+          "origin_vertical_units": 1743
+        },
+        "command_grid_supported": true,
+        "full_head_banks": [
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 0,
+            "row_group": 1,
+            "selector": 0
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 1,
+            "row_group": 1,
+            "selector": 1
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 2,
+            "row_group": 1,
+            "selector": 2
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 4,
+            "row_group": 1,
+            "selector": 4
+          }
+        ],
+        "full_head_channel_offsets": [
+          {
+            "offset_command_units": 1088,
+            "selector": 0
+          },
+          {
+            "offset_command_units": 544,
+            "selector": 1
+          },
+          {
+            "offset_command_units": 0,
+            "selector": 2
+          },
+          {
+            "offset_command_units": 1088,
+            "selector": 4
+          }
+        ],
+        "full_head_geometry_source": "native colour windows and separately registered full black bank origin",
+        "full_head_origin_vertical_units": 655,
+        "head_banks": [
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 0,
+            "row_group": 1,
+            "selector": 0
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 1,
+            "row_group": 1,
+            "selector": 1
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 2,
+            "row_group": 1,
+            "selector": 2
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 4,
+            "row_group": 1,
+            "selector": 4
+          }
+        ],
+        "native_bit_depth": 2,
+        "observed_primary_bank_grid_dpi": {
+          "horizontal": 1200,
+          "vertical": 1200
+        },
+        "primary_channel_offsets": [
+          {
+            "offset_command_units": 0,
+            "selector": 0
+          },
+          {
+            "offset_command_units": 544,
+            "selector": 1
+          },
+          {
+            "offset_command_units": 0,
+            "selector": 2
+          },
+          {
+            "offset_command_units": 1088,
+            "selector": 4
+          }
+        ],
+        "primary_nozzle_count": 128,
+        "raster_dpi": {
+          "horizontal": 1200,
+          "vertical": 1200
+        },
+        "reference_top_margin_mils": 120,
+        "registration_capture_sha256": "cec19dae485fbaa676cfff94929be0b49d612b3b36dbcd222716d845175f7b58",
+        "registration_fit": {
+          "0": 1.0,
+          "1": 0.98908,
+          "2": 0.986381,
+          "4": 0.987263
+        },
+        "resolution_payload_hex": "b0040404",
+        "sheet_origin_vertical_units": 655,
+        "units_payload_hex": "010101b004"
+      },
+      "nominal_output_dpi": {
+        "horizontal": 4800,
+        "vertical": 1200
+      },
+      "printer_color_coordinate_dpi": {
+        "horizontal": 1200,
+        "vertical": 1200
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 1200,
+        "vertical": 1200
+      },
+      "quality_rank": 6,
+      "raster_bit_depth": 2,
+      "variant_index": 3
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 600,
+        "vertical": 600
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_index": 2,
+        "media_scope": "one_media"
+      },
+      "display_name": "Medium",
+      "dither_raster_dpi": {
+        "horizontal": 600,
+        "vertical": 600
+      },
+      "drop_level_codes": [
+        0,
+        2,
+        3
+      ],
+      "drop_levels_percent": [
+        0,
+        63,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 83
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 1,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 17
+      },
+      "explicit_weave_sequence": [],
+      "native_geometry": {
+        "bank_geometry_source": {
+          "capture_sha256": "d6bfe19a8996d6c16d0489c22c9f4a846d56b97ca58e6635ee0ca0d46b06ba05",
+          "kind": "single_bank_capture",
+          "row_selection_function": "0x1400500d0",
+          "setup_function": "0x1400551e0"
+        },
+        "black_only_channel_offset": 1088,
+        "black_only_registration": {
+          "capture_sha256": "6540970d52c1dbb9d96f76c387b8acc5b4d63b578ccbb7193a487939c285b7f1",
+          "fit": 0.991363,
+          "origin_vertical_units": 1742
+        },
+        "command_grid_supported": true,
+        "full_head_banks": [
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 0,
+            "row_group": 1,
+            "selector": 0
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 1,
+            "row_group": 1,
+            "selector": 1
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 2,
+            "row_group": 1,
+            "selector": 2
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 4,
+            "row_group": 1,
+            "selector": 4
+          }
+        ],
+        "full_head_channel_offsets": [
+          {
+            "offset_command_units": 1088,
+            "selector": 0
+          },
+          {
+            "offset_command_units": 544,
+            "selector": 1
+          },
+          {
+            "offset_command_units": 0,
+            "selector": 2
+          },
+          {
+            "offset_command_units": 1088,
+            "selector": 4
+          }
+        ],
+        "full_head_geometry_source": "native colour windows and separately registered full black bank origin",
+        "full_head_origin_vertical_units": 654,
+        "head_banks": [
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 0,
+            "row_group": 1,
+            "selector": 0
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 1,
+            "row_group": 1,
+            "selector": 1
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 2,
+            "row_group": 1,
+            "selector": 2
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 4,
+            "row_group": 1,
+            "selector": 4
+          }
+        ],
+        "native_bit_depth": 2,
+        "observed_primary_bank_grid_dpi": {
+          "horizontal": 600,
+          "vertical": 600
+        },
+        "primary_channel_offsets": [
+          {
+            "offset_command_units": 0,
+            "selector": 0
+          },
+          {
+            "offset_command_units": 544,
+            "selector": 1
+          },
+          {
+            "offset_command_units": 0,
+            "selector": 2
+          },
+          {
+            "offset_command_units": 1088,
+            "selector": 4
+          }
+        ],
+        "primary_nozzle_count": 128,
+        "raster_dpi": {
+          "horizontal": 600,
+          "vertical": 600
+        },
+        "reference_top_margin_mils": 120,
+        "registration_capture_sha256": "d6bfe19a8996d6c16d0489c22c9f4a846d56b97ca58e6635ee0ca0d46b06ba05",
+        "registration_fit": {
+          "0": 1.0,
+          "1": 0.986866,
+          "2": 0.980759,
+          "4": 0.984916
+        },
+        "resolution_payload_hex": "b0040402",
+        "sheet_origin_vertical_units": 654,
+        "units_payload_hex": "010101b004"
+      },
+      "nominal_output_dpi": {
+        "horizontal": 600,
+        "vertical": 600
+      },
+      "printer_color_coordinate_dpi": {
+        "horizontal": 600,
+        "vertical": 600
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 600,
+        "vertical": 600
+      },
+      "quality_rank": 3,
+      "raster_bit_depth": 2,
+      "variant_index": 0
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 600,
+        "vertical": 600
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_index": 2,
+        "media_scope": "one_media"
+      },
+      "display_name": "High",
+      "dither_raster_dpi": {
+        "horizontal": 600,
+        "vertical": 1200
+      },
+      "drop_level_codes": [
+        0,
+        2,
+        3
+      ],
+      "drop_levels_percent": [
+        0,
+        63,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 112
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 1,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 17
+      },
+      "explicit_weave_sequence": [],
+      "native_geometry": {
+        "bank_geometry_source": {
+          "capture_sha256": "c9b98b08906882512387dfe99890254f89d4ed7b3edebe99dcaf681c7e2a5ca2",
+          "kind": "single_bank_capture",
+          "row_selection_function": "0x1400500d0",
+          "setup_function": "0x1400551e0"
+        },
+        "black_only_channel_offset": 1088,
+        "black_only_registration": {
+          "capture_sha256": "8559e5f9dc2dce5d4075e0f12aafd08536b061fef37e97957b9bb99d31c230b9",
+          "fit": 0.984971,
+          "origin_vertical_units": 1743
+        },
+        "command_grid_supported": true,
+        "full_head_banks": [
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 0,
+            "row_group": 1,
+            "selector": 0
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 1,
+            "row_group": 1,
+            "selector": 1
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 2,
+            "row_group": 1,
+            "selector": 2
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 4,
+            "row_group": 1,
+            "selector": 4
+          }
+        ],
+        "full_head_channel_offsets": [
+          {
+            "offset_command_units": 1088,
+            "selector": 0
+          },
+          {
+            "offset_command_units": 544,
+            "selector": 1
+          },
+          {
+            "offset_command_units": 0,
+            "selector": 2
+          },
+          {
+            "offset_command_units": 1088,
+            "selector": 4
+          }
+        ],
+        "full_head_geometry_source": "native colour windows and separately registered full black bank origin",
+        "full_head_origin_vertical_units": 655,
+        "head_banks": [
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 0,
+            "row_group": 1,
+            "selector": 0
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 1,
+            "row_group": 1,
+            "selector": 1
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 2,
+            "row_group": 1,
+            "selector": 2
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 4,
+            "row_group": 1,
+            "selector": 4
+          }
+        ],
+        "native_bit_depth": 2,
+        "observed_primary_bank_grid_dpi": {
+          "horizontal": 600,
+          "vertical": 1200
+        },
+        "primary_channel_offsets": [
+          {
+            "offset_command_units": 0,
+            "selector": 0
+          },
+          {
+            "offset_command_units": 544,
+            "selector": 1
+          },
+          {
+            "offset_command_units": 0,
+            "selector": 2
+          },
+          {
+            "offset_command_units": 1088,
+            "selector": 4
+          }
+        ],
+        "primary_nozzle_count": 128,
+        "raster_dpi": {
+          "horizontal": 600,
+          "vertical": 1200
+        },
+        "reference_top_margin_mils": 120,
+        "registration_capture_sha256": "c9b98b08906882512387dfe99890254f89d4ed7b3edebe99dcaf681c7e2a5ca2",
+        "registration_fit": {
+          "0": 1.0,
+          "1": 0.977591,
+          "2": 0.968777,
+          "4": 0.975365
+        },
+        "resolution_payload_hex": "b0040402",
+        "sheet_origin_vertical_units": 655,
+        "units_payload_hex": "010101b004"
+      },
+      "nominal_output_dpi": {
+        "horizontal": 1200,
+        "vertical": 1200
+      },
+      "printer_color_coordinate_dpi": {
+        "horizontal": 600,
+        "vertical": 1200
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 600,
+        "vertical": 1200
+      },
+      "quality_rank": 4,
+      "raster_bit_depth": 2,
+      "variant_index": 1
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 600,
+        "vertical": 1200
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_index": 2,
+        "media_scope": "one_media"
+      },
+      "display_name": "Super",
+      "dither_raster_dpi": {
+        "horizontal": 600,
+        "vertical": 1200
+      },
+      "drop_levels_percent": [
+        0,
+        23,
+        43,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 96
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 2,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 18
+      },
+      "explicit_weave_sequence": [],
+      "native_geometry": {
+        "bank_geometry_source": {
+          "capture_sha256": "8f00fc62e79a581799531aed9d24f13e62120b741c142a4232fc8693f358c8a8",
+          "kind": "single_bank_capture",
+          "row_selection_function": "0x1400500d0",
+          "setup_function": "0x1400551e0"
+        },
+        "black_only_channel_offset": 1088,
+        "black_only_registration": {
+          "capture_sha256": "a7d2fda966d4e20b6b7d01ec888ff46f24a90d4ffa0f9c0c448102a7eef1c232",
+          "fit": 0.981227,
+          "origin_vertical_units": 1743
+        },
+        "command_grid_supported": true,
+        "full_head_banks": [
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 0,
+            "row_group": 1,
+            "selector": 0
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 1,
+            "row_group": 1,
+            "selector": 1
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 2,
+            "row_group": 1,
+            "selector": 2
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 4,
+            "row_group": 1,
+            "selector": 4
+          }
+        ],
+        "full_head_channel_offsets": [
+          {
+            "offset_command_units": 1088,
+            "selector": 0
+          },
+          {
+            "offset_command_units": 544,
+            "selector": 1
+          },
+          {
+            "offset_command_units": 0,
+            "selector": 2
+          },
+          {
+            "offset_command_units": 1088,
+            "selector": 4
+          }
+        ],
+        "full_head_geometry_source": "native colour windows and separately registered full black bank origin",
+        "full_head_origin_vertical_units": 655,
+        "head_banks": [
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 0,
+            "row_group": 1,
+            "selector": 0
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 1,
+            "row_group": 1,
+            "selector": 1
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 2,
+            "row_group": 1,
+            "selector": 2
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 4,
+            "row_group": 1,
+            "selector": 4
+          }
+        ],
+        "native_bit_depth": 2,
+        "observed_primary_bank_grid_dpi": {
+          "horizontal": 600,
+          "vertical": 1200
+        },
+        "primary_channel_offsets": [
+          {
+            "offset_command_units": 0,
+            "selector": 0
+          },
+          {
+            "offset_command_units": 544,
+            "selector": 1
+          },
+          {
+            "offset_command_units": 0,
+            "selector": 2
+          },
+          {
+            "offset_command_units": 1088,
+            "selector": 4
+          }
+        ],
+        "primary_nozzle_count": 128,
+        "raster_dpi": {
+          "horizontal": 600,
+          "vertical": 1200
+        },
+        "reference_top_margin_mils": 120,
+        "registration_capture_sha256": "8f00fc62e79a581799531aed9d24f13e62120b741c142a4232fc8693f358c8a8",
+        "registration_fit": {
+          "0": 1.0,
+          "1": 0.98031,
+          "2": 0.969698,
+          "4": 0.975994
+        },
+        "resolution_payload_hex": "b0040404",
+        "sheet_origin_vertical_units": 655,
+        "units_payload_hex": "010101b004"
+      },
+      "nominal_output_dpi": {
+        "horizontal": 2400,
+        "vertical": 1200
+      },
+      "printer_color_coordinate_dpi": {
+        "horizontal": 600,
+        "vertical": 1200
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 600,
+        "vertical": 1200
+      },
+      "quality_rank": 5,
+      "raster_bit_depth": 2,
+      "variant_index": 2
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 1200,
+        "vertical": 1200
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_index": 2,
+        "media_scope": "one_media"
+      },
+      "display_name": "Photo",
+      "dither_raster_dpi": {
+        "horizontal": 1200,
+        "vertical": 1200
+      },
+      "drop_levels_percent": [
+        0,
+        23,
+        43,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 176
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 4,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 18
+      },
+      "explicit_weave_sequence": [],
+      "native_geometry": {
+        "bank_geometry_source": {
+          "capture_sha256": "cec19dae485fbaa676cfff94929be0b49d612b3b36dbcd222716d845175f7b58",
+          "kind": "single_bank_capture",
+          "row_selection_function": "0x1400500d0",
+          "setup_function": "0x1400551e0"
+        },
+        "black_only_channel_offset": 1088,
+        "black_only_registration": {
+          "capture_sha256": "0b585a6012c0a1ccb447ddf94f6221e779355655db9bd548fecf8ba90d75ccb4",
+          "fit": 0.993636,
+          "origin_vertical_units": 1743
+        },
+        "command_grid_supported": true,
+        "full_head_banks": [
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 0,
+            "row_group": 1,
+            "selector": 0
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 1,
+            "row_group": 1,
+            "selector": 1
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 2,
+            "row_group": 1,
+            "selector": 2
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 4,
+            "row_group": 1,
+            "selector": 4
+          }
+        ],
+        "full_head_channel_offsets": [
+          {
+            "offset_command_units": 1088,
+            "selector": 0
+          },
+          {
+            "offset_command_units": 544,
+            "selector": 1
+          },
+          {
+            "offset_command_units": 0,
+            "selector": 2
+          },
+          {
+            "offset_command_units": 1088,
+            "selector": 4
+          }
+        ],
+        "full_head_geometry_source": "native colour windows and separately registered full black bank origin",
+        "full_head_origin_vertical_units": 655,
+        "head_banks": [
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 0,
+            "row_group": 1,
+            "selector": 0
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 1,
+            "row_group": 1,
+            "selector": 1
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 2,
+            "row_group": 1,
+            "selector": 2
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 4,
+            "row_group": 1,
+            "selector": 4
+          }
+        ],
+        "native_bit_depth": 2,
+        "observed_primary_bank_grid_dpi": {
+          "horizontal": 1200,
+          "vertical": 1200
+        },
+        "primary_channel_offsets": [
+          {
+            "offset_command_units": 0,
+            "selector": 0
+          },
+          {
+            "offset_command_units": 544,
+            "selector": 1
+          },
+          {
+            "offset_command_units": 0,
+            "selector": 2
+          },
+          {
+            "offset_command_units": 1088,
+            "selector": 4
+          }
+        ],
+        "primary_nozzle_count": 128,
+        "raster_dpi": {
+          "horizontal": 1200,
+          "vertical": 1200
+        },
+        "reference_top_margin_mils": 120,
+        "registration_capture_sha256": "cec19dae485fbaa676cfff94929be0b49d612b3b36dbcd222716d845175f7b58",
+        "registration_fit": {
+          "0": 1.0,
+          "1": 0.98908,
+          "2": 0.986381,
+          "4": 0.987263
+        },
+        "resolution_payload_hex": "b0040404",
+        "sheet_origin_vertical_units": 655,
+        "units_payload_hex": "010101b004"
+      },
+      "nominal_output_dpi": {
+        "horizontal": 4800,
+        "vertical": 1200
+      },
+      "printer_color_coordinate_dpi": {
+        "horizontal": 1200,
+        "vertical": 1200
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 1200,
+        "vertical": 1200
+      },
+      "quality_rank": 6,
+      "raster_bit_depth": 2,
+      "variant_index": 3
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 600,
+        "vertical": 600
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_index": 3,
+        "media_scope": "one_media"
+      },
+      "display_name": "Medium",
+      "dither_raster_dpi": {
+        "horizontal": 600,
+        "vertical": 600
+      },
+      "drop_level_codes": [
+        0,
+        2,
+        3
+      ],
+      "drop_levels_percent": [
+        0,
+        63,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 83
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 1,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 17
+      },
+      "explicit_weave_sequence": [],
+      "native_geometry": {
+        "bank_geometry_source": {
+          "capture_sha256": "d6bfe19a8996d6c16d0489c22c9f4a846d56b97ca58e6635ee0ca0d46b06ba05",
+          "kind": "single_bank_capture",
+          "row_selection_function": "0x1400500d0",
+          "setup_function": "0x1400551e0"
+        },
+        "black_only_channel_offset": 1088,
+        "black_only_registration": {
+          "capture_sha256": "6540970d52c1dbb9d96f76c387b8acc5b4d63b578ccbb7193a487939c285b7f1",
+          "fit": 0.991363,
+          "origin_vertical_units": 1742
+        },
+        "command_grid_supported": true,
+        "full_head_banks": [
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 0,
+            "row_group": 1,
+            "selector": 0
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 1,
+            "row_group": 1,
+            "selector": 1
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 2,
+            "row_group": 1,
+            "selector": 2
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 4,
+            "row_group": 1,
+            "selector": 4
+          }
+        ],
+        "full_head_channel_offsets": [
+          {
+            "offset_command_units": 1088,
+            "selector": 0
+          },
+          {
+            "offset_command_units": 544,
+            "selector": 1
+          },
+          {
+            "offset_command_units": 0,
+            "selector": 2
+          },
+          {
+            "offset_command_units": 1088,
+            "selector": 4
+          }
+        ],
+        "full_head_geometry_source": "native colour windows and separately registered full black bank origin",
+        "full_head_origin_vertical_units": 654,
+        "head_banks": [
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 0,
+            "row_group": 1,
+            "selector": 0
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 1,
+            "row_group": 1,
+            "selector": 1
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 2,
+            "row_group": 1,
+            "selector": 2
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 4,
+            "row_group": 1,
+            "selector": 4
+          }
+        ],
+        "native_bit_depth": 2,
+        "observed_primary_bank_grid_dpi": {
+          "horizontal": 600,
+          "vertical": 600
+        },
+        "primary_channel_offsets": [
+          {
+            "offset_command_units": 0,
+            "selector": 0
+          },
+          {
+            "offset_command_units": 544,
+            "selector": 1
+          },
+          {
+            "offset_command_units": 0,
+            "selector": 2
+          },
+          {
+            "offset_command_units": 1088,
+            "selector": 4
+          }
+        ],
+        "primary_nozzle_count": 128,
+        "raster_dpi": {
+          "horizontal": 600,
+          "vertical": 600
+        },
+        "reference_top_margin_mils": 120,
+        "registration_capture_sha256": "d6bfe19a8996d6c16d0489c22c9f4a846d56b97ca58e6635ee0ca0d46b06ba05",
+        "registration_fit": {
+          "0": 1.0,
+          "1": 0.986866,
+          "2": 0.980759,
+          "4": 0.984916
+        },
+        "resolution_payload_hex": "b0040402",
+        "sheet_origin_vertical_units": 654,
+        "units_payload_hex": "010101b004"
+      },
+      "nominal_output_dpi": {
+        "horizontal": 600,
+        "vertical": 600
+      },
+      "printer_color_coordinate_dpi": {
+        "horizontal": 600,
+        "vertical": 600
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 600,
+        "vertical": 600
+      },
+      "quality_rank": 3,
+      "raster_bit_depth": 2,
+      "variant_index": 0
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 600,
+        "vertical": 600
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_index": 3,
+        "media_scope": "one_media"
+      },
+      "display_name": "High",
+      "dither_raster_dpi": {
+        "horizontal": 600,
+        "vertical": 1200
+      },
+      "drop_level_codes": [
+        0,
+        2,
+        3
+      ],
+      "drop_levels_percent": [
+        0,
+        63,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 112
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 1,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 17
+      },
+      "explicit_weave_sequence": [],
+      "native_geometry": {
+        "bank_geometry_source": {
+          "capture_sha256": "c9b98b08906882512387dfe99890254f89d4ed7b3edebe99dcaf681c7e2a5ca2",
+          "kind": "single_bank_capture",
+          "row_selection_function": "0x1400500d0",
+          "setup_function": "0x1400551e0"
+        },
+        "black_only_channel_offset": 1088,
+        "black_only_registration": {
+          "capture_sha256": "8559e5f9dc2dce5d4075e0f12aafd08536b061fef37e97957b9bb99d31c230b9",
+          "fit": 0.984971,
+          "origin_vertical_units": 1743
+        },
+        "command_grid_supported": true,
+        "full_head_banks": [
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 0,
+            "row_group": 1,
+            "selector": 0
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 1,
+            "row_group": 1,
+            "selector": 1
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 2,
+            "row_group": 1,
+            "selector": 2
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 4,
+            "row_group": 1,
+            "selector": 4
+          }
+        ],
+        "full_head_channel_offsets": [
+          {
+            "offset_command_units": 1088,
+            "selector": 0
+          },
+          {
+            "offset_command_units": 544,
+            "selector": 1
+          },
+          {
+            "offset_command_units": 0,
+            "selector": 2
+          },
+          {
+            "offset_command_units": 1088,
+            "selector": 4
+          }
+        ],
+        "full_head_geometry_source": "native colour windows and separately registered full black bank origin",
+        "full_head_origin_vertical_units": 655,
+        "head_banks": [
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 0,
+            "row_group": 1,
+            "selector": 0
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 1,
+            "row_group": 1,
+            "selector": 1
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 2,
+            "row_group": 1,
+            "selector": 2
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 4,
+            "row_group": 1,
+            "selector": 4
+          }
+        ],
+        "native_bit_depth": 2,
+        "observed_primary_bank_grid_dpi": {
+          "horizontal": 600,
+          "vertical": 1200
+        },
+        "primary_channel_offsets": [
+          {
+            "offset_command_units": 0,
+            "selector": 0
+          },
+          {
+            "offset_command_units": 544,
+            "selector": 1
+          },
+          {
+            "offset_command_units": 0,
+            "selector": 2
+          },
+          {
+            "offset_command_units": 1088,
+            "selector": 4
+          }
+        ],
+        "primary_nozzle_count": 128,
+        "raster_dpi": {
+          "horizontal": 600,
+          "vertical": 1200
+        },
+        "reference_top_margin_mils": 120,
+        "registration_capture_sha256": "c9b98b08906882512387dfe99890254f89d4ed7b3edebe99dcaf681c7e2a5ca2",
+        "registration_fit": {
+          "0": 1.0,
+          "1": 0.977591,
+          "2": 0.968777,
+          "4": 0.975365
+        },
+        "resolution_payload_hex": "b0040402",
+        "sheet_origin_vertical_units": 655,
+        "units_payload_hex": "010101b004"
+      },
+      "nominal_output_dpi": {
+        "horizontal": 1200,
+        "vertical": 1200
+      },
+      "printer_color_coordinate_dpi": {
+        "horizontal": 600,
+        "vertical": 1200
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 600,
+        "vertical": 1200
+      },
+      "quality_rank": 4,
+      "raster_bit_depth": 2,
+      "variant_index": 1
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 600,
+        "vertical": 1200
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_index": 3,
+        "media_scope": "one_media"
+      },
+      "display_name": "Super",
+      "dither_raster_dpi": {
+        "horizontal": 600,
+        "vertical": 1200
+      },
+      "drop_levels_percent": [
+        0,
+        23,
+        43,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 96
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 2,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 18
+      },
+      "explicit_weave_sequence": [],
+      "native_geometry": {
+        "bank_geometry_source": {
+          "capture_sha256": "8f00fc62e79a581799531aed9d24f13e62120b741c142a4232fc8693f358c8a8",
+          "kind": "single_bank_capture",
+          "row_selection_function": "0x1400500d0",
+          "setup_function": "0x1400551e0"
+        },
+        "black_only_channel_offset": 1088,
+        "black_only_registration": {
+          "capture_sha256": "a7d2fda966d4e20b6b7d01ec888ff46f24a90d4ffa0f9c0c448102a7eef1c232",
+          "fit": 0.981227,
+          "origin_vertical_units": 1743
+        },
+        "command_grid_supported": true,
+        "full_head_banks": [
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 0,
+            "row_group": 1,
+            "selector": 0
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 1,
+            "row_group": 1,
+            "selector": 1
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 2,
+            "row_group": 1,
+            "selector": 2
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 4,
+            "row_group": 1,
+            "selector": 4
+          }
+        ],
+        "full_head_channel_offsets": [
+          {
+            "offset_command_units": 1088,
+            "selector": 0
+          },
+          {
+            "offset_command_units": 544,
+            "selector": 1
+          },
+          {
+            "offset_command_units": 0,
+            "selector": 2
+          },
+          {
+            "offset_command_units": 1088,
+            "selector": 4
+          }
+        ],
+        "full_head_geometry_source": "native colour windows and separately registered full black bank origin",
+        "full_head_origin_vertical_units": 655,
+        "head_banks": [
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 0,
+            "row_group": 1,
+            "selector": 0
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 1,
+            "row_group": 1,
+            "selector": 1
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 2,
+            "row_group": 1,
+            "selector": 2
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 4,
+            "row_group": 1,
+            "selector": 4
+          }
+        ],
+        "native_bit_depth": 2,
+        "observed_primary_bank_grid_dpi": {
+          "horizontal": 600,
+          "vertical": 1200
+        },
+        "primary_channel_offsets": [
+          {
+            "offset_command_units": 0,
+            "selector": 0
+          },
+          {
+            "offset_command_units": 544,
+            "selector": 1
+          },
+          {
+            "offset_command_units": 0,
+            "selector": 2
+          },
+          {
+            "offset_command_units": 1088,
+            "selector": 4
+          }
+        ],
+        "primary_nozzle_count": 128,
+        "raster_dpi": {
+          "horizontal": 600,
+          "vertical": 1200
+        },
+        "reference_top_margin_mils": 120,
+        "registration_capture_sha256": "8f00fc62e79a581799531aed9d24f13e62120b741c142a4232fc8693f358c8a8",
+        "registration_fit": {
+          "0": 1.0,
+          "1": 0.98031,
+          "2": 0.969698,
+          "4": 0.975994
+        },
+        "resolution_payload_hex": "b0040404",
+        "sheet_origin_vertical_units": 655,
+        "units_payload_hex": "010101b004"
+      },
+      "nominal_output_dpi": {
+        "horizontal": 2400,
+        "vertical": 1200
+      },
+      "printer_color_coordinate_dpi": {
+        "horizontal": 600,
+        "vertical": 1200
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 600,
+        "vertical": 1200
+      },
+      "quality_rank": 5,
+      "raster_bit_depth": 2,
+      "variant_index": 2
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 1200,
+        "vertical": 1200
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_index": 3,
+        "media_scope": "one_media"
+      },
+      "display_name": "Photo",
+      "dither_raster_dpi": {
+        "horizontal": 1200,
+        "vertical": 1200
+      },
+      "drop_levels_percent": [
+        0,
+        23,
+        43,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 176
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 4,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 18
+      },
+      "explicit_weave_sequence": [],
+      "native_geometry": {
+        "bank_geometry_source": {
+          "capture_sha256": "cec19dae485fbaa676cfff94929be0b49d612b3b36dbcd222716d845175f7b58",
+          "kind": "single_bank_capture",
+          "row_selection_function": "0x1400500d0",
+          "setup_function": "0x1400551e0"
+        },
+        "black_only_channel_offset": 1088,
+        "black_only_registration": {
+          "capture_sha256": "0b585a6012c0a1ccb447ddf94f6221e779355655db9bd548fecf8ba90d75ccb4",
+          "fit": 0.993636,
+          "origin_vertical_units": 1743
+        },
+        "command_grid_supported": true,
+        "full_head_banks": [
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 0,
+            "row_group": 1,
+            "selector": 0
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 1,
+            "row_group": 1,
+            "selector": 1
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 2,
+            "row_group": 1,
+            "selector": 2
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 4,
+            "row_group": 1,
+            "selector": 4
+          }
+        ],
+        "full_head_channel_offsets": [
+          {
+            "offset_command_units": 1088,
+            "selector": 0
+          },
+          {
+            "offset_command_units": 544,
+            "selector": 1
+          },
+          {
+            "offset_command_units": 0,
+            "selector": 2
+          },
+          {
+            "offset_command_units": 1088,
+            "selector": 4
+          }
+        ],
+        "full_head_geometry_source": "native colour windows and separately registered full black bank origin",
+        "full_head_origin_vertical_units": 655,
+        "head_banks": [
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 0,
+            "row_group": 1,
+            "selector": 0
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 1,
+            "row_group": 1,
+            "selector": 1
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 2,
+            "row_group": 1,
+            "selector": 2
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 4,
+            "row_group": 1,
+            "selector": 4
+          }
+        ],
+        "native_bit_depth": 2,
+        "observed_primary_bank_grid_dpi": {
+          "horizontal": 1200,
+          "vertical": 1200
+        },
+        "primary_channel_offsets": [
+          {
+            "offset_command_units": 0,
+            "selector": 0
+          },
+          {
+            "offset_command_units": 544,
+            "selector": 1
+          },
+          {
+            "offset_command_units": 0,
+            "selector": 2
+          },
+          {
+            "offset_command_units": 1088,
+            "selector": 4
+          }
+        ],
+        "primary_nozzle_count": 128,
+        "raster_dpi": {
+          "horizontal": 1200,
+          "vertical": 1200
+        },
+        "reference_top_margin_mils": 120,
+        "registration_capture_sha256": "cec19dae485fbaa676cfff94929be0b49d612b3b36dbcd222716d845175f7b58",
+        "registration_fit": {
+          "0": 1.0,
+          "1": 0.98908,
+          "2": 0.986381,
+          "4": 0.987263
+        },
+        "resolution_payload_hex": "b0040404",
+        "sheet_origin_vertical_units": 655,
+        "units_payload_hex": "010101b004"
+      },
+      "nominal_output_dpi": {
+        "horizontal": 4800,
+        "vertical": 1200
+      },
+      "printer_color_coordinate_dpi": {
+        "horizontal": 1200,
+        "vertical": 1200
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 1200,
+        "vertical": 1200
+      },
+      "quality_rank": 6,
+      "raster_bit_depth": 2,
+      "variant_index": 3
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 600,
+        "vertical": 600
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_index": 7,
+        "media_scope": "one_media"
+      },
+      "display_name": "Medium",
+      "dither_raster_dpi": {
+        "horizontal": 600,
+        "vertical": 600
+      },
+      "drop_level_codes": [
+        0,
+        2,
+        3
+      ],
+      "drop_levels_percent": [
+        0,
+        63,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 83
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 1,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 17
+      },
+      "explicit_weave_sequence": [],
+      "native_geometry": {
+        "bank_geometry_source": {
+          "capture_sha256": "d6bfe19a8996d6c16d0489c22c9f4a846d56b97ca58e6635ee0ca0d46b06ba05",
+          "kind": "single_bank_capture",
+          "row_selection_function": "0x1400500d0",
+          "setup_function": "0x1400551e0"
+        },
+        "black_only_channel_offset": 1088,
+        "black_only_registration": {
+          "capture_sha256": "6540970d52c1dbb9d96f76c387b8acc5b4d63b578ccbb7193a487939c285b7f1",
+          "fit": 0.991363,
+          "origin_vertical_units": 1742
+        },
+        "command_grid_supported": true,
+        "full_head_banks": [
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 0,
+            "row_group": 1,
+            "selector": 0
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 1,
+            "row_group": 1,
+            "selector": 1
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 2,
+            "row_group": 1,
+            "selector": 2
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 4,
+            "row_group": 1,
+            "selector": 4
+          }
+        ],
+        "full_head_channel_offsets": [
+          {
+            "offset_command_units": 1088,
+            "selector": 0
+          },
+          {
+            "offset_command_units": 544,
+            "selector": 1
+          },
+          {
+            "offset_command_units": 0,
+            "selector": 2
+          },
+          {
+            "offset_command_units": 1088,
+            "selector": 4
+          }
+        ],
+        "full_head_geometry_source": "native colour windows and separately registered full black bank origin",
+        "full_head_origin_vertical_units": 654,
+        "head_banks": [
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 0,
+            "row_group": 1,
+            "selector": 0
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 1,
+            "row_group": 1,
+            "selector": 1
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 2,
+            "row_group": 1,
+            "selector": 2
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 4,
+            "row_group": 1,
+            "selector": 4
+          }
+        ],
+        "native_bit_depth": 2,
+        "observed_primary_bank_grid_dpi": {
+          "horizontal": 600,
+          "vertical": 600
+        },
+        "primary_channel_offsets": [
+          {
+            "offset_command_units": 0,
+            "selector": 0
+          },
+          {
+            "offset_command_units": 544,
+            "selector": 1
+          },
+          {
+            "offset_command_units": 0,
+            "selector": 2
+          },
+          {
+            "offset_command_units": 1088,
+            "selector": 4
+          }
+        ],
+        "primary_nozzle_count": 128,
+        "raster_dpi": {
+          "horizontal": 600,
+          "vertical": 600
+        },
+        "reference_top_margin_mils": 120,
+        "registration_capture_sha256": "d6bfe19a8996d6c16d0489c22c9f4a846d56b97ca58e6635ee0ca0d46b06ba05",
+        "registration_fit": {
+          "0": 1.0,
+          "1": 0.986866,
+          "2": 0.980759,
+          "4": 0.984916
+        },
+        "resolution_payload_hex": "b0040402",
+        "sheet_origin_vertical_units": 654,
+        "units_payload_hex": "010101b004"
+      },
+      "nominal_output_dpi": {
+        "horizontal": 600,
+        "vertical": 600
+      },
+      "printer_color_coordinate_dpi": {
+        "horizontal": 600,
+        "vertical": 600
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 600,
+        "vertical": 600
+      },
+      "quality_rank": 3,
+      "raster_bit_depth": 2,
+      "variant_index": 0
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 600,
+        "vertical": 600
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_index": 7,
+        "media_scope": "one_media"
+      },
+      "display_name": "High",
+      "dither_raster_dpi": {
+        "horizontal": 600,
+        "vertical": 1200
+      },
+      "drop_level_codes": [
+        0,
+        2,
+        3
+      ],
+      "drop_levels_percent": [
+        0,
+        63,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 112
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 1,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 17
+      },
+      "explicit_weave_sequence": [],
+      "native_geometry": {
+        "bank_geometry_source": {
+          "capture_sha256": "c9b98b08906882512387dfe99890254f89d4ed7b3edebe99dcaf681c7e2a5ca2",
+          "kind": "single_bank_capture",
+          "row_selection_function": "0x1400500d0",
+          "setup_function": "0x1400551e0"
+        },
+        "black_only_channel_offset": 1088,
+        "black_only_registration": {
+          "capture_sha256": "8559e5f9dc2dce5d4075e0f12aafd08536b061fef37e97957b9bb99d31c230b9",
+          "fit": 0.984971,
+          "origin_vertical_units": 1743
+        },
+        "command_grid_supported": true,
+        "full_head_banks": [
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 0,
+            "row_group": 1,
+            "selector": 0
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 1,
+            "row_group": 1,
+            "selector": 1
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 2,
+            "row_group": 1,
+            "selector": 2
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 4,
+            "row_group": 1,
+            "selector": 4
+          }
+        ],
+        "full_head_channel_offsets": [
+          {
+            "offset_command_units": 1088,
+            "selector": 0
+          },
+          {
+            "offset_command_units": 544,
+            "selector": 1
+          },
+          {
+            "offset_command_units": 0,
+            "selector": 2
+          },
+          {
+            "offset_command_units": 1088,
+            "selector": 4
+          }
+        ],
+        "full_head_geometry_source": "native colour windows and separately registered full black bank origin",
+        "full_head_origin_vertical_units": 655,
+        "head_banks": [
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 0,
+            "row_group": 1,
+            "selector": 0
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 1,
+            "row_group": 1,
+            "selector": 1
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 2,
+            "row_group": 1,
+            "selector": 2
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 4,
+            "row_group": 1,
+            "selector": 4
+          }
+        ],
+        "native_bit_depth": 2,
+        "observed_primary_bank_grid_dpi": {
+          "horizontal": 600,
+          "vertical": 1200
+        },
+        "primary_channel_offsets": [
+          {
+            "offset_command_units": 0,
+            "selector": 0
+          },
+          {
+            "offset_command_units": 544,
+            "selector": 1
+          },
+          {
+            "offset_command_units": 0,
+            "selector": 2
+          },
+          {
+            "offset_command_units": 1088,
+            "selector": 4
+          }
+        ],
+        "primary_nozzle_count": 128,
+        "raster_dpi": {
+          "horizontal": 600,
+          "vertical": 1200
+        },
+        "reference_top_margin_mils": 120,
+        "registration_capture_sha256": "c9b98b08906882512387dfe99890254f89d4ed7b3edebe99dcaf681c7e2a5ca2",
+        "registration_fit": {
+          "0": 1.0,
+          "1": 0.977591,
+          "2": 0.968777,
+          "4": 0.975365
+        },
+        "resolution_payload_hex": "b0040402",
+        "sheet_origin_vertical_units": 655,
+        "units_payload_hex": "010101b004"
+      },
+      "nominal_output_dpi": {
+        "horizontal": 1200,
+        "vertical": 1200
+      },
+      "printer_color_coordinate_dpi": {
+        "horizontal": 600,
+        "vertical": 1200
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 600,
+        "vertical": 1200
+      },
+      "quality_rank": 4,
+      "raster_bit_depth": 2,
+      "variant_index": 1
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 600,
+        "vertical": 1200
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_index": 7,
+        "media_scope": "one_media"
+      },
+      "display_name": "Super",
+      "dither_raster_dpi": {
+        "horizontal": 600,
+        "vertical": 1200
+      },
+      "drop_levels_percent": [
+        0,
+        23,
+        43,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 96
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 2,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 18
+      },
+      "explicit_weave_sequence": [],
+      "native_geometry": {
+        "bank_geometry_source": {
+          "capture_sha256": "8f00fc62e79a581799531aed9d24f13e62120b741c142a4232fc8693f358c8a8",
+          "kind": "single_bank_capture",
+          "row_selection_function": "0x1400500d0",
+          "setup_function": "0x1400551e0"
+        },
+        "black_only_channel_offset": 1088,
+        "black_only_registration": {
+          "capture_sha256": "a7d2fda966d4e20b6b7d01ec888ff46f24a90d4ffa0f9c0c448102a7eef1c232",
+          "fit": 0.981227,
+          "origin_vertical_units": 1743
+        },
+        "command_grid_supported": true,
+        "full_head_banks": [
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 0,
+            "row_group": 1,
+            "selector": 0
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 1,
+            "row_group": 1,
+            "selector": 1
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 2,
+            "row_group": 1,
+            "selector": 2
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 4,
+            "row_group": 1,
+            "selector": 4
+          }
+        ],
+        "full_head_channel_offsets": [
+          {
+            "offset_command_units": 1088,
+            "selector": 0
+          },
+          {
+            "offset_command_units": 544,
+            "selector": 1
+          },
+          {
+            "offset_command_units": 0,
+            "selector": 2
+          },
+          {
+            "offset_command_units": 1088,
+            "selector": 4
+          }
+        ],
+        "full_head_geometry_source": "native colour windows and separately registered full black bank origin",
+        "full_head_origin_vertical_units": 655,
+        "head_banks": [
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 0,
+            "row_group": 1,
+            "selector": 0
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 1,
+            "row_group": 1,
+            "selector": 1
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 2,
+            "row_group": 1,
+            "selector": 2
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 4,
+            "row_group": 1,
+            "selector": 4
+          }
+        ],
+        "native_bit_depth": 2,
+        "observed_primary_bank_grid_dpi": {
+          "horizontal": 600,
+          "vertical": 1200
+        },
+        "primary_channel_offsets": [
+          {
+            "offset_command_units": 0,
+            "selector": 0
+          },
+          {
+            "offset_command_units": 544,
+            "selector": 1
+          },
+          {
+            "offset_command_units": 0,
+            "selector": 2
+          },
+          {
+            "offset_command_units": 1088,
+            "selector": 4
+          }
+        ],
+        "primary_nozzle_count": 128,
+        "raster_dpi": {
+          "horizontal": 600,
+          "vertical": 1200
+        },
+        "reference_top_margin_mils": 120,
+        "registration_capture_sha256": "8f00fc62e79a581799531aed9d24f13e62120b741c142a4232fc8693f358c8a8",
+        "registration_fit": {
+          "0": 1.0,
+          "1": 0.98031,
+          "2": 0.969698,
+          "4": 0.975994
+        },
+        "resolution_payload_hex": "b0040404",
+        "sheet_origin_vertical_units": 655,
+        "units_payload_hex": "010101b004"
+      },
+      "nominal_output_dpi": {
+        "horizontal": 2400,
+        "vertical": 1200
+      },
+      "printer_color_coordinate_dpi": {
+        "horizontal": 600,
+        "vertical": 1200
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 600,
+        "vertical": 1200
+      },
+      "quality_rank": 5,
+      "raster_bit_depth": 2,
+      "variant_index": 2
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 1200,
+        "vertical": 1200
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_index": 7,
+        "media_scope": "one_media"
+      },
+      "display_name": "Photo",
+      "dither_raster_dpi": {
+        "horizontal": 1200,
+        "vertical": 1200
+      },
+      "drop_levels_percent": [
+        0,
+        23,
+        43,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 176
+        },
+        "software_weave": {
+          "encoding": "packed_nibbles",
+          "pass_group_count": 4,
+          "variant_code": 1
+        },
+        "variable_dot_mode": 18
+      },
+      "explicit_weave_sequence": [],
+      "native_geometry": {
+        "bank_geometry_source": {
+          "capture_sha256": "cec19dae485fbaa676cfff94929be0b49d612b3b36dbcd222716d845175f7b58",
+          "kind": "single_bank_capture",
+          "row_selection_function": "0x1400500d0",
+          "setup_function": "0x1400551e0"
+        },
+        "black_only_channel_offset": 1088,
+        "black_only_registration": {
+          "capture_sha256": "0b585a6012c0a1ccb447ddf94f6221e779355655db9bd548fecf8ba90d75ccb4",
+          "fit": 0.993636,
+          "origin_vertical_units": 1743
+        },
+        "command_grid_supported": true,
+        "full_head_banks": [
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 0,
+            "row_group": 1,
+            "selector": 0
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 1,
+            "row_group": 1,
+            "selector": 1
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 2,
+            "row_group": 1,
+            "selector": 2
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 4,
+            "row_group": 1,
+            "selector": 4
+          }
+        ],
+        "full_head_channel_offsets": [
+          {
+            "offset_command_units": 1088,
+            "selector": 0
+          },
+          {
+            "offset_command_units": 544,
+            "selector": 1
+          },
+          {
+            "offset_command_units": 0,
+            "selector": 2
+          },
+          {
+            "offset_command_units": 1088,
+            "selector": 4
+          }
+        ],
+        "full_head_geometry_source": "native colour windows and separately registered full black bank origin",
+        "full_head_origin_vertical_units": 655,
+        "head_banks": [
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 0,
+            "row_group": 1,
+            "selector": 0
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 1,
+            "row_group": 1,
+            "selector": 1
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 2,
+            "row_group": 1,
+            "selector": 2
+          },
+          {
+            "bank_count": 1,
+            "offset_command_units": 0,
+            "phase": 0,
+            "primary_selector": 4,
+            "row_group": 1,
+            "selector": 4
+          }
+        ],
+        "native_bit_depth": 2,
+        "observed_primary_bank_grid_dpi": {
+          "horizontal": 1200,
+          "vertical": 1200
+        },
+        "primary_channel_offsets": [
+          {
+            "offset_command_units": 0,
+            "selector": 0
+          },
+          {
+            "offset_command_units": 544,
+            "selector": 1
+          },
+          {
+            "offset_command_units": 0,
+            "selector": 2
+          },
+          {
+            "offset_command_units": 1088,
+            "selector": 4
+          }
+        ],
+        "primary_nozzle_count": 128,
+        "raster_dpi": {
+          "horizontal": 1200,
+          "vertical": 1200
+        },
+        "reference_top_margin_mils": 120,
+        "registration_capture_sha256": "cec19dae485fbaa676cfff94929be0b49d612b3b36dbcd222716d845175f7b58",
+        "registration_fit": {
+          "0": 1.0,
+          "1": 0.98908,
+          "2": 0.986381,
+          "4": 0.987263
+        },
+        "resolution_payload_hex": "b0040404",
+        "sheet_origin_vertical_units": 655,
+        "units_payload_hex": "010101b004"
+      },
+      "nominal_output_dpi": {
+        "horizontal": 4800,
+        "vertical": 1200
+      },
+      "printer_color_coordinate_dpi": {
+        "horizontal": 1200,
+        "vertical": 1200
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 1200,
+        "vertical": 1200
+      },
+      "quality_rank": 6,
+      "raster_bit_depth": 2,
+      "variant_index": 3
+    }
+  ],
+  "native_model": {
+    "bank_policy": "source_row_parity_host_weave",
+    "black_only_layout": {
+      "gray_mode": 1,
+      "nozzle_count": 400
+    },
+    "declared_heads": [
+      {
+        "black_nozzles": 400,
+        "black_pitch_dpi": 300,
+        "cartridge_index": 0,
+        "color_nozzles": 128,
+        "color_pitch_dpi": 300
+      }
+    ],
+    "descriptor_sha256": "a2aa11723db2994ff4d882aaad0398f4727b6460e3219e805bb7077a82da8b1e",
+    "emit_paper_path": true,
+    "mapping_source": "ReferenceDriver printers.lst [Epson_WorkForceWF2960DWF] Driver=Epson_EcoTank_ET3700",
+    "mixed_head_layout": {
+      "nozzles_by_primary_selector": {
+        "0": 400,
+        "1": 128,
+        "2": 128,
+        "4": 128
+      },
+      "use_full_banks": true
+    },
+    "offline_geometry_validated": true,
+    "physical_print_verified": false,
+    "remote_after_paper_path": [],
+    "remote_setup": [
+      {
+        "command": "DP",
+        "payload_hex": "0000"
+      },
+      {
+        "command": "US",
+        "payload_hex": "000001"
+      },
+      {
+        "command": "US",
+        "payload_hex": "000100"
+      },
+      {
+        "command": "US",
+        "payload_hex": "000200"
+      },
+      {
+        "command": "FP",
+        "payload_hex": "000000"
+      }
+    ],
+    "schema": "pytone-rip.native-workforce-v1",
+    "technical_descriptor": "Epson_EcoTank_ET3700",
+    "unavailable_modes": [
+      {
+        "reason": "Media is absent from the model descriptor",
+        "source_mode": "Mode0_11_0"
+      },
+      {
+        "reason": "Media is absent from the model descriptor",
+        "source_mode": "Mode0_11_1"
+      },
+      {
+        "reason": "Media is absent from the model descriptor",
+        "source_mode": "Mode0_11_2"
+      },
+      {
+        "reason": "Media is absent from the model descriptor",
+        "source_mode": "Mode0_11_3"
+      }
+    ]
+  },
+  "schema": "pytone-rip.mode-runtime-v2"
+}

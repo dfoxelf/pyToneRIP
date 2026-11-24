@@ -58,12 +58,13 @@ class _WindowsUsbPrintApi:
     _FILE_ATTRIBUTE_NORMAL = 0x80
     _INVALID_HANDLE_VALUE = ctypes.c_void_p(-1).value
 
-    def __init__(self) -> None:
+    def __init__(self, *, exclusive: bool = False) -> None:
         if os.name != "nt":
             raise OSError("USBPRINT transport requires Windows")
         self.setupapi = ctypes.WinDLL("setupapi.dll", use_last_error=True)
         self.cfgmgr = ctypes.WinDLL("cfgmgr32.dll", use_last_error=True)
         self.kernel = ctypes.WinDLL("kernel32.dll", use_last_error=True)
+        self.share_mode = 0 if exclusive else self._FILE_SHARE_READ | self._FILE_SHARE_WRITE
         self._declare_functions()
 
     def _declare_functions(self) -> None:
@@ -116,6 +117,11 @@ class _WindowsUsbPrintApi:
             ctypes.POINTER(wintypes.DWORD), ctypes.c_void_p,
         ]
         self.kernel.WriteFile.restype = wintypes.BOOL
+        self.kernel.DeviceIoControl.argtypes = [
+            wintypes.HANDLE, wintypes.DWORD, ctypes.c_void_p, wintypes.DWORD,
+            ctypes.c_void_p, wintypes.DWORD, ctypes.POINTER(wintypes.DWORD), ctypes.c_void_p,
+        ]
+        self.kernel.DeviceIoControl.restype = wintypes.BOOL
         self.kernel.CloseHandle.argtypes = [wintypes.HANDLE]
         self.kernel.CloseHandle.restype = wintypes.BOOL
         self.kernel.OpenThread.argtypes = [wintypes.DWORD, wintypes.BOOL, wintypes.DWORD]
@@ -199,7 +205,7 @@ class _WindowsUsbPrintApi:
     def open(self, device_id: str) -> wintypes.HANDLE:
         path = self._interface_path(device_id)
         handle = self.kernel.CreateFileW(
-            path, self._GENERIC_WRITE, self._FILE_SHARE_READ | self._FILE_SHARE_WRITE,
+            path, self._GENERIC_WRITE, self.share_mode,
             None, self._OPEN_EXISTING, self._FILE_ATTRIBUTE_NORMAL, None,
         )
         if handle == self._INVALID_HANDLE_VALUE:
@@ -220,11 +226,20 @@ class _WindowsUsbPrintApi:
         # The model-scoped payload starts with the independently verified Epson
         # abort sequence, before any page/job finalization commands.
         remaining = memoryview(trailer)
-        while remaining:
-            written = self.write(handle, remaining)
-            if not 0 < written <= len(remaining):
-                raise OSError("USB abort trailer returned an invalid byte count")
-            remaining = remaining[written:]
+        try:
+            while remaining:
+                written = self.write(handle, remaining)
+                if not 0 < written <= len(remaining):
+                    raise OSError("USB abort trailer returned an invalid byte count")
+                remaining = remaining[written:]
+        except OSError:
+            _LOGGER.debug("USB parser exit failed; attempting class reset", exc_info=True)
+        # usbprint.h: IOCTL_USBPRINT_SOFT_RESET. Reset must be last: a bulk
+        # write after this request can block while the printer discards a job.
+        returned = wintypes.DWORD()
+        if not self.kernel.DeviceIoControl(handle, 0x220040, None, 0, None, 0,
+                                          ctypes.byref(returned), None):
+            raise self._win_error("Cancel USB print job (USB soft reset)")
         return True
 
     def cancel(self, thread_id: int) -> bool:
@@ -274,8 +289,7 @@ class WindowsUsbInterfaceTransport:
             device_id=self.device_id, api_factory=self.api_factory, policy=self.buffer_policy,
             connection=connection, cancel_check=cancel_check, progress=progress,
             statistics=self.statistics,
-            abort=((lambda api, handle: api.abort(handle, self.abort_payload))
-                   if self.abort_payload else None),
+            abort=lambda api, handle: api.abort(handle, self.abort_payload),
         )
         try:
             sent = session.run(producer)

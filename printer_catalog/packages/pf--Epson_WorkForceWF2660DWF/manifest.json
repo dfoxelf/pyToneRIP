@@ -1,0 +1,25 @@
+{
+  "backend_family": "unsupported_escpr_rgb",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTATION_REQUIRES_PROTOCOL_PROFILE",
+  "display_name": "Epson WorkForceWF2660DWF",
+  "model_id": "WorkForceWF2660DWF",
+  "package_id": "pf--Epson_WorkForceWF2660DWF",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "61d15b08df58aab52d27975e8fe10b6c7f60b6b0ecdf98494c2be7b4cbe6d774",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escpr-rgb",
+  "protocol_family": "escpr",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "e111b520aaff019117eec066fbabd8bfbc9c1e90cc49123ac4e4d9636c30726b",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "776b5240ddc53d64799f53191027ec68d445ab50eae615cab35eb0687ef3ced0",
+  "version": 1,
+  "visible": false,
+  "warnings": [
+    "SYNTHETIC_PPD: no Epson manufacturer PPD supplied; technical source ReferenceDriver driver WF100"
+  ]
+}

@@ -13,6 +13,7 @@ from hashlib import sha256
 from pathlib import Path
 from time import perf_counter
 from typing import Any
+from uuid import UUID
 
 from xp750_rip.analysis.escp2_parser import format_stream, parse_stream
 from xp750_rip.application import (
@@ -186,6 +187,13 @@ def _add_job_arguments(parser: argparse.ArgumentParser, *, allow_send: bool) -> 
 
 
 def add_product_commands(subparsers: Any) -> None:
+    command = subparsers.add_parser("printer-status", help="прочитать состояние и чернила принтера")
+    connection = command.add_mutually_exclusive_group(required=True)
+    connection.add_argument("--host", help="адрес принтера для SNMP")
+    connection.add_argument("--usb-device", help="Linux usblp: /dev/usb/lpN")
+    command.add_argument("--timeout", type=float, default=8.0, help="таймаут опроса, секунды")
+    command.add_argument("--community", default="public", help="SNMP community")
+    command.set_defaults(phase8_handler=_printer_status)
     command = subparsers.add_parser(
         "psa-export-capabilities",
         help="экспортировать read-only registry/capabilities для Windows PSA",
@@ -676,6 +684,13 @@ def render_psa_job(
     else:
         with performance_trace.stage("PSA job preparation"):
             bridge, prepared_job = prepare_job_record(record, curve_root=curve_root)
+    try:
+        job_uuid = UUID(str(bridge["job_id"]))
+    except ValueError:
+        pass
+    else:
+        # The ESC/P2 job label is used for device-side correlation over USB and SNMP.
+        prepared_job = replace(prepared_job, job_label="PT" + job_uuid.hex[:16])
     copies = int(bridge["copies"])
     adapter_tiff = input_tiff
     if adapter_tiff is None and bridge.get("adapter_tiff_file"):
@@ -1537,6 +1552,16 @@ def _render(args: argparse.Namespace) -> None:
 
 def _print(args: argparse.Namespace) -> None:
     _execute_job(args, send=bool(args.send))
+
+
+def _printer_status(args: argparse.Namespace) -> None:
+    from xp750_rip.printer_status import read_network_status, read_usb_status
+
+    status = (read_network_status(args.host, timeout=args.timeout, community=args.community)
+              if args.host else read_usb_status(args.usb_device, timeout=args.timeout))
+    result = asdict(status)
+    result["ready"] = status.ready
+    print(json.dumps(result, ensure_ascii=False, indent=2))
 
 
 def dispatch_product(args: argparse.Namespace) -> bool:

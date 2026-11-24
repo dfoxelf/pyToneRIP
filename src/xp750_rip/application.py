@@ -139,6 +139,7 @@ class PrintJobConfiguration:
     source_page: int = 0
     source_is_adapter: bool = False
     source_dpi_override: tuple[float, float] | None = None
+    job_label: str = "EPSONRIP"
 
 
 @dataclass(frozen=True, slots=True)
@@ -637,6 +638,7 @@ class MonoRipService:
                 page=page,
                 input_source=input_source,
                 rasters=physical,
+                job_label=configuration.job_label,
                 write_chunk=write_and_hash,
                 cancel_check=cancel_check,
                 direction=configuration.direction,
@@ -666,6 +668,7 @@ class MonoRipService:
             page=page,
             input_source=input_source,
             rasters=physical,
+            job_label=configuration.job_label,
             direction=configuration.direction,
             allow_unsupported_ppd_combinations=(
                 configuration.allow_unsupported_ppd_combinations
@@ -842,6 +845,11 @@ class MonoRipService:
                 "horizontal_oversampling": mode.horizontal_passes,
                 "vertical_passes": mode.vertical_passes,
                 "nozzles": mode.nozzle_count,
+                **({"nozzles_by_primary_selector": {
+                    str(selector): count for selector, count
+                    in mode.native_raster_setup.channel_nozzle_counts}}
+                   if mode.native_raster_setup is not None
+                   and mode.native_raster_setup.channel_nozzle_counts else {}),
                 "nozzle_separation": mode.nozzle_separation,
                 "escp2_ink_type": mode.escp2_ink_type,
                 "density": mode.density,

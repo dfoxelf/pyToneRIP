@@ -309,20 +309,34 @@ def _write_transport_result(
 
 def _output_transport(configuration, connection_state=None, job_dir: Path | None = None) -> StreamingTransport:
     connection = configuration.get("connection")
-    if not isinstance(connection, dict) or connection.get("kind") != "usb":
+    if not isinstance(connection, dict) or connection.get("kind") == "network":
         return _network_transport(configuration, connection_state)
 
+    kind = connection.get("kind")
     mode = connection.get("usb_transport_mode")
-    if mode == "windows_queue" or (mode is None and connection.get("printer_queue")):
+    if kind == "windows_queue" or (kind == "usb"
+            and (mode == "windows_queue" or (mode is None and connection.get("printer_queue")))):
+        queue = connection.get("printer_queue")
+        if not isinstance(queue, str) or not queue.strip():
+            raise ValueError("Windows print queue is missing")
+
         def job_state(job_id: int, document_name: str, state: str) -> None:
             if job_dir is not None:
                 _atomic_json(job_dir / "physical-print-job.json", {
                     "schema": "pytone-rip.physical-print-job", "version": 1,
                     "queue_name": connection["printer_queue"], "job_id": job_id,
                     "document_name": document_name, "state": state,
-                    "device_id": connection["usb_device_id"], "port_name": connection["usb_port"],
+                    "device_id": connection.get("usb_device_id") if kind == "usb" else None,
+                    "port_name": connection.get("usb_port") if kind == "usb" else None,
+                    "driver_name": connection.get("printer_queue_driver") if kind == "windows_queue" else None,
                 })
 
+        if kind == "windows_queue":
+            driver = connection.get("printer_queue_driver")
+            if not isinstance(driver, str) or not driver.strip():
+                raise ValueError("Windows print queue driver is missing")
+            return WindowsPrinterTransport(queue, connection_state=connection_state,
+                                           job_state=job_state, expected_driver=driver)
         for key in ("printer_queue", "usb_port", "usb_device_id"):
             if not isinstance(connection.get(key), str) or not connection[key].strip():
                 raise ValueError("USB physical-queue fallback is missing " + key)
@@ -330,7 +344,7 @@ def _output_transport(configuration, connection_state=None, job_dir: Path | None
             connection["printer_queue"], connection["usb_port"], connection["usb_device_id"],
             connection_state=connection_state, job_state=job_state,
         )
-    if mode not in (None, "usbprint"):
+    if kind != "usb" or mode not in (None, "usbprint"):
         raise ValueError("Unsupported USB transport mode: " + str(mode))
     device_id = connection.get("usb_device_id")
     if not isinstance(device_id, str) or not device_id.strip():
@@ -387,7 +401,9 @@ def run_request(request_path: Path) -> dict[str, object]:
                 "schema": "pytone-rip.transport-activity",
                 "version": 1,
                 "job_id": str(request["job_id"]),
-                "kind": "network" if isinstance(transport, RawTcpTransport) else "usb",
+                "kind": "network" if isinstance(transport, RawTcpTransport) else (
+                    "windows_queue" if getattr(transport, "expected_driver", None) else "usb"
+                ),
                 "host": transport.host if isinstance(transport, RawTcpTransport) else None,
                 "port": transport.port if isinstance(transport, RawTcpTransport) else None,
                 "printer_queue": getattr(transport, "queue_name", None),

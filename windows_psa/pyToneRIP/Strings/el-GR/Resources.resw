@@ -93,7 +93,7 @@
   <data name="Auto.B388B9C01523.Text"><value>Μέγεθος</value></data>
   <data name="Auto.C195019E59CC.Text"><value>Φωτεινότερο</value></data>
   <data name="Auto.C681456D80A8.Content"><value>Επιλογείς RGB (QTR InkSeparation)</value></data>
-  <data name="Auto.C706B9DFA105.Text"><value>Δημιουργεί ένα μικρό PRN για συγκεκριμένο μοντέλο με ακατέργαστες λωρίδες πυκνότητας για κάθε διαμορφωμένο φυσικό κανάλι. Οι καμπύλες QTR σκόπιμα δεν χρησιμοποιούνται από αυτήν την πρώτη δοκιμή μηχανικής.</value></data>
+  <data name="Auto.C706B9DFA105.Text"><value>Εκτύπωση τονικού ελέγχου A4 με διαβαθμίσεις, κύκλους και επίπεδα γκρι με τις επιλεγμένες καμπύλες και ρυθμίσεις. Τοποθετήστε ένα κενό φύλλο A4.</value></data>
   <data name="Auto.C84252F663BA.Header"><value>Σύνδεση</value></data>
   <data name="Auto.C8D7FCDF582D.Text"><value>Σύνδεση εκτυπωτή</value></data>
   <data name="Auto.CC5611F72641.Text"><value>Off (συνιστάται): διατήρηση της σελίδας που αποτελείται από την εφαρμογή εκτύπωσης και τα Windows. On: επιπλέον κλιμάκωση και τοποθέτηση της ολοκληρωμένης σελίδας στο RIP.</value></data>
@@ -277,7 +277,7 @@
   <data name="Maintenance.head_clean.Title"><value>Καθαρίστε την κεφαλή εκτύπωσης</value></data>
   <data name="Maintenance.nozzle_check.Description"><value>Ζητήστε από το υλικολογισμικό του εκτυπωτή να εκτυπώσει το εγγενές μοτίβο ακροφυσίων του.</value></data>
   <data name="Maintenance.nozzle_check.Title"><value>Έλεγχος ακροφυσίων εκτύπωσης</value></data>
-  <data name="Maintenance.test_page.Description"><value>Εκτυπώστε ένα μικρό ακατέργαστο μοτίβο ανά κανάλι χρησιμοποιώντας τις επιλεγμένες ρυθμίσεις μοντέλου.</value></data>
+  <data name="Maintenance.test_page.Description"><value>Εκτύπωση τονικού ελέγχου A4 με διαβαθμίσεις, κύκλους και επίπεδα γκρι με τις επιλεγμένες καμπύλες και ρυθμίσεις. Τοποθετήστε ένα κενό φύλλο A4.</value></data>
   <data name="Maintenance.test_page.Title"><value>Εκτυπώστε τη δοκιμαστική σελίδα pyToneRIP</value></data>
   <data name="Processing16Bit.Content"><value>Επεξεργασία 16 bit</value></data>
   <data name="Processing16BitExperimental.Text"><value>(πειραματική λειτουργία)</value></data>
@@ -289,6 +289,9 @@
   <data name="MainPage.SendLogs.Content"><value>Δημιουργία διαγνωστικής αναφοράς</value></data>
   <data name="Code.SupportReportPrompt"><value>Το ZIP στην επιφάνεια εργασίας περιέχει τεχνικά στοιχεία σφαλμάτων του pyToneRIP και των Windows από τις τελευταίες 24 ώρες. Εξαιρούνται το περιεχόμενο εγγράφων, οι προσωπικές διαδρομές και οι διευθύνσεις IP. Η εφαρμογή δεν αποστέλλει το αρχείο.</value></data>
   <data name="Code.SupportReportCreated"><value>Το αρχείο ZIP δημιουργήθηκε στην επιφάνεια εργασίας: {0}</value></data>
+  <data name="Usb.DirectPrint"><value>Απευθείας εκτύπωση μέσω USB</value></data>
+  <data name="Usb.DirectPrintHint"><value>Στέλνει τις εργασίες απευθείας σε εκτυπωτή συνδεδεμένο μέσω USB. Αν είναι εγκατεστημένο το πρόγραμμα οδήγησης Epson, επιλέξτε την ουρά εκτύπωσης των Windows (RAW).</value></data>
+  <data name="Usb.DirectPrintRecommendation"><value>Επιλέξτε αυτήν τη μέθοδο αν δεν έχει εγκατασταθεί το επίσημο πρόγραμμα οδήγησης της Epson.</value></data>
   <data name="Usb.Device"><value>Συνδεδεμένος εκτυπωτής USB</value></data>
   <data name="Usb.Refresh"><value>Ανανέωση εκτυπωτών USB</value></data>
   <data name="Usb.Searching"><value>Αναζήτηση εκτυπωτών USB…</value></data>
@@ -347,6 +350,7 @@
   <data name="PreviewWindow.ProfileMismatch" xml:space="preserve"><value>Το ICC διαφέρει από τις αποθηκευμένες συνθήκες εκτύπωσης.</value></data>
   <data name="PreviewWindow.PhysicalUnavailable" xml:space="preserve"><value>Η φυσική κατάσταση εκτυπωτή δεν είναι διαθέσιμη.</value></data>
   <data name="PreviewWindow.PhysicalUnconfirmed" xml:space="preserve"><value>Η κατάσταση συσκευής δεν επιβεβαιώνει ολοκλήρωση αυτής της εργασίας ή έξοδο του φύλλου.</value></data>
+  <data name="PreviewWindow.PhysicalCancelUnconfirmed" xml:space="preserve"><value>Ο εκτυπωτής δεν επιβεβαίωσε την ακύρωση. Δοκιμάστε ξανά ή ακυρώστε την εργασία από τον πίνακα ελέγχου του εκτυπωτή.</value></data>
   <data name="PreviewWindow.DeviceOther" xml:space="preserve"><value>Εκτυπωτής: άλλη κατάσταση</value></data>
   <data name="PreviewWindow.DeviceUnknown" xml:space="preserve"><value>Εκτυπωτής: άγνωστη κατάσταση</value></data>
   <data name="PreviewWindow.DeviceIdle" xml:space="preserve"><value>Εκτυπωτής: αδρανής</value></data>
@@ -368,4 +372,60 @@
   <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>Το βέλος δείχνει την άκρη του φύλλου που εκτυπώνεται πρώτη.</value></data>
   <data name="PreviewWindow.PhotoCrop" xml:space="preserve"><value>Σύρετε τις λευκές λαβές στο μέσο των πλευρών για περικοπή· σύρετε προς τα έξω για επαναφορά. Οι γωνιακές λαβές αλλάζουν το μέγεθος.</value></data>
   <data name="PreviewWindow.PhotoFill" xml:space="preserve"><value>Γέμισμα σελίδας</value></data>
+  <data name="PrinterInfo.Read.Content" xml:space="preserve"><value>Ανάγνωση πληροφοριών εκτυπωτή</value></data>
+  <data name="PrinterInfo.Help.Text" xml:space="preserve"><value>Διαβάζει τις πληροφορίες που αναφέρει ο επιλεγμένος εκτυπωτής μέσω USB ή δικτύου.</value></data>
+  <data name="PrinterInfo.Title.Text" xml:space="preserve"><value>Πληροφορίες εκτυπωτή</value></data>
+  <data name="PrinterInfo.Empty.Text" xml:space="preserve"><value>Επιλέξτε «Ανάγνωση πληροφοριών εκτυπωτή» για να λάβετε την αναφορά της συσκευής.</value></data>
+  <data name="PrinterInfo.Reading" xml:space="preserve"><value>Ανάγνωση πληροφοριών εκτυπωτή…</value></data>
+  <data name="PrinterInfo.Failed" xml:space="preserve"><value>Δεν ήταν δυνατή η ανάγνωση πληροφοριών εκτυπωτή: {0}</value></data>
+  <data name="PrinterInfo.Busy" xml:space="preserve"><value>Ο εκτυπωτής χρησιμοποιείται. Περιμένετε να ολοκληρωθεί η εκτύπωση ή η συντήρηση.</value></data>
+  <data name="PrinterInfo.Connection" xml:space="preserve"><value>Σύνδεση</value></data>
+  <data name="PrinterInfo.Identity" xml:space="preserve"><value>Αναγνώριση</value></data>
+  <data name="PrinterInfo.Status" xml:space="preserve"><value>Κατάσταση και προειδοποιήσεις</value></data>
+  <data name="PrinterInfo.Inks" xml:space="preserve"><value>Στάθμες μελανιού</value></data>
+  <data name="PrinterInfo.Details" xml:space="preserve"><value>Πρόσθετες πληροφορίες</value></data>
+  <data name="PrinterInfo.Raw" xml:space="preserve"><value>Αρχικές απαντήσεις συσκευής</value></data>
+  <data name="PrinterInfo.Model" xml:space="preserve"><value>Μοντέλο</value></data>
+  <data name="PrinterInfo.Firmware" xml:space="preserve"><value>Υλικολογισμικό</value></data>
+  <data name="PrinterInfo.DeviceId" xml:space="preserve"><value>Αναγνώριση συσκευής</value></data>
+  <data name="PrinterInfo.Cartridges" xml:space="preserve"><value>Τύποι κασετών</value></data>
+  <data name="PrinterInfo.Cartridge" xml:space="preserve"><value>Κασέτα</value></data>
+  <data name="PrinterInfo.Error" xml:space="preserve"><value>Σφάλμα</value></data>
+  <data name="PrinterInfo.Warning" xml:space="preserve"><value>Προειδοποίηση</value></data>
+  <data name="PrinterInfo.SerialNumber" xml:space="preserve"><value>Σειριακός αριθμός</value></data>
+  <data name="PrinterInfo.State" xml:space="preserve"><value>Κατάσταση</value></data>
+  <data name="PrinterInfo.NoData" xml:space="preserve"><value>Δεν αναφέρεται</value></data>
+  <data name="PrinterInfo.Field" xml:space="preserve"><value>Πεδίο 0x{0}</value></data>
+  <data name="PrinterInfo.MaintenanceBox" xml:space="preserve"><value>Δοχείο συντήρησης</value></data>
+  <data name="PrinterInfo.PaperCounters" xml:space="preserve"><value>Μετρητές σελίδων</value></data>
+  <data name="PrinterInfo.Temperature" xml:space="preserve"><value>Θερμοκρασία</value></data>
+  <data name="PrinterInfo.Interface" xml:space="preserve"><value>Κατάσταση διεπαφής</value></data>
+  <data name="PrinterInfo.Unsupported" xml:space="preserve"><value>Δεν υποστηρίζεται ή δεν υπάρχει απάντηση</value></data>
+  <data name="PrinterInfo.Source" xml:space="preserve"><value>Πηγή</value></data>
+  <data name="MainPage.CancelJob.Content"><value>Ακύρωση της τρέχουσας εργασίας εκτύπωσης</value></data>
+  <data name="MainPage.NoActiveJob" xml:space="preserve"><value>Ο επιλεγμένος εκτυπωτής δεν έχει ενεργή εργασία εκτύπωσης.</value></data>
+  <data name="MainPage.CancelJobFailed" xml:space="preserve"><value>Δεν ήταν δυνατή η ακύρωση της εργασίας. Ελέγξτε τη σύνδεση του εκτυπωτή και δοκιμάστε ξανά.</value></data>
+  <data name="Network.Search"><value>Αναζήτηση εκτυπωτών</value></data>
+  <data name="Network.Device"><value>Επιλέξτε έναν εκτυπωτή που βρέθηκε</value></data>
+  <data name="Network.DeviceHint"><value>Η λίστα εμφανίζει το μοντέλο και τη διεύθυνση IP κάθε εκτυπωτή.</value></data>
+  <data name="Network.Searching"><value>Αναζήτηση εκτυπωτών Epson…</value></data>
+  <data name="Network.None"><value>Δεν βρέθηκαν συσκευές Epson στο τοπικό δίκτυο.</value></data>
+  <data name="Network.Choose"><value>Επιλέξτε από τη λίστα</value></data>
+  <data name="Network.Manual"><value>Χειροκίνητη ρύθμιση</value></data>
+  <data name="Network.UnknownModel"><value>Ο εκτυπωτής δεν ανέφερε το μοντέλο του.</value></data>
+  <data name="Network.UnsupportedModel"><value>Το μοντέλο δεν υπάρχει στον εγκατεστημένο κατάλογο εκτυπωτών.</value></data>
+  <data name="Network.RawUnavailable"><value>Ο εκτυπωτής δεν δέχτηκε σύνδεση στη θύρα TCP 9100.</value></data>
+  <data name="Network.ChooseModel"><value>Επιλέξτε ένα αντίστοιχο μοντέλο από τον κατάλογο.</value></data>
+  <data name="Network.SearchFailed"><value>Η αναζήτηση εκτυπωτών δικτύου απέτυχε.</value></data>
+  <data name="Network.AddressAssigned"><value>Η διεύθυνση {0} έχει ήδη εκχωρηθεί σε εκτυπωτή pyToneRIP.</value></data>
+  <data name="Network.SearchHint"><value>Αναζητήστε εκτυπωτές Epson στο τοπικό σας δίκτυο.</value></data>
+  <data name="Network.FoundCount"><value>Εκτυπωτές που βρέθηκαν: {0}</value></data>
+  <data name="Queue.Title"><value>Ουρά Windows (RAW)</value></data>
+  <data name="Queue.Recommended"><value>Συνιστάται εάν έχει εγκατασταθεί το επίσημο πρόγραμμα οδήγησης Epson για αυτόν τον εκτυπωτή.</value></data>
+  <data name="Queue.RawDriverRequired"><value>Εγκαταστήστε το επίσημο πρόγραμμα οδήγησης Epson για αυτό το μοντέλο για εκτύπωση από το pyToneRIP μέσω της ουράς των Windows (RAW).</value></data>
+  <data name="Queue.Select"><value>Επιλέξτε μια εγκατεστημένη ουρά Epson</value></data>
+  <data name="Queue.Searching"><value>Αναζήτηση ουρών Epson στα Windows…</value></data>
+  <data name="Queue.None"><value>Δεν βρέθηκαν συμβατές ουρές Epson στα Windows.</value></data>
+  <data name="Queue.SearchFailed"><value>Δεν ήταν δυνατή η εύρεση των ουρών εκτύπωσης των Windows.</value></data>
+  <data name="Queue.Assigned"><value>Η ουρά Windows {0} έχει ήδη εκχωρηθεί σε εκτυπωτή pyToneRIP.</value></data>
 </root>

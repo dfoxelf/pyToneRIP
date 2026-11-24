@@ -39,7 +39,7 @@ from xp750_rip.printers.media_mappings import (
     media_display_name,
     media_material_id,
 )
-from xp750_rip.printers.p900_pages import native_p900_pages
+from xp750_rip.printers.p900_pages import additional_p700_pages, native_p900_pages
 from xp750_rip.printers.verified_reference_driver_pro_media import (
     CAPTURED_PRO_MEDIA_BY_DRIVER,
 )
@@ -1509,7 +1509,7 @@ def _pages(
                 page = replace(page, imageable_bottom_points=bottom)
             if (r2880 or r3000) and page.name in _R3000_PAGE_SIZES:
                 media_size_code, width_mils, height_mils = _R3000_PAGE_SIZES[page.name]
-                native_format = (width_mils, height_mils, 60 if r3000 else 120)
+                native_format = (width_mils, height_mils, 120)
                 physical_size = (width_mils * 25.4 / 1000, height_mils * 25.4 / 1000)
             if p700_roll_width and not p700_rip and descriptor is not None and not page.borderless:
                 # ReferenceDriver's source dimensions are in mils. Rounded PPD points
@@ -2773,6 +2773,11 @@ def load_catalog_model(
     source = json.loads((directory / "printer.json").read_text(encoding="utf-8"))
     runtime_path = directory / (package.runtime_source_file or "runtime-source.json")
     runtime = json.loads(runtime_path.read_text(encoding="utf-8")) if runtime_path.is_file() else {}
+    if "native_model" in runtime:
+        from xp750_rip.printers.wf_native import load_native_workforce
+        return load_native_workforce(
+            package, source, runtime, read_ppd(directory / package.ppd_file)
+        )
     backend_source_path = directory / (
         package.backend_source_file or "backend-source.json"
     )
@@ -2950,6 +2955,8 @@ def load_catalog_model(
         pages = tuple(replace(page, media_size_code=0) for page in pages)
     if package.package_id == "pf--Epson_SureColorP900_RIP":
         pages, ppd = native_p900_pages(pages, ppd)
+    if package.package_id == "pf--Epson_SureColorP700_RIP":
+        pages, ppd = additional_p700_pages(pages, ppd)
     if (
         package.ppd_source != "vendor.ppd"
         and package.package_id.removeprefix("gp--") in CAPTURED_PRO_MEDIA_BY_DRIVER

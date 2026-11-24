@@ -1,0 +1,25 @@
+{
+  "backend_family": "unsupported_escpr_rgb",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTATION_REQUIRES_PROTOCOL_PROFILE",
+  "display_name": "Epson WorkForceWF7720",
+  "model_id": "WorkForceWF7720",
+  "package_id": "pf--Epson_WorkForceWF7720",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "64d29f3d4fe9a5898dd413593a281e30c476a4d299cf22fcd1f1317de0434908",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escpr-rgb",
+  "protocol_family": "escpr",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "d57c2048dd19c87f163f1e09dd7c7a8461ab406e75a9e6b5b0608a223a9ff8de",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "dc0a0454934db4ef3d41c1aaf8f0b4bb40c029ed3068af35d0028f24cf5d3c1c",
+  "version": 1,
+  "visible": false,
+  "warnings": [
+    "SYNTHETIC_PPD: no Epson manufacturer PPD supplied; technical source ReferenceDriver driver WF100"
+  ]
+}

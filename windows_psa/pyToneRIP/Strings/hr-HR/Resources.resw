@@ -93,7 +93,7 @@
   <data name="Auto.B388B9C01523.Text"><value>Veličina</value></data>
   <data name="Auto.C195019E59CC.Text"><value>Najsvjetlije</value></data>
   <data name="Auto.C681456D80A8.Content"><value>RGB birači (QTR InkSeparation)</value></data>
-  <data name="Auto.C706B9DFA105.Text"><value>Stvara mali PRN specifičan za model s neobrađenim trakama gustoće za svaki konfigurirani fizički kanal. QTR krivulje se namjerno ne koriste u ovom prvom inženjerskom testu.</value></data>
+  <data name="Auto.C706B9DFA105.Text"><value>Ispišite tonski test A4 s gradijentima, krugovima i sivim koracima uz odabrane krivulje i postavke ispisa. Umetnite prazan list A4.</value></data>
   <data name="Auto.C84252F663BA.Header"><value>Veza</value></data>
   <data name="Auto.C8D7FCDF582D.Text"><value>Povezivanje pisača</value></data>
   <data name="Auto.CC5611F72641.Text"><value>Isključeno (preporučeno): čuva stranicu koju su sastavili aplikacija za ispis i Windows. Uključeno: dodatno skalirajte i postavite dovršenu stranicu u RIP.</value></data>
@@ -277,7 +277,7 @@
   <data name="Maintenance.head_clean.Title"><value>Čista glava za ispis</value></data>
   <data name="Maintenance.nozzle_check.Description"><value>Zatražite od firmvera pisača da ispiše izvorni uzorak mlaznica.</value></data>
   <data name="Maintenance.nozzle_check.Title"><value>Provjera ispisnih mlaznica</value></data>
-  <data name="Maintenance.test_page.Description"><value>Ispišite mali neobrađeni uzorak po kanalu koristeći odabrane postavke modela.</value></data>
+  <data name="Maintenance.test_page.Description"><value>Ispišite tonski test A4 s gradijentima, krugovima i sivim koracima uz odabrane krivulje i postavke ispisa. Umetnite prazan list A4.</value></data>
   <data name="Maintenance.test_page.Title"><value>Ispišite testnu stranicu pyToneRIP</value></data>
   <data name="Processing16Bit.Content"><value>16-bitna obrada</value></data>
   <data name="Processing16BitExperimental.Text"><value>(eksperimentalni način rada)</value></data>
@@ -289,6 +289,9 @@
   <data name="MainPage.SendLogs.Content"><value>Izradi dijagnostičko izvješće</value></data>
   <data name="Code.SupportReportPrompt"><value>ZIP na radnoj površini sadrži tehničke podatke o pogreškama pyToneRIP-a i Windowsa u posljednja 24 sata. Sadržaj dokumenata, osobne putanje i IP adrese nisu uključeni. Aplikacija ne šalje arhivu.</value></data>
   <data name="Code.SupportReportCreated"><value>ZIP je stvoren na radnoj površini: {0}</value></data>
+  <data name="Usb.DirectPrint"><value>Izravan ispis putem USB-a</value></data>
+  <data name="Usb.DirectPrintHint"><value>Šalje zadatke izravno pisaču spojenom putem USB-a. Ako je instaliran upravljački program Epson, odaberite red čekanja sustava Windows (RAW).</value></data>
+  <data name="Usb.DirectPrintRecommendation"><value>Odaberite ovu mogućnost ako službeni upravljački program Epson nije instaliran.</value></data>
   <data name="Usb.Device"><value>Povezani USB pisač</value></data>
   <data name="Usb.Refresh"><value>Osvježi USB pisače</value></data>
   <data name="Usb.Searching"><value>Traženje USB pisača…</value></data>
@@ -347,6 +350,7 @@
   <data name="PreviewWindow.ProfileMismatch" xml:space="preserve"><value>ICC se razlikuje od spremljenih uvjeta ispisa.</value></data>
   <data name="PreviewWindow.PhysicalUnavailable" xml:space="preserve"><value>Fizičko stanje pisača nije dostupno.</value></data>
   <data name="PreviewWindow.PhysicalUnconfirmed" xml:space="preserve"><value>Stanje uređaja ne potvrđuje dovršetak ovog zadatka ili izlazak lista.</value></data>
+  <data name="PreviewWindow.PhysicalCancelUnconfirmed" xml:space="preserve"><value>Pisač nije potvrdio otkazivanje. Pokušajte ponovno ili otkažite zadatak na upravljačkoj ploči pisača.</value></data>
   <data name="PreviewWindow.DeviceOther" xml:space="preserve"><value>Pisač: drugo stanje</value></data>
   <data name="PreviewWindow.DeviceUnknown" xml:space="preserve"><value>Pisač: nepoznato stanje</value></data>
   <data name="PreviewWindow.DeviceIdle" xml:space="preserve"><value>Pisač: miruje</value></data>
@@ -368,4 +372,60 @@
   <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>Strelica označava rub lista koji se prvi ispisuje.</value></data>
   <data name="PreviewWindow.PhotoCrop" xml:space="preserve"><value>Povucite bijele ručice na sredini stranica za obrezivanje; povucite prema van za vraćanje. Kutne ručice mijenjaju veličinu.</value></data>
   <data name="PreviewWindow.PhotoFill" xml:space="preserve"><value>Ispuni stranicu</value></data>
+  <data name="PrinterInfo.Read.Content" xml:space="preserve"><value>Pročitaj podatke o pisaču</value></data>
+  <data name="PrinterInfo.Help.Text" xml:space="preserve"><value>Čita podatke koje odabrani pisač šalje putem USB-a ili mreže.</value></data>
+  <data name="PrinterInfo.Title.Text" xml:space="preserve"><value>Podaci o pisaču</value></data>
+  <data name="PrinterInfo.Empty.Text" xml:space="preserve"><value>Odaberite „Pročitaj podatke o pisaču” za dohvat izvješća uređaja.</value></data>
+  <data name="PrinterInfo.Reading" xml:space="preserve"><value>Čitanje podataka o pisaču…</value></data>
+  <data name="PrinterInfo.Failed" xml:space="preserve"><value>Nije moguće pročitati podatke o pisaču: {0}</value></data>
+  <data name="PrinterInfo.Busy" xml:space="preserve"><value>Pisač je u upotrebi. Pričekajte završetak ispisa ili održavanja.</value></data>
+  <data name="PrinterInfo.Connection" xml:space="preserve"><value>Veza</value></data>
+  <data name="PrinterInfo.Identity" xml:space="preserve"><value>Identifikacija</value></data>
+  <data name="PrinterInfo.Status" xml:space="preserve"><value>Stanje i upozorenja</value></data>
+  <data name="PrinterInfo.Inks" xml:space="preserve"><value>Razine tinte</value></data>
+  <data name="PrinterInfo.Details" xml:space="preserve"><value>Dodatni podaci</value></data>
+  <data name="PrinterInfo.Raw" xml:space="preserve"><value>Izvorni odgovori uređaja</value></data>
+  <data name="PrinterInfo.Model" xml:space="preserve"><value>Model</value></data>
+  <data name="PrinterInfo.Firmware" xml:space="preserve"><value>Firmver</value></data>
+  <data name="PrinterInfo.DeviceId" xml:space="preserve"><value>Identifikacija uređaja</value></data>
+  <data name="PrinterInfo.Cartridges" xml:space="preserve"><value>Vrste uložaka</value></data>
+  <data name="PrinterInfo.Cartridge" xml:space="preserve"><value>Uložak</value></data>
+  <data name="PrinterInfo.Error" xml:space="preserve"><value>Pogreška</value></data>
+  <data name="PrinterInfo.Warning" xml:space="preserve"><value>Upozorenje</value></data>
+  <data name="PrinterInfo.SerialNumber" xml:space="preserve"><value>Serijski broj</value></data>
+  <data name="PrinterInfo.State" xml:space="preserve"><value>Stanje</value></data>
+  <data name="PrinterInfo.NoData" xml:space="preserve"><value>Nije prijavljeno</value></data>
+  <data name="PrinterInfo.Field" xml:space="preserve"><value>Polje 0x{0}</value></data>
+  <data name="PrinterInfo.MaintenanceBox" xml:space="preserve"><value>Kutija za održavanje</value></data>
+  <data name="PrinterInfo.PaperCounters" xml:space="preserve"><value>Brojači stranica</value></data>
+  <data name="PrinterInfo.Temperature" xml:space="preserve"><value>Temperatura</value></data>
+  <data name="PrinterInfo.Interface" xml:space="preserve"><value>Stanje sučelja</value></data>
+  <data name="PrinterInfo.Unsupported" xml:space="preserve"><value>Nije podržano ili nema odgovora</value></data>
+  <data name="PrinterInfo.Source" xml:space="preserve"><value>Izvor</value></data>
+  <data name="MainPage.CancelJob.Content"><value>Otkaži trenutačni zadatak ispisa</value></data>
+  <data name="MainPage.NoActiveJob" xml:space="preserve"><value>Odabrani pisač nema aktivan zadatak ispisa.</value></data>
+  <data name="MainPage.CancelJobFailed" xml:space="preserve"><value>Zadatak se nije mogao otkazati. Provjerite vezu s pisačem i pokušajte ponovno.</value></data>
+  <data name="Network.Search"><value>Pronađi pisače</value></data>
+  <data name="Network.Device"><value>Odaberite pronađeni pisač</value></data>
+  <data name="Network.DeviceHint"><value>Na popisu su model i IP adresa svakog pisača.</value></data>
+  <data name="Network.Searching"><value>Traženje Epson pisača…</value></data>
+  <data name="Network.None"><value>Na lokalnoj mreži nisu pronađeni Epson uređaji.</value></data>
+  <data name="Network.Choose"><value>Odaberite s popisa</value></data>
+  <data name="Network.Manual"><value>Postavi ručno</value></data>
+  <data name="Network.UnknownModel"><value>Pisač nije prijavio svoj model.</value></data>
+  <data name="Network.UnsupportedModel"><value>Ovog modela nema u instaliranom katalogu pisača.</value></data>
+  <data name="Network.RawUnavailable"><value>Pisač nije prihvatio vezu na TCP priključku 9100.</value></data>
+  <data name="Network.ChooseModel"><value>Odaberite odgovarajući model iz kataloga.</value></data>
+  <data name="Network.SearchFailed"><value>Traženje mrežnih pisača nije uspjelo.</value></data>
+  <data name="Network.AddressAssigned"><value>Adresa {0} već je dodijeljena pisaču pyToneRIP.</value></data>
+  <data name="Network.SearchHint"><value>Pronađite Epson pisače na lokalnoj mreži.</value></data>
+  <data name="Network.FoundCount"><value>Pronađeni pisači: {0}</value></data>
+  <data name="Queue.Title"><value>Red čekanja sustava Windows (RAW)</value></data>
+  <data name="Queue.Recommended"><value>Preporučuje se ako je za ovaj pisač instaliran službeni upravljački program tvrtke Epson.</value></data>
+  <data name="Queue.RawDriverRequired"><value>Instalirajte službeni upravljački program Epson za ovaj model kako biste iz programa pyToneRIP ispisivali preko reda čekanja sustava Windows (RAW).</value></data>
+  <data name="Queue.Select"><value>Odaberite instalirani Epson red čekanja</value></data>
+  <data name="Queue.Searching"><value>Traženje Epson redova čekanja u sustavu Windows…</value></data>
+  <data name="Queue.None"><value>Nema kompatibilnih Epson redova čekanja u sustavu Windows.</value></data>
+  <data name="Queue.SearchFailed"><value>Nije moguće pronaći redove čekanja pisača u sustavu Windows.</value></data>
+  <data name="Queue.Assigned"><value>Red čekanja sustava Windows {0} već je dodijeljen pisaču pyToneRIP.</value></data>
 </root>

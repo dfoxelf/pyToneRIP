@@ -1,0 +1,25 @@
+{
+  "backend_family": "unsupported_escpr_rgb",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTATION_REQUIRES_PROTOCOL_PROFILE",
+  "display_name": "Epson WorkForceWF2760DWF",
+  "model_id": "WorkForceWF2760DWF",
+  "package_id": "pf--Epson_WorkForceWF2760DWF",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "3cb4cafcbfc44be291992502043054ca08d3c2937d512acd2b988bc0f7b52164",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escpr-rgb",
+  "protocol_family": "escpr",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "e111b520aaff019117eec066fbabd8bfbc9c1e90cc49123ac4e4d9636c30726b",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "740a6ff10df0211cc98a0cc7d9f23e5d40c16c8c6f359faa8b82b337ef337caa",
+  "version": 1,
+  "visible": false,
+  "warnings": [
+    "SYNTHETIC_PPD: no Epson manufacturer PPD supplied; technical source ReferenceDriver driver WF100"
+  ]
+}

@@ -116,7 +116,11 @@ if (@(Get-AppxPackage -AllUsers -ErrorAction Stop | Where-Object {
     return
 }
 $queues = @(Get-Printer)
-if (@($queues | Where-Object { $_.Name -like 'pyToneRIP*' -or $_.PortName -match 'pytone-rip:' }).Count) {
+if (@($queues | Where-Object {
+    ($_.DriverName -eq 'Microsoft Virtual Print Class Driver' -or $_.DriverName -like 'pyToneRIP*') -and
+    ($_.Name -like 'pyToneRIP*' -or
+        $_.PortName -match '(?i)^(pytone-rip:|pyToneRIP\.(Manager|PSA|Printer\.[^_]+)_)')
+}).Count) {
     throw 'Remove pyToneRIP queues before clearing their print state.'
 }
 
@@ -126,7 +130,19 @@ foreach ($form in $Forms) {
     if ([PyToneRipPrintState]::Remove($form.Name, $form.Keyword, $form.W, $form.H)) { $removedForms++ }
 }
 $portPattern = '^pyToneRIP\.(Manager|PSA|Printer\.[^_]+)_\d+\.\d+\.\d+\.\d+_'
-$ports = @(Get-PrinterPort | Where-Object { $_.Name -match $portPattern -and $_.Name -notin @($queues.PortName) })
+# Include every port in a printer pool. A foreign printer referencing one of
+# our ports must survive uninstall, together with that port and its jobs.
+$referencedPorts = @(
+    foreach ($queue in $queues) {
+        foreach ($queuePort in ([string]$queue.PortName -split ',')) { $queuePort.Trim() }
+    }
+)
+$allPorts = @(Get-PrinterPort)
+$keptPorts = @($allPorts | Where-Object { $_.Name -match $portPattern -and $_.Name -in $referencedPorts })
+foreach ($port in $keptPorts) {
+    Write-Host "Keeping pyToneRIP port still referenced by another printer: $($port.Name)"
+}
+$ports = @($allPorts | Where-Object { $_.Name -match $portPattern -and $_.Name -notin $referencedPorts })
 $fallback = @()
 $removedPorts = 0
 $temporaryBackup = -not $PortBackupPath
@@ -187,10 +203,10 @@ if ($fallback.Count) {
         }
     } finally { $root.Dispose() }
 }
-if (@(Get-PrinterPort | Where-Object { $_.Name -match $portPattern -and $_.Name -notin @($queues.PortName) }).Count) {
+if (@(Get-PrinterPort | Where-Object { $_.Name -match $portPattern -and $_.Name -notin $referencedPorts }).Count) {
     throw 'Unused pyToneRIP ports remain after cleanup.'
 }
 if ($temporaryBackup -and $PortBackupPath -and (Test-Path -LiteralPath $PortBackupPath -PathType Leaf)) {
     Remove-Item -LiteralPath $PortBackupPath -Force
 }
-[pscustomobject]@{ RemovedForms=$removedForms; RemovedPorts=$removedPorts; SpoolerRestarted=$restarted }
+[pscustomobject]@{ RemovedForms=$removedForms; RemovedPorts=$removedPorts; SpoolerRestarted=$restarted; PreservedPorts=$keptPorts.Count }

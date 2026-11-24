@@ -1,0 +1,25 @@
+{
+  "backend_family": "unsupported_escpr_rgb",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTATION_REQUIRES_PROTOCOL_PROFILE",
+  "display_name": "Epson WorkForceWF110",
+  "model_id": "WorkForceWF110",
+  "package_id": "pf--Epson_WorkForceWF110",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "2bd9d299f722e81f94c4a6528724ea85142f93a5a30625d822ab4e3d015c80bf",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escpr-rgb",
+  "protocol_family": "escpr",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "20ecb2193cb6bb716d04686bab00949282f99beb60f1b6a5eef027c1cc615200",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "ab37f49e84aa67c2455924f6ce92b6c10cd940eaf7107e23cad10aaa61bc5017",
+  "version": 1,
+  "visible": false,
+  "warnings": [
+    "SYNTHETIC_PPD: no Epson manufacturer PPD supplied; technical source ReferenceDriver driver WF100"
+  ]
+}

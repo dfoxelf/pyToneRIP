@@ -1,0 +1,1077 @@
+{
+  "channels": [
+    {
+      "esc_i_code": "0x0",
+      "role": "black",
+      "slot": "k"
+    },
+    {
+      "esc_i_code": "0x2",
+      "role": "cyan",
+      "slot": "c"
+    },
+    {
+      "esc_i_code": "0x1",
+      "role": "magenta",
+      "slot": "m"
+    },
+    {
+      "esc_i_code": "0x4",
+      "role": "yellow",
+      "slot": "y"
+    }
+  ],
+  "device_features": [],
+  "driver": {
+    "driver_mechanics": {
+      "command_level": 22,
+      "leading_feed_offset_mils": -1000,
+      "mechanical_feature_set": 3
+    },
+    "id": "WF100",
+    "module": "Epson",
+    "number": "544"
+  },
+  "feeds": [
+    {
+      "feed_mechanics": {
+        "medium_kind": "automatic_cut_sheet",
+        "remote_paper_path": {
+          "number": 1,
+          "type": 1
+        },
+        "roll_cut_mode": "none",
+        "suppress_form_feed_after_page": false
+      },
+      "idx": 1,
+      "name": "Cassette 1"
+    },
+    {
+      "feed_mechanics": {
+        "medium_kind": "automatic_cut_sheet",
+        "remote_paper_path": {
+          "number": 2,
+          "type": 1
+        },
+        "roll_cut_mode": "none",
+        "suppress_form_feed_after_page": false
+      },
+      "idx": 2,
+      "name": "Cassette 2"
+    },
+    {
+      "feed_mechanics": {
+        "medium_kind": "automatic_cut_sheet",
+        "remote_paper_path": {
+          "number": 0,
+          "type": 2
+        },
+        "roll_cut_mode": "none",
+        "suppress_form_feed_after_page": false
+      },
+      "idx": 3,
+      "name": "Rear Feed"
+    }
+  ],
+  "identity": {
+    "manufacturer": "Epson",
+    "marketing": "WorkForceWF7210",
+    "name": "Epson_WorkForceWF7210"
+  },
+  "media": [
+    {
+      "idx": 0,
+      "match": "plain_paper",
+      "media_mechanics": {
+        "legacy_media_type_code": 0,
+        "physical_raster_layout_variant": 18,
+        "remote_media_type_code": 0,
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "name": "Plain paper"
+    },
+    {
+      "idx": 1,
+      "match": "plain_paper",
+      "media_mechanics": {
+        "legacy_media_type_code": 0,
+        "physical_raster_layout_variant": 6,
+        "remote_media_type_code": 5,
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "name": "Epson Inkjet Paper"
+    },
+    {
+      "idx": 2,
+      "match": "plain_paper",
+      "media_mechanics": {
+        "legacy_media_type_code": 0,
+        "physical_raster_layout_variant": 6,
+        "remote_media_type_code": 5,
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "name": "Archival Matte"
+    },
+    {
+      "idx": 3,
+      "match": "plain_paper",
+      "media_mechanics": {
+        "legacy_media_type_code": 0,
+        "physical_raster_layout_variant": 6,
+        "remote_media_type_code": 5,
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "name": "Epson Matte Heavy"
+    },
+    {
+      "idx": 4,
+      "match": "plain_paper",
+      "media_mechanics": {
+        "legacy_media_type_code": 0,
+        "physical_raster_layout_variant": 6,
+        "remote_media_type_code": 52,
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "name": "Epson Photo Glossy"
+    },
+    {
+      "idx": 5,
+      "match": "plain_paper",
+      "media_mechanics": {
+        "legacy_media_type_code": 0,
+        "physical_raster_layout_variant": 6,
+        "remote_media_type_code": 11,
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "name": "Epson Premium Glossy"
+    },
+    {
+      "idx": 6,
+      "match": "plain_paper",
+      "media_mechanics": {
+        "legacy_media_type_code": 0,
+        "physical_raster_layout_variant": 6,
+        "remote_media_type_code": 12,
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "name": "Epson Premium Satin"
+    },
+    {
+      "idx": 7,
+      "match": "plain_paper",
+      "media_mechanics": {
+        "legacy_media_type_code": 0,
+        "physical_raster_layout_variant": 6,
+        "remote_media_type_code": 38,
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "name": "Epson Ultra Glossy"
+    },
+    {
+      "idx": 8,
+      "match": "plain_paper",
+      "media_mechanics": {
+        "legacy_media_type_code": 0,
+        "physical_raster_layout_variant": 6,
+        "remote_media_type_code": 9,
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "name": "Transparency"
+    }
+  ],
+  "media_sizes": [
+    {
+      "additional_margin_fields_mils": [
+        540
+      ],
+      "availability": "custom_range_not_fixed_page",
+      "height_mils": 47240,
+      "idx": 0,
+      "margins_mils": {
+        "bottom": 120,
+        "left": 120,
+        "right": 120,
+        "top": 120
+      },
+      "name": "Custom",
+      "page_id": "Custom",
+      "page_mechanics": {
+        "media_size_code": 99,
+        "sheet_geometry_class": "standard_sheet",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "physical_size_mils": [
+        12950,
+        47240
+      ],
+      "width_mils": 12950
+    },
+    {
+      "additional_margin_fields_mils": [
+        540
+      ],
+      "availability": "enabled",
+      "height_mils": 11000,
+      "idx": 1,
+      "margins_mils": {
+        "bottom": 120,
+        "left": 120,
+        "right": 120,
+        "top": 120
+      },
+      "name": "US-Letter",
+      "page_id": "Letter",
+      "page_mechanics": {
+        "media_size_code": 1,
+        "sheet_geometry_class": "standard_sheet",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "physical_size_mils": [
+        8500,
+        11000
+      ],
+      "width_mils": 8500
+    },
+    {
+      "additional_margin_fields_mils": [
+        540
+      ],
+      "availability": "enabled",
+      "height_mils": 14000,
+      "idx": 2,
+      "margins_mils": {
+        "bottom": 120,
+        "left": 120,
+        "right": 120,
+        "top": 120
+      },
+      "name": "US-Legal",
+      "page_id": "Legal",
+      "page_mechanics": {
+        "media_size_code": 2,
+        "sheet_geometry_class": "standard_sheet",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "physical_size_mils": [
+        8500,
+        14000
+      ],
+      "width_mils": 8500
+    },
+    {
+      "additional_margin_fields_mils": [
+        540
+      ],
+      "availability": "enabled",
+      "height_mils": 11693,
+      "idx": 3,
+      "margins_mils": {
+        "bottom": 120,
+        "left": 120,
+        "right": 120,
+        "top": 120
+      },
+      "name": "A4",
+      "page_id": "A4",
+      "page_mechanics": {
+        "media_size_code": 0,
+        "sheet_geometry_class": "standard_sheet",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "physical_size_mils": [
+        8268,
+        11693
+      ],
+      "width_mils": 8268
+    },
+    {
+      "additional_margin_fields_mils": [
+        540
+      ],
+      "availability": "enabled",
+      "height_mils": 8268,
+      "idx": 4,
+      "margins_mils": {
+        "bottom": 120,
+        "left": 120,
+        "right": 120,
+        "top": 120
+      },
+      "name": "A5",
+      "page_id": "A5",
+      "page_mechanics": {
+        "media_size_code": 3,
+        "sheet_geometry_class": "standard_sheet",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "physical_size_mils": [
+        5846,
+        8268
+      ],
+      "width_mils": 5846
+    },
+    {
+      "additional_margin_fields_mils": [
+        540
+      ],
+      "availability": "enabled",
+      "height_mils": 16535,
+      "idx": 5,
+      "margins_mils": {
+        "bottom": 120,
+        "left": 120,
+        "right": 120,
+        "top": 120
+      },
+      "name": "A3",
+      "page_id": "A3",
+      "page_mechanics": {
+        "media_size_code": 62,
+        "sheet_geometry_class": "standard_sheet",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "physical_size_mils": [
+        11693,
+        16535
+      ],
+      "width_mils": 11693
+    },
+    {
+      "additional_margin_fields_mils": [
+        540
+      ],
+      "availability": "enabled",
+      "height_mils": 19000,
+      "idx": 6,
+      "margins_mils": {
+        "bottom": 120,
+        "left": 120,
+        "right": 164,
+        "top": 120
+      },
+      "name": "A3+ / US B+",
+      "page_id": "A3_US_B",
+      "page_mechanics": {
+        "media_size_code": 61,
+        "sheet_geometry_class": "standard_sheet",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "physical_size_mils": [
+        12950,
+        19000
+      ],
+      "width_mils": 12950
+    },
+    {
+      "additional_margin_fields_mils": [
+        540
+      ],
+      "availability": "enabled",
+      "height_mils": 10118,
+      "idx": 7,
+      "margins_mils": {
+        "bottom": 120,
+        "left": 120,
+        "right": 120,
+        "top": 120
+      },
+      "name": "B5",
+      "page_id": "B5",
+      "page_mechanics": {
+        "media_size_code": 5,
+        "sheet_geometry_class": "standard_sheet",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "physical_size_mils": [
+        7165,
+        10118
+      ],
+      "width_mils": 7165
+    },
+    {
+      "additional_margin_fields_mils": [
+        540
+      ],
+      "availability": "enabled",
+      "height_mils": 14331,
+      "idx": 8,
+      "margins_mils": {
+        "bottom": 120,
+        "left": 120,
+        "right": 120,
+        "top": 120
+      },
+      "name": "B4",
+      "page_id": "B4",
+      "page_mechanics": {
+        "media_size_code": 63,
+        "sheet_geometry_class": "standard_sheet",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "physical_size_mils": [
+        10118,
+        14331
+      ],
+      "width_mils": 10118
+    },
+    {
+      "additional_margin_fields_mils": [
+        540
+      ],
+      "availability": "enabled",
+      "height_mils": 5827,
+      "idx": 9,
+      "margins_mils": {
+        "bottom": 120,
+        "left": 120,
+        "right": 120,
+        "top": 120
+      },
+      "name": "A6",
+      "page_id": "A6",
+      "page_mechanics": {
+        "media_size_code": 4,
+        "sheet_geometry_class": "photo_or_card",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "physical_size_mils": [
+        4134,
+        5827
+      ],
+      "width_mils": 4134
+    },
+    {
+      "additional_margin_fields_mils": [
+        540
+      ],
+      "availability": "enabled",
+      "height_mils": 8000,
+      "idx": 10,
+      "margins_mils": {
+        "bottom": 120,
+        "left": 120,
+        "right": 120,
+        "top": 120
+      },
+      "name": "5x8",
+      "page_id": "5x8",
+      "page_mechanics": {
+        "media_size_code": 11,
+        "sheet_geometry_class": "photo_or_card",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "physical_size_mils": [
+        5000,
+        8000
+      ],
+      "width_mils": 5000
+    },
+    {
+      "additional_margin_fields_mils": [],
+      "availability": "enabled",
+      "height_mils": 9500,
+      "idx": 11,
+      "margins_mils": {
+        "bottom": 540,
+        "left": 120,
+        "right": 120,
+        "top": 120
+      },
+      "name": "Envelope #10",
+      "page_id": "Envelope_10",
+      "page_mechanics": {
+        "media_size_code": 29,
+        "sheet_geometry_class": "envelope",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "physical_size_mils": [
+        4125,
+        9500
+      ],
+      "width_mils": 4125
+    },
+    {
+      "additional_margin_fields_mils": [],
+      "availability": "enabled",
+      "height_mils": 8661,
+      "idx": 12,
+      "margins_mils": {
+        "bottom": 540,
+        "left": 120,
+        "right": 120,
+        "top": 120
+      },
+      "name": "Envelope DL",
+      "page_id": "Envelope_DL",
+      "page_mechanics": {
+        "media_size_code": 31,
+        "sheet_geometry_class": "envelope",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "physical_size_mils": [
+        4331,
+        8661
+      ],
+      "width_mils": 4331
+    },
+    {
+      "additional_margin_fields_mils": [],
+      "availability": "enabled",
+      "height_mils": 6378,
+      "idx": 13,
+      "margins_mils": {
+        "bottom": 540,
+        "left": 120,
+        "right": 120,
+        "top": 120
+      },
+      "name": "Envelope C6",
+      "page_id": "Envelope_C6",
+      "page_mechanics": {
+        "media_size_code": 30,
+        "sheet_geometry_class": "envelope",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "physical_size_mils": [
+        4488,
+        6378
+      ],
+      "width_mils": 4488
+    },
+    {
+      "additional_margin_fields_mils": [
+        540
+      ],
+      "availability": "enabled",
+      "height_mils": 6000,
+      "idx": 14,
+      "margins_mils": {
+        "bottom": 120,
+        "left": 120,
+        "right": 120,
+        "top": 120
+      },
+      "name": "4x6",
+      "page_id": "4x6",
+      "page_mechanics": {
+        "media_size_code": 10,
+        "sheet_geometry_class": "photo_or_card",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "physical_size_mils": [
+        4000,
+        6000
+      ],
+      "width_mils": 4000
+    },
+    {
+      "additional_margin_fields_mils": [
+        540
+      ],
+      "availability": "enabled",
+      "height_mils": 5906,
+      "idx": 15,
+      "margins_mils": {
+        "bottom": 120,
+        "left": 120,
+        "right": 120,
+        "top": 120
+      },
+      "name": "10x15cm",
+      "page_id": "10x15cm",
+      "page_mechanics": {
+        "media_size_code": 16,
+        "sheet_geometry_class": "photo_or_card",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "physical_size_mils": [
+        3937,
+        5906
+      ],
+      "width_mils": 3937
+    },
+    {
+      "additional_margin_fields_mils": [
+        540
+      ],
+      "availability": "enabled",
+      "height_mils": 11811,
+      "idx": 16,
+      "margins_mils": {
+        "bottom": 120,
+        "left": 120,
+        "right": 120,
+        "top": 120
+      },
+      "name": "20x30cm",
+      "page_id": "20x30cm",
+      "page_mechanics": {
+        "media_size_code": 14,
+        "sheet_geometry_class": "photo_or_card",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "physical_size_mils": [
+        7874,
+        11811
+      ],
+      "width_mils": 7874
+    },
+    {
+      "additional_margin_fields_mils": [
+        540
+      ],
+      "availability": "enabled",
+      "height_mils": 5000,
+      "idx": 17,
+      "margins_mils": {
+        "bottom": 120,
+        "left": 120,
+        "right": 120,
+        "top": 120
+      },
+      "name": "9x13cm",
+      "page_id": "9x13cm",
+      "page_mechanics": {
+        "media_size_code": 15,
+        "sheet_geometry_class": "photo_or_card",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "physical_size_mils": [
+        3500,
+        5000
+      ],
+      "width_mils": 3500
+    },
+    {
+      "additional_margin_fields_mils": [
+        540
+      ],
+      "availability": "enabled",
+      "height_mils": 7000,
+      "idx": 18,
+      "margins_mils": {
+        "bottom": 120,
+        "left": 120,
+        "right": 120,
+        "top": 120
+      },
+      "name": "5x7",
+      "page_id": "5x7",
+      "page_mechanics": {
+        "media_size_code": 28,
+        "sheet_geometry_class": "photo_or_card",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "physical_size_mils": [
+        5000,
+        7000
+      ],
+      "width_mils": 5000
+    },
+    {
+      "additional_margin_fields_mils": [
+        540
+      ],
+      "availability": "enabled",
+      "height_mils": 10000,
+      "idx": 19,
+      "margins_mils": {
+        "bottom": 120,
+        "left": 120,
+        "right": 120,
+        "top": 120
+      },
+      "name": "8x10",
+      "page_id": "8x10",
+      "page_mechanics": {
+        "media_size_code": 12,
+        "sheet_geometry_class": "photo_or_card",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "physical_size_mils": [
+        8000,
+        10000
+      ],
+      "width_mils": 8000
+    },
+    {
+      "additional_margin_fields_mils": [
+        540
+      ],
+      "availability": "enabled",
+      "height_mils": 13000,
+      "idx": 20,
+      "margins_mils": {
+        "bottom": 120,
+        "left": 120,
+        "right": 120,
+        "top": 120
+      },
+      "name": "8.5x13",
+      "page_id": "8_5x13",
+      "page_mechanics": {
+        "media_size_code": 86,
+        "sheet_geometry_class": "photo_or_card",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "physical_size_mils": [
+        8500,
+        13000
+      ],
+      "width_mils": 8500
+    },
+    {
+      "additional_margin_fields_mils": [
+        540
+      ],
+      "availability": "enabled",
+      "height_mils": 7110,
+      "idx": 21,
+      "margins_mils": {
+        "bottom": 120,
+        "left": 120,
+        "right": 120,
+        "top": 120
+      },
+      "name": "4x7\" 16:9",
+      "page_id": "4x7_16_9",
+      "page_mechanics": {
+        "media_size_code": 43,
+        "sheet_geometry_class": "photo_or_card",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "physical_size_mils": [
+        4000,
+        7110
+      ],
+      "width_mils": 4000
+    },
+    {
+      "additional_margin_fields_mils": [],
+      "availability": "pending_borderless_geometry",
+      "height_mils": 11300,
+      "idx": 22,
+      "margins_mils": {
+        "bottom": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "name": "US-Letter borderless",
+      "page_id": "US_Letter_borderless",
+      "page_mechanics": {
+        "media_size_code": 1,
+        "sheet_geometry_class": "photo_or_card",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "physical_size_mils": [
+        8500,
+        11000
+      ],
+      "width_mils": 8700
+    },
+    {
+      "additional_margin_fields_mils": [],
+      "availability": "pending_borderless_geometry",
+      "height_mils": 11993,
+      "idx": 23,
+      "margins_mils": {
+        "bottom": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "name": "A4 borderless",
+      "page_id": "A4_borderless",
+      "page_mechanics": {
+        "media_size_code": 0,
+        "sheet_geometry_class": "photo_or_card",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "physical_size_mils": [
+        8268,
+        11693
+      ],
+      "width_mils": 8468
+    },
+    {
+      "additional_margin_fields_mils": [],
+      "availability": "pending_borderless_geometry",
+      "height_mils": 16835,
+      "idx": 24,
+      "margins_mils": {
+        "bottom": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "name": "A3 borderless",
+      "page_id": "A3_borderless",
+      "page_mechanics": {
+        "media_size_code": 62,
+        "sheet_geometry_class": "standard_sheet",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "physical_size_mils": [
+        11693,
+        16535
+      ],
+      "width_mils": 11893
+    },
+    {
+      "additional_margin_fields_mils": [],
+      "availability": "pending_borderless_geometry",
+      "height_mils": 19300,
+      "idx": 25,
+      "margins_mils": {
+        "bottom": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "name": "A3+ / US B+ borderless",
+      "page_id": "A3_US_B_borderless",
+      "page_mechanics": {
+        "media_size_code": 61,
+        "sheet_geometry_class": "standard_sheet",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "physical_size_mils": [
+        12950,
+        19000
+      ],
+      "width_mils": 13150
+    },
+    {
+      "additional_margin_fields_mils": [],
+      "availability": "pending_borderless_geometry",
+      "height_mils": 6300,
+      "idx": 26,
+      "margins_mils": {
+        "bottom": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "name": "Borderless 4x6",
+      "page_id": "Borderless_4x6",
+      "page_mechanics": {
+        "media_size_code": 10,
+        "sheet_geometry_class": "photo_or_card",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "physical_size_mils": [
+        4000,
+        6000
+      ],
+      "width_mils": 4200
+    },
+    {
+      "additional_margin_fields_mils": [],
+      "availability": "pending_borderless_geometry",
+      "height_mils": 6206,
+      "idx": 27,
+      "margins_mils": {
+        "bottom": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "name": "Borderless 10x15cm",
+      "page_id": "Borderless_10x15cm",
+      "page_mechanics": {
+        "media_size_code": 16,
+        "sheet_geometry_class": "photo_or_card",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "physical_size_mils": [
+        3937,
+        5906
+      ],
+      "width_mils": 4137
+    },
+    {
+      "additional_margin_fields_mils": [],
+      "availability": "pending_borderless_geometry",
+      "height_mils": 5300,
+      "idx": 28,
+      "margins_mils": {
+        "bottom": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "name": "Borderless 9x13cm",
+      "page_id": "Borderless_9x13cm",
+      "page_mechanics": {
+        "media_size_code": 15,
+        "sheet_geometry_class": "photo_or_card",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "physical_size_mils": [
+        3500,
+        5000
+      ],
+      "width_mils": 3700
+    },
+    {
+      "additional_margin_fields_mils": [],
+      "availability": "pending_borderless_geometry",
+      "height_mils": 7300,
+      "idx": 29,
+      "margins_mils": {
+        "bottom": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "name": "Borderless 5x7",
+      "page_id": "Borderless_5x7",
+      "page_mechanics": {
+        "media_size_code": 28,
+        "sheet_geometry_class": "photo_or_card",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "physical_size_mils": [
+        5000,
+        7000
+      ],
+      "width_mils": 5200
+    },
+    {
+      "additional_margin_fields_mils": [],
+      "availability": "pending_borderless_geometry",
+      "height_mils": 10300,
+      "idx": 30,
+      "margins_mils": {
+        "bottom": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "name": "Borderless 8x10",
+      "page_id": "Borderless_8x10",
+      "page_mechanics": {
+        "media_size_code": 12,
+        "sheet_geometry_class": "photo_or_card",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "physical_size_mils": [
+        8000,
+        10000
+      ],
+      "width_mils": 8200
+    },
+    {
+      "additional_margin_fields_mils": [],
+      "availability": "pending_borderless_geometry",
+      "height_mils": 7410,
+      "idx": 31,
+      "margins_mils": {
+        "bottom": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "name": "Borderless 4x7\" 16:9",
+      "page_id": "Borderless_4x7_16_9",
+      "page_mechanics": {
+        "media_size_code": 43,
+        "sheet_geometry_class": "photo_or_card",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "physical_size_mils": [
+        4000,
+        7110
+      ],
+      "width_mils": 4200
+    }
+  ],
+  "protocol": {
+    "cls": "escpr-rgb",
+    "family": "escpr"
+  },
+  "schema": "rip-printer-v1.2"
+}

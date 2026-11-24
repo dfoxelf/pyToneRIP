@@ -17,6 +17,7 @@ namespace pyToneRIP.QueueHelper
         private const uint JobStatusDeleting = 0x00000004;
         private const uint JobStatusDeleted = 0x00000100;
         private const uint JobStatusComplete = 0x00001000;
+        private const uint JobStatusPrinted = 0x00000080;
         private const uint JobControlDelete = 5;
         private const int ErrorInsufficientBuffer = 122;
         private readonly string queueName;
@@ -139,8 +140,12 @@ namespace pyToneRIP.QueueHelper
             try
             {
                 if (!SetJobW(printer, current.Id, 0, IntPtr.Zero, JobControlDelete))
-                    throw new Win32Exception(Marshal.GetLastWin32Error(),
-                        "Windows could not cancel the current print job.");
+                {
+                    var error = Marshal.GetLastWin32Error();
+                    if ((error == 2 || error == 87 || error == 259)
+                        && !ReadJobs(queueName).Exists(job => job.Id == current.Id)) return current.Id;
+                    throw new Win32Exception(error, "Windows could not cancel the current print job.");
+                }
                 return current.Id;
             }
             finally { ClosePrinter(printer); }
@@ -148,13 +153,24 @@ namespace pyToneRIP.QueueHelper
 
         public static bool HasCurrentJob(string queueName) => FindCurrentJob(queueName) != null;
 
+        internal static bool HasMatchingJob(string queueName, uint id, string document) =>
+            ReadJobs(queueName).Exists(job => job.Id == id && job.Document == document
+                && IsPendingJob(job.Status));
+
+        private static bool IsPendingJob(uint status) =>
+            (status & (JobStatusDeleting | JobStatusDeleted | JobStatusComplete | JobStatusPrinted)) == 0;
+
         private static QueueJob FindCurrentJob(string queueName)
         {
-            var jobs = ReadJobs(queueName);
+            return SelectCurrentJob(ReadJobs(queueName));
+        }
+
+        private static QueueJob SelectCurrentJob(IEnumerable<QueueJob> jobs)
+        {
             QueueJob current = null;
             foreach (var job in jobs)
             {
-                if ((job.Status & (JobStatusDeleting | JobStatusDeleted | JobStatusComplete)) != 0)
+                if (!IsPendingJob(job.Status))
                     continue;
                 if (current == null ||
                     ((job.Status & JobStatusPrinting) != 0 &&
@@ -197,6 +213,7 @@ namespace pyToneRIP.QueueHelper
                         {
                             Id = raw.JobId,
                             Status = raw.Status,
+                            Document = Marshal.PtrToStringUni(raw.Document),
                             Position = raw.Position,
                             Size = raw.Size,
                             SubmittedUtc = raw.Submitted.ToUtc()
@@ -212,6 +229,7 @@ namespace pyToneRIP.QueueHelper
         private sealed class QueueJob
         {
             public uint Id;
+            public string Document;
             public uint Status;
             public uint Position;
             public long Size;

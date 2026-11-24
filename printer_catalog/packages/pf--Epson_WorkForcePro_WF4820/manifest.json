@@ -1,0 +1,25 @@
+{
+  "backend_family": "epson_escp2_workforcenative",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson WorkForce Pro WF-4820 (Experimental ESC/P2)",
+  "model_id": "WorkForcePro_WF4820",
+  "package_id": "pf--Epson_WorkForcePro_WF4820",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "1d09df44ce9a3e6e57607eb6533a8848fab0d4dab7cde9511a29e108a9a70510",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "WorkForceNative",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "b6b83b38e9342d7a0d18d855f9d71ab5bb4dc691814028444d240db45a565707",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "a29db4e4242d8d2a13143b401090ac6f0e52cbbd8309fec81d27d9a41e56c620",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "Experimental ESC/P2 profile derived from WF-C4810. Physical printing on WF-4820 is unverified."
+  ]
+}

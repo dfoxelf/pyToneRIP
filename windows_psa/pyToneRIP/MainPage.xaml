@@ -237,7 +237,9 @@
       <StackPanel x:Name="FooterActions" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
         <CheckBox x:Uid="MainPage/ShowLog" x:Name="ShowLogCheckBox" Content="Show log" VerticalAlignment="Center" Margin="0,0,16,0"
                   Checked="ShowLogChanged" Unchecked="ShowLogChanged"/>
-        <Button x:Uid="MainPage/PrintJobs" x:Name="OpenJobsButton" Content="Print jobs" Click="OpenPrintJobs"
+        <Button x:Uid="MainPage/CancelJob" x:Name="CancelJobButton" Content="Cancel job" Click="CancelCurrentPrintJob"
+                IsEnabled="False" Margin="0,0,8,0"/>
+        <Button x:Uid="MainPage/PrintJobs" x:Name="OpenJobsButton" Content="Printer Jobs" Click="OpenPrintJobs"
                 IsEnabled="False" Margin="0,0,8,0"/>
         <Button x:Uid="MainPage/WindowsPrinters" Content="Windows printers" Click="OpenWindowsPrinters"/>
         <Button x:Uid="MainPage/SendLogs" x:Name="SendLogsButton" Content="Prepare log files"

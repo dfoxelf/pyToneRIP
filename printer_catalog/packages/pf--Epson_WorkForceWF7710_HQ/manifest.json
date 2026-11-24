@@ -1,0 +1,25 @@
+{
+  "backend_family": "epson_escp2_workforcenative",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson WorkForceWF7710_HQ",
+  "model_id": "WorkForceWF7710_HQ",
+  "package_id": "pf--Epson_WorkForceWF7710_HQ",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "079c8e41c1c9f31e66d81677137f0de05e68275c50469bcdab07a954eba80953",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "WorkForceNative",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "363e61f0ed8af166cc8c8d995f7c0da7992293c8fd3455e110c81154779b2043",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "e20387dc112f4ff90f4d95b091eabc8a7824c0cc9062fef4a4c2174103dfa68e",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "SYNTHETIC_PPD: no Epson manufacturer PPD supplied; technical source ReferenceDriver driver WF7710"
+  ]
+}

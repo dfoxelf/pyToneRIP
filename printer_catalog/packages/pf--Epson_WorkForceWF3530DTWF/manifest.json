@@ -1,0 +1,25 @@
+{
+  "backend_family": "epson_escp2_workforcenative",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson WorkForceWF3530DTWF",
+  "model_id": "WorkForceWF3530DTWF",
+  "package_id": "pf--Epson_WorkForceWF3530DTWF",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "c1d01e3429e4cd8257df52a94e0d508212b84d3eeeb0719e94c1f9c5e1036871",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "WorkForceNative",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "7812be7889424d445cf3a07a4b55dc883af1ec0879684d5fbf0e6cbe6fd65076",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "430691c1eeb120dce27e5bbd8796182608a9bd4e649e678a9ff59ba02921fcd5",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "SYNTHETIC_PPD: no Epson manufacturer PPD supplied; technical source ReferenceDriver driver BX610"
+  ]
+}

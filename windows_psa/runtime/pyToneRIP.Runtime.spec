@@ -33,6 +33,7 @@ def license_file(distribution_name, suffix):
 
 
 datas = [
+    (str(source_root / "xp750_rip" / "data"), "xp750_rip/data"),
     (str(source_root / "xp750_rip" / "dither" / "data"), "xp750_rip/dither/data"),
     (str(Path(sys.base_prefix) / "LICENSE.txt"), "licenses/Python"),
     license_file("numpy", ".dist-info/licenses/LICENSE.txt"),

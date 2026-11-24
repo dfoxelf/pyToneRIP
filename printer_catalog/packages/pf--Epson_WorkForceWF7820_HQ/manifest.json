@@ -1,0 +1,25 @@
+{
+  "backend_family": "epson_escp2_workforcenative",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson WorkForceWF7820_HQ",
+  "model_id": "WorkForceWF7820_HQ",
+  "package_id": "pf--Epson_WorkForceWF7820_HQ",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "e983ab6ddc6c01456d538198f52a1b422c1d4f310281937f32ee4badb88a6242",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "WorkForceNative",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "f94f73769de860a86a11c29396c391799e2f1a1a5dc9f5a351d26b4e3f49f9a3",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "3a7bc5e8085e302e26fce75692208ab6061e73ea00ce8860d02ca84edf5fd7a3",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "SYNTHETIC_PPD: no Epson manufacturer PPD supplied; technical source ReferenceDriver driver WF7710"
+  ]
+}

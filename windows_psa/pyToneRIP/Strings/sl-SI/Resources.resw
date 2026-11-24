@@ -93,7 +93,7 @@
   <data name="Auto.B388B9C01523.Text"><value>Velikost</value></data>
   <data name="Auto.C195019E59CC.Text"><value>Najsvetlejše</value></data>
   <data name="Auto.C681456D80A8.Content"><value>Izbirniki RGB (QTR InkSeparation)</value></data>
-  <data name="Auto.C706B9DFA105.Text"><value>Ustvari majhen PRN, specifičen za model, s trakovi neobdelane gostote za vsak konfiguriran fizični kanal. Krivulje QTR namerno niso uporabljene pri tem prvem inženirskem preizkusu.</value></data>
+  <data name="Auto.C706B9DFA105.Text"><value>Natisnite tonski preizkus A4 s prelivi, krogi in sivinskimi stopnjami z izbranimi krivuljami in nastavitvami tiskanja. Vstavite prazen list A4.</value></data>
   <data name="Auto.C84252F663BA.Header"><value>Povezava</value></data>
   <data name="Auto.C8D7FCDF582D.Text"><value>Povezava tiskalnika</value></data>
   <data name="Auto.CC5611F72641.Text"><value>Izklopljeno (priporočeno): ohrani stran, ki sta jo sestavila aplikacija za tiskanje in Windows. Vklopljeno: dodatno povečajte in postavite dokončano stran v RIP.</value></data>
@@ -277,7 +277,7 @@
   <data name="Maintenance.head_clean.Title"><value>Očistite tiskalno glavo</value></data>
   <data name="Maintenance.nozzle_check.Description"><value>Prosite vdelano programsko opremo tiskalnika, da natisne izvorni vzorec šob.</value></data>
   <data name="Maintenance.nozzle_check.Title"><value>Preverjanje tiskalnih šob</value></data>
-  <data name="Maintenance.test_page.Description"><value>Natisnite majhen surovi vzorec na kanal z uporabo izbranih nastavitev modela.</value></data>
+  <data name="Maintenance.test_page.Description"><value>Natisnite tonski preizkus A4 s prelivi, krogi in sivinskimi stopnjami z izbranimi krivuljami in nastavitvami tiskanja. Vstavite prazen list A4.</value></data>
   <data name="Maintenance.test_page.Title"><value>Natisnite preskusno stran pyToneRIP</value></data>
   <data name="Processing16Bit.Content"><value>16-bitna obdelava</value></data>
   <data name="Processing16BitExperimental.Text"><value>(poskusni način)</value></data>
@@ -289,6 +289,9 @@
   <data name="MainPage.SendLogs.Content"><value>Ustvari diagnostično poročilo</value></data>
   <data name="Code.SupportReportPrompt"><value>ZIP na namizju vsebuje tehnične podatke o napakah pyToneRIP in Windows v zadnjih 24 urah. Vsebina dokumentov, osebne poti in naslovi IP niso vključeni. Aplikacija arhiva ne pošilja.</value></data>
   <data name="Code.SupportReportCreated"><value>Datoteka ZIP je ustvarjena na namizju: {0}</value></data>
+  <data name="Usb.DirectPrint"><value>Neposredno tiskanje prek USB-ja</value></data>
+  <data name="Usb.DirectPrintHint"><value>Pošlje opravila neposredno tiskalniku, priključenemu prek USB-ja. Če je nameščen gonilnik Epson, izberite čakalno vrsto sistema Windows (RAW).</value></data>
+  <data name="Usb.DirectPrintRecommendation"><value>Izberite to možnost, če uradni gonilnik Epson ni nameščen.</value></data>
   <data name="Usb.Device"><value>Priključen tiskalnik USB</value></data>
   <data name="Usb.Refresh"><value>Osveži tiskalnike USB</value></data>
   <data name="Usb.Searching"><value>Iskanje tiskalnikov USB…</value></data>
@@ -347,6 +350,7 @@
   <data name="PreviewWindow.ProfileMismatch" xml:space="preserve"><value>ICC se razlikuje od shranjenih pogojev tiskanja.</value></data>
   <data name="PreviewWindow.PhysicalUnavailable" xml:space="preserve"><value>Fizično stanje tiskalnika ni na voljo.</value></data>
   <data name="PreviewWindow.PhysicalUnconfirmed" xml:space="preserve"><value>Stanje naprave ne potrjuje zaključka tega opravila ali izhoda lista.</value></data>
+  <data name="PreviewWindow.PhysicalCancelUnconfirmed" xml:space="preserve"><value>Tiskalnik ni potrdil preklica. Poskusite znova ali prekličite opravilo na nadzorni plošči tiskalnika.</value></data>
   <data name="PreviewWindow.DeviceOther" xml:space="preserve"><value>Tiskalnik: drugo stanje</value></data>
   <data name="PreviewWindow.DeviceUnknown" xml:space="preserve"><value>Tiskalnik: neznano stanje</value></data>
   <data name="PreviewWindow.DeviceIdle" xml:space="preserve"><value>Tiskalnik: miruje</value></data>
@@ -368,4 +372,60 @@
   <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>Puščica označuje rob lista, ki se natisne prvi.</value></data>
   <data name="PreviewWindow.PhotoCrop" xml:space="preserve"><value>Za obrezovanje povlecite bele ročice na sredini stranic; za obnovitev povlecite navzven. Kotne ročice spreminjajo velikost.</value></data>
   <data name="PreviewWindow.PhotoFill" xml:space="preserve"><value>Zapolni stran</value></data>
+  <data name="PrinterInfo.Read.Content" xml:space="preserve"><value>Preberi podatke o tiskalniku</value></data>
+  <data name="PrinterInfo.Help.Text" xml:space="preserve"><value>Prebere podatke, ki jih izbrani tiskalnik sporoča prek USB ali omrežja.</value></data>
+  <data name="PrinterInfo.Title.Text" xml:space="preserve"><value>Podatki o tiskalniku</value></data>
+  <data name="PrinterInfo.Empty.Text" xml:space="preserve"><value>Izberite »Preberi podatke o tiskalniku«, da pridobite poročilo naprave.</value></data>
+  <data name="PrinterInfo.Reading" xml:space="preserve"><value>Branje podatkov o tiskalniku…</value></data>
+  <data name="PrinterInfo.Failed" xml:space="preserve"><value>Podatkov o tiskalniku ni mogoče prebrati: {0}</value></data>
+  <data name="PrinterInfo.Busy" xml:space="preserve"><value>Tiskalnik je v uporabi. Počakajte, da se tiskanje ali vzdrževanje konča.</value></data>
+  <data name="PrinterInfo.Connection" xml:space="preserve"><value>Povezava</value></data>
+  <data name="PrinterInfo.Identity" xml:space="preserve"><value>Identifikacija</value></data>
+  <data name="PrinterInfo.Status" xml:space="preserve"><value>Stanje in opozorila</value></data>
+  <data name="PrinterInfo.Inks" xml:space="preserve"><value>Ravni črnila</value></data>
+  <data name="PrinterInfo.Details" xml:space="preserve"><value>Dodatni podatki</value></data>
+  <data name="PrinterInfo.Raw" xml:space="preserve"><value>Izvirni odgovori naprave</value></data>
+  <data name="PrinterInfo.Model" xml:space="preserve"><value>Model</value></data>
+  <data name="PrinterInfo.Firmware" xml:space="preserve"><value>Vdelana programska oprema</value></data>
+  <data name="PrinterInfo.DeviceId" xml:space="preserve"><value>Identifikacija naprave</value></data>
+  <data name="PrinterInfo.Cartridges" xml:space="preserve"><value>Vrste kartuš</value></data>
+  <data name="PrinterInfo.Cartridge" xml:space="preserve"><value>Kartuša</value></data>
+  <data name="PrinterInfo.Error" xml:space="preserve"><value>Napaka</value></data>
+  <data name="PrinterInfo.Warning" xml:space="preserve"><value>Opozorilo</value></data>
+  <data name="PrinterInfo.SerialNumber" xml:space="preserve"><value>Serijska številka</value></data>
+  <data name="PrinterInfo.State" xml:space="preserve"><value>Stanje</value></data>
+  <data name="PrinterInfo.NoData" xml:space="preserve"><value>Ni sporočeno</value></data>
+  <data name="PrinterInfo.Field" xml:space="preserve"><value>Polje 0x{0}</value></data>
+  <data name="PrinterInfo.MaintenanceBox" xml:space="preserve"><value>Vzdrževalna posoda</value></data>
+  <data name="PrinterInfo.PaperCounters" xml:space="preserve"><value>Števci strani</value></data>
+  <data name="PrinterInfo.Temperature" xml:space="preserve"><value>Temperatura</value></data>
+  <data name="PrinterInfo.Interface" xml:space="preserve"><value>Stanje vmesnika</value></data>
+  <data name="PrinterInfo.Unsupported" xml:space="preserve"><value>Ni podprto ali ni odgovora</value></data>
+  <data name="PrinterInfo.Source" xml:space="preserve"><value>Vir</value></data>
+  <data name="MainPage.CancelJob.Content"><value>Prekliči trenutno tiskalno opravilo</value></data>
+  <data name="MainPage.NoActiveJob" xml:space="preserve"><value>Izbrani tiskalnik nima dejavnega tiskalnega opravila.</value></data>
+  <data name="MainPage.CancelJobFailed" xml:space="preserve"><value>Opravila ni bilo mogoče preklicati. Preverite povezavo s tiskalnikom in poskusite znova.</value></data>
+  <data name="Network.Search"><value>Poišči tiskalnike</value></data>
+  <data name="Network.Device"><value>Izberite najdeni tiskalnik</value></data>
+  <data name="Network.DeviceHint"><value>Seznam prikazuje model in naslov IP vsakega tiskalnika.</value></data>
+  <data name="Network.Searching"><value>Iskanje tiskalnikov Epson…</value></data>
+  <data name="Network.None"><value>V lokalnem omrežju ni bilo najdenih naprav Epson.</value></data>
+  <data name="Network.Choose"><value>Izberite s seznama</value></data>
+  <data name="Network.Manual"><value>Ročna nastavitev</value></data>
+  <data name="Network.UnknownModel"><value>Tiskalnik ni sporočil svojega modela.</value></data>
+  <data name="Network.UnsupportedModel"><value>Tega modela ni v nameščenem katalogu tiskalnikov.</value></data>
+  <data name="Network.RawUnavailable"><value>Tiskalnik ni sprejel povezave prek vrat TCP 9100.</value></data>
+  <data name="Network.ChooseModel"><value>Izberite ustrezen model iz kataloga.</value></data>
+  <data name="Network.SearchFailed"><value>Iskanje omrežnih tiskalnikov ni uspelo.</value></data>
+  <data name="Network.AddressAssigned"><value>Naslov {0} je že dodeljen tiskalniku pyToneRIP.</value></data>
+  <data name="Network.SearchHint"><value>Poiščite tiskalnike Epson v svojem lokalnem omrežju.</value></data>
+  <data name="Network.FoundCount"><value>Najdeni tiskalniki: {0}</value></data>
+  <data name="Queue.Title"><value>Čakalna vrsta Windows (RAW)</value></data>
+  <data name="Queue.Recommended"><value>Priporočeno, če je za ta tiskalnik nameščen uradni gonilnik Epson.</value></data>
+  <data name="Queue.RawDriverRequired"><value>Namestite uradni gonilnik Epson za ta model, da boste lahko tiskali iz programa pyToneRIP prek čakalne vrste Windows (RAW).</value></data>
+  <data name="Queue.Select"><value>Izberite nameščeno čakalno vrsto Epson</value></data>
+  <data name="Queue.Searching"><value>Iskanje čakalnih vrst Epson v sistemu Windows…</value></data>
+  <data name="Queue.None"><value>V sistemu Windows ni bilo najdenih združljivih čakalnih vrst Epson.</value></data>
+  <data name="Queue.SearchFailed"><value>Tiskalniških čakalnih vrst Windows ni bilo mogoče najti.</value></data>
+  <data name="Queue.Assigned"><value>Čakalna vrsta Windows {0} je že dodeljena tiskalniku pyToneRIP.</value></data>
 </root>

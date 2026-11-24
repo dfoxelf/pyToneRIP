@@ -1,0 +1,25 @@
+{
+  "backend_family": "epson_escp2_workforcenative",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson WorkForceWF2960DWF",
+  "model_id": "WorkForceWF2960DWF",
+  "package_id": "pf--Epson_WorkForceWF2960DWF",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "e39d516bbe595877da753c0f6ff2f962d5bbdb757eb586bbf2a648e1e853b15b",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "WorkForceNative",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "fcbbac1bbba67c5b87ce0ad6a5d993f87d0944fc6b718c4ec20397e97496563c",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "611927124b7fdf595d0708c70c3055ff714dae3d93303b7f3df3409e8b6f788a",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "SYNTHETIC_PPD: no Epson manufacturer PPD supplied; technical source ReferenceDriver driver ET3700"
+  ]
+}

@@ -1,10 +1,10 @@
 # pyToneRIP
 
-[![Release](https://img.shields.io/github/v/release/dfoxelf/pyToneRIP?include_prereleases&style=flat-square&v=248)](https://github.com/dfoxelf/pyToneRIP/releases)
-[![Release downloads](https://img.shields.io/github/downloads/dfoxelf/pyToneRIP/total?style=flat-square&label=release%20downloads&v=248)](https://github.com/dfoxelf/pyToneRIP/releases)
+[![Prerelease](https://img.shields.io/github/v/release/dfoxelf/pyToneRIP?include_prereleases&style=flat-square&label=prerelease&v=270)](https://github.com/dfoxelf/pyToneRIP/releases/tag/v1.0.0.270-beta)
+[![Release downloads](https://img.shields.io/github/downloads/dfoxelf/pyToneRIP/total?style=flat-square&label=release%20downloads&v=270)](https://github.com/dfoxelf/pyToneRIP/releases)
 [![License: GPL-3.0-only](https://img.shields.io/badge/license-GPL--3.0--only-blue?style=flat-square)](https://github.com/dfoxelf/pyToneRIP/blob/main/LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Windows%2011%20x64-0078D4?style=flat-square)](#install)
-[![Download Beta 1.0.0.248](https://img.shields.io/badge/Download-Beta%201.0.0.248-2ea44f?style=flat-square)](https://github.com/dfoxelf/pyToneRIP/releases/download/v1.0.0.248-beta/pyToneRIP-Setup-1.0.0.248-Beta.exe)
+[![Download Beta 1.0.0.270](https://img.shields.io/badge/Download-Beta%201.0.0.270-2ea44f?style=flat-square)](https://github.com/dfoxelf/pyToneRIP/releases/download/v1.0.0.270-beta/pyToneRIP-Setup-1.0.0.270-Beta.exe)
 
 Copyright © 2026 Alexander Eichhorn.
 
@@ -12,68 +12,47 @@ pyToneRIP is a monochrome Epson raster image processor for Windows 11. Print fro
 
 ## Download the beta
 
-The current beta is **1.0.0.248**. [Download the setup installer](https://github.com/dfoxelf/pyToneRIP/releases/download/v1.0.0.248-beta/pyToneRIP-Setup-1.0.0.248-Beta.exe).
+The current beta is **1.0.0.270**. [Download the setup installer](https://github.com/dfoxelf/pyToneRIP/releases/download/v1.0.0.270-beta/pyToneRIP-Setup-1.0.0.270-Beta.exe).
 
 This is a **prerelease** for Windows 11 x64, build 26100 or later. Printer support and the available settings depend on the selected model. Start with a small test print when using a new printer, paper, curve set, or print mode.
 
 <details>
 <summary>Verify the installer checksum</summary>
 
-Installer size: **68,758,557 bytes**. SHA-256:
+Installer size: **69,614,050 bytes**. SHA-256:
 
 ```text
-b7259cf4e2b4c74dd46c2c59ee02947b42effe26debdf018dd5fecaff23a0475
+cbdd3eb5e166b63212e4ca6f16c4f855c0bbadfc1ba750d3301783e3a722c4b8
 ```
 
 ```powershell
-Get-FileHash .\pyToneRIP-Setup-1.0.0.248-Beta.exe -Algorithm SHA256
+Get-FileHash .\pyToneRIP-Setup-1.0.0.270-Beta.exe -Algorithm SHA256
 ```
 
 </details>
 
-## Changes in beta 248
+## What's new in beta 270
 
-The changes below describe **1.0.0.248 Beta**, relative to the previous public beta 244.
+### Find and connect your Epson printer
 
-### New ET-18100 / L18050 / L8050 family
+- **Network.** Search for supported Epson printers on your local network. Choose a result by model and IP address, and pyToneRIP fills in the connection. When switching an existing printer to Network, search results are limited to its model. Manual IP entry is still available.
+- **Windows queue (RAW).** Use an existing Epson queue with the official Epson driver when one is installed. Continue printing from the pyToneRIP virtual printer. pyToneRIP applies the selected curves and sends the rendered printer data through the Epson queue.
+- **Direct USB.** Connect directly when the official Epson driver is absent. Printer setup now opens with Network selected.
 
-- Added Epson EcoTank ET-18100, Epson L18050 and Epson L8050 as separate printer entries, with their own cartridge-channel names and model capabilities.
-- Imported paper choices, paper selectors, print modes, drop-size levels and their output codes, page dimensions, margins, and available borderless formats. ET-18100/L18050 expose A3+; L8050 has its own A4-class page set.
-- Kept the input-raster resolution, printer coordinate grid and advertised mode resolution separate. Mode-dependent drop levels are applied without treating color-correction tables as ink-coverage multipliers.
-- Added the paper-feed choices described by this family. The presence of a roll/continuous output mode in the RIP does not establish that a printer has a factory roll holder; check the physical setup before using it.
+The built-in Epson V4 class driver can handle ordinary Windows printing while being incompatible with this RAW path. pyToneRIP detects the affected drivers and tells you to install the official driver. Network discovery requires local reachability and may miss printers across routed networks or virtual-machine NAT.
 
-### Model-specific pass scheduling and coordinate fixes
+### WorkForce and printer maintenance
 
-- **P50 / T50 / T60:** corrected leading/trailing pass planning and the use of the existing top margin. The initial head-position offset participates in scheduling instead of being added after the edge passes have been planned. The P50 improvement at the beginning of a physical print was confirmed by the user.
-- **Stylus Photo R series:** corrected trailing-edge planning where applicable, retaining each model's established origin, nozzle offsets and feed geometry. R2880 retains its own initial-feed handling.
-- **ET-14000 / ET-14100:** replaced incompatible imported geometry with their own head/feed profiles and corrected the trailing scheduling limit for staggered channels.
-- **ET-8500 / ET-8550 / L8160 / L8180:** corrected mixed-resolution nozzle spacing, the model-specific sheet/borderless starting position and the horizontal subpass phase of the affected Super modes.
-- **ET-18100 / L18050 / L8050 and F500:** moved their own initial-feed offsets into edge planning and allowed the required head travel at the end of the image.
-- **T3200 / T5200 / T7200:** use the verified firmware-weave, single-row transport path with mode-dependent coordinate units. Raster preparation uses the transport grid before dithering.
-- **F500:** corrected mode-dependent drop-code depth, command length and mixed-resolution geometry.
+- Extended tuned WorkForce printhead geometry and page offsets to related profiles. **Super Photo Fine 2400 x 1200 dpi PyToneRIP** is available for WF-3620, WF-3640, WF-7110, WF-7610 and WF-7620. Physical validation varies by model.
+- Added a catalog profile for **WF-4820**. Physical output for this model still needs validation.
+- Improved repeated USB ink readings and offline-state reporting for Windows queues. Ink readings can use direct USB when a supported Windows queue cannot return them and the matching USB device is available.
+- Nozzle checks and supported maintenance commands follow the configured connection. For supported local USB queues using the built-in Epson class driver, a nozzle check can use direct USB.
 
-These changes use explicit model/family conditions. The P50 correction is not applied universally to SureColor, EcoTank or Stylus Pro printers. Coordinate reconstruction checks distinguish changes in pass order from deliberate corrections to previously incorrect origins or pixel phases. The 8-bit and 16-bit input-processing paths remain independent of the output drop-code depth.
+### Windows integration
 
-### SureColor T5400 catalog and output
-
-T5400 now uses its own model description instead of an incompatible inherited profile. The catalog contains **20 paper entries, 36 mode rows and 23 fixed page sizes**, with verified paper-selector codes, mode-dependent coordinate grids and drop-code depths. Physical feed choices are Tray, Manual Feed, Roll Paper without cutting, and Roll Paper with cutting.
-
-Paper handling, roll cutting and the page origin follow this model's commands. Settings inherited from an unrelated printer have been removed. Existing T5400 configurations may need their paper and mode selected again. T5400's secondary nozzle banks and complete native pass distribution are not implemented; physical quality and throughput still need testing.
-
-### USB discovery and cancellation
-
-- Improved USB model matching for devices whose reported name repeats the Epson manufacturer prefix, including the P50 discovery case.
-- Added an explicit abort/finalization sequence for direct USB cancellation on P50/T50/T60 and ET-18100/L18050/L8050. Sheet jobs receive the verified sheet-eject sequence after the abort; roll jobs do not receive an added form feed.
-- Preserved sender-thread ownership, partial-write handling, bounded cancellation waits and the original failure cause. Successful jobs do not receive cancellation commands.
-
-The USB cancellation sequence is covered by transport tests; physical sheet ejection after cancellation still needs confirmation on the affected devices.
-
-### Preview cropping, fit and placement
-
-- Added white crop handles at the middle of the four photo edges. Drag these to crop the visible image; the corner handles continue to resize it.
-- Added **Fill Photo to Page**, alongside **Fit Photo to Page**, as toolbar icons with localized tooltips. Fit keeps the whole photo visible; Fill covers the page using an aspect-preserving crop. Fit Page remains a separate view/zoom action.
-- Preserved crop geometry through resizing, rotation, settings updates, rendering and edited-job output. Cropping retains the original image resources rather than replacing a 16-bit image with an 8-bit preview.
-- Preserved the Photo Placement selection when Soft Proof is toggled or the preview is rebuilt.
+- Queue commands now use Windows App Services for the normal request path. Opening Windows print jobs and receiving printer status can proceed independently.
+- Improved recovery when applying legacy Windows printer defaults. If the helper does not reply in time, pyToneRIP reads back the settings before flagging the write as unconfirmed.
+- Improved upgrade and uninstall handling, including guidance to close the old app and cleanup of app-owned virtual-printer state.
 
 ## Monochrome printing controls
 
@@ -83,7 +62,7 @@ The USB cancellation sequence is covered by transport tests; physical sheet ejec
 - Use the optional 16-bit processing path for suitable source data. Enabling it cannot recover tonal information missing from an 8-bit source.
 - Prepare large pages with bounded working buffers and buffered USB delivery where the selected transport supports it.
 
-The printer catalog includes desktop Stylus Photo and Expression models, EcoTank printers, Stylus Pro wide-format models and SureColor families. A catalog entry is not a claim that every paper/mode/feed combination has been physically tested. Consult the settings available for the selected model.
+The printer catalog includes desktop Stylus Photo and Expression models, EcoTank and WorkForce printers, Stylus Pro wide-format models and SureColor families. A catalog entry is not a claim that every paper/mode/feed combination has been physically tested. Consult the settings available for the selected model.
 
 ## Soft Proof preview and viewing simulation
 
@@ -113,7 +92,7 @@ Violet printing in wide-format Commercial Edition models is not implemented. Rol
 
 ## Install
 
-1. Run the [pyToneRIP 1.0.0.248 Beta installer](https://github.com/dfoxelf/pyToneRIP/releases/download/v1.0.0.248-beta/pyToneRIP-Setup-1.0.0.248-Beta.exe) on Windows 11 x64 build 26100 or later.
+1. Run the [pyToneRIP 1.0.0.270 Beta installer](https://github.com/dfoxelf/pyToneRIP/releases/download/v1.0.0.270-beta/pyToneRIP-Setup-1.0.0.270-Beta.exe) on Windows 11 x64 build 26100 or later.
 2. Approve the administrator request to trust the package certificate and install the Manager.
 3. Start pyToneRIP, add your printer, and select its paper, physical feed, size, mode and `.quad` curves.
 4. Enable Soft Proof if you want to inspect and approve jobs before transmission, then print through the Windows printer queue from your application.
@@ -123,7 +102,7 @@ The bootstrap EXE is not Authenticode signed. Windows may show a publisher or Sm
 For a package without the bootstrap installer, open PowerShell as Administrator and run:
 
 ```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows_psa\artifacts\pyToneRIP-ModuleSet-1.0.0.248\Install-ModuleSet-Manager.ps1
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows_psa\artifacts\pyToneRIP-ModuleSet-1.0.0.270\Install-ModuleSet-Manager.ps1
 ```
 
 ## Build requirements
@@ -142,8 +121,8 @@ Run PowerShell from the repository root:
 
 ```powershell
 uv sync --locked
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows_psa\Build-ModelPackageSet.ps1 -Version 1.0.0.248
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows_psa\Build-InnoSetup.ps1 -Version 1.0.0.248
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows_psa\Build-ModelPackageSet.ps1 -Version 1.0.0.270
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows_psa\Build-InnoSetup.ps1 -Version 1.0.0.270
 ```
 
 Use a new four-part version for each build. The first script compiles Cython, freezes the Python runtime, builds and signs the Manager MSIX, and checks the result. The second creates `windows_psa/artifacts/pyToneRIP-Setup-<version>-Beta.exe`.

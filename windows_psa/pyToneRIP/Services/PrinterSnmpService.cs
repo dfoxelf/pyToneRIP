@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using pyToneRIP.Models;
+using pyToneRIP.Shared;
 
 namespace pyToneRIP.Services
 {
@@ -23,23 +25,124 @@ namespace pyToneRIP.Services
         // table for network status and Printer-MIB for ink supplies.
         private const string PrinterStatusOid = "1.3.6.1.2.1.25.3.5.1.1";
         private const string EpsonBdcOid = "1.3.6.1.4.1.1248.1.2.2.1.1.1.4";
+        private const string EpsonStatusCommandOid = "1.3.6.1.4.1.1248.1.2.2.44.1.1.2.1.115.116.1.0.1";
         private const string SuppliesPrefix = "1.3.6.1.2.1.43.11.1.1.";
         private const string ColorantValueOid = "1.3.6.1.2.1.43.12.1.1.4.1";
         private static readonly int[] SupplyColumns = { 3, 5, 6, 8, 9 };
         private static readonly int[] EssentialSupplyColumns = { 5, 6, 8, 9 };
         private static int nextRequestId = 100;
 
+        internal static async Task<string> ReadModelNameAsync(string host, CancellationToken cancellation)
+        {
+            const string epsonDeviceId = "1.3.6.1.4.1.1248.1.2.2.1.1.1.1.1";
+            const string deviceDescription = "1.3.6.1.2.1.25.3.2.1.3";
+            var deviceIdCommand = PrinterInformationDecoder.Oid("di");
+            foreach (var version in new[] { 0, 1 })
+            {
+                cancellation.ThrowIfCancellationRequested();
+                var deviceId = QueryAsync(host, version, 0xa0, deviceIdCommand);
+                var legacyId = QueryAsync(host, version, 0xa0, epsonDeviceId);
+                var description = QueryAsync(host, version, 0xa1, deviceDescription);
+                await Task.WhenAll(deviceId, legacyId, description);
+                foreach (var query in new[] { deviceId, legacyId })
+                {
+                    var oid = query == deviceId ? deviceIdCommand : epsonDeviceId;
+                    var data = (await query)?.FirstOrDefault(value => value.Tag == 4 && value.Oid == oid)?.Data;
+                    var model = PrinterInformationDecoder.ReadDeviceIdModel(data);
+                    if (!string.IsNullOrWhiteSpace(model)) return model;
+                }
+                var name = (await description)?.FirstOrDefault(value =>
+                    value.Oid.StartsWith(deviceDescription + ".", StringComparison.Ordinal))?.AsText()?.Trim();
+                if (!string.IsNullOrWhiteSpace(name)) return name;
+            }
+            return null;
+        }
+
+        internal static async Task<PrinterInformationReport> ReadInformationAsync(string host)
+        {
+            if (string.IsNullOrWhiteSpace(host)) throw new ArgumentException("A printer address is required.", nameof(host));
+            var report = new PrinterInformationReport { Source = "SNMP: " + host };
+            var clock = System.Diagnostics.Stopwatch.StartNew();
+            foreach (var query in PrinterInformationDecoder.Queries)
+            {
+                if (clock.ElapsedMilliseconds >= 60000) break;
+                var data = await ReadInformationCommandAsync(host, query);
+                if ((data == null || data.Length == 0) && query == "st")
+                {
+                    foreach (var version in new[] { 0, 1 })
+                    {
+                        var values = await QueryAsync(host, version, 0xa1, EpsonBdcOid);
+                        data = values?.FirstOrDefault(value => value.Tag == 4 &&
+                            value.Oid.StartsWith(EpsonBdcOid + ".", StringComparison.Ordinal))?.Data;
+                        if (data != null && data.Length > 0) break;
+                    }
+                }
+                if (data != null && data.Length > 0) report.Add(query, data);
+                else report.AddFailure(query, null);
+            }
+            var statusReply = report.Replies.FirstOrDefault(reply => reply.Command == "st" && !string.IsNullOrEmpty(reply.Hex));
+            var slots = statusReply == null ? 8 : EpsonBdcStatusParser.ReadInk(
+                PrinterInformationDecoder.Bytes(statusReply.Hex)).Count;
+            if ((statusReply == null || slots == 0) && clock.ElapsedMilliseconds < 60000)
+            {
+                var supplies = await ReadPrinterMibInkAsync(host);
+                if (supplies.Count > 0)
+                    report.Supplies = supplies.Select(ink => new PrinterInformationSupply
+                        { Name = ink.Name, Percent = ink.Percent }).ToList();
+            }
+            for (var slot = 1; slot <= Math.Min(32, Math.Max(1, slots)) && clock.ElapsedMilliseconds < 60000; slot++)
+            {
+                var query = "ii:" + slot.ToString(CultureInfo.InvariantCulture);
+                var data = await ReadInformationCommandAsync(host, query);
+                if (data == null || data.Length == 0) { report.AddFailure(query, null); break; }
+                report.Add(query, data);
+                if (Encoding.ASCII.GetString(data).Contains(":NA;")) break;
+            }
+            var systemOids = new[] { "1.3.6.1.2.1.1.1.0", "1.3.6.1.2.1.1.5.0", "1.3.6.1.2.1.1.3.0" };
+            if (clock.ElapsedMilliseconds < 60000)
+            {
+                var system = await QueryAsync(host, 0, 0xa0, systemOids)
+                    ?? await QueryAsync(host, 1, 0xa0, systemOids);
+                if (system != null)
+                    foreach (var value in system.Where(value => value.Tag == 4 || value.Tag == 0x43))
+                        report.Add(value.Oid, value.Tag == 4 ? value.Data :
+                            Encoding.ASCII.GetBytes("TimeTicks: 0x" + BitConverter.ToString(value.Data).Replace("-", "")));
+            }
+            if (!report.Replies.Any(reply => !string.IsNullOrEmpty(reply.Hex)) &&
+                (report.Supplies == null || report.Supplies.Count == 0))
+                throw new InvalidOperationException("The printer returned no supported information.");
+            return report;
+        }
+
+        private static async Task<byte[]> ReadInformationCommandAsync(string host, string command)
+        {
+            var oid = PrinterInformationDecoder.Oid(command);
+            foreach (var version in new[] { 0, 1 })
+            {
+                var values = await QueryAsync(host, version, 0xa0, oid);
+                var data = values?.FirstOrDefault(value => value.Tag == 4 && value.Oid == oid)?.Data;
+                if (data != null && data.Length > 0) return data;
+            }
+            return null;
+        }
+
         internal static async Task<PrinterReportedState?> ReadReportedStateAsync(string host)
         {
             if (string.IsNullOrWhiteSpace(host)) return null;
+            // ST2 distinguishes physical idle (0x04) from waiting for paper.
+            // Do not replace a reported Epson condition with generic MIB idle.
+            var epsonState = EpsonBdcStatusParser.ReadState(await ReadInformationCommandAsync(host, "st"));
+            if (epsonState == 4) return PrinterReportedState.Idle;
             foreach (var version in new[] { 0, 1 })
             {
                 var values = await QueryAsync(host, version, 0xa1, PrinterStatusOid);
                 var value = values?.FirstOrDefault(item => item.Oid.StartsWith(
                     PrinterStatusOid + ".", StringComparison.Ordinal))?.AsInteger();
+                if (value == (int)PrinterReportedState.Idle && epsonState.HasValue)
+                    return PrinterReportedState.Other;
                 if (value >= 1 && value <= 5) return (PrinterReportedState)value.Value;
             }
-            return null;
+            return epsonState.HasValue ? PrinterReportedState.Other : (PrinterReportedState?)null;
         }
 
         internal static async Task<PrinterNetworkState?> ReadStatusAsync(string host)
@@ -69,6 +172,7 @@ namespace pyToneRIP.Services
             // before walking the generic supplies table to keep one read cheap.
             var epson = await ReadEpsonBdcInkAsync(host);
             if (epson.Count > 0 && epson.Count >= expectedInkCount &&
+                epson.All(ink => ink.Percent >= 0) &&
                 !epson.Any(ink => ink.Name.StartsWith("Ink ",
                     StringComparison.Ordinal))) return epson;
 
@@ -76,13 +180,15 @@ namespace pyToneRIP.Services
             // Prefer the device's own Printer-MIB supply descriptions when its
             // complete supply list is available; keep BDC levels otherwise.
             var supplies = await ReadPrinterMibInkAsync(host);
-            return supplies.Count >= epson.Count && supplies.Count > 0
+            return supplies.Count >= epson.Count && supplies.Count > 0 &&
+                supplies.Count(ink => ink.Percent >= 0) >= epson.Count(ink => ink.Percent >= 0)
                 ? supplies : epson;
         }
 
         private static async Task<IReadOnlyList<PrinterInkLevel>> ReadEpsonBdcInkAsync(
             string host)
         {
+            IReadOnlyList<PrinterInkLevel> best = new List<PrinterInkLevel>();
             foreach (var version in new[] { 0, 1 })
             {
                 var values = await QueryAsync(host, version, 0xa1, EpsonBdcOid);
@@ -91,9 +197,34 @@ namespace pyToneRIP.Services
                         EpsonBdcOid + ".", StringComparison.Ordinal));
                 if (blob == null) continue;
                 var inks = EpsonBdcStatusParser.ReadInk(blob.Data);
-                if (inks.Count > 0) return inks;
+                best = BetterInkReply(best, inks);
+                if (best.Count > 0 && best.All(ink => ink.Percent >= 0 &&
+                    !ink.Name.StartsWith("Ink ", StringComparison.Ordinal))) return best;
             }
-            return new List<PrinterInkLevel>();
+            // EPSON-CTRL st over SNMP GET is supported by models which do not
+            // expose a usable cached EpsonBDC property. This is a status query.
+            foreach (var version in new[] { 0, 1 })
+            {
+                var values = await QueryAsync(host, version, 0xa0, EpsonStatusCommandOid);
+                var blob = values?.FirstOrDefault(value => value.Tag == 0x04 &&
+                    value.Oid == EpsonStatusCommandOid);
+                if (blob == null) continue;
+                var inks = EpsonBdcStatusParser.ReadInk(blob.Data);
+                best = BetterInkReply(best, inks);
+                if (best.Count > 0 && best.All(ink => ink.Percent >= 0 &&
+                    !ink.Name.StartsWith("Ink ", StringComparison.Ordinal))) return best;
+            }
+            return best;
+        }
+
+        private static IReadOnlyList<PrinterInkLevel> BetterInkReply(
+            IReadOnlyList<PrinterInkLevel> current, IReadOnlyList<PrinterInkLevel> candidate)
+        {
+            if (candidate.Count != current.Count) return candidate.Count > current.Count ? candidate : current;
+            var known = candidate.Count(ink => ink.Percent >= 0).CompareTo(current.Count(ink => ink.Percent >= 0));
+            if (known != 0) return known > 0 ? candidate : current;
+            return candidate.Count(ink => !ink.Name.StartsWith("Ink ", StringComparison.Ordinal)) >
+                current.Count(ink => !ink.Name.StartsWith("Ink ", StringComparison.Ordinal)) ? candidate : current;
         }
 
         private static async Task<IReadOnlyList<PrinterInkLevel>> ReadPrinterMibInkAsync(

@@ -1,0 +1,25 @@
+{
+  "backend_family": "epson_escp2_workforcenative",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson WorkForceWF2010W",
+  "model_id": "WorkForceWF2010W",
+  "package_id": "pf--Epson_WorkForceWF2010W",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "7d3ead8a95c574db568960fb70b946244a651e76064ac6626f2c812a54a82843",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "WorkForceNative",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "0306c9eb6b7fb07597ff762e4182adea56f72e2e0aca9e9732fe614d3eb7f8e9",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "f1ffe33df2914b7b1aa5f4b459e429630dbc5a426c1681eb9a6d77b955f51f48",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "SYNTHETIC_PPD: no Epson manufacturer PPD supplied; technical source ReferenceDriver driver D120"
+  ]
+}

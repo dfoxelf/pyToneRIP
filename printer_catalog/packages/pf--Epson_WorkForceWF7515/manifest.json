@@ -1,0 +1,25 @@
+{
+  "backend_family": "epson_escp2_workforcenative",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson WorkForceWF7515",
+  "model_id": "WorkForceWF7515",
+  "package_id": "pf--Epson_WorkForceWF7515",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "fb2d6ce3abdfae52bc44a1a9af6af30a52aba3150896aee191121e5e904faee8",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "WorkForceNative",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "f9f8fc92f0554898a1720945952d9cbaf070be61241f32e6fc2892a662dfeed1",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "300d25106f3eb9364bbefcae2026a84fa37dba8f3f76467693aa829d45894771",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "SYNTHETIC_PPD: no Epson manufacturer PPD supplied; technical source ReferenceDriver driver BX610"
+  ]
+}

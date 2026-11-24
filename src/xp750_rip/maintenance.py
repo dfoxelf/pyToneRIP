@@ -1,7 +1,7 @@
 # Copyright (C) 2026 Alexander Eichhorn
 # SPDX-License-Identifier: GPL-3.0-only
 
-"""Immediate Epson maintenance operations and a small native test page.
+"""Immediate Epson maintenance operations and a profiled A4 tonal test page.
 
 The module is deliberately independent from the ordinary photo job queue.
 Firmware maintenance commands do not use QTR curves, while the test page is
@@ -16,17 +16,9 @@ import json
 from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
 
-from xp750_rip.analysis.native_validation import (
-    validate_escp2_native,
-    validate_xp750_native,
-)
-from xp750_rip.direction import parse_print_direction
 from xp750_rip.escp2 import commands
-from xp750_rip.escp2.backend import EpsonEscp2Backend
 from xp750_rip.printers import default_registry
-from xp750_rip.raster import NamedRasterPlane, PhysicalPathId, PhysicalRasterSet
 from xp750_rip.transport import RawTcpTransport, TransmissionReceipt, Transport
 
 MAINTENANCE_REQUEST_SCHEMA = "pytone-rip.maintenance-request"
@@ -96,134 +88,10 @@ def build_remote_maintenance_stream(action: str) -> bytes:
     )
 
 
-def _packed_step_rows(width: int, bit_depth: int) -> tuple[bytes, ...]:
-    """Create one conservative four-step row for every sample bit plane."""
+def _render_test_page(request: Mapping[str, object], output_dir: Path, *, model=None) -> tuple[bytes, Path]:
+    from xp750_rip.tonal_test_page import render_tonal_test_job
 
-    maximum = (1 << bit_depth) - 1
-    sample_codes = (max(1, maximum // 3), max(1, maximum * 2 // 3), maximum)
-    row_bytes = width // 8
-    segment_bytes = max(1, (row_bytes - 4) // len(sample_codes))
-    rows: list[bytes] = []
-    for bit in range(bit_depth):
-        row = bytearray(row_bytes)
-        for index, sample in enumerate(sample_codes):
-            if sample & (1 << bit):
-                start = 2 + index * segment_bytes
-                end = min(row_bytes - 2, start + segment_bytes)
-                row[start:end] = b"\xff" * (end - start)
-        rows.append(bytes(row))
-    return tuple(rows)
-
-
-def _simple_test_rasters(
-    *,
-    mode: Any,
-    physical_paths: tuple[PhysicalPathId, ...],
-) -> PhysicalRasterSet:
-    """Build a small raw per-path density strip without color conversion.
-
-    This first test page intentionally checks transport, model framing, weave,
-    physical routing and all configured channels. It does not claim to test
-    QTR tone curves; a photographic gradient page belongs to a later module.
-    """
-
-    if not physical_paths:
-        raise ValueError("test page requires at least one active physical path")
-    width = max(64, round(mode.horizontal_dpi * 25.0 / 25.4))
-    width = (width + 7) // 8 * 8
-    height = max(len(physical_paths) * 8, round(mode.vertical_dpi * 20.0 / 25.4))
-    zero = bytes(width // 8)
-    active_rows = _packed_step_rows(width, mode.bit_depth)
-    planes: list[NamedRasterPlane] = []
-    for index, path in enumerate(physical_paths):
-        start = height * index // len(physical_paths)
-        end = height * (index + 1) // len(physical_paths)
-        bit_planes = tuple(
-            tuple(active_rows[bit] if start <= y < end else zero for y in range(height))
-            for bit in range(mode.bit_depth)
-        )
-        planes.append(
-            NamedRasterPlane(
-                identity=path,
-                width_pixels=width,
-                bit_plane_rows=bit_planes,
-            )
-        )
-    return PhysicalRasterSet(tuple(planes))
-
-
-def _mapping(value: object, name: str) -> dict[str, object]:
-    if not isinstance(value, dict):
-        raise TypeError(f"{name} must be a JSON object")
-    return dict(value)
-
-
-def _render_test_page(request: Mapping[str, object], output_dir: Path) -> tuple[bytes, Path]:
-    model = default_registry().get(_text(request["model"], "model"))
-    mode = model.mode(_text(request["mode"], "mode"))
-    medium = model.medium(_text(request["media"], "media"))
-    page = model.page(_text(request["page"], "page"))
-    input_source = model.input_source(_text(request["input_source"], "input_source"))
-
-    logical_values = request.get("logical_inks")
-    if not isinstance(logical_values, list) or not logical_values:
-        raise TypeError("logical_inks must be a non-empty JSON array")
-    logical = tuple(_text(item, "logical_inks[]") for item in logical_values)
-    if len(set(logical)) != len(logical):
-        raise ValueError("logical_inks must be unique")
-    ink_configuration = request.get("ink_configuration")
-    if ink_configuration is not None:
-        ink_configuration = _text(ink_configuration, "ink_configuration")
-    active_logical = model.active_logical_ink_names(logical, ink_configuration)
-
-    routing = _mapping(request.get("routing"), "routing")
-    if set(routing) != set(logical):
-        raise ValueError("routing must map every and only requested logical ink")
-    known_paths = {item.identity for item in model.physical_paths}
-    paths: list[PhysicalPathId] = []
-    for ink in active_logical:
-        path = PhysicalPathId(_text(routing[ink], f"routing.{ink}"))
-        if path not in known_paths:
-            raise ValueError(f"routing.{ink} selects an unknown physical path: {path}")
-        if path not in paths:
-            paths.append(path)
-
-    settings_raw = _mapping(request.get("device_settings", {}), "device_settings")
-    settings: dict[str, str] = {}
-    for setting_id, choice_id in settings_raw.items():
-        setting = _text(setting_id, "device_settings key")
-        choice = _text(choice_id, f"device_settings.{setting}")
-        model.device_setting(setting).choice(choice)
-        settings[setting] = choice
-
-    rasters = _simple_test_rasters(mode=mode, physical_paths=tuple(paths))
-    backend = EpsonEscp2Backend()
-    rendered = backend.render(
-        model=model,
-        mode=mode,
-        medium=medium,
-        page=page,
-        input_source=input_source,
-        rasters=rasters,
-        direction=parse_print_direction(request["direction"]),
-        job_label="PYTONERIP-TEST",
-        allow_unsupported_ppd_combinations=bool(
-            request.get("allow_unsupported_ppd_combinations", False)
-        ),
-        device_settings=settings,
-    )
-    validator = (
-        validate_escp2_native
-        if model.escp2_profile is not None and model.backend_family != backend.family
-        else validate_xp750_native
-    )
-    validation = validator(rendered)
-    if not validation.passed:
-        raise ValueError("generated maintenance test page failed native validation")
-    output_dir.mkdir(parents=True, exist_ok=True)
-    path = output_dir / "last-maintenance-test-page.prn"
-    path.write_bytes(rendered.data)
-    return rendered.data, path
+    return render_tonal_test_job(request, output_dir, model=model)
 
 
 def execute_maintenance_request(
@@ -236,8 +104,10 @@ def execute_maintenance_request(
 
     _exact_keys(
         request,
-        required={"schema", "version", "action", "model", "host", "port"},
+        required={"schema", "version", "action", "model"},
         optional={
+            "host", "port", "connection_kind", "usb_device_id", "configuration_json",
+            "printer_queue", "printer_queue_driver", "exclusive_usb",
             "mode",
             "media",
             "page",
@@ -260,13 +130,41 @@ def execute_maintenance_request(
         model.maintenance_action(action)
     except KeyError as error:
         raise ValueError(f"{model.identity} does not support maintenance action {action}") from error
-    host = _text(request["host"], "host")
-    port = _integer(request["port"], "port")
-    selected_transport = transport or RawTcpTransport(host, port)
+    kind = _text(request.get("connection_kind", "network"), "connection_kind")
+    exclusive_usb = request.get("exclusive_usb", False)
+    if not isinstance(exclusive_usb, bool) or (exclusive_usb and (kind != "usb" or action != "nozzle_check")):
+        raise ValueError("exclusive_usb is only supported for a USB nozzle check")
+    if kind == "usb":
+        from xp750_rip.windows_usb_transport import WindowsUsbInterfaceTransport, _WindowsUsbPrintApi
+
+        device_id = _text(request.get("usb_device_id"), "usb_device_id")
+        if not device_id.casefold().startswith("usbprint\\"):
+            raise ValueError("A USBPRINT device instance is required")
+        if exclusive_usb:
+            selected_transport = transport or WindowsUsbInterfaceTransport(
+                device_id, api_factory=lambda: _WindowsUsbPrintApi(exclusive=True),
+            )
+        else:
+            selected_transport = transport or WindowsUsbInterfaceTransport(device_id)
+    elif kind == "windows_queue":
+        from xp750_rip.windows_printer_transport import WindowsPrinterTransport
+
+        queue = _text(request.get("printer_queue"), "printer_queue")
+        driver = _text(request.get("printer_queue_driver"), "printer_queue_driver")
+        destination = WindowsPrinterTransport(queue, expected_driver=driver)
+        selected_transport = transport or destination
+    elif kind == "network":
+        host = _text(request.get("host"), "host")
+        port = _integer(request.get("port"), "port")
+        if not 1 <= port <= 65535:
+            raise ValueError("maintenance network port is invalid")
+        selected_transport = transport or RawTcpTransport(host, port)
+    else:
+        raise ValueError("maintenance connection kind is invalid")
 
     prn_path: Path | None = None
     if action == "test_page":
-        data, prn_path = _render_test_page(request, output_dir)
+        data, prn_path = _render_test_page(request, output_dir, model=model)
     else:
         data = build_remote_maintenance_stream(action)
     receipt: TransmissionReceipt = selected_transport.send(data)

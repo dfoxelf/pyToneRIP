@@ -61,7 +61,18 @@ if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administra
     $start.Arguments = '-NoLogo -NoProfile -NonInteractive -WindowStyle Hidden -ExecutionPolicy Bypass -File "' +
         $PSCommandPath + '" -ElevatedWorker -UserSid "' + $UserSid + '" -QueueNamesBase64 "' +
         $QueueNamesBase64 + '" -LogPath "' + $LogPath + '"'
-    $worker = [Diagnostics.Process]::Start($start)
+    try {
+        $worker = [Diagnostics.Process]::Start($start)
+    } catch {
+        $nativeError = $_.Exception.GetBaseException()
+        $_ | Out-String | Set-Content -LiteralPath $LogPath -Encoding UTF8
+        if ($nativeError -is [ComponentModel.Win32Exception] -and $nativeError.NativeErrorCode -eq 1223) {
+            Add-Content -LiteralPath $LogPath -Encoding UTF8 -Value 'Windows elevation was cancelled. Confirm the administrator prompt to continue uninstalling pyToneRIP.'
+            # Shared with the Inno Setup uninstall dialog.
+            exit 43
+        }
+        throw
+    }
     try {
         $worker.WaitForExit()
         exit $worker.ExitCode
@@ -77,9 +88,11 @@ function Get-PyToneRipQueue {
     # another user's jobs or manually delete their endpoints.
     if ($sharedInstallation) { return }
     @(Get-Printer -ErrorAction Stop | Where-Object {
-        $_.PortName -match '(?i)^(pytone-rip:|pyToneRIP\.(Manager|PSA|Printer\.[^_]+)_)' -or
-        ($_.Name -like 'pyToneRIP:*' -and
-            ($_.DriverName -eq 'Microsoft Virtual Print Class Driver' -or $_.DriverName -like 'pyToneRIP*'))
+        # An OEM queue can accidentally use our port. Its driver and jobs
+        # still belong to the OEM; a port name alone is not ownership.
+        ($_.DriverName -eq 'Microsoft Virtual Print Class Driver' -or $_.DriverName -like 'pyToneRIP*') -and
+        ($_.PortName -match '(?i)^(pytone-rip:|pyToneRIP\.(Manager|PSA|Printer\.[^_]+)_)' -or
+            $_.Name -like 'pyToneRIP:*' -or $_.Name -in $userQueueNames)
     })
 }
 
@@ -243,8 +256,35 @@ if ($remaining.Count) {
     throw "Windows still holds pyToneRIP queues: $names. Restart Windows before installing another clean copy."
 }
 $cleanup = & $printStateCleanup -Forms $formCleanupPlan
-$registryCleanup = & $registryStateCleanup -QueueNames $ownedQueueNames -UserSid $UserSid
+$protectedQueueNames = @(if (-not $sharedInstallation) { Get-Printer -ErrorAction Stop | ForEach-Object Name })
+$registryCleanup = & $registryStateCleanup -QueueNames $ownedQueueNames -UserSid $UserSid `
+    -ProtectedQueueNames $protectedQueueNames -ClearUnscopedSystemCache:(-not $sharedInstallation)
 Write-Host "Removed print registry cache keys: $($registryCleanup.RemovedRegistryKeys); values: $($registryCleanup.RemovedRegistryValues)."
+
+# The installer imports the bundled signer into the machine TrustedPeople store.
+# Other users and sibling packages from the same publisher may still need it.
+$certificatePath = Join-Path $PSScriptRoot 'pyToneRIP-TestSigning.cer'
+if (-not $sharedInstallation -and (Test-Path -LiteralPath $certificatePath -PathType Leaf)) {
+    $publisherInUse = @(Get-AppxPackage -AllUsers -ErrorAction Stop | Where-Object {
+        $_.PublisherId -eq 'qg4mjaqw0qctt' -and
+        @($_.PackageUserInformation | Where-Object { $_.InstallState -eq 'Installed' }).Count -gt 0
+    }).Count -gt 0
+    if ($publisherInUse) {
+        Write-Host 'Kept the signing certificate because another app from this publisher is installed.'
+    } else {
+        $certificate = [Security.Cryptography.X509Certificates.X509Certificate2]::new($certificatePath)
+        try {
+            if ($certificate.Subject -cne 'CN=pyToneRIP' -or $certificate.Issuer -cne $certificate.Subject) {
+                throw 'Unexpected bundled pyToneRIP signing certificate.'
+            }
+            $certificateStorePath = 'Cert:\LocalMachine\TrustedPeople\' + $certificate.Thumbprint
+            if (Test-Path -LiteralPath $certificateStorePath) {
+                Remove-Item -LiteralPath $certificateStorePath -ErrorAction Stop
+                Write-Host "Removed the bundled pyToneRIP signing certificate: $($certificate.Thumbprint)"
+            }
+        } finally { $certificate.Dispose() }
+    }
+}
 if (Test-Path -LiteralPath $formPlanPath -PathType Leaf) {
     Remove-Item -LiteralPath $formPlanPath -Force
 }

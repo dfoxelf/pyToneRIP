@@ -93,7 +93,7 @@
   <data name="Auto.B388B9C01523.Text"><value>Koko</value></data>
   <data name="Auto.C195019E59CC.Text"><value>Vaalein</value></data>
   <data name="Auto.C681456D80A8.Content"><value>RGB-valitsimet (QTR InkSeparation)</value></data>
-  <data name="Auto.C706B9DFA105.Text"><value>Luo pienen mallikohtaisen PRN:n raakatiheyskaistaleilla jokaiselle määritetylle fyysiselle kanavalle. QTR-käyriä ei tarkoituksella käytetä tässä ensimmäisessä suunnittelutestissä.</value></data>
+  <data name="Auto.C706B9DFA105.Text"><value>Tulosta A4-sävytesti, jossa on liukuvärejä, ympyröitä ja harmaasävyportaita, valituilla käyrillä ja tulostusasetuksilla. Aseta tyhjä A4-arkki.</value></data>
   <data name="Auto.C84252F663BA.Header"><value>Yhteys</value></data>
   <data name="Auto.C8D7FCDF582D.Text"><value>Tulostinliitäntä</value></data>
   <data name="Auto.CC5611F72641.Text"><value>Ei käytössä (suositus): säilyttää tulostussovelluksen ja Windowsin muodostaman sivun. Päällä: skaalaa ja sijoita valmis sivu RIP:iin.</value></data>
@@ -277,7 +277,7 @@
   <data name="Maintenance.head_clean.Title"><value>Puhdista tulostuspää</value></data>
   <data name="Maintenance.nozzle_check.Description"><value>Pyydä tulostimen laiteohjelmistoa tulostamaan alkuperäinen suutinkuvio.</value></data>
   <data name="Maintenance.nozzle_check.Title"><value>Tulostussuuttimen tarkistus</value></data>
-  <data name="Maintenance.test_page.Description"><value>Tulosta pieni raakakuvio kanavakohtaisesti käyttämällä valittuja malliasetuksia.</value></data>
+  <data name="Maintenance.test_page.Description"><value>Tulosta A4-sävytesti, jossa on liukuvärejä, ympyröitä ja harmaasävyportaita, valituilla käyrillä ja tulostusasetuksilla. Aseta tyhjä A4-arkki.</value></data>
   <data name="Maintenance.test_page.Title"><value>Tulosta pyToneRIP-testisivu</value></data>
   <data name="Processing16Bit.Content"><value>16-bittinen käsittely</value></data>
   <data name="Processing16BitExperimental.Text"><value>(kokeellinen tila)</value></data>
@@ -289,6 +289,9 @@
   <data name="MainPage.SendLogs.Content"><value>Luo diagnostiikkaraportti</value></data>
   <data name="Code.SupportReportPrompt"><value>Työpöydän ZIP-tiedosto sisältää pyToneRIPin ja Windowsin tekniset virhetiedot viimeisten 24 tunnin ajalta. Asiakirjojen sisältö, henkilökohtaiset polut ja IP-osoitteet jätetään pois. Sovellus ei lähetä arkistoa.</value></data>
   <data name="Code.SupportReportCreated"><value>ZIP-tiedosto luotiin työpöydälle: {0}</value></data>
+  <data name="Usb.DirectPrint"><value>Tulosta suoraan USB:n kautta</value></data>
+  <data name="Usb.DirectPrintHint"><value>Lähettää työt suoraan USB:llä liitettyyn tulostimeen. Jos Epson-ohjain on asennettu, valitse Windowsin tulostusjono (RAW).</value></data>
+  <data name="Usb.DirectPrintRecommendation"><value>Valitse tämä vaihtoehto, jos virallista Epson-ohjainta ei ole asennettu.</value></data>
   <data name="Usb.Device"><value>Liitetty USB-tulostin</value></data>
   <data name="Usb.Refresh"><value>Päivitä USB-tulostimet</value></data>
   <data name="Usb.Searching"><value>Etsitään USB-tulostimia…</value></data>
@@ -347,6 +350,7 @@
   <data name="PreviewWindow.ProfileMismatch" xml:space="preserve"><value>ICC poikkeaa tallennetuista tulostusolosuhteista.</value></data>
   <data name="PreviewWindow.PhysicalUnavailable" xml:space="preserve"><value>Tulostimen fyysinen tila ei ole saatavilla.</value></data>
   <data name="PreviewWindow.PhysicalUnconfirmed" xml:space="preserve"><value>Laitteen tila ei vahvista tämän työn valmistumista tai arkin ulostuloa.</value></data>
+  <data name="PreviewWindow.PhysicalCancelUnconfirmed" xml:space="preserve"><value>Tulostin ei vahvistanut peruutusta. Yritä uudelleen tai peruuta työ tulostimen ohjauspaneelista.</value></data>
   <data name="PreviewWindow.DeviceOther" xml:space="preserve"><value>Tulostin: muu tila</value></data>
   <data name="PreviewWindow.DeviceUnknown" xml:space="preserve"><value>Tulostin: tuntematon tila</value></data>
   <data name="PreviewWindow.DeviceIdle" xml:space="preserve"><value>Tulostin: vapaa</value></data>
@@ -368,4 +372,60 @@
   <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>Nuoli osoittaa arkin reunan, joka tulostetaan ensimmäisenä.</value></data>
   <data name="PreviewWindow.PhotoCrop" xml:space="preserve"><value>Rajaa vetämällä sivujen keskellä olevia valkoisia kahvoja; palauta vetämällä ulospäin. Kulmakahvat muuttavat kokoa.</value></data>
   <data name="PreviewWindow.PhotoFill" xml:space="preserve"><value>Täytä sivu</value></data>
+  <data name="PrinterInfo.Read.Content" xml:space="preserve"><value>Lue tulostimen tiedot</value></data>
+  <data name="PrinterInfo.Help.Text" xml:space="preserve"><value>Lukee valitun tulostimen USB:n tai verkon kautta ilmoittamat tiedot.</value></data>
+  <data name="PrinterInfo.Title.Text" xml:space="preserve"><value>Tulostimen tiedot</value></data>
+  <data name="PrinterInfo.Empty.Text" xml:space="preserve"><value>Hae laitteen raportti valitsemalla ”Lue tulostimen tiedot”.</value></data>
+  <data name="PrinterInfo.Reading" xml:space="preserve"><value>Luetaan tulostimen tietoja…</value></data>
+  <data name="PrinterInfo.Failed" xml:space="preserve"><value>Tulostimen tietoja ei voitu lukea: {0}</value></data>
+  <data name="PrinterInfo.Busy" xml:space="preserve"><value>Tulostin on käytössä. Odota tulostuksen tai huollon valmistumista.</value></data>
+  <data name="PrinterInfo.Connection" xml:space="preserve"><value>Yhteys</value></data>
+  <data name="PrinterInfo.Identity" xml:space="preserve"><value>Tunnistus</value></data>
+  <data name="PrinterInfo.Status" xml:space="preserve"><value>Tila ja varoitukset</value></data>
+  <data name="PrinterInfo.Inks" xml:space="preserve"><value>Mustetasot</value></data>
+  <data name="PrinterInfo.Details" xml:space="preserve"><value>Lisätiedot</value></data>
+  <data name="PrinterInfo.Raw" xml:space="preserve"><value>Laitteen alkuperäiset vastaukset</value></data>
+  <data name="PrinterInfo.Model" xml:space="preserve"><value>Malli</value></data>
+  <data name="PrinterInfo.Firmware" xml:space="preserve"><value>Laiteohjelmisto</value></data>
+  <data name="PrinterInfo.DeviceId" xml:space="preserve"><value>Laitteen tunnistus</value></data>
+  <data name="PrinterInfo.Cartridges" xml:space="preserve"><value>Kasettityypit</value></data>
+  <data name="PrinterInfo.Cartridge" xml:space="preserve"><value>Kasetti</value></data>
+  <data name="PrinterInfo.Error" xml:space="preserve"><value>Virhe</value></data>
+  <data name="PrinterInfo.Warning" xml:space="preserve"><value>Varoitus</value></data>
+  <data name="PrinterInfo.SerialNumber" xml:space="preserve"><value>Sarjanumero</value></data>
+  <data name="PrinterInfo.State" xml:space="preserve"><value>Tila</value></data>
+  <data name="PrinterInfo.NoData" xml:space="preserve"><value>Ei ilmoitettu</value></data>
+  <data name="PrinterInfo.Field" xml:space="preserve"><value>Kenttä 0x{0}</value></data>
+  <data name="PrinterInfo.MaintenanceBox" xml:space="preserve"><value>Huoltolaatikko</value></data>
+  <data name="PrinterInfo.PaperCounters" xml:space="preserve"><value>Sivulaskurit</value></data>
+  <data name="PrinterInfo.Temperature" xml:space="preserve"><value>Lämpötila</value></data>
+  <data name="PrinterInfo.Interface" xml:space="preserve"><value>Liitännän tila</value></data>
+  <data name="PrinterInfo.Unsupported" xml:space="preserve"><value>Ei tuettu tai ei vastausta</value></data>
+  <data name="PrinterInfo.Source" xml:space="preserve"><value>Lähde</value></data>
+  <data name="MainPage.CancelJob.Content"><value>Peruuta nykyinen tulostustyö</value></data>
+  <data name="MainPage.NoActiveJob" xml:space="preserve"><value>Valitulla tulostimella ei ole aktiivista tulostustyötä.</value></data>
+  <data name="MainPage.CancelJobFailed" xml:space="preserve"><value>Tulostustyön peruuttaminen epäonnistui. Tarkista tulostimen yhteys ja yritä uudelleen.</value></data>
+  <data name="Network.Search"><value>Etsi tulostimia</value></data>
+  <data name="Network.Device"><value>Valitse löydetty tulostin</value></data>
+  <data name="Network.DeviceHint"><value>Luettelossa näkyvät tulostinten mallit ja IP-osoitteet.</value></data>
+  <data name="Network.Searching"><value>Etsitään Epson-tulostimia…</value></data>
+  <data name="Network.None"><value>Paikallisverkosta ei löytynyt Epson-laitteita.</value></data>
+  <data name="Network.Choose"><value>Valitse luettelosta</value></data>
+  <data name="Network.Manual"><value>Määritä käsin</value></data>
+  <data name="Network.UnknownModel"><value>Tulostin ei ilmoittanut malliaan.</value></data>
+  <data name="Network.UnsupportedModel"><value>Mallia ei ole asennetussa tulostinluettelossa.</value></data>
+  <data name="Network.RawUnavailable"><value>Tulostin ei hyväksynyt yhteyttä TCP-portissa 9100.</value></data>
+  <data name="Network.ChooseModel"><value>Valitse vastaava malli luettelosta.</value></data>
+  <data name="Network.SearchFailed"><value>Verkkotulostimien haku epäonnistui.</value></data>
+  <data name="Network.AddressAssigned"><value>Osoite {0} on jo määritetty pyToneRIP-tulostimelle.</value></data>
+  <data name="Network.SearchHint"><value>Etsi Epson-tulostimia paikallisverkostasi.</value></data>
+  <data name="Network.FoundCount"><value>Löydetyt tulostimet: {0}</value></data>
+  <data name="Queue.Title"><value>Windows-jono (RAW)</value></data>
+  <data name="Queue.Recommended"><value>Suositellaan, jos tälle tulostimelle on asennettu Epsonin virallinen ohjain.</value></data>
+  <data name="Queue.RawDriverRequired"><value>Asenna tämän mallin virallinen Epson-ohjain, jotta voit tulostaa pyToneRIPistä Windowsin tulostusjonon (RAW) kautta.</value></data>
+  <data name="Queue.Select"><value>Valitse asennettu Epson-jono</value></data>
+  <data name="Queue.Searching"><value>Etsitään Epson-jonoja Windowsista…</value></data>
+  <data name="Queue.None"><value>Yhteensopivia Epson-jonoja ei löytynyt Windowsista.</value></data>
+  <data name="Queue.SearchFailed"><value>Windowsin tulostusjonoja ei voitu hakea.</value></data>
+  <data name="Queue.Assigned"><value>Windows-jono {0} on jo määritetty pyToneRIP-tulostimelle.</value></data>
 </root>

@@ -93,7 +93,7 @@
   <data name="Auto.B388B9C01523.Text"><value>Dimensiune</value></data>
   <data name="Auto.C195019E59CC.Text"><value>Cel mai luminos</value></data>
   <data name="Auto.C681456D80A8.Content"><value>Selectoare RGB (QTR InkSeparation)</value></data>
-  <data name="Auto.C706B9DFA105.Text"><value>Creează un mic PRN specific modelului cu benzi de densitate brută pentru fiecare canal fizic configurat. Curbele QTR nu sunt utilizate în mod intenționat de acest prim test de inginerie.</value></data>
+  <data name="Auto.C706B9DFA105.Text"><value>Imprimă un test tonal A4 cu degradeuri, cercuri și trepte de gri, folosind curbele și setările selectate. Încărcați o coală A4 goală.</value></data>
   <data name="Auto.C84252F663BA.Header"><value>Conexiune</value></data>
   <data name="Auto.C8D7FCDF582D.Text"><value>Conexiune la imprimantă</value></data>
   <data name="Auto.CC5611F72641.Text"><value>Dezactivat (recomandat): păstrați pagina compusă de aplicația de imprimare și Windows. Activat: în plus, scalați și poziționați pagina finalizată în RIP.</value></data>
@@ -277,7 +277,7 @@
   <data name="Maintenance.head_clean.Title"><value>Curățați capul de imprimare</value></data>
   <data name="Maintenance.nozzle_check.Description"><value>Solicitați firmware-ului imprimantei să-și imprime modelul de duză nativ.</value></data>
   <data name="Maintenance.nozzle_check.Title"><value>Imprimați verificarea duzelor</value></data>
-  <data name="Maintenance.test_page.Description"><value>Imprimați un mic model brut pe canal folosind setările modelului selectat.</value></data>
+  <data name="Maintenance.test_page.Description"><value>Imprimă un test tonal A4 cu degradeuri, cercuri și trepte de gri, folosind curbele și setările selectate. Încărcați o coală A4 goală.</value></data>
   <data name="Maintenance.test_page.Title"><value>Imprimați pagina de test pyToneRIP</value></data>
   <data name="Processing16Bit.Content"><value>Procesare pe 16 biți</value></data>
   <data name="Processing16BitExperimental.Text"><value>(mod experimental)</value></data>
@@ -289,6 +289,9 @@
   <data name="MainPage.SendLogs.Content"><value>Creează raport de diagnostic</value></data>
   <data name="Code.SupportReportPrompt"><value>ZIP-ul de pe desktop conține detalii tehnice despre erorile pyToneRIP și Windows din ultimele 24 de ore. Conținutul documentelor, căile personale și adresele IP sunt excluse. Aplicația nu trimite arhiva.</value></data>
   <data name="Code.SupportReportCreated"><value>Fișier ZIP creat pe desktop: {0}</value></data>
+  <data name="Usb.DirectPrint"><value>Imprimare directă prin USB</value></data>
+  <data name="Usb.DirectPrintHint"><value>Trimite lucrările direct la o imprimantă conectată prin USB. Dacă driverul Epson este instalat, alegeți coada de imprimare Windows (RAW).</value></data>
+  <data name="Usb.DirectPrintRecommendation"><value>Alegeți această opțiune dacă driverul oficial Epson nu este instalat.</value></data>
   <data name="Usb.Device"><value>Imprimantă USB conectată</value></data>
   <data name="Usb.Refresh"><value>Actualizați imprimantele USB</value></data>
   <data name="Usb.Searching"><value>Se caută imprimante USB…</value></data>
@@ -347,6 +350,7 @@
   <data name="PreviewWindow.ProfileMismatch" xml:space="preserve"><value>ICC diferă de condițiile de imprimare salvate.</value></data>
   <data name="PreviewWindow.PhysicalUnavailable" xml:space="preserve"><value>Starea fizică a imprimantei nu este disponibilă.</value></data>
   <data name="PreviewWindow.PhysicalUnconfirmed" xml:space="preserve"><value>Starea dispozitivului nu confirmă terminarea acestei lucrări sau ieșirea foii.</value></data>
+  <data name="PreviewWindow.PhysicalCancelUnconfirmed" xml:space="preserve"><value>Imprimanta nu a confirmat anularea. Încercați din nou sau anulați lucrarea din panoul de control al imprimantei.</value></data>
   <data name="PreviewWindow.DeviceOther" xml:space="preserve"><value>Imprimantă: altă stare</value></data>
   <data name="PreviewWindow.DeviceUnknown" xml:space="preserve"><value>Imprimantă: stare necunoscută</value></data>
   <data name="PreviewWindow.DeviceIdle" xml:space="preserve"><value>Imprimantă: inactivă</value></data>
@@ -368,4 +372,60 @@
   <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>Săgeata indică marginea foii care este imprimată prima.</value></data>
   <data name="PreviewWindow.PhotoCrop" xml:space="preserve"><value>Trageți mânerele albe din mijlocul laturilor pentru decupare; trageți spre exterior pentru restaurare. Mânerele din colțuri schimbă dimensiunea.</value></data>
   <data name="PreviewWindow.PhotoFill" xml:space="preserve"><value>Umple pagina</value></data>
+  <data name="PrinterInfo.Read.Content" xml:space="preserve"><value>Citește informațiile imprimantei</value></data>
+  <data name="PrinterInfo.Help.Text" xml:space="preserve"><value>Citește informațiile raportate de imprimanta selectată prin USB sau rețea.</value></data>
+  <data name="PrinterInfo.Title.Text" xml:space="preserve"><value>Informațiile imprimantei</value></data>
+  <data name="PrinterInfo.Empty.Text" xml:space="preserve"><value>Selectați „Citește informațiile imprimantei” pentru a obține raportul dispozitivului.</value></data>
+  <data name="PrinterInfo.Reading" xml:space="preserve"><value>Se citesc informațiile imprimantei…</value></data>
+  <data name="PrinterInfo.Failed" xml:space="preserve"><value>Nu s-au putut citi informațiile imprimantei: {0}</value></data>
+  <data name="PrinterInfo.Busy" xml:space="preserve"><value>Imprimanta este utilizată. Așteptați finalizarea imprimării sau a întreținerii.</value></data>
+  <data name="PrinterInfo.Connection" xml:space="preserve"><value>Conexiune</value></data>
+  <data name="PrinterInfo.Identity" xml:space="preserve"><value>Identificare</value></data>
+  <data name="PrinterInfo.Status" xml:space="preserve"><value>Stare și avertismente</value></data>
+  <data name="PrinterInfo.Inks" xml:space="preserve"><value>Niveluri de cerneală</value></data>
+  <data name="PrinterInfo.Details" xml:space="preserve"><value>Informații suplimentare</value></data>
+  <data name="PrinterInfo.Raw" xml:space="preserve"><value>Răspunsurile originale ale dispozitivului</value></data>
+  <data name="PrinterInfo.Model" xml:space="preserve"><value>Model</value></data>
+  <data name="PrinterInfo.Firmware" xml:space="preserve"><value>Firmware</value></data>
+  <data name="PrinterInfo.DeviceId" xml:space="preserve"><value>Identificarea dispozitivului</value></data>
+  <data name="PrinterInfo.Cartridges" xml:space="preserve"><value>Tipuri de cartușe</value></data>
+  <data name="PrinterInfo.Cartridge" xml:space="preserve"><value>Cartuș</value></data>
+  <data name="PrinterInfo.Error" xml:space="preserve"><value>Eroare</value></data>
+  <data name="PrinterInfo.Warning" xml:space="preserve"><value>Avertisment</value></data>
+  <data name="PrinterInfo.SerialNumber" xml:space="preserve"><value>Număr de serie</value></data>
+  <data name="PrinterInfo.State" xml:space="preserve"><value>Stare</value></data>
+  <data name="PrinterInfo.NoData" xml:space="preserve"><value>Nu este raportat</value></data>
+  <data name="PrinterInfo.Field" xml:space="preserve"><value>Câmp 0x{0}</value></data>
+  <data name="PrinterInfo.MaintenanceBox" xml:space="preserve"><value>Cutie de întreținere</value></data>
+  <data name="PrinterInfo.PaperCounters" xml:space="preserve"><value>Contoare de pagini</value></data>
+  <data name="PrinterInfo.Temperature" xml:space="preserve"><value>Temperatură</value></data>
+  <data name="PrinterInfo.Interface" xml:space="preserve"><value>Starea interfeței</value></data>
+  <data name="PrinterInfo.Unsupported" xml:space="preserve"><value>Neacceptat sau fără răspuns</value></data>
+  <data name="PrinterInfo.Source" xml:space="preserve"><value>Sursă</value></data>
+  <data name="MainPage.CancelJob.Content"><value>Anulează lucrarea de imprimare curentă</value></data>
+  <data name="MainPage.NoActiveJob" xml:space="preserve"><value>Imprimanta selectată nu are nicio lucrare de imprimare activă.</value></data>
+  <data name="MainPage.CancelJobFailed" xml:space="preserve"><value>Lucrarea nu a putut fi anulată. Verificați conexiunea imprimantei și încercați din nou.</value></data>
+  <data name="Network.Search"><value>Caută imprimante</value></data>
+  <data name="Network.Device"><value>Selectați o imprimantă detectată</value></data>
+  <data name="Network.DeviceHint"><value>Lista afișează modelul și adresa IP a fiecărei imprimante.</value></data>
+  <data name="Network.Searching"><value>Se caută imprimante Epson…</value></data>
+  <data name="Network.None"><value>Nu s-au găsit dispozitive Epson în rețeaua locală.</value></data>
+  <data name="Network.Choose"><value>Alegeți din listă</value></data>
+  <data name="Network.Manual"><value>Configurează manual</value></data>
+  <data name="Network.UnknownModel"><value>Imprimanta nu și-a raportat modelul.</value></data>
+  <data name="Network.UnsupportedModel"><value>Acest model nu apare în catalogul de imprimante instalat.</value></data>
+  <data name="Network.RawUnavailable"><value>Imprimanta nu a acceptat conexiunea pe portul TCP 9100.</value></data>
+  <data name="Network.ChooseModel"><value>Selectați un model corespunzător din catalog.</value></data>
+  <data name="Network.SearchFailed"><value>Căutarea imprimantelor de rețea a eșuat.</value></data>
+  <data name="Network.AddressAssigned"><value>Adresa {0} este deja atribuită unei imprimante pyToneRIP.</value></data>
+  <data name="Network.SearchHint"><value>Căutați imprimante Epson în rețeaua locală.</value></data>
+  <data name="Network.FoundCount"><value>Imprimante găsite: {0}</value></data>
+  <data name="Queue.Title"><value>Coadă Windows (RAW)</value></data>
+  <data name="Queue.Recommended"><value>Recomandat dacă driverul oficial Epson este instalat pentru această imprimantă.</value></data>
+  <data name="Queue.RawDriverRequired"><value>Instalați driverul oficial Epson pentru acest model pentru a imprima din pyToneRIP prin coada Windows (RAW).</value></data>
+  <data name="Queue.Select"><value>Selectați o coadă Epson instalată</value></data>
+  <data name="Queue.Searching"><value>Se caută cozi Epson în Windows…</value></data>
+  <data name="Queue.None"><value>Nu s-au găsit cozi Epson compatibile în Windows.</value></data>
+  <data name="Queue.SearchFailed"><value>Cozile de imprimare Windows nu au putut fi găsite.</value></data>
+  <data name="Queue.Assigned"><value>Coada Windows {0} este deja atribuită unei imprimante pyToneRIP.</value></data>
 </root>

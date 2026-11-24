@@ -1,0 +1,25 @@
+{
+  "backend_family": "epson_escp2_workforcenative",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson WorkForcePro_WF8010",
+  "model_id": "WorkForcePro_WF8010",
+  "package_id": "pf--Epson_WorkForcePro_WF8010",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "40b219b7cd9cdbe9e80b122a03aad4e6412be9d3f35761ca99076e7cea807f12",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "WorkForceNative",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "69e48de5088bb022457e29236740f42b9b5f04baae0219406d840bac5a356a74",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "9f3f3f63efbdad12e1ada149c6a3db49f6c6b768a5ec2ba09c8d13b90067e478",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "SYNTHETIC_PPD: no Epson manufacturer PPD supplied; technical source ReferenceDriver driver WFC5890"
+  ]
+}

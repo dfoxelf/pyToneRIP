@@ -93,7 +93,7 @@
   <data name="Auto.B388B9C01523.Text"><value>Storlek</value></data>
   <data name="Auto.C195019E59CC.Text"><value>Ljusast</value></data>
   <data name="Auto.C681456D80A8.Content"><value>RGB-väljare (QTR InkSeparation)</value></data>
-  <data name="Auto.C706B9DFA105.Text"><value>Skapar en liten modellspecifik PRN med rådensitetsremsor för varje konfigurerad fysisk kanal. QTR-kurvor används avsiktligt inte av detta första tekniska test.</value></data>
+  <data name="Auto.C706B9DFA105.Text"><value>Skriv ut ett A4-tontest med övertoningar, cirklar och gråsteg med valda kurvor och utskriftsinställningar. Lägg i ett tomt A4-ark.</value></data>
   <data name="Auto.C84252F663BA.Header"><value>Förbindelse</value></data>
   <data name="Auto.C8D7FCDF582D.Text"><value>Skrivaranslutning</value></data>
   <data name="Auto.CC5611F72641.Text"><value>Av (rekommenderas): bevara sidan som består av utskriftsprogrammet och Windows. På: skala och placera dessutom den färdiga sidan i RIP.</value></data>
@@ -277,7 +277,7 @@
   <data name="Maintenance.head_clean.Title"><value>Rengör skrivhuvudet</value></data>
   <data name="Maintenance.nozzle_check.Description"><value>Be skrivarens fasta programvara att skriva ut sitt ursprungliga munstycksmönster.</value></data>
   <data name="Maintenance.nozzle_check.Title"><value>Skriv ut munstyckeskontroll</value></data>
-  <data name="Maintenance.test_page.Description"><value>Skriv ut ett litet råmönster per kanal med de valda modellinställningarna.</value></data>
+  <data name="Maintenance.test_page.Description"><value>Skriv ut ett A4-tontest med övertoningar, cirklar och gråsteg med valda kurvor och utskriftsinställningar. Lägg i ett tomt A4-ark.</value></data>
   <data name="Maintenance.test_page.Title"><value>Skriv ut pyToneRIP-testsida</value></data>
   <data name="Processing16Bit.Content"><value>16-bitars bearbetning</value></data>
   <data name="Processing16BitExperimental.Text"><value>(experimentellt läge)</value></data>
@@ -289,6 +289,9 @@
   <data name="MainPage.SendLogs.Content"><value>Skapa diagnostikrapport</value></data>
   <data name="Code.SupportReportPrompt"><value>ZIP-filen på skrivbordet innehåller tekniska feluppgifter från pyToneRIP och Windows från de senaste 24 timmarna. Dokumentinnehåll, personliga sökvägar och IP-adresser tas inte med. Appen skickar inte arkivet.</value></data>
   <data name="Code.SupportReportCreated"><value>ZIP-filen skapades på skrivbordet: {0}</value></data>
+  <data name="Usb.DirectPrint"><value>Skriv ut direkt via USB</value></data>
+  <data name="Usb.DirectPrintHint"><value>Skickar jobb direkt till en skrivare som är ansluten via USB. Välj Windows utskriftskö (RAW) om Epson-drivrutinen är installerad.</value></data>
+  <data name="Usb.DirectPrintRecommendation"><value>Välj det här alternativet om den officiella Epson-drivrutinen inte är installerad.</value></data>
   <data name="Usb.Device"><value>Ansluten USB-skrivare</value></data>
   <data name="Usb.Refresh"><value>Uppdatera USB-skrivare</value></data>
   <data name="Usb.Searching"><value>Söker efter USB-skrivare…</value></data>
@@ -347,6 +350,7 @@
   <data name="PreviewWindow.ProfileMismatch" xml:space="preserve"><value>ICC skiljer sig från de sparade utskriftsvillkoren.</value></data>
   <data name="PreviewWindow.PhysicalUnavailable" xml:space="preserve"><value>Skrivarens fysiska status är inte tillgänglig.</value></data>
   <data name="PreviewWindow.PhysicalUnconfirmed" xml:space="preserve"><value>Enhetens status bekräftar inte att detta jobb är klart eller att arket har matats ut.</value></data>
+  <data name="PreviewWindow.PhysicalCancelUnconfirmed" xml:space="preserve"><value>Skrivaren bekräftade inte att jobbet avbröts. Försök igen eller avbryt jobbet på skrivarens kontrollpanel.</value></data>
   <data name="PreviewWindow.DeviceOther" xml:space="preserve"><value>Skrivare: annat tillstånd</value></data>
   <data name="PreviewWindow.DeviceUnknown" xml:space="preserve"><value>Skrivare: okänt tillstånd</value></data>
   <data name="PreviewWindow.DeviceIdle" xml:space="preserve"><value>Skrivare: inaktiv</value></data>
@@ -368,4 +372,60 @@
   <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>Pilen markerar den kant av arket som skrivs ut först.</value></data>
   <data name="PreviewWindow.PhotoCrop" xml:space="preserve"><value>Dra de vita handtagen mitt på sidorna för att beskära; dra utåt för att återställa. Hörnhandtagen ändrar storleken.</value></data>
   <data name="PreviewWindow.PhotoFill" xml:space="preserve"><value>Fyll sidan</value></data>
+  <data name="PrinterInfo.Read.Content" xml:space="preserve"><value>Läs skrivarinformation</value></data>
+  <data name="PrinterInfo.Help.Text" xml:space="preserve"><value>Läser informationen som den valda skrivaren rapporterar via USB eller nätverket.</value></data>
+  <data name="PrinterInfo.Title.Text" xml:space="preserve"><value>Skrivarinformation</value></data>
+  <data name="PrinterInfo.Empty.Text" xml:space="preserve"><value>Välj ”Läs skrivarinformation” för att hämta enhetsrapporten.</value></data>
+  <data name="PrinterInfo.Reading" xml:space="preserve"><value>Läser skrivarinformation…</value></data>
+  <data name="PrinterInfo.Failed" xml:space="preserve"><value>Det gick inte att läsa skrivarinformation: {0}</value></data>
+  <data name="PrinterInfo.Busy" xml:space="preserve"><value>Skrivaren används. Vänta tills utskriften eller underhållet är klart.</value></data>
+  <data name="PrinterInfo.Connection" xml:space="preserve"><value>Anslutning</value></data>
+  <data name="PrinterInfo.Identity" xml:space="preserve"><value>Identifiering</value></data>
+  <data name="PrinterInfo.Status" xml:space="preserve"><value>Status och varningar</value></data>
+  <data name="PrinterInfo.Inks" xml:space="preserve"><value>Bläcknivåer</value></data>
+  <data name="PrinterInfo.Details" xml:space="preserve"><value>Ytterligare information</value></data>
+  <data name="PrinterInfo.Raw" xml:space="preserve"><value>Enhetens ursprungliga svar</value></data>
+  <data name="PrinterInfo.Model" xml:space="preserve"><value>Modell</value></data>
+  <data name="PrinterInfo.Firmware" xml:space="preserve"><value>Inbyggd programvara</value></data>
+  <data name="PrinterInfo.DeviceId" xml:space="preserve"><value>Enhetsidentifiering</value></data>
+  <data name="PrinterInfo.Cartridges" xml:space="preserve"><value>Patrontyper</value></data>
+  <data name="PrinterInfo.Cartridge" xml:space="preserve"><value>Patron</value></data>
+  <data name="PrinterInfo.Error" xml:space="preserve"><value>Fel</value></data>
+  <data name="PrinterInfo.Warning" xml:space="preserve"><value>Varning</value></data>
+  <data name="PrinterInfo.SerialNumber" xml:space="preserve"><value>Serienummer</value></data>
+  <data name="PrinterInfo.State" xml:space="preserve"><value>Status</value></data>
+  <data name="PrinterInfo.NoData" xml:space="preserve"><value>Rapporteras inte</value></data>
+  <data name="PrinterInfo.Field" xml:space="preserve"><value>Fält 0x{0}</value></data>
+  <data name="PrinterInfo.MaintenanceBox" xml:space="preserve"><value>Underhållsbehållare</value></data>
+  <data name="PrinterInfo.PaperCounters" xml:space="preserve"><value>Sidräknare</value></data>
+  <data name="PrinterInfo.Temperature" xml:space="preserve"><value>Temperatur</value></data>
+  <data name="PrinterInfo.Interface" xml:space="preserve"><value>Gränssnittsstatus</value></data>
+  <data name="PrinterInfo.Unsupported" xml:space="preserve"><value>Stöds inte eller inget svar</value></data>
+  <data name="PrinterInfo.Source" xml:space="preserve"><value>Källa</value></data>
+  <data name="MainPage.CancelJob.Content"><value>Avbryt det aktuella utskriftsjobbet</value></data>
+  <data name="MainPage.NoActiveJob" xml:space="preserve"><value>Den valda skrivaren har inget aktivt utskriftsjobb.</value></data>
+  <data name="MainPage.CancelJobFailed" xml:space="preserve"><value>Det gick inte att avbryta jobbet. Kontrollera anslutningen till skrivaren och försök igen.</value></data>
+  <data name="Network.Search"><value>Sök efter skrivare</value></data>
+  <data name="Network.Device"><value>Välj en hittad skrivare</value></data>
+  <data name="Network.DeviceHint"><value>Listan visar varje skrivares modell och IP-adress.</value></data>
+  <data name="Network.Searching"><value>Söker efter Epson-skrivare…</value></data>
+  <data name="Network.None"><value>Inga Epson-enheter hittades i det lokala nätverket.</value></data>
+  <data name="Network.Choose"><value>Välj i listan</value></data>
+  <data name="Network.Manual"><value>Konfigurera manuellt</value></data>
+  <data name="Network.UnknownModel"><value>Skrivaren rapporterade inte sin modell.</value></data>
+  <data name="Network.UnsupportedModel"><value>Modellen finns inte i den installerade skrivarkatalogen.</value></data>
+  <data name="Network.RawUnavailable"><value>Skrivaren accepterade inte en anslutning på TCP-port 9100.</value></data>
+  <data name="Network.ChooseModel"><value>Välj en matchande modell i katalogen.</value></data>
+  <data name="Network.SearchFailed"><value>Sökningen efter nätverksskrivare misslyckades.</value></data>
+  <data name="Network.AddressAssigned"><value>Adressen {0} har redan tilldelats en pyToneRIP-skrivare.</value></data>
+  <data name="Network.SearchHint"><value>Sök efter Epson-skrivare i ditt lokala nätverk.</value></data>
+  <data name="Network.FoundCount"><value>Hittade skrivare: {0}</value></data>
+  <data name="Queue.Title"><value>Windows-kö (RAW)</value></data>
+  <data name="Queue.Recommended"><value>Rekommenderas om den officiella Epson-drivrutinen är installerad för skrivaren.</value></data>
+  <data name="Queue.RawDriverRequired"><value>Installera den officiella Epson-drivrutinen för den här modellen för att skriva ut från pyToneRIP via Windows-skrivarkön (RAW).</value></data>
+  <data name="Queue.Select"><value>Välj en installerad Epson-kö</value></data>
+  <data name="Queue.Searching"><value>Söker efter Epson-köer i Windows…</value></data>
+  <data name="Queue.None"><value>Inga kompatibla Epson-köer hittades i Windows.</value></data>
+  <data name="Queue.SearchFailed"><value>Det gick inte att hitta Windows skrivarköer.</value></data>
+  <data name="Queue.Assigned"><value>Windows-kön {0} har redan tilldelats en pyToneRIP-skrivare.</value></data>
 </root>

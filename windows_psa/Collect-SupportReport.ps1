@@ -1037,12 +1037,33 @@ function Add-ReportText($archive, $included, [string]$name, [string]$value) {
     $included.Add($name)
 }
 
+function Get-SupportJobRoots {
+    # Discover the app's publisher cache without requiring a running Manager.
+    # Include LocalState for older installations that used package-local storage.
+    $candidates = [Collections.Generic.List[string]]::new()
+    if (-not [string]::IsNullOrWhiteSpace($LocalStatePath)) { $candidates.Add($LocalStatePath) }
+    $publishers = Join-Path $env:LOCALAPPDATA 'Publishers'
+    if ([IO.Directory]::Exists($publishers)) {
+        foreach ($publisher in @(Get-ChildItem -LiteralPath $publishers -Directory -ErrorAction SilentlyContinue |
+                Where-Object { -not ($_.Attributes -band [IO.FileAttributes]::ReparsePoint) })) {
+            $candidates.Add((Join-Path $publisher.FullName 'pyToneRIP.Shared'))
+        }
+    }
+    foreach ($root in @($candidates | Select-Object -Unique)) {
+        $jobs = Join-Path $root 'jobs'
+        if (-not [IO.Directory]::Exists($root) -or -not [IO.Directory]::Exists($jobs)) { continue }
+        if (((Get-Item -LiteralPath $root).Attributes -band [IO.FileAttributes]::ReparsePoint) -or
+            ((Get-Item -LiteralPath $jobs).Attributes -band [IO.FileAttributes]::ReparsePoint)) { continue }
+        $jobs
+    }
+}
+
 function Get-UsbStreamingSummary {
     $lines = [System.Collections.Generic.List[string]]::new()
     $lines.Add('USB transport counters only; no document contents, job names or device identifiers.')
     $lines.Add('At most 100 recent job folders are inspected. Queue empty time is host-side waiting, not measured print-head stopping.')
-    $jobs = Join-ExistingRoot $LocalStatePath 'jobs'
-    if ([string]::IsNullOrWhiteSpace($jobs) -or -not [System.IO.Directory]::Exists($jobs)) {
+    $jobRoots = @(Get-SupportJobRoots)
+    if ($jobRoots.Count -eq 0) {
         $lines.Add('USB streaming counters are not present.')
         return ($lines -join "`r`n")
     }
@@ -1051,7 +1072,7 @@ function Get-UsbStreamingSummary {
         'queue_empty_waits','queue_empty_seconds','native_write_calls','native_write_seconds',
         'max_native_write_seconds','native_cancel_requests','elapsed_seconds')
     $count = 0
-    foreach ($folder in @(Get-ChildItem -LiteralPath $jobs -Directory -ErrorAction SilentlyContinue |
+    foreach ($folder in @(Get-ChildItem -LiteralPath $jobRoots -Directory -ErrorAction SilentlyContinue |
         Where-Object { -not ($_.Attributes -band [System.IO.FileAttributes]::ReparsePoint) } |
         Sort-Object LastWriteTimeUtc -Descending | Select-Object -First 100)) {
         $path = Join-Path $folder.FullName 'usb-streaming.json'
@@ -1190,6 +1211,55 @@ function Add-PsaPackageDiagnostics($archive, $included, $printers) {
             $files = @()
             $manifest = Join-Path $root 'AppxManifest.xml'
             if (Test-Path -LiteralPath $manifest -PathType Leaf) { $files += Get-Item -LiteralPath $manifest }
+            $manifestResources = @()
+            if (Test-Path -LiteralPath $manifest -PathType Leaf) {
+                try {
+                    $settings = [Xml.XmlReaderSettings]::new()
+                    $settings.DtdProcessing = [Xml.DtdProcessing]::Prohibit
+                    $settings.XmlResolver = $null
+                    $reader = [Xml.XmlReader]::Create($manifest, $settings)
+                    $document = [Xml.XmlDocument]::new()
+                    $document.XmlResolver = $null
+                    try { $document.Load($reader) } finally { $reader.Dispose() }
+                    foreach ($node in @($document.SelectNodes("//*[local-name()='PrintSupportVirtualPrinter']"))) {
+                        foreach ($attribute in @('PdcFile','PdrFile')) {
+                            $relative = $node.GetAttribute($attribute)
+                            if ([string]::IsNullOrWhiteSpace($relative)) { continue }
+                            $path = [IO.Path]::GetFullPath((Join-Path $root $relative))
+                            if (-not $path.StartsWith($root + '\', [StringComparison]::OrdinalIgnoreCase) -or
+                                $relative -notmatch '^[A-Za-z0-9_./\\-]+\.(pdc|pdr)\.xml$') {
+                                [void]$text.AppendLine("Package $packageNumber; manifestReference=$attribute; rejected: invalid package resource path")
+                                continue
+                            }
+                            $relative = $path.Substring($root.Length + 1).Replace('\','/')
+                            $present = Test-Path -LiteralPath $path -PathType Leaf
+                            [void]$text.AppendLine("Package $packageNumber; manifestReference=$attribute; asset=$relative; present=$present")
+                            if ($present) {
+                                $manifestResources += $path
+                                $files += Get-Item -LiteralPath $path
+                            }
+                        }
+                    }
+                    # Identify the installed implementation without putting executables in the ZIP.
+                    $binaries = @(Get-ChildItem -LiteralPath $root -File | Where-Object {
+                        $_.Name -match '^pyToneRIP.*\.(exe|dll|winmd)$'
+                    } | Sort-Object Name | Select-Object -First 32)
+                    foreach ($binary in $binaries) {
+                        if ($binary.Length -gt 128MB) {
+                            [void]$text.AppendLine("Package $packageNumber; binary=$($binary.Name); skipped: diagnostic size limit")
+                            continue
+                        }
+                        try {
+                            $hash = [Security.Cryptography.SHA256]::Create()
+                            $inputStream = [IO.File]::OpenRead($binary.FullName)
+                            try { $digest = [BitConverter]::ToString($hash.ComputeHash($inputStream)).Replace('-','') }
+                            finally { $inputStream.Dispose(); $hash.Dispose() }
+                            $version = [Diagnostics.FileVersionInfo]::GetVersionInfo($binary.FullName)
+                            [void]$text.AppendLine("Package $packageNumber; binary=$($binary.Name); bytes=$($binary.Length); fileVersion=$($version.FileVersion); productVersion=$($version.ProductVersion); sha256=$digest")
+                        } catch { [void]$text.AppendLine((Format-ProbeError $_)) }
+                    }
+                } catch { [void]$text.AppendLine((Format-ProbeError $_)) }
+            }
             $assets = Join-Path $root 'Assets'
             if (Test-Path -LiteralPath $assets -PathType Container) {
                 $files += @(Get-ChildItem -LiteralPath $assets -File -Recurse -ErrorAction Stop | Where-Object {
@@ -1200,7 +1270,9 @@ function Add-PsaPackageDiagnostics($archive, $included, $printers) {
                 })
             }
             $total = 0
-            foreach ($fileInfo in @($files | Sort-Object FullName | Select-Object -First 256)) {
+            foreach ($fileInfo in @($files | Sort-Object FullName -Unique |
+                    Sort-Object @{Expression={ if ($_.FullName -in $manifestResources) { 0 } else { 1 } }},FullName |
+                    Select-Object -First 256)) {
                 try {
                     $path = [IO.Path]::GetFullPath($fileInfo.FullName)
                     if (-not $path.StartsWith($root + '\', [StringComparison]::OrdinalIgnoreCase)) { throw 'Package asset outside installed package root' }

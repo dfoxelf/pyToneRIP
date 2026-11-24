@@ -140,7 +140,7 @@ namespace pyToneRIP.Tasks.Services
 
                 if (File.Exists(Path.Combine(jobFolder.Path, "cancel.requested")))
                     throw new OperationCanceledException(
-                        "Windows print job was canceled while waiting for its printer.");
+                        "Windows print job cancellation requested; the printer may still be stopping.");
 
                 // If no runtime process is visible shortly after the AppService
                 // failure, this was not the recoverable 90-second disconnect.

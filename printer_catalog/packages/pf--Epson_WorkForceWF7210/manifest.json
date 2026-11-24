@@ -1,0 +1,25 @@
+{
+  "backend_family": "unsupported_escpr_rgb",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTATION_REQUIRES_PROTOCOL_PROFILE",
+  "display_name": "Epson WorkForceWF7210",
+  "model_id": "WorkForceWF7210",
+  "package_id": "pf--Epson_WorkForceWF7210",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "b71c61c1def471e6da28da06555b6a853c479e72dbbf590298298303d2c7c2a8",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escpr-rgb",
+  "protocol_family": "escpr",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "d57c2048dd19c87f163f1e09dd7c7a8461ab406e75a9e6b5b0608a223a9ff8de",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "7647566c63a0c3436bf7ea9d45bd99823da1336bb6f39281de146469b20d1ecc",
+  "version": 1,
+  "visible": false,
+  "warnings": [
+    "SYNTHETIC_PPD: no Epson manufacturer PPD supplied; technical source ReferenceDriver driver WF100"
+  ]
+}

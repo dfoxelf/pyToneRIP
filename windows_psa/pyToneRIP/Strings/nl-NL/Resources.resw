@@ -93,7 +93,7 @@
   <data name="Auto.B388B9C01523.Text"><value>Maat</value></data>
   <data name="Auto.C195019E59CC.Text"><value>Lichtste</value></data>
   <data name="Auto.C681456D80A8.Content"><value>RGB-selectors (QTR InkSeparation)</value></data>
-  <data name="Auto.C706B9DFA105.Text"><value>Creëert een kleine modelspecifieke PRN met ruwe dichtheidsstrips voor elk geconfigureerd fysiek kanaal. QTR-curven worden opzettelijk niet gebruikt bij deze eerste technische test.</value></data>
+  <data name="Auto.C706B9DFA105.Text"><value>Druk een A4-toontest af met verlopen, cirkels en grijsstappen met de geselecteerde curven en afdrukinstellingen. Plaats een leeg A4-vel.</value></data>
   <data name="Auto.C84252F663BA.Header"><value>Verbinding</value></data>
   <data name="Auto.C8D7FCDF582D.Text"><value>Printeraansluiting</value></data>
   <data name="Auto.CC5611F72641.Text"><value>Uit (aanbevolen): behoud de pagina die is samengesteld door de afdruktoepassing en Windows. Aan: de voltooide pagina bovendien schalen en positioneren in de RIP.</value></data>
@@ -277,7 +277,7 @@
   <data name="Maintenance.head_clean.Title"><value>Printkop reinigen</value></data>
   <data name="Maintenance.nozzle_check.Description"><value>Vraag de printerfirmware om het oorspronkelijke spuitmondpatroon af te drukken.</value></data>
   <data name="Maintenance.nozzle_check.Title"><value>Controle van de spuitopeningen</value></data>
-  <data name="Maintenance.test_page.Description"><value>Druk een klein onbewerkt patroon per kanaal af met behulp van de geselecteerde modelinstellingen.</value></data>
+  <data name="Maintenance.test_page.Description"><value>Druk een A4-toontest af met verlopen, cirkels en grijsstappen met de geselecteerde curven en afdrukinstellingen. Plaats een leeg A4-vel.</value></data>
   <data name="Maintenance.test_page.Title"><value>Druk de pyToneRIP-testpagina af</value></data>
   <data name="Processing16Bit.Content"><value>16-bitsverwerking</value></data>
   <data name="Processing16BitExperimental.Text"><value>(experimentele modus)</value></data>
@@ -289,6 +289,9 @@
   <data name="MainPage.SendLogs.Content"><value>Diagnoserapport maken</value></data>
   <data name="Code.SupportReportPrompt"><value>Het ZIP-bestand op het bureaublad bevat technische foutgegevens van pyToneRIP en Windows van de afgelopen 24 uur. Documentinhoud, persoonlijke paden en IP-adressen worden niet opgenomen. De app verzendt het archief niet.</value></data>
   <data name="Code.SupportReportCreated"><value>ZIP-bestand gemaakt op het bureaublad: {0}</value></data>
+  <data name="Usb.DirectPrint"><value>Direct afdrukken via USB</value></data>
+  <data name="Usb.DirectPrintHint"><value>Stuurt taken rechtstreeks naar een printer die via USB is aangesloten. Kies de Windows-afdrukwachtrij (RAW) als het Epson-stuurprogramma is geïnstalleerd.</value></data>
+  <data name="Usb.DirectPrintRecommendation"><value>Kies deze optie als het officiële Epson-stuurprogramma niet is geïnstalleerd.</value></data>
   <data name="Usb.Device"><value>Aangesloten USB-printer</value></data>
   <data name="Usb.Refresh"><value>USB-printers vernieuwen</value></data>
   <data name="Usb.Searching"><value>USB-printers zoeken…</value></data>
@@ -347,6 +350,7 @@
   <data name="PreviewWindow.ProfileMismatch" xml:space="preserve"><value>ICC wijkt af van de opgeslagen afdrukomstandigheden.</value></data>
   <data name="PreviewWindow.PhysicalUnavailable" xml:space="preserve"><value>Fysieke printerstatus niet beschikbaar.</value></data>
   <data name="PreviewWindow.PhysicalUnconfirmed" xml:space="preserve"><value>De apparaatstatus bevestigt niet dat deze taak of de papieruitvoer voltooid is.</value></data>
+  <data name="PreviewWindow.PhysicalCancelUnconfirmed" xml:space="preserve"><value>De printer heeft de annulering niet bevestigd. Probeer het opnieuw of annuleer de taak via het bedieningspaneel van de printer.</value></data>
   <data name="PreviewWindow.DeviceOther" xml:space="preserve"><value>Printer: andere status</value></data>
   <data name="PreviewWindow.DeviceUnknown" xml:space="preserve"><value>Printer: onbekend</value></data>
   <data name="PreviewWindow.DeviceIdle" xml:space="preserve"><value>Printer: inactief</value></data>
@@ -368,4 +372,60 @@
   <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>De pijl markeert de rand van het vel die als eerste wordt bedrukt.</value></data>
   <data name="PreviewWindow.PhotoCrop" xml:space="preserve"><value>Sleep de witte grepen in het midden van de zijkanten om bij te snijden; sleep naar buiten om te herstellen. Hoekgrepen wijzigen de grootte.</value></data>
   <data name="PreviewWindow.PhotoFill" xml:space="preserve"><value>Pagina vullen</value></data>
+  <data name="PrinterInfo.Read.Content" xml:space="preserve"><value>Printerinformatie uitlezen</value></data>
+  <data name="PrinterInfo.Help.Text" xml:space="preserve"><value>Leest de informatie die de geselecteerde printer via USB of het netwerk doorgeeft.</value></data>
+  <data name="PrinterInfo.Title.Text" xml:space="preserve"><value>Printerinformatie</value></data>
+  <data name="PrinterInfo.Empty.Text" xml:space="preserve"><value>Selecteer ‘Printerinformatie uitlezen’ om het apparaatrapport op te halen.</value></data>
+  <data name="PrinterInfo.Reading" xml:space="preserve"><value>Printerinformatie wordt gelezen…</value></data>
+  <data name="PrinterInfo.Failed" xml:space="preserve"><value>Kan printerinformatie niet lezen: {0}</value></data>
+  <data name="PrinterInfo.Busy" xml:space="preserve"><value>De printer is in gebruik. Wacht totdat het afdrukken of onderhoud is voltooid.</value></data>
+  <data name="PrinterInfo.Connection" xml:space="preserve"><value>Verbinding</value></data>
+  <data name="PrinterInfo.Identity" xml:space="preserve"><value>Identificatie</value></data>
+  <data name="PrinterInfo.Status" xml:space="preserve"><value>Status en waarschuwingen</value></data>
+  <data name="PrinterInfo.Inks" xml:space="preserve"><value>Inktniveaus</value></data>
+  <data name="PrinterInfo.Details" xml:space="preserve"><value>Aanvullende informatie</value></data>
+  <data name="PrinterInfo.Raw" xml:space="preserve"><value>Oorspronkelijke apparaatantwoorden</value></data>
+  <data name="PrinterInfo.Model" xml:space="preserve"><value>Model</value></data>
+  <data name="PrinterInfo.Firmware" xml:space="preserve"><value>Firmware</value></data>
+  <data name="PrinterInfo.DeviceId" xml:space="preserve"><value>Apparaatidentificatie</value></data>
+  <data name="PrinterInfo.Cartridges" xml:space="preserve"><value>Cartridgetypen</value></data>
+  <data name="PrinterInfo.Cartridge" xml:space="preserve"><value>Cartridge</value></data>
+  <data name="PrinterInfo.Error" xml:space="preserve"><value>Fout</value></data>
+  <data name="PrinterInfo.Warning" xml:space="preserve"><value>Waarschuwing</value></data>
+  <data name="PrinterInfo.SerialNumber" xml:space="preserve"><value>Serienummer</value></data>
+  <data name="PrinterInfo.State" xml:space="preserve"><value>Status</value></data>
+  <data name="PrinterInfo.NoData" xml:space="preserve"><value>Niet gemeld</value></data>
+  <data name="PrinterInfo.Field" xml:space="preserve"><value>Veld 0x{0}</value></data>
+  <data name="PrinterInfo.MaintenanceBox" xml:space="preserve"><value>Onderhoudscassette</value></data>
+  <data name="PrinterInfo.PaperCounters" xml:space="preserve"><value>Paginatellers</value></data>
+  <data name="PrinterInfo.Temperature" xml:space="preserve"><value>Temperatuur</value></data>
+  <data name="PrinterInfo.Interface" xml:space="preserve"><value>Interfacestatus</value></data>
+  <data name="PrinterInfo.Unsupported" xml:space="preserve"><value>Niet ondersteund of geen antwoord</value></data>
+  <data name="PrinterInfo.Source" xml:space="preserve"><value>Bron</value></data>
+  <data name="MainPage.CancelJob.Content"><value>Huidige afdruktaak annuleren</value></data>
+  <data name="MainPage.NoActiveJob" xml:space="preserve"><value>De geselecteerde printer heeft geen actieve afdruktaak.</value></data>
+  <data name="MainPage.CancelJobFailed" xml:space="preserve"><value>De taak kon niet worden geannuleerd. Controleer de verbinding met de printer en probeer het opnieuw.</value></data>
+  <data name="Network.Search"><value>Printers zoeken</value></data>
+  <data name="Network.Device"><value>Selecteer een gevonden printer</value></data>
+  <data name="Network.DeviceHint"><value>De lijst toont het model en IP-adres van elke printer.</value></data>
+  <data name="Network.Searching"><value>Zoeken naar Epson-printers…</value></data>
+  <data name="Network.None"><value>Geen Epson-apparaten gevonden op het lokale netwerk.</value></data>
+  <data name="Network.Choose"><value>Kies uit de lijst</value></data>
+  <data name="Network.Manual"><value>Handmatig instellen</value></data>
+  <data name="Network.UnknownModel"><value>De printer heeft zijn model niet doorgegeven.</value></data>
+  <data name="Network.UnsupportedModel"><value>Dit model staat niet in de geïnstalleerde printercatalogus.</value></data>
+  <data name="Network.RawUnavailable"><value>De printer accepteerde geen verbinding op TCP-poort 9100.</value></data>
+  <data name="Network.ChooseModel"><value>Selecteer een passend model uit de catalogus.</value></data>
+  <data name="Network.SearchFailed"><value>Zoeken naar netwerkprinters is mislukt.</value></data>
+  <data name="Network.AddressAssigned"><value>Adres {0} is al toegewezen aan een pyToneRIP-printer.</value></data>
+  <data name="Network.SearchHint"><value>Zoek naar Epson-printers op uw lokale netwerk.</value></data>
+  <data name="Network.FoundCount"><value>Gevonden printers: {0}</value></data>
+  <data name="Queue.Title"><value>Windows-wachtrij (RAW)</value></data>
+  <data name="Queue.Recommended"><value>Aanbevolen als voor deze printer het officiële Epson-stuurprogramma is geïnstalleerd.</value></data>
+  <data name="Queue.RawDriverRequired"><value>Installeer het officiële Epson-stuurprogramma voor dit model om vanuit pyToneRIP via de Windows-wachtrij (RAW) af te drukken.</value></data>
+  <data name="Queue.Select"><value>Selecteer een geïnstalleerde Epson-wachtrij</value></data>
+  <data name="Queue.Searching"><value>Zoeken naar Epson-wachtrijen in Windows…</value></data>
+  <data name="Queue.None"><value>Geen compatibele Epson-wachtrijen gevonden in Windows.</value></data>
+  <data name="Queue.SearchFailed"><value>De Windows-printerwachtrijen konden niet worden gevonden.</value></data>
+  <data name="Queue.Assigned"><value>De Windows-wachtrij {0} is al toegewezen aan een pyToneRIP-printer.</value></data>
 </root>

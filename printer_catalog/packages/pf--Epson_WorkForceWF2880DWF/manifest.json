@@ -1,0 +1,25 @@
+{
+  "backend_family": "epson_escp2_workforcenative",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson WorkForceWF2880DWF",
+  "model_id": "WorkForceWF2880DWF",
+  "package_id": "pf--Epson_WorkForceWF2880DWF",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "0451db126ae95af57d341dc86905089611979a750e416d8caad20070fc1e85d6",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "WorkForceNative",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "55a2421ccf2e039828ce8ceff81a33841178d3009f7136b6483c4802a476d159",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "cad46827cd3537365a4d62bce8aefb3037ceb45d943f909e75f89dc19730f158",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "SYNTHETIC_PPD: no Epson manufacturer PPD supplied; technical source ReferenceDriver driver ET3700"
+  ]
+}

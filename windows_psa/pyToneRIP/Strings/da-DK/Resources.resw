@@ -93,7 +93,7 @@
   <data name="Auto.B388B9C01523.Text"><value>Størrelse</value></data>
   <data name="Auto.C195019E59CC.Text"><value>Lyseste</value></data>
   <data name="Auto.C681456D80A8.Content"><value>RGB-vælgere (QTR InkSeparation)</value></data>
-  <data name="Auto.C706B9DFA105.Text"><value>Opretter en lille modelspecifik PRN med rå tæthedsstrimler for hver konfigureret fysisk kanal. QTR-kurver bruges med vilje ikke af denne første ingeniørtest.</value></data>
+  <data name="Auto.C706B9DFA105.Text"><value>Udskriv en A4-tonetest med gradienter, cirkler og gråtrin med de valgte kurver og udskriftsindstillinger. Ilæg et blankt A4-ark.</value></data>
   <data name="Auto.C84252F663BA.Header"><value>Forbindelse</value></data>
   <data name="Auto.C8D7FCDF582D.Text"><value>Printerforbindelse</value></data>
   <data name="Auto.CC5611F72641.Text"><value>Fra (anbefalet): bevar siden sammensat af udskrivningsprogrammet og Windows. Til: skaler og placerer desuden den færdige side i RIP&#x27;en.</value></data>
@@ -277,7 +277,7 @@
   <data name="Maintenance.head_clean.Title"><value>Rens printhovedet</value></data>
   <data name="Maintenance.nozzle_check.Description"><value>Bed printerfirmwaren om at udskrive dets oprindelige dysemønster.</value></data>
   <data name="Maintenance.nozzle_check.Title"><value>Udskriv dysekontrol</value></data>
-  <data name="Maintenance.test_page.Description"><value>Udskriv et lille råt mønster pr. kanal ved hjælp af de valgte modelindstillinger.</value></data>
+  <data name="Maintenance.test_page.Description"><value>Udskriv en A4-tonetest med gradienter, cirkler og gråtrin med de valgte kurver og udskriftsindstillinger. Ilæg et blankt A4-ark.</value></data>
   <data name="Maintenance.test_page.Title"><value>Udskriv pyToneRIP-testside</value></data>
   <data name="Processing16Bit.Content"><value>16-bit-behandling</value></data>
   <data name="Processing16BitExperimental.Text"><value>(eksperimentel tilstand)</value></data>
@@ -289,6 +289,9 @@
   <data name="MainPage.SendLogs.Content"><value>Opret diagnoserapport</value></data>
   <data name="Code.SupportReportPrompt"><value>ZIP-filen på skrivebordet indeholder tekniske fejloplysninger fra pyToneRIP og Windows fra de seneste 24 timer. Dokumentindhold, personlige stier og IP-adresser medtages ikke. Appen sender ikke arkivet.</value></data>
   <data name="Code.SupportReportCreated"><value>ZIP-filen blev oprettet på skrivebordet: {0}</value></data>
+  <data name="Usb.DirectPrint"><value>Udskriv direkte via USB</value></data>
+  <data name="Usb.DirectPrintHint"><value>Sender job direkte til en printer, der er tilsluttet via USB. Vælg Windows-udskriftskøen (RAW), hvis Epson-driveren er installeret.</value></data>
+  <data name="Usb.DirectPrintRecommendation"><value>Vælg denne mulighed, hvis den officielle Epson-driver ikke er installeret.</value></data>
   <data name="Usb.Device"><value>Tilsluttet USB-printer</value></data>
   <data name="Usb.Refresh"><value>Opdater USB-printere</value></data>
   <data name="Usb.Searching"><value>Søger efter USB-printere…</value></data>
@@ -347,6 +350,7 @@
   <data name="PreviewWindow.ProfileMismatch" xml:space="preserve"><value>ICC afviger fra de gemte udskriftsbetingelser.</value></data>
   <data name="PreviewWindow.PhysicalUnavailable" xml:space="preserve"><value>Printerens fysiske status er ikke tilgængelig.</value></data>
   <data name="PreviewWindow.PhysicalUnconfirmed" xml:space="preserve"><value>Enhedens status bekræfter ikke, at dette job er færdigt eller arket er ført ud.</value></data>
+  <data name="PreviewWindow.PhysicalCancelUnconfirmed" xml:space="preserve"><value>Printeren bekræftede ikke annulleringen. Prøv igen, eller annullér jobbet på printerens kontrolpanel.</value></data>
   <data name="PreviewWindow.DeviceOther" xml:space="preserve"><value>Printer: anden tilstand</value></data>
   <data name="PreviewWindow.DeviceUnknown" xml:space="preserve"><value>Printer: ukendt tilstand</value></data>
   <data name="PreviewWindow.DeviceIdle" xml:space="preserve"><value>Printer: inaktiv</value></data>
@@ -368,4 +372,60 @@
   <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>Pilen viser den kant af arket, der udskrives først.</value></data>
   <data name="PreviewWindow.PhotoCrop" xml:space="preserve"><value>Træk de hvide håndtag midt på siderne for at beskære; træk udad for at gendanne. Hjørnehåndtag ændrer størrelsen.</value></data>
   <data name="PreviewWindow.PhotoFill" xml:space="preserve"><value>Fyld siden</value></data>
+  <data name="PrinterInfo.Read.Content" xml:space="preserve"><value>Læs printeroplysninger</value></data>
+  <data name="PrinterInfo.Help.Text" xml:space="preserve"><value>Læser de oplysninger, som den valgte printer rapporterer via USB eller netværket.</value></data>
+  <data name="PrinterInfo.Title.Text" xml:space="preserve"><value>Printeroplysninger</value></data>
+  <data name="PrinterInfo.Empty.Text" xml:space="preserve"><value>Vælg »Læs printeroplysninger« for at hente enhedsrapporten.</value></data>
+  <data name="PrinterInfo.Reading" xml:space="preserve"><value>Læser printeroplysninger…</value></data>
+  <data name="PrinterInfo.Failed" xml:space="preserve"><value>Printeroplysningerne kunne ikke læses: {0}</value></data>
+  <data name="PrinterInfo.Busy" xml:space="preserve"><value>Printeren er i brug. Vent, til udskrivningen eller vedligeholdelsen er afsluttet.</value></data>
+  <data name="PrinterInfo.Connection" xml:space="preserve"><value>Forbindelse</value></data>
+  <data name="PrinterInfo.Identity" xml:space="preserve"><value>Identifikation</value></data>
+  <data name="PrinterInfo.Status" xml:space="preserve"><value>Status og advarsler</value></data>
+  <data name="PrinterInfo.Inks" xml:space="preserve"><value>Blækniveauer</value></data>
+  <data name="PrinterInfo.Details" xml:space="preserve"><value>Yderligere oplysninger</value></data>
+  <data name="PrinterInfo.Raw" xml:space="preserve"><value>Enhedens oprindelige svar</value></data>
+  <data name="PrinterInfo.Model" xml:space="preserve"><value>Model</value></data>
+  <data name="PrinterInfo.Firmware" xml:space="preserve"><value>Firmware</value></data>
+  <data name="PrinterInfo.DeviceId" xml:space="preserve"><value>Enhedsidentifikation</value></data>
+  <data name="PrinterInfo.Cartridges" xml:space="preserve"><value>Patrontyper</value></data>
+  <data name="PrinterInfo.Cartridge" xml:space="preserve"><value>Patron</value></data>
+  <data name="PrinterInfo.Error" xml:space="preserve"><value>Fejl</value></data>
+  <data name="PrinterInfo.Warning" xml:space="preserve"><value>Advarsel</value></data>
+  <data name="PrinterInfo.SerialNumber" xml:space="preserve"><value>Serienummer</value></data>
+  <data name="PrinterInfo.State" xml:space="preserve"><value>Status</value></data>
+  <data name="PrinterInfo.NoData" xml:space="preserve"><value>Ikke rapporteret</value></data>
+  <data name="PrinterInfo.Field" xml:space="preserve"><value>Felt 0x{0}</value></data>
+  <data name="PrinterInfo.MaintenanceBox" xml:space="preserve"><value>Vedligeholdelsesboks</value></data>
+  <data name="PrinterInfo.PaperCounters" xml:space="preserve"><value>Sidetællere</value></data>
+  <data name="PrinterInfo.Temperature" xml:space="preserve"><value>Temperatur</value></data>
+  <data name="PrinterInfo.Interface" xml:space="preserve"><value>Grænsefladestatus</value></data>
+  <data name="PrinterInfo.Unsupported" xml:space="preserve"><value>Ikke understøttet eller intet svar</value></data>
+  <data name="PrinterInfo.Source" xml:space="preserve"><value>Kilde</value></data>
+  <data name="MainPage.CancelJob.Content"><value>Annuller det aktuelle udskriftsjob</value></data>
+  <data name="MainPage.NoActiveJob" xml:space="preserve"><value>Den valgte printer har intet aktivt udskriftsjob.</value></data>
+  <data name="MainPage.CancelJobFailed" xml:space="preserve"><value>Udskriftsjobbet kunne ikke annulleres. Kontrollér forbindelsen til printeren, og prøv igen.</value></data>
+  <data name="Network.Search"><value>Find printere</value></data>
+  <data name="Network.Device"><value>Vælg en fundet printer</value></data>
+  <data name="Network.DeviceHint"><value>Listen viser hver printers model og IP-adresse.</value></data>
+  <data name="Network.Searching"><value>Søger efter Epson-printere…</value></data>
+  <data name="Network.None"><value>Der blev ikke fundet Epson-enheder på lokalnetværket.</value></data>
+  <data name="Network.Choose"><value>Vælg fra listen</value></data>
+  <data name="Network.Manual"><value>Konfigurer manuelt</value></data>
+  <data name="Network.UnknownModel"><value>Printeren oplyste ikke sin model.</value></data>
+  <data name="Network.UnsupportedModel"><value>Modellen findes ikke i det installerede printerkatalog.</value></data>
+  <data name="Network.RawUnavailable"><value>Printeren accepterede ikke en forbindelse på TCP-port 9100.</value></data>
+  <data name="Network.ChooseModel"><value>Vælg en passende model fra kataloget.</value></data>
+  <data name="Network.SearchFailed"><value>Søgningen efter netværksprintere mislykkedes.</value></data>
+  <data name="Network.AddressAssigned"><value>Adressen {0} er allerede tildelt en pyToneRIP-printer.</value></data>
+  <data name="Network.SearchHint"><value>Find Epson-printere på dit lokalnetværk.</value></data>
+  <data name="Network.FoundCount"><value>Fundne printere: {0}</value></data>
+  <data name="Queue.Title"><value>Windows-kø (RAW)</value></data>
+  <data name="Queue.Recommended"><value>Anbefales, hvis den officielle Epson-driver er installeret til denne printer.</value></data>
+  <data name="Queue.RawDriverRequired"><value>Installér den officielle Epson-driver til denne model for at udskrive fra pyToneRIP via Windows-køen (RAW).</value></data>
+  <data name="Queue.Select"><value>Vælg en installeret Epson-kø</value></data>
+  <data name="Queue.Searching"><value>Søger efter Epson-køer i Windows…</value></data>
+  <data name="Queue.None"><value>Der blev ikke fundet kompatible Epson-køer i Windows.</value></data>
+  <data name="Queue.SearchFailed"><value>Windows-printerkøerne kunne ikke findes.</value></data>
+  <data name="Queue.Assigned"><value>Windows-køen {0} er allerede tildelt en pyToneRIP-printer.</value></data>
 </root>

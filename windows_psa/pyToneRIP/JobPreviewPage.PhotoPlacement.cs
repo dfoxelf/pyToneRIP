@@ -134,7 +134,8 @@ namespace pyToneRIP
 
         private void RefreshPhotoActions()
         {
-            var ready = renderer != null && previewValid && !approved && !approving && !terminal && !editing && !rendering && !applyingPhoto && !photoDragging;
+            RefreshPrintActions();
+            var ready = CanEditPrint && previewValid;
             photoMode.IsEnabled = ready;
             var selected = ready && photoMode.IsChecked == true && photoPlacement != null;
             photoLeft.IsEnabled = photoRight.IsEnabled = photoFit.IsEnabled = photoFill.IsEnabled = photoReset.IsEnabled = selected;
@@ -153,10 +154,9 @@ namespace pyToneRIP
                 ShowPhotoWorking(false); photoLayer.Visibility = Visibility.Collapsed; photoSize.Text = "";
                 await ClosePhotoSourceAsync(); RefreshPhotoActions(); return;
             }
-            if (renderer == null || !previewValid || approved || terminal || editing || rendering || applyingPhoto || closed.Task.IsCompleted)
+            if (!CanEditPrint || !previewValid)
             { await DisablePhotoModeAsync(); return; }
             editing = photoLoading = true; detailCancellation?.Cancel();
-            print.IsEnabled = printClose.IsEnabled = editSettings.IsEnabled = false;
             previous.IsEnabled = next.IsEnabled = thumbnails.IsEnabled = proof.IsEnabled = false;
             RefreshPhotoActions();
             try
@@ -181,8 +181,6 @@ namespace pyToneRIP
             finally
             {
                 editing = photoLoading = false; thumbnails.IsEnabled = proof.IsEnabled = true;
-                print.IsEnabled = printClose.IsEnabled = previewValid && !approved && !terminal;
-                editSettings.IsEnabled = !approved && !terminal;
                 previous.IsEnabled = pageIndex > 0; next.IsEnabled = pageIndex+1 < renderer.PageCount;
                 RefreshPhotoActions();
             }
@@ -292,13 +290,13 @@ namespace pyToneRIP
         {
             element.PointerPressed += (sender, args) =>
             {
-                if (photoMode.IsChecked != true || photoPlacement == null || editing || rendering || applyingPhoto || approved || terminal || photoDragging) return;
+                if (photoMode.IsChecked != true || photoPlacement == null || !CanEditPrint) return;
                 var point = args.GetCurrentPoint(surface);
                 if (args.Pointer.PointerDeviceType == Windows.Devices.Input.PointerDeviceType.Mouse && !point.Properties.IsLeftButtonPressed) return;
                 if (!element.CapturePointer(args.Pointer)) return;
                 photoDragging = true; photoPointer = args.Pointer.PointerId; photoCorner = corner;
                 photoStart = photoPlacement.Copy(); photoPointerStart = point.Position;
-                detailCancellation?.Cancel(); ShowPhotoWorking(true); print.IsEnabled = printClose.IsEnabled = false;
+                detailCancellation?.Cancel(); ShowPhotoWorking(true);
                 RefreshPhotoActions(); args.Handled = true;
             };
             element.PointerMoved += (sender, args) =>
@@ -329,7 +327,6 @@ namespace pyToneRIP
             if (!photoDragging) return;
             photoDragging = false; photoPlacement = photoCommitted.Copy();
             ShowPhotoWorking(false); UpdatePhotoOverlay(); RefreshPhotoActions();
-            print.IsEnabled = printClose.IsEnabled = previewValid && !approved && !terminal;
             ScheduleDetail();
         }
 
@@ -399,7 +396,6 @@ namespace pyToneRIP
         {
             if (pendingPhotoPlacements.Count == 0) return true;
             applyingPhoto = editing = true; detailCancellation?.Cancel(); RefreshPhotoActions();
-            print.IsEnabled = printClose.IsEnabled = editSettings.IsEnabled = false;
             previous.IsEnabled = next.IsEnabled = thumbnails.IsEnabled = proof.IsEnabled = false;
             var committed = false;
             try
@@ -435,7 +431,6 @@ namespace pyToneRIP
                 applyingPhoto = editing = false; thumbnails.IsEnabled = proof.IsEnabled = true;
                 if (!closed.Task.IsCompleted && !approved && !approving && !terminal)
                 {
-                    print.IsEnabled = printClose.IsEnabled = previewValid; editSettings.IsEnabled = true;
                     previous.IsEnabled = pageIndex > 0; next.IsEnabled = pageIndex+1 < renderer.PageCount;
                     ScheduleDetail();
                 }

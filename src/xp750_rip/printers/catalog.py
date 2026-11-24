@@ -1251,7 +1251,10 @@ def _normalized_mode_runtime(
         if source_data.get("drop_levels_percent") and "drop_levels_percent" not in mode:
             mode["drop_levels_percent"] = source_data["drop_levels_percent"]
             mode["raster_bit_depth"] = int(source_data.get("raster_bit_depth") or 2)
-    return _json_bytes({"schema": "pytone-rip.mode-runtime-v2", "modes": modes})
+    return _json_bytes({
+        "schema": "pytone-rip.mode-runtime-v2", "modes": modes,
+        **({"native_model": value["native_model"]} if "native_model" in value else {}),
+    })
 
 
 def _choose_ppd(

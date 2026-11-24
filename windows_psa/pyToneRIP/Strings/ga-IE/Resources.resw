@@ -93,7 +93,7 @@
   <data name="Auto.B388B9C01523.Text"><value>Méid</value></data>
   <data name="Auto.C195019E59CC.Text"><value>Is éadroime</value></data>
   <data name="Auto.C681456D80A8.Content"><value>Roghnóirí RGB (QTR InkSparation)</value></data>
-  <data name="Auto.C706B9DFA105.Text"><value>Cruthaítear PRN beag samhail-shonrach le stiallacha dlúis amh do gach cainéal fisiceach cumraithe. Ní bhaineann an chéad tástáil innealtóireachta seo úsáid as cuair QTR d&#x27;aon ghnó.</value></data>
+  <data name="Auto.C706B9DFA105.Text"><value>Priontáil tástáil thonach A4 le grádáin, ciorcail agus céimeanna liatha leis na cuair agus socruithe roghnaithe. Luchtaigh bileog ghlan A4.</value></data>
   <data name="Auto.C84252F663BA.Header"><value>Ceangal</value></data>
   <data name="Auto.C8D7FCDF582D.Text"><value>Nasc printéir</value></data>
   <data name="Auto.CC5611F72641.Text"><value>As (molta): caomhnaigh an leathanach atá comhdhéanta ag an bhfeidhmchlár priontála agus Windows. Ar: chomh maith leis sin scála agus cuir an leathanach críochnaithe sa RIP.</value></data>
@@ -277,7 +277,7 @@
   <data name="Maintenance.head_clean.Title"><value>Glan ceann priontála</value></data>
   <data name="Maintenance.nozzle_check.Description"><value>Iarr ar firmware an printéir a phatrún dúchasach nozzle a phriontáil.</value></data>
   <data name="Maintenance.nozzle_check.Title"><value>Priontáil seiceáil soic</value></data>
-  <data name="Maintenance.test_page.Description"><value>Priontáil patrún beag amh in aghaidh an chainéil ag baint úsáide as na socruithe samhla roghnaithe.</value></data>
+  <data name="Maintenance.test_page.Description"><value>Priontáil tástáil thonach A4 le grádáin, ciorcail agus céimeanna liatha leis na cuair agus socruithe roghnaithe. Luchtaigh bileog ghlan A4.</value></data>
   <data name="Maintenance.test_page.Title"><value>Priontáil leathanach tástála pyToneRIP</value></data>
   <data name="Processing16Bit.Content"><value>Próiseáil 16 ghiotán</value></data>
   <data name="Processing16BitExperimental.Text"><value>(mód turgnamhach)</value></data>
@@ -289,6 +289,9 @@
   <data name="MainPage.SendLogs.Content"><value>Cruthaigh tuairisc dhiagnóiseach</value></data>
   <data name="Code.SupportReportPrompt"><value>Tá sonraí teicniúla faoi earráidí pyToneRIP agus Windows le 24 uair anuas sa ZIP ar an deasc. Ní chuirtear ábhar doiciméad, cosáin phearsanta ná seoltaí IP san áireamh. Ní sheolann an aip an chartlann.</value></data>
   <data name="Code.SupportReportCreated"><value>Cruthaíodh ZIP ar an deasc: {0}</value></data>
+  <data name="Usb.DirectPrint"><value>Priontáil go díreach trí USB</value></data>
+  <data name="Usb.DirectPrintHint"><value>Seolann sé tascanna go díreach chuig printéir atá ceangailte trí USB. Má tá an tiománaí Epson suiteáilte, roghnaigh scuaine priontála Windows (RAW).</value></data>
+  <data name="Usb.DirectPrintRecommendation"><value>Roghnaigh an rogha seo mura bhfuil tiománaí oifigiúil Epson suiteáilte.</value></data>
   <data name="Usb.Device"><value>Printéir USB ceangailte</value></data>
   <data name="Usb.Refresh"><value>Athnuaigh printéirí USB</value></data>
   <data name="Usb.Searching"><value>Printéirí USB á lorg…</value></data>
@@ -347,6 +350,7 @@
   <data name="PreviewWindow.ProfileMismatch" xml:space="preserve"><value>Ní mheaitseálann ICC na coinníollacha priontála sábháilte.</value></data>
   <data name="PreviewWindow.PhysicalUnavailable" xml:space="preserve"><value>Níl stádas fisiciúil an phrintéara ar fáil.</value></data>
   <data name="PreviewWindow.PhysicalUnconfirmed" xml:space="preserve"><value>Ní dheimhníonn stádas an ghléis críochnú an jab seo ná aschur na bileoige.</value></data>
+  <data name="PreviewWindow.PhysicalCancelUnconfirmed" xml:space="preserve"><value>Níor dheimhnigh an printéir gur cuireadh an tasc ar ceal. Bain triail eile as nó cuir an tasc ar ceal ar phainéal rialaithe an phrintéara.</value></data>
   <data name="PreviewWindow.DeviceOther" xml:space="preserve"><value>Printéir: staid eile</value></data>
   <data name="PreviewWindow.DeviceUnknown" xml:space="preserve"><value>Printéir: anaithnid</value></data>
   <data name="PreviewWindow.DeviceIdle" xml:space="preserve"><value>Printéir: díomhaoin</value></data>
@@ -368,4 +372,60 @@
   <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>Léiríonn an tsaighead imeall an leathanaigh a phriontáiltear ar dtús.</value></data>
   <data name="PreviewWindow.PhotoCrop" xml:space="preserve"><value>Tarraing na hanlaí bána i lár gach taoibh chun bearradh; tarraing amach chun athchóiriú. Athraíonn na hanlaí cúinne an méid.</value></data>
   <data name="PreviewWindow.PhotoFill" xml:space="preserve"><value>Líon an leathanach</value></data>
+  <data name="PrinterInfo.Read.Content" xml:space="preserve"><value>Léigh faisnéis an phrintéara</value></data>
+  <data name="PrinterInfo.Help.Text" xml:space="preserve"><value>Léann sé an fhaisnéis a thuairiscíonn an printéir roghnaithe trí USB nó an líonra.</value></data>
+  <data name="PrinterInfo.Title.Text" xml:space="preserve"><value>Faisnéis an phrintéara</value></data>
+  <data name="PrinterInfo.Empty.Text" xml:space="preserve"><value>Roghnaigh ‘Léigh faisnéis an phrintéara’ chun tuairisc na feiste a fháil.</value></data>
+  <data name="PrinterInfo.Reading" xml:space="preserve"><value>Faisnéis an phrintéara á léamh…</value></data>
+  <data name="PrinterInfo.Failed" xml:space="preserve"><value>Níorbh fhéidir faisnéis an phrintéara a léamh: {0}</value></data>
+  <data name="PrinterInfo.Busy" xml:space="preserve"><value>Tá an printéir in úsáid. Fan go mbeidh an priontáil nó an chothabháil críochnaithe.</value></data>
+  <data name="PrinterInfo.Connection" xml:space="preserve"><value>Ceangal</value></data>
+  <data name="PrinterInfo.Identity" xml:space="preserve"><value>Aitheantas</value></data>
+  <data name="PrinterInfo.Status" xml:space="preserve"><value>Stádas agus rabhaidh</value></data>
+  <data name="PrinterInfo.Inks" xml:space="preserve"><value>Leibhéil dúigh</value></data>
+  <data name="PrinterInfo.Details" xml:space="preserve"><value>Faisnéis bhreise</value></data>
+  <data name="PrinterInfo.Raw" xml:space="preserve"><value>Bunfhreagraí na feiste</value></data>
+  <data name="PrinterInfo.Model" xml:space="preserve"><value>Samhail</value></data>
+  <data name="PrinterInfo.Firmware" xml:space="preserve"><value>Dochtearraí</value></data>
+  <data name="PrinterInfo.DeviceId" xml:space="preserve"><value>Aitheantas na feiste</value></data>
+  <data name="PrinterInfo.Cartridges" xml:space="preserve"><value>Cineálacha cartús</value></data>
+  <data name="PrinterInfo.Cartridge" xml:space="preserve"><value>Cartús</value></data>
+  <data name="PrinterInfo.Error" xml:space="preserve"><value>Earráid</value></data>
+  <data name="PrinterInfo.Warning" xml:space="preserve"><value>Rabhadh</value></data>
+  <data name="PrinterInfo.SerialNumber" xml:space="preserve"><value>Sraithuimhir</value></data>
+  <data name="PrinterInfo.State" xml:space="preserve"><value>Stádas</value></data>
+  <data name="PrinterInfo.NoData" xml:space="preserve"><value>Gan tuairisciú</value></data>
+  <data name="PrinterInfo.Field" xml:space="preserve"><value>Réimse 0x{0}</value></data>
+  <data name="PrinterInfo.MaintenanceBox" xml:space="preserve"><value>Bosca cothabhála</value></data>
+  <data name="PrinterInfo.PaperCounters" xml:space="preserve"><value>Áiritheoirí leathanach</value></data>
+  <data name="PrinterInfo.Temperature" xml:space="preserve"><value>Teocht</value></data>
+  <data name="PrinterInfo.Interface" xml:space="preserve"><value>Stádas an chomhéadain</value></data>
+  <data name="PrinterInfo.Unsupported" xml:space="preserve"><value>Gan tacaíocht nó gan freagra</value></data>
+  <data name="PrinterInfo.Source" xml:space="preserve"><value>Foinse</value></data>
+  <data name="MainPage.CancelJob.Content"><value>Cealaigh an jab priontála reatha</value></data>
+  <data name="MainPage.NoActiveJob" xml:space="preserve"><value>Níl aon tasc priontála gníomhach ar an bprintéir roghnaithe.</value></data>
+  <data name="MainPage.CancelJobFailed" xml:space="preserve"><value>Níorbh fhéidir an tasc a chur ar ceal. Seiceáil nasc an phrintéara agus bain triail eile as.</value></data>
+  <data name="Network.Search"><value>Aimsigh printéirí</value></data>
+  <data name="Network.Device"><value>Roghnaigh printéir aimsithe</value></data>
+  <data name="Network.DeviceHint"><value>Taispeántar samhail agus seoladh IP gach printéara sa liosta.</value></data>
+  <data name="Network.Searching"><value>Ag cuardach printéirí Epson…</value></data>
+  <data name="Network.None"><value>Níor aimsíodh aon ghléas Epson ar an líonra logánta.</value></data>
+  <data name="Network.Choose"><value>Roghnaigh ón liosta</value></data>
+  <data name="Network.Manual"><value>Cumraigh de láimh</value></data>
+  <data name="Network.UnknownModel"><value>Níor thuairiscigh an printéir a shamhail.</value></data>
+  <data name="Network.UnsupportedModel"><value>Níl an tsamhail seo sa chatalóg printéirí atá suiteáilte.</value></data>
+  <data name="Network.RawUnavailable"><value>Níor ghlac an printéir le nasc ar phort TCP 9100.</value></data>
+  <data name="Network.ChooseModel"><value>Roghnaigh samhail chomhoiriúnach ón gcatalóg.</value></data>
+  <data name="Network.SearchFailed"><value>Theip ar chuardach na bprintéirí líonra.</value></data>
+  <data name="Network.AddressAssigned"><value>Tá an seoladh {0} sannta do phrintéir pyToneRIP cheana.</value></data>
+  <data name="Network.SearchHint"><value>Aimsigh printéirí Epson ar do líonra logánta.</value></data>
+  <data name="Network.FoundCount"><value>Printéirí aimsithe: {0}</value></data>
+  <data name="Queue.Title"><value>Scuaine Windows (RAW)</value></data>
+  <data name="Queue.Recommended"><value>Molta má tá tiománaí oifigiúil Epson suiteáilte don phrintéir seo.</value></data>
+  <data name="Queue.RawDriverRequired"><value>Suiteáil an tiománaí oifigiúil Epson don mhúnla seo chun priontáil ó pyToneRIP trí scuaine Windows (RAW).</value></data>
+  <data name="Queue.Select"><value>Roghnaigh scuaine Epson atá suiteáilte</value></data>
+  <data name="Queue.Searching"><value>Ag cuardach scuainí Epson in Windows…</value></data>
+  <data name="Queue.None"><value>Níor aimsíodh aon scuaine Epson chomhoiriúnach in Windows.</value></data>
+  <data name="Queue.SearchFailed"><value>Níorbh fhéidir scuainí printéara Windows a fháil.</value></data>
+  <data name="Queue.Assigned"><value>Tá scuaine Windows {0} sannta do phrintéir pyToneRIP cheana.</value></data>
 </root>

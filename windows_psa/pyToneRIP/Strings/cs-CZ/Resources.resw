@@ -93,7 +93,7 @@
   <data name="Auto.B388B9C01523.Text"><value>Velikost</value></data>
   <data name="Auto.C195019E59CC.Text"><value>Nejsvětlejší</value></data>
   <data name="Auto.C681456D80A8.Content"><value>RGB selektory (QTR InkSeparation)</value></data>
-  <data name="Auto.C706B9DFA105.Text"><value>Vytvoří malé PRN specifické pro model s proužky nezpracované hustoty pro každý nakonfigurovaný fyzický kanál. Křivky QTR nejsou v tomto prvním inženýrském testu záměrně použity.</value></data>
+  <data name="Auto.C706B9DFA105.Text"><value>Vytiskne tónový test A4 s přechody, kruhy a stupni šedi s vybranými křivkami a nastavením tisku. Vložte čistý list A4.</value></data>
   <data name="Auto.C84252F663BA.Header"><value>Spojení</value></data>
   <data name="Auto.C8D7FCDF582D.Text"><value>Připojení tiskárny</value></data>
   <data name="Auto.CC5611F72641.Text"><value>Vypnuto (doporučeno): Zachování stránky vytvořené tiskovou aplikací a systémem Windows. Zapnuto: dodatečné měřítko a umístění dokončené stránky v RIP.</value></data>
@@ -277,7 +277,7 @@
   <data name="Maintenance.head_clean.Title"><value>Vyčistěte tiskovou hlavu</value></data>
   <data name="Maintenance.nozzle_check.Description"><value>Požádejte firmware tiskárny, aby vytiskl svůj nativní vzorek trysek.</value></data>
   <data name="Maintenance.nozzle_check.Title"><value>Kontrola trysek tisku</value></data>
-  <data name="Maintenance.test_page.Description"><value>Vytiskněte malý nezpracovaný vzor pro každý kanál pomocí vybraných nastavení modelu.</value></data>
+  <data name="Maintenance.test_page.Description"><value>Vytiskne tónový test A4 s přechody, kruhy a stupni šedi s vybranými křivkami a nastavením tisku. Vložte čistý list A4.</value></data>
   <data name="Maintenance.test_page.Title"><value>Vytiskněte zkušební stránku pyToneRIP</value></data>
   <data name="Processing16Bit.Content"><value>16bitové zpracování</value></data>
   <data name="Processing16BitExperimental.Text"><value>(experimentální režim)</value></data>
@@ -289,6 +289,9 @@
   <data name="MainPage.SendLogs.Content"><value>Vytvořit diagnostickou zprávu</value></data>
   <data name="Code.SupportReportPrompt"><value>ZIP na ploše obsahuje technické údaje o chybách pyToneRIP a Windows za posledních 24 hodin. Obsah dokumentů, osobní cesty a IP adresy nejsou zahrnuty. Aplikace archiv neodesílá.</value></data>
   <data name="Code.SupportReportCreated"><value>ZIP archiv byl vytvořen na ploše: {0}</value></data>
+  <data name="Usb.DirectPrint"><value>Přímý tisk přes USB</value></data>
+  <data name="Usb.DirectPrintHint"><value>Odesílá úlohy přímo do tiskárny připojené přes USB. Pokud je nainstalován ovladač Epson, zvolte tiskovou frontu Windows (RAW).</value></data>
+  <data name="Usb.DirectPrintRecommendation"><value>Tuto možnost zvolte, pokud není nainstalován oficiální ovladač Epson.</value></data>
   <data name="Usb.Device"><value>Připojená tiskárna USB</value></data>
   <data name="Usb.Refresh"><value>Obnovit seznam tiskáren USB</value></data>
   <data name="Usb.Searching"><value>Vyhledávání tiskáren USB…</value></data>
@@ -347,6 +350,7 @@
   <data name="PreviewWindow.ProfileMismatch" xml:space="preserve"><value>ICC se liší od uložených podmínek tisku.</value></data>
   <data name="PreviewWindow.PhysicalUnavailable" xml:space="preserve"><value>Fyzický stav tiskárny není dostupný.</value></data>
   <data name="PreviewWindow.PhysicalUnconfirmed" xml:space="preserve"><value>Stav zařízení nepotvrzuje dokončení této úlohy ani vysunutí listu.</value></data>
+  <data name="PreviewWindow.PhysicalCancelUnconfirmed" xml:space="preserve"><value>Tiskárna nepotvrdila zrušení. Zkuste to znovu nebo úlohu zrušte na ovládacím panelu tiskárny.</value></data>
   <data name="PreviewWindow.DeviceOther" xml:space="preserve"><value>Tiskárna: jiný stav</value></data>
   <data name="PreviewWindow.DeviceUnknown" xml:space="preserve"><value>Tiskárna: neznámý stav</value></data>
   <data name="PreviewWindow.DeviceIdle" xml:space="preserve"><value>Tiskárna: nečinná</value></data>
@@ -368,4 +372,60 @@
   <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>Šipka označuje okraj listu, který se tiskne jako první.</value></data>
   <data name="PreviewWindow.PhotoCrop" xml:space="preserve"><value>Tažením bílých úchytů uprostřed stran obrázek oříznete; tažením ven jej obnovíte. Rohové úchyty mění velikost.</value></data>
   <data name="PreviewWindow.PhotoFill" xml:space="preserve"><value>Vyplnit stránku</value></data>
+  <data name="PrinterInfo.Read.Content" xml:space="preserve"><value>Načíst informace o tiskárně</value></data>
+  <data name="PrinterInfo.Help.Text" xml:space="preserve"><value>Načte informace hlášené vybranou tiskárnou přes USB nebo síť.</value></data>
+  <data name="PrinterInfo.Title.Text" xml:space="preserve"><value>Informace o tiskárně</value></data>
+  <data name="PrinterInfo.Empty.Text" xml:space="preserve"><value>Zvolením „Načíst informace o tiskárně“ získáte hlášení zařízení.</value></data>
+  <data name="PrinterInfo.Reading" xml:space="preserve"><value>Načítání informací o tiskárně…</value></data>
+  <data name="PrinterInfo.Failed" xml:space="preserve"><value>Informace o tiskárně nelze načíst: {0}</value></data>
+  <data name="PrinterInfo.Busy" xml:space="preserve"><value>Tiskárna se používá. Počkejte na dokončení tisku nebo údržby.</value></data>
+  <data name="PrinterInfo.Connection" xml:space="preserve"><value>Připojení</value></data>
+  <data name="PrinterInfo.Identity" xml:space="preserve"><value>Identifikace</value></data>
+  <data name="PrinterInfo.Status" xml:space="preserve"><value>Stav a upozornění</value></data>
+  <data name="PrinterInfo.Inks" xml:space="preserve"><value>Hladiny inkoustu</value></data>
+  <data name="PrinterInfo.Details" xml:space="preserve"><value>Další informace</value></data>
+  <data name="PrinterInfo.Raw" xml:space="preserve"><value>Původní odpovědi zařízení</value></data>
+  <data name="PrinterInfo.Model" xml:space="preserve"><value>Model</value></data>
+  <data name="PrinterInfo.Firmware" xml:space="preserve"><value>Firmware</value></data>
+  <data name="PrinterInfo.DeviceId" xml:space="preserve"><value>Identifikace zařízení</value></data>
+  <data name="PrinterInfo.Cartridges" xml:space="preserve"><value>Typy kazet</value></data>
+  <data name="PrinterInfo.Cartridge" xml:space="preserve"><value>Kazeta</value></data>
+  <data name="PrinterInfo.Error" xml:space="preserve"><value>Chyba</value></data>
+  <data name="PrinterInfo.Warning" xml:space="preserve"><value>Upozornění</value></data>
+  <data name="PrinterInfo.SerialNumber" xml:space="preserve"><value>Sériové číslo</value></data>
+  <data name="PrinterInfo.State" xml:space="preserve"><value>Stav</value></data>
+  <data name="PrinterInfo.NoData" xml:space="preserve"><value>Nehlášeno</value></data>
+  <data name="PrinterInfo.Field" xml:space="preserve"><value>Pole 0x{0}</value></data>
+  <data name="PrinterInfo.MaintenanceBox" xml:space="preserve"><value>Údržbová nádobka</value></data>
+  <data name="PrinterInfo.PaperCounters" xml:space="preserve"><value>Počítadla stránek</value></data>
+  <data name="PrinterInfo.Temperature" xml:space="preserve"><value>Teplota</value></data>
+  <data name="PrinterInfo.Interface" xml:space="preserve"><value>Stav rozhraní</value></data>
+  <data name="PrinterInfo.Unsupported" xml:space="preserve"><value>Nepodporováno nebo bez odpovědi</value></data>
+  <data name="PrinterInfo.Source" xml:space="preserve"><value>Zdroj</value></data>
+  <data name="MainPage.CancelJob.Content"><value>Zrušit aktuální tiskovou úlohu</value></data>
+  <data name="MainPage.NoActiveJob" xml:space="preserve"><value>Vybraná tiskárna nemá žádnou aktivní úlohu.</value></data>
+  <data name="MainPage.CancelJobFailed" xml:space="preserve"><value>Úlohu se nepodařilo zrušit. Zkontrolujte připojení tiskárny a zkuste to znovu.</value></data>
+  <data name="Network.Search"><value>Vyhledat tiskárny</value></data>
+  <data name="Network.Device"><value>Vyberte nalezenou tiskárnu</value></data>
+  <data name="Network.DeviceHint"><value>V seznamu je uveden model a IP adresa každé tiskárny.</value></data>
+  <data name="Network.Searching"><value>Vyhledávají se tiskárny Epson…</value></data>
+  <data name="Network.None"><value>V místní síti nebyla nalezena žádná zařízení Epson.</value></data>
+  <data name="Network.Choose"><value>Vyberte ze seznamu</value></data>
+  <data name="Network.Manual"><value>Nastavit ručně</value></data>
+  <data name="Network.UnknownModel"><value>Tiskárna nenahlásila svůj model.</value></data>
+  <data name="Network.UnsupportedModel"><value>Tento model není v nainstalovaném katalogu tiskáren.</value></data>
+  <data name="Network.RawUnavailable"><value>Tiskárna nepřijala připojení na portu TCP 9100.</value></data>
+  <data name="Network.ChooseModel"><value>Vyberte odpovídající model z katalogu.</value></data>
+  <data name="Network.SearchFailed"><value>Vyhledávání síťových tiskáren se nezdařilo.</value></data>
+  <data name="Network.AddressAssigned"><value>Adresa {0} je již přiřazena tiskárně pyToneRIP.</value></data>
+  <data name="Network.SearchHint"><value>Vyhledejte tiskárny Epson v místní síti.</value></data>
+  <data name="Network.FoundCount"><value>Počet nalezených tiskáren: {0}</value></data>
+  <data name="Queue.Title"><value>Fronta Windows (RAW)</value></data>
+  <data name="Queue.Recommended"><value>Doporučeno, pokud je pro tuto tiskárnu nainstalován oficiální ovladač Epson.</value></data>
+  <data name="Queue.RawDriverRequired"><value>Chcete-li v pyToneRIP tisknout přes frontu Windows (RAW), nainstalujte oficiální ovladač Epson pro tento model.</value></data>
+  <data name="Queue.Select"><value>Vyberte nainstalovanou frontu Epson</value></data>
+  <data name="Queue.Searching"><value>Vyhledávají se fronty Epson ve Windows…</value></data>
+  <data name="Queue.None"><value>Nebyly nalezeny žádné kompatibilní fronty Epson ve Windows.</value></data>
+  <data name="Queue.SearchFailed"><value>Fronty tisku ve Windows se nepodařilo najít.</value></data>
+  <data name="Queue.Assigned"><value>Fronta Windows {0} je již přiřazena tiskárně pyToneRIP.</value></data>
 </root>

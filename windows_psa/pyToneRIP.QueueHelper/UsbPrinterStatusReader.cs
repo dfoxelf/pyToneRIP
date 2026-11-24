@@ -6,61 +6,311 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using pyToneRIP.Models;
+using pyToneRIP.Shared;
 
 namespace pyToneRIP.QueueHelper
 {
     internal static class UsbPrinterStatusReader
     {
+        internal static void CancelPrint(string deviceInstanceId)
+        {
+            if (string.IsNullOrWhiteSpace(deviceInstanceId) || !deviceInstanceId.StartsWith(
+                "USBPRINT\\", StringComparison.OrdinalIgnoreCase))
+                throw new ArgumentException("A USBPRINT device instance is required.");
+            using (var device = new UsbPrintDevice(deviceInstanceId))
+            {
+                // Parser exit before the class reset; never bulk-write after reset.
+                try { device.Write(Encoding.ASCII.GetBytes("\0\0\0\x1b\x01@EJL 1284.4\n@EJL     \n\x1b@\x1b@")); }
+                catch (Exception error) { System.Diagnostics.Trace.WriteLine("USB parser exit: " + error.Message); }
+                device.SoftReset();
+            }
+        }
+
         private static readonly byte[] StatusRequest = { (byte)'s', (byte)'t', 1, 0, 1 };
         private static readonly byte[] StatusHeader = Encoding.ASCII.GetBytes("@BDC ST2\r\n");
 
-        internal static List<UsbInkLevel> ReadInk(string deviceInstanceId)
+        internal static List<UsbInkLevel> ReadInk(string deviceInstanceId, bool exclusive = false) =>
+            ParseInk(ReadStatus(deviceInstanceId, exclusive));
+
+        internal static byte[] ReadStatus(string deviceInstanceId, bool exclusive = false)
+        {
+            if (string.IsNullOrWhiteSpace(deviceInstanceId) || !deviceInstanceId.StartsWith(
+                "USBPRINT\\", StringComparison.OrdinalIgnoreCase))
+                throw new ArgumentException("A USBPRINT device instance is required.", nameof(deviceInstanceId));
+            using (var device = new UsbPrintDevice(deviceInstanceId, exclusive))
+            {
+                device.Drain();
+                return ReadStatus(device.Write, device.Read);
+            }
+        }
+
+        // IEEE 1284.4 wire layout follows escputil/d4lib (Jean-Jacques
+        // Sarton, GPL-2.0-or-later). Keep status off the raw print channel.
+        internal static byte[] ReadStatus(Action<byte[]> write, Func<byte[]> read)
+        {
+            return new ControlChannel(write, read).Query();
+        }
+
+        internal static PrinterInformationReport ReadInformation(string deviceInstanceId)
         {
             if (string.IsNullOrWhiteSpace(deviceInstanceId) || !deviceInstanceId.StartsWith(
                 "USBPRINT\\", StringComparison.OrdinalIgnoreCase))
                 throw new ArgumentException("A USBPRINT device instance is required.", nameof(deviceInstanceId));
             using (var device = new UsbPrintDevice(deviceInstanceId))
             {
-                device.Write(StatusRequest);
-                return ParseInk(device.Read());
+                device.Drain();
+                return ReadInformation(device.Write, device.Read, deviceInstanceId);
+            }
+        }
+
+        internal static PrinterInformationReport ReadInformation(Action<byte[]> write, Func<byte[]> read,
+            string source = "USB")
+        {
+            var report = new PrinterInformationReport { Source = source };
+            var clock = System.Diagnostics.Stopwatch.StartNew();
+            try
+            {
+                new ControlChannel(write, read).Query(ask =>
+                {
+                    foreach (var query in PrinterInformationDecoder.Queries)
+                    {
+                        if (clock.ElapsedMilliseconds >= 60000) return;
+                        try { report.Add(query, ask(PrinterInformationDecoder.Request(query))); }
+                        catch (Exception error) { report.AddFailure(query, error.Message); return; }
+                    }
+                    var status = report.Replies.FirstOrDefault(item => item.Command == "st");
+                    var slots = status == null ? 8 : ParseInk(PrinterInformationDecoder.Bytes(status.Hex)).Count;
+                    for (var slot = 1; slot <= Math.Min(32, Math.Max(1, slots)); slot++)
+                    {
+                        if (clock.ElapsedMilliseconds >= 60000) return;
+                        var query = "ii:" + slot.ToString(CultureInfo.InvariantCulture);
+                        try
+                        {
+                            var reply = ask(PrinterInformationDecoder.Request(query));
+                            report.Add(query, reply);
+                            if (Encoding.ASCII.GetString(reply).Contains(":NA;")) break;
+                        }
+                        catch (Exception error) { report.AddFailure(query, error.Message); return; }
+                    }
+                });
+            }
+            catch (Exception error)
+            {
+                if (!report.Replies.Any(item => !string.IsNullOrEmpty(item.Hex))) throw;
+                report.AddFailure("session", error.Message);
+            }
+            return report;
+        }
+
+        private sealed class ControlChannel
+        {
+            private readonly Action<byte[]> write;
+            private readonly Func<byte[]> read;
+            private readonly Queue<byte> received = new Queue<byte>();
+            private readonly System.Diagnostics.Stopwatch elapsed = System.Diagnostics.Stopwatch.StartNew();
+            private byte socket;
+            private byte revision = 0x10;
+
+            internal ControlChannel(Action<byte[]> write, Func<byte[]> read)
+            {
+                this.write = write;
+                this.read = read;
+            }
+
+            private void CheckDeadline()
+            {
+                if (elapsed.ElapsedMilliseconds >= 8000)
+                    throw new TimeoutException("The USB printer did not complete its EPSON-CTRL status exchange.");
+            }
+
+            private byte[] Take(int count)
+            {
+                var result = new byte[count];
+                for (var i = 0; i < count; i++)
+                {
+                    while (received.Count == 0)
+                    {
+                        CheckDeadline();
+                        var chunk = read();
+                        if (chunk == null)
+                            throw new InvalidOperationException("Missing IEEE 1284.4 USB transfer.");
+                        // USB can complete with a zero-length packet before the next D4 frame.
+                        if (chunk.Length == 0)
+                        {
+                            System.Threading.Thread.Sleep(10);
+                            continue;
+                        }
+                        foreach (var value in chunk) received.Enqueue(value);
+                    }
+                    result[i] = received.Dequeue();
+                }
+                return result;
+            }
+
+            private byte[] Packet()
+            {
+                var header = Take(6);
+                var length = header[2] * 256 + header[3];
+                if (length < 6)
+                    throw new InvalidOperationException("Invalid IEEE 1284.4 packet length.");
+                return header.Concat(Take(length - 6)).ToArray();
+            }
+
+            private byte[] Command(byte command, params byte[] payload)
+                => ExchangeCommand(command, payload);
+
+            private byte[] ExchangeCommand(byte command, byte[] payload, bool allowError = false)
+            {
+                CheckDeadline();
+                var length = 7 + payload.Length;
+                write(new byte[] { 0, 0, (byte)(length >> 8), (byte)length, 1, 0, command }
+                    .Concat(payload).ToArray());
+                var reply = Packet();
+                if (reply.Length < 8 || reply[0] != 0 || reply[1] != 0 ||
+                    reply[6] != (command | 0x80) || (reply[7] != 0 && !allowError))
+                    throw new InvalidOperationException("The USB printer rejected IEEE 1284.4 command " + command + ".");
+                return reply;
+            }
+
+            internal byte[] Query(Action<Func<byte[], byte[]>> collect = null)
+            {
+                var entered = false;
+                var opened = false;
+                var failed = false;
+                try
+                {
+                    write(new byte[] { 0, 0, 0, 27, 1 }.Concat(
+                        Encoding.ASCII.GetBytes("@EJL 1284.4\n@EJL\n@EJL\n")).ToArray());
+                    entered = true;
+                    Packet(); // EnterIEEE acknowledgement, before Init.
+                    var init = ExchangeCommand(0, new[] { revision }, allowError: true);
+                    if (init.Length == 9 && init[7] != 0 && init[8] == 0x20)
+                    {
+                        revision = 0x20;
+                        init = Command(0, revision);
+                    }
+                    if (init.Length != 9 || init[7] != 0 || init[8] != revision)
+                        throw new InvalidOperationException("Unsupported IEEE 1284.4 revision.");
+                    var service = Command(9, Encoding.ASCII.GetBytes("EPSON-CTRL"));
+                    if (service.Length < 9 || service[8] == 0)
+                        throw new InvalidOperationException("EPSON-CTRL is unavailable.");
+                    socket = service[8];
+                    var channel = revision == 0x10
+                        ? Command(1, socket, socket, 2, 0, 2, 0, 0, 0, 0, 0)
+                        : Command(1, socket, socket, 2, 0, 2, 0, 0, 0);
+                    opened = true;
+                    if (channel.Length != (revision == 0x10 ? 16 : 14) || channel[8] != socket || channel[9] != socket ||
+                        channel[10] * 256 + channel[11] < 11 || channel[12] * 256 + channel[13] <= 6)
+                        throw new InvalidOperationException("Invalid EPSON-CTRL packet sizes.");
+                    if (collect == null) return ReadCommand(StatusRequest);
+                    collect(ReadCommand);
+                    return new byte[0];
+                }
+                catch { failed = true; throw; }
+                finally
+                {
+                    // Always attempt Exit, including when CloseChannel fails.
+                    try
+                    {
+                        elapsed.Restart();
+                        try { if (opened) Command(2, socket, socket, 0); }
+                        finally { elapsed.Restart(); if (entered) Command(8); }
+                    }
+                    catch (Exception) when (failed) { /* Preserve the original query failure. */ }
+                }
+            }
+
+            private byte[] ReadCommand(byte[] request)
+            {
+                elapsed.Restart();
+                byte[] credit;
+                do
+                {
+                    credit = revision == 0x10
+                        ? Command(4, socket, socket, 0, 0x80, 0xff, 0xff)
+                        : Command(4, socket, socket, 0, 8);
+                    if (credit.Length != 12 || credit[8] != socket || credit[9] != socket)
+                        throw new InvalidOperationException("Invalid EPSON-CTRL credit reply.");
+                } while (credit[10] == 0 && credit[11] == 0);
+                GrantCredit();
+                var length = request.Length + 6;
+                write(new byte[] { socket, socket, (byte)(length >> 8), (byte)length, 0, 1 }
+                    .Concat(request).ToArray());
+                var status = new List<byte>();
+                var bdc = request.SequenceEqual(StatusRequest);
+                while (true)
+                {
+                    CheckDeadline();
+                    var packet = Packet();
+                    if (packet[0] != socket || packet[1] != socket)
+                        throw new InvalidOperationException("Unexpected EPSON-CTRL data socket.");
+                    status.AddRange(packet.Skip(6));
+                    if (bdc && status.Count > 0 && status[0] == 0) status.RemoveAt(0);
+                    if (status.Count > 65547)
+                        throw new InvalidOperationException("EPSON-CTRL reply is too large.");
+                    if (bdc && !StatusHeader.Take(Math.Min(10, status.Count)).SequenceEqual(status.Take(10)))
+                        throw new InvalidOperationException("Invalid EPSON-CTRL status header.");
+                    if (bdc && status.Count >= 12)
+                    {
+                        if (!StatusHeader.SequenceEqual(status.Take(10)))
+                            throw new InvalidOperationException("Invalid EPSON-CTRL status header.");
+                        var expected = 12 + status[10] + 256 * status[11];
+                        if (status.Count >= expected) return status.Take(expected).ToArray();
+                    }
+                    if (!bdc && (status.Contains(12) || (packet[5] & 1) != 0)) return status.ToArray();
+                    GrantCredit();
+                }
+            }
+
+            private void GrantCredit()
+            {
+                var reply = Command(3, socket, socket, 0, 1);
+                if (reply.Length != 10 || reply[8] != socket || reply[9] != socket)
+                    throw new InvalidOperationException("Invalid EPSON-CTRL receive credit reply.");
             }
         }
 
         private static List<UsbInkLevel> ParseInk(byte[] reply)
         {
             var inks = new List<UsbInkLevel>();
+            if (reply != null && reply.Length > 0 && reply[0] == 0)
+                reply = reply.Skip(1).ToArray();
             if (reply == null || reply.Length < 12 || !StatusHeader.SequenceEqual(reply.Take(StatusHeader.Length)))
                 throw new InvalidOperationException("The USB printer did not return an Epson BDC status reply.");
             var bodyLength = reply[10] | reply[11] << 8;
             if (bodyLength > reply.Length - 12)
                 throw new InvalidOperationException("The USB printer returned an incomplete status reply.");
             var end = 12 + bodyLength;
-            for (var position = 12; position + 2 <= end;)
+            var entries = new List<int>();
+            for (var position = 12; position < end;)
             {
+                if (end - position < 2)
+                    throw new InvalidOperationException("The USB printer returned an invalid status reply.");
                 var tag = reply[position++];
                 var length = reply[position++];
                 if (position + length > end)
                     throw new InvalidOperationException("The USB printer returned an invalid status reply.");
-                if (tag == 0x0f && length >= 4)
+                if (tag == 0x0f)
                 {
+                    if (length < 1)
+                        throw new InvalidOperationException("The USB printer returned an invalid ink field.");
                     var width = reply[position];
-                    if ((width == 3 || width == 4) && (length - 1) % width == 0)
-                    {
-                        var kinds = new HashSet<byte>();
-                        for (var entry = position + 1; entry + width <= position + length; entry += width)
-                            kinds.Add(reply[entry]);
-                        for (var entry = position + 1; entry + width <= position + length; entry += width)
-                        {
-                            var level = reply[entry + 2] == (byte)'i' ? 0 : reply[entry + 2];
-                            if (level <= 100) inks.Add(new UsbInkLevel
-                            {
-                                Name = InkName(reply[entry], kinds.Contains(0x0b)),
-                                Percent = level,
-                            });
-                        }
-                    }
+                    if (width < 3 || (length - 1) % width != 0)
+                        throw new InvalidOperationException("The USB printer returned an invalid ink record width.");
+                    for (var entry = position + 1; entry + width <= position + length; entry += width)
+                        entries.Add(entry);
                 }
                 position += length;
+            }
+            var matte = entries.Any(entry => reply[entry] == 0x0b);
+            foreach (var entry in entries)
+            {
+                var level = reply[entry + 2] == (byte)'i' ? 0 : reply[entry + 2];
+                inks.Add(new UsbInkLevel
+                {
+                    Name = InkName(reply[entry], matte),
+                    Percent = level <= 100 ? level : -1,
+                });
             }
             return inks;
         }
@@ -79,7 +329,7 @@ namespace pyToneRIP.QueueHelper
                 case 0x0b: return "MK";
                 case 0x0c: return "R";
                 case 0x0d: return "B";
-                case 0x0e: return "O";
+                case 0x0e: return "GO";
                 case 0x0f: return "LLK";
                 case 0x10: return "OR";
                 case 0x11: return "G";
@@ -105,51 +355,83 @@ namespace pyToneRIP.QueueHelper
             private static readonly IntPtr InvalidHandleValue = new IntPtr(-1);
             private readonly IntPtr handle;
 
-            internal UsbPrintDevice(string deviceInstanceId)
+            internal UsbPrintDevice(string deviceInstanceId, bool exclusive = false)
             {
                 handle = CreateFileW(FindInterfacePath(deviceInstanceId), GenericRead | GenericWrite,
-                    FileShareRead | FileShareWrite, IntPtr.Zero, OpenExisting, FileFlagOverlapped, IntPtr.Zero);
+                    exclusive ? 0 : FileShareRead | FileShareWrite,
+                    IntPtr.Zero, OpenExisting, FileFlagOverlapped, IntPtr.Zero);
                 if (handle == InvalidHandleValue)
                     throw new Win32Exception(Marshal.GetLastWin32Error(), "Could not open the USB printer interface.");
             }
 
-            internal void Write(byte[] data) => Transfer(data, true);
+            internal void Write(byte[] data)
+            {
+                var offset = 0;
+                while (offset < data.Length)
+                {
+                    var count = Transfer(data.Skip(offset).ToArray(), true);
+                    if (count == 0) throw new InvalidOperationException("The USB printer accepted no status data.");
+                    offset += count;
+                }
+            }
 
             internal byte[] Read()
             {
-                var buffer = new byte[8192];
+                // Read a whole USB transfer; ControlChannel buffers D4 frames.
+                var buffer = new byte[65536];
                 var count = Transfer(buffer, false);
-                if (count == 0) throw new InvalidOperationException("The USB printer returned an empty status reply.");
                 return buffer.Take(count).ToArray();
             }
 
-            private int Transfer(byte[] buffer, bool write)
+            internal void Drain()
+            {
+                var timer = System.Diagnostics.Stopwatch.StartNew();
+                var buffer = new byte[65536];
+                while (timer.ElapsedMilliseconds < 300)
+                {
+                    try { if (Transfer(buffer, false, 100) == 0) break; }
+                    catch (TimeoutException) { break; }
+                }
+            }
+
+            internal void SoftReset() => Transfer(new byte[0], false, 3000, true);
+
+            private int Transfer(byte[] buffer, bool write, uint timeout = 3000, bool reset = false)
             {
                 var eventHandle = CreateEventW(IntPtr.Zero, true, false, null);
                 if (eventHandle == IntPtr.Zero)
                     throw new Win32Exception(Marshal.GetLastWin32Error(), "Could not create USB status event.");
                 var pinnedBuffer = GCHandle.Alloc(buffer, GCHandleType.Pinned);
+                var overlapped = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(NativeOverlapped)));
                 try
                 {
-                    var overlapped = new NativeOverlapped { EventHandle = eventHandle };
+                    Marshal.StructureToPtr(new NativeOverlapped { EventHandle = eventHandle }, overlapped, false);
                     uint transferred;
-                    var succeeded = write
+                    var succeeded = reset
+                        ? DeviceIoControl(handle, 0x220040, IntPtr.Zero, 0, IntPtr.Zero, 0, out transferred, overlapped)
+                        : write
                         ? WriteFile(handle, pinnedBuffer.AddrOfPinnedObject(), (uint)buffer.Length,
-                            out transferred, ref overlapped)
+                            out transferred, overlapped)
                         : ReadFile(handle, pinnedBuffer.AddrOfPinnedObject(), (uint)buffer.Length,
-                            out transferred, ref overlapped);
+                            out transferred, overlapped);
                     if (!succeeded)
                     {
                         var error = Marshal.GetLastWin32Error();
                         if (error != ErrorIoPending)
                             throw new Win32Exception(error, "USB printer status transfer failed.");
-                        var result = WaitForSingleObject(eventHandle, 3000);
-                        if (result == WaitTimeout)
+                        var result = WaitForSingleObject(eventHandle, timeout);
+                        if (result != WaitObject0)
                         {
-                            CancelIoEx(handle, ref overlapped);
-                            throw new TimeoutException("The USB printer did not answer its status request.");
+                            var waitError = Marshal.GetLastWin32Error();
+                            CancelIoEx(handle, overlapped);
+                            // Cancellation is asynchronous: both native OVERLAPPED
+                            // and the pinned buffer must survive its completion.
+                            GetOverlappedResult(handle, overlapped, out transferred, true);
+                            if (result == WaitTimeout)
+                                throw new TimeoutException("The USB printer did not answer its status request.");
+                            throw new Win32Exception(waitError, "USB status wait failed.");
                         }
-                        if (result != WaitObject0 || !GetOverlappedResult(handle, ref overlapped,
+                        if (!GetOverlappedResult(handle, overlapped,
                             out transferred, false))
                             throw new Win32Exception(Marshal.GetLastWin32Error(), "USB printer status transfer failed.");
                     }
@@ -157,6 +439,7 @@ namespace pyToneRIP.QueueHelper
                 }
                 finally
                 {
+                    Marshal.FreeHGlobal(overlapped);
                     pinnedBuffer.Free();
                     CloseHandle(eventHandle);
                 }
@@ -281,16 +564,19 @@ namespace pyToneRIP.QueueHelper
             private static extern IntPtr CreateFileW(string name, uint access, uint share,
                 IntPtr security, uint creation, uint flags, IntPtr template);
             [DllImport("kernel32.dll", SetLastError = true)]
+            private static extern bool DeviceIoControl(IntPtr handle, uint code, IntPtr input, uint inputSize,
+                IntPtr output, uint outputSize, out uint returned, IntPtr overlapped);
+            [DllImport("kernel32.dll", SetLastError = true)]
             private static extern bool ReadFile(IntPtr handle, IntPtr buffer, uint count,
-                out uint read, ref NativeOverlapped overlapped);
+                out uint read, IntPtr overlapped);
             [DllImport("kernel32.dll", SetLastError = true)]
             private static extern bool WriteFile(IntPtr handle, IntPtr buffer, uint count,
-                out uint written, ref NativeOverlapped overlapped);
+                out uint written, IntPtr overlapped);
             [DllImport("kernel32.dll", SetLastError = true)]
             private static extern bool GetOverlappedResult(IntPtr handle,
-                ref NativeOverlapped overlapped, out uint transferred, bool wait);
+                IntPtr overlapped, out uint transferred, bool wait);
             [DllImport("kernel32.dll", SetLastError = true)]
-            private static extern bool CancelIoEx(IntPtr handle, ref NativeOverlapped overlapped);
+            private static extern bool CancelIoEx(IntPtr handle, IntPtr overlapped);
             [DllImport("kernel32.dll", SetLastError = true)]
             private static extern IntPtr CreateEventW(IntPtr attributes, bool manualReset,
                 bool initialState, string name);

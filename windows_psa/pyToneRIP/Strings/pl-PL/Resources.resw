@@ -93,7 +93,7 @@
   <data name="Auto.B388B9C01523.Text"><value>Rozmiar</value></data>
   <data name="Auto.C195019E59CC.Text"><value>Najjaśniejszy</value></data>
   <data name="Auto.C681456D80A8.Content"><value>Selektory RGB (QTR InkSeparation)</value></data>
-  <data name="Auto.C706B9DFA105.Text"><value>Tworzy mały PRN specyficzny dla modelu z nieprzetworzonymi paskami gęstości dla każdego skonfigurowanego kanału fizycznego. Krzywe QTR celowo nie są wykorzystywane w tym pierwszym teście inżynieryjnym.</value></data>
+  <data name="Auto.C706B9DFA105.Text"><value>Drukuj test tonalny A4 z gradientami, kołami i stopniami szarości, używając wybranych krzywych i ustawień druku. Włóż pusty arkusz A4.</value></data>
   <data name="Auto.C84252F663BA.Header"><value>Połączenie</value></data>
   <data name="Auto.C8D7FCDF582D.Text"><value>Podłączenie drukarki</value></data>
   <data name="Auto.CC5611F72641.Text"><value>Wyłączone (zalecane): zachowanie strony utworzonej przez aplikację drukującą i system Windows. Włącz: dodatkowo skaluj i pozycjonuj ukończoną stronę w RIP-ie.</value></data>
@@ -277,7 +277,7 @@
   <data name="Maintenance.head_clean.Title"><value>Wyczyść głowicę drukującą</value></data>
   <data name="Maintenance.nozzle_check.Description"><value>Poproś oprogramowanie sprzętowe drukarki o wydrukowanie natywnego wzoru dysz.</value></data>
   <data name="Maintenance.nozzle_check.Title"><value>Wydrukuj test dysz</value></data>
-  <data name="Maintenance.test_page.Description"><value>Wydrukuj mały, surowy wzór na każdy kanał, korzystając z wybranych ustawień modelu.</value></data>
+  <data name="Maintenance.test_page.Description"><value>Drukuj test tonalny A4 z gradientami, kołami i stopniami szarości, używając wybranych krzywych i ustawień druku. Włóż pusty arkusz A4.</value></data>
   <data name="Maintenance.test_page.Title"><value>Wydrukuj stronę testową pyToneRIP</value></data>
   <data name="Processing16Bit.Content"><value>Przetwarzanie 16-bitowe</value></data>
   <data name="Processing16BitExperimental.Text"><value>(tryb eksperymentalny)</value></data>
@@ -289,6 +289,9 @@
   <data name="MainPage.SendLogs.Content"><value>Utwórz raport diagnostyczny</value></data>
   <data name="Code.SupportReportPrompt"><value>ZIP na pulpicie zawiera techniczne informacje o błędach pyToneRIP i Windows z ostatnich 24 godzin. Zawartość dokumentów, prywatne ścieżki i adresy IP są pomijane. Aplikacja nie wysyła archiwum.</value></data>
   <data name="Code.SupportReportCreated"><value>Plik ZIP utworzono na pulpicie: {0}</value></data>
+  <data name="Usb.DirectPrint"><value>Drukuj bezpośrednio przez USB</value></data>
+  <data name="Usb.DirectPrintHint"><value>Wysyła zadania bezpośrednio do drukarki podłączonej przez USB. Jeśli zainstalowano sterownik Epson, wybierz kolejkę drukowania systemu Windows (RAW).</value></data>
+  <data name="Usb.DirectPrintRecommendation"><value>Wybierz tę opcję, jeśli oficjalny sterownik Epson nie jest zainstalowany.</value></data>
   <data name="Usb.Device"><value>Podłączona drukarka USB</value></data>
   <data name="Usb.Refresh"><value>Odśwież drukarki USB</value></data>
   <data name="Usb.Searching"><value>Wyszukiwanie drukarek USB…</value></data>
@@ -347,6 +350,7 @@
   <data name="PreviewWindow.ProfileMismatch" xml:space="preserve"><value>ICC różni się od zapisanych warunków druku.</value></data>
   <data name="PreviewWindow.PhysicalUnavailable" xml:space="preserve"><value>Fizyczny stan drukarki jest niedostępny.</value></data>
   <data name="PreviewWindow.PhysicalUnconfirmed" xml:space="preserve"><value>Stan urządzenia nie potwierdza zakończenia tego zadania ani wysunięcia arkusza.</value></data>
+  <data name="PreviewWindow.PhysicalCancelUnconfirmed" xml:space="preserve"><value>Drukarka nie potwierdziła anulowania. Spróbuj ponownie lub anuluj zadanie na panelu sterowania drukarki.</value></data>
   <data name="PreviewWindow.DeviceOther" xml:space="preserve"><value>Drukarka: inny stan</value></data>
   <data name="PreviewWindow.DeviceUnknown" xml:space="preserve"><value>Drukarka: nieznany stan</value></data>
   <data name="PreviewWindow.DeviceIdle" xml:space="preserve"><value>Drukarka: bezczynna</value></data>
@@ -368,4 +372,60 @@
   <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>Strzałka wskazuje krawędź arkusza drukowaną jako pierwszą.</value></data>
   <data name="PreviewWindow.PhotoCrop" xml:space="preserve"><value>Przeciągnij białe uchwyty pośrodku boków, aby przyciąć; przeciągnij na zewnątrz, aby przywrócić. Uchwyty narożne zmieniają rozmiar.</value></data>
   <data name="PreviewWindow.PhotoFill" xml:space="preserve"><value>Wypełnij stronę</value></data>
+  <data name="PrinterInfo.Read.Content" xml:space="preserve"><value>Odczytaj informacje o drukarce</value></data>
+  <data name="PrinterInfo.Help.Text" xml:space="preserve"><value>Odczytuje informacje zgłaszane przez wybraną drukarkę przez USB lub sieć.</value></data>
+  <data name="PrinterInfo.Title.Text" xml:space="preserve"><value>Informacje o drukarce</value></data>
+  <data name="PrinterInfo.Empty.Text" xml:space="preserve"><value>Wybierz „Odczytaj informacje o drukarce”, aby pobrać raport urządzenia.</value></data>
+  <data name="PrinterInfo.Reading" xml:space="preserve"><value>Odczytywanie informacji o drukarce…</value></data>
+  <data name="PrinterInfo.Failed" xml:space="preserve"><value>Nie można odczytać informacji o drukarce: {0}</value></data>
+  <data name="PrinterInfo.Busy" xml:space="preserve"><value>Drukarka jest używana. Poczekaj na zakończenie drukowania lub konserwacji.</value></data>
+  <data name="PrinterInfo.Connection" xml:space="preserve"><value>Połączenie</value></data>
+  <data name="PrinterInfo.Identity" xml:space="preserve"><value>Identyfikacja</value></data>
+  <data name="PrinterInfo.Status" xml:space="preserve"><value>Stan i ostrzeżenia</value></data>
+  <data name="PrinterInfo.Inks" xml:space="preserve"><value>Poziomy tuszu</value></data>
+  <data name="PrinterInfo.Details" xml:space="preserve"><value>Dodatkowe informacje</value></data>
+  <data name="PrinterInfo.Raw" xml:space="preserve"><value>Oryginalne odpowiedzi urządzenia</value></data>
+  <data name="PrinterInfo.Model" xml:space="preserve"><value>Model</value></data>
+  <data name="PrinterInfo.Firmware" xml:space="preserve"><value>Oprogramowanie układowe</value></data>
+  <data name="PrinterInfo.DeviceId" xml:space="preserve"><value>Identyfikacja urządzenia</value></data>
+  <data name="PrinterInfo.Cartridges" xml:space="preserve"><value>Typy wkładów</value></data>
+  <data name="PrinterInfo.Cartridge" xml:space="preserve"><value>Wkład</value></data>
+  <data name="PrinterInfo.Error" xml:space="preserve"><value>Błąd</value></data>
+  <data name="PrinterInfo.Warning" xml:space="preserve"><value>Ostrzeżenie</value></data>
+  <data name="PrinterInfo.SerialNumber" xml:space="preserve"><value>Numer seryjny</value></data>
+  <data name="PrinterInfo.State" xml:space="preserve"><value>Stan</value></data>
+  <data name="PrinterInfo.NoData" xml:space="preserve"><value>Brak danych</value></data>
+  <data name="PrinterInfo.Field" xml:space="preserve"><value>Pole 0x{0}</value></data>
+  <data name="PrinterInfo.MaintenanceBox" xml:space="preserve"><value>Pojemnik konserwacyjny</value></data>
+  <data name="PrinterInfo.PaperCounters" xml:space="preserve"><value>Liczniki stron</value></data>
+  <data name="PrinterInfo.Temperature" xml:space="preserve"><value>Temperatura</value></data>
+  <data name="PrinterInfo.Interface" xml:space="preserve"><value>Stan interfejsu</value></data>
+  <data name="PrinterInfo.Unsupported" xml:space="preserve"><value>Nieobsługiwane lub brak odpowiedzi</value></data>
+  <data name="PrinterInfo.Source" xml:space="preserve"><value>Źródło</value></data>
+  <data name="MainPage.CancelJob.Content"><value>Anuluj bieżące zadanie drukowania</value></data>
+  <data name="MainPage.NoActiveJob" xml:space="preserve"><value>Wybrana drukarka nie ma aktywnego zadania drukowania.</value></data>
+  <data name="MainPage.CancelJobFailed" xml:space="preserve"><value>Nie udało się anulować zadania. Sprawdź połączenie z drukarką i spróbuj ponownie.</value></data>
+  <data name="Network.Search"><value>Wyszukaj drukarki</value></data>
+  <data name="Network.Device"><value>Wybierz wykrytą drukarkę</value></data>
+  <data name="Network.DeviceHint"><value>Na liście widać model i adres IP każdej drukarki.</value></data>
+  <data name="Network.Searching"><value>Wyszukiwanie drukarek Epson…</value></data>
+  <data name="Network.None"><value>Nie znaleziono urządzeń Epson w sieci lokalnej.</value></data>
+  <data name="Network.Choose"><value>Wybierz z listy</value></data>
+  <data name="Network.Manual"><value>Skonfiguruj ręcznie</value></data>
+  <data name="Network.UnknownModel"><value>Drukarka nie podała swojego modelu.</value></data>
+  <data name="Network.UnsupportedModel"><value>Tego modelu nie ma w zainstalowanym katalogu drukarek.</value></data>
+  <data name="Network.RawUnavailable"><value>Drukarka nie przyjęła połączenia na porcie TCP 9100.</value></data>
+  <data name="Network.ChooseModel"><value>Wybierz odpowiedni model z katalogu.</value></data>
+  <data name="Network.SearchFailed"><value>Wyszukiwanie drukarek sieciowych nie powiodło się.</value></data>
+  <data name="Network.AddressAssigned"><value>Adres {0} jest już przypisany do drukarki pyToneRIP.</value></data>
+  <data name="Network.SearchHint"><value>Wyszukaj drukarki Epson w sieci lokalnej.</value></data>
+  <data name="Network.FoundCount"><value>Liczba znalezionych drukarek: {0}</value></data>
+  <data name="Queue.Title"><value>Kolejka Windows (RAW)</value></data>
+  <data name="Queue.Recommended"><value>Zalecane, jeśli dla tej drukarki zainstalowano oficjalny sterownik Epson.</value></data>
+  <data name="Queue.RawDriverRequired"><value>Zainstaluj oficjalny sterownik Epson dla tego modelu, aby drukować z pyToneRIP przez kolejkę systemu Windows (RAW).</value></data>
+  <data name="Queue.Select"><value>Wybierz zainstalowaną kolejkę Epson</value></data>
+  <data name="Queue.Searching"><value>Wyszukiwanie kolejek Epson w systemie Windows…</value></data>
+  <data name="Queue.None"><value>Nie znaleziono zgodnych kolejek Epson w systemie Windows.</value></data>
+  <data name="Queue.SearchFailed"><value>Nie udało się pobrać kolejek wydruku systemu Windows.</value></data>
+  <data name="Queue.Assigned"><value>Kolejka Windows {0} jest już przypisana do drukarki pyToneRIP.</value></data>
 </root>

@@ -92,7 +92,7 @@ namespace pyToneRIP.Tasks.Services
 
                 if (File.Exists(Path.Combine(jobFolder.Path, "cancel.requested")))
                     throw new OperationCanceledException(
-                        "Windows print job was canceled while waiting for its printer.");
+                        "Windows print job cancellation requested; the printer may still be stopping.");
 
                 // Queue waiting is intentionally not charged to the job's
                 // processing timeout.  Start a separate deadline only after the
@@ -167,6 +167,12 @@ namespace pyToneRIP.Tasks.Services
                 if (string.IsNullOrWhiteSpace(deviceId))
                     throw new InvalidDataException("pyToneRIP USB device identity is missing.");
                 return "usb|" + deviceId.ToUpperInvariant();
+            }
+            if (kind == "windows_queue")
+            {
+                var queue = connection.GetNamedString("printer_queue", "").Trim();
+                if (queue.Length == 0) throw new InvalidDataException("pyToneRIP Windows queue is missing.");
+                return "windows_queue|" + queue.ToUpperInvariant();
             }
             throw new InvalidDataException("pyToneRIP connection kind is invalid.");
         }

@@ -61,7 +61,7 @@ namespace pyToneRIP.QueueHelper
             }
         }
 
-        public static void RunMaintenance(string localState, string requestJson)
+        public static string RunMaintenance(string localState, string requestJson)
         {
             if (string.IsNullOrWhiteSpace(requestJson) || requestJson.Length > 1024 * 1024)
                 throw new InvalidDataException("Maintenance request JSON is missing or too large.");
@@ -69,16 +69,7 @@ namespace pyToneRIP.QueueHelper
             using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(requestJson)))
                 request = (MaintenanceBrokerRequest)new DataContractJsonSerializer(
                     typeof(MaintenanceBrokerRequest)).ReadObject(stream);
-            IPAddress address;
-            if (request == null
-                || request.Schema != "pytone-rip.maintenance-request"
-                || request.Version != 1
-                || !IPAddress.TryParse((request.Host ?? "").Trim(), out address)
-                || request.Port < 1
-                || request.Port > 65535)
-                throw new InvalidDataException("Maintenance request endpoint is invalid.");
-
-            var printerKey = "network|" + address + "|" + request.Port;
+            var printerKey = MaintenancePrinterKey(request);
             using (var printerMutex = new Mutex(false, PhysicalPrinterMutexName(printerKey)))
             {
                 var ownsPrinter = false;
@@ -96,37 +87,7 @@ namespace pyToneRIP.QueueHelper
                         throw new InvalidOperationException(
                             "The printer is busy with another RIP or maintenance job.");
 
-                    var folder = Path.Combine(localState, "maintenance");
-                    Directory.CreateDirectory(folder);
-                    var requestPath = Path.Combine(folder, Guid.NewGuid().ToString("N") + ".json");
-                    var errorPath = Path.ChangeExtension(requestPath, ".error.txt");
-                    try
-                    {
-                        File.WriteAllText(requestPath, requestJson, new UTF8Encoding(false));
-                        using (var process = StartRuntime(
-                            localState, "--maintenance-request " + Quote(requestPath)))
-                        {
-                            if (!process.WaitForExit(
-                                (int)TimeSpan.FromMinutes(10).TotalMilliseconds))
-                            {
-                                try { process.Kill(); } catch { }
-                                throw new TimeoutException(
-                                    "Printer maintenance exceeded the 10 minute limit.");
-                            }
-                            if (process.ExitCode != 0)
-                            {
-                                var detail = File.Exists(errorPath)
-                                    ? File.ReadAllText(errorPath).Trim()
-                                    : "Packaged Python RIP exited with code " + process.ExitCode + ".";
-                                throw new InvalidOperationException(detail);
-                            }
-                        }
-                    }
-                    finally
-                    {
-                        try { File.Delete(requestPath); } catch { }
-                        try { File.Delete(errorPath); } catch { }
-                    }
+                    return Program.RunMaintenanceTransport(request, requestJson, json => RunMaintenanceRuntime(localState, json));
                 }
                 finally
                 {
@@ -134,6 +95,65 @@ namespace pyToneRIP.QueueHelper
                         printerMutex.ReleaseMutex();
                 }
             }
+        }
+
+        private static void RunMaintenanceRuntime(string localState, string requestJson)
+        {
+            var folder = Path.Combine(localState, "maintenance");
+            Directory.CreateDirectory(folder);
+            var requestPath = Path.Combine(folder, Guid.NewGuid().ToString("N") + ".json");
+            var errorPath = Path.ChangeExtension(requestPath, ".error.txt");
+            try
+            {
+                File.WriteAllText(requestPath, requestJson, new UTF8Encoding(false));
+                using (var process = StartRuntime(localState, "--maintenance-request " + Quote(requestPath)))
+                {
+                    if (!process.WaitForExit((int)TimeSpan.FromMinutes(10).TotalMilliseconds))
+                    {
+                        try { process.Kill(); } catch { }
+                        throw new TimeoutException("Printer maintenance exceeded the 10 minute limit.");
+                    }
+                    if (process.ExitCode != 0)
+                    {
+                        var detail = File.Exists(errorPath) ? File.ReadAllText(errorPath).Trim()
+                            : "Packaged Python RIP exited with code " + process.ExitCode + ".";
+                        throw new InvalidOperationException(detail);
+                    }
+                }
+            }
+            finally
+            {
+                try { File.Delete(requestPath); } catch { }
+                try { File.Delete(errorPath); } catch { }
+            }
+        }
+
+        internal static string MaintenancePrinterKey(MaintenanceBrokerRequest request)
+        {
+            if (request == null || request.Schema != "pytone-rip.maintenance-request" || request.Version != 1)
+                throw new InvalidDataException("Maintenance request schema is invalid.");
+            var kind = request.ConnectionKind ?? "network";
+            if (kind == "usb")
+            {
+                var device = request.UsbDeviceId;
+                if (string.IsNullOrWhiteSpace(device) || device != device.Trim() ||
+                    !device.StartsWith("USBPRINT\\", StringComparison.OrdinalIgnoreCase))
+                    throw new InvalidDataException("Maintenance USB device identity is invalid.");
+                return "usb|" + device.ToUpperInvariant();
+            }
+            if (kind == "windows_queue")
+            {
+                var queue = (request.PhysicalQueueName ?? "").Trim();
+                if (queue.Length == 0 || request.PhysicalQueueDriver?.StartsWith("Epson ", StringComparison.OrdinalIgnoreCase) != true
+                    || queue.StartsWith("pyToneRIP", StringComparison.OrdinalIgnoreCase))
+                    throw new InvalidDataException("Maintenance Windows RAW queue is invalid.");
+                return "windows_queue|" + queue.ToUpperInvariant();
+            }
+            IPAddress address;
+            if (kind != "network" || !IPAddress.TryParse((request.Host ?? "").Trim(), out address) ||
+                request.Port < 1 || request.Port > 65535)
+                throw new InvalidDataException("Maintenance request endpoint is invalid.");
+            return "network|" + address + "|" + request.Port;
         }
 
         public static void ProcessPending(string localState)
@@ -402,6 +422,7 @@ namespace pyToneRIP.QueueHelper
                 var jobFolder = Path.GetDirectoryName(request.JobRecord);
                 var cancellationPath = Path.Combine(jobFolder, CancellationFileName);
                 ThrowIfCancellationRequested(cancellationPath);
+                ValidateRawQueueDriver(jobFolder);
                 PrintQueueCancellationMonitor queueCancellation = null;
                 try
                 {
@@ -417,8 +438,16 @@ namespace pyToneRIP.QueueHelper
                 ThrowIfCancellationRequested(cancellationPath);
                 using (var process = StartRuntime(localState, "--request " + Quote(claimedPath)))
                 {
-                    var cancellationObserved = WaitForRuntimeExit(
-                        process, cancellationPath, queueCancellation);
+                    bool cancellationObserved;
+                    try
+                    {
+                        cancellationObserved = WaitForRuntimeExit(
+                            process, cancellationPath, queueCancellation);
+                    }
+                    finally
+                    {
+                        DeliveredPrintCancellation.CompletePending(localState, jobFolder);
+                    }
                     if (process.ExitCode != 0)
                     {
                         if (cancellationObserved || File.Exists(cancellationPath))
@@ -450,8 +479,6 @@ namespace pyToneRIP.QueueHelper
                         throw new OperationCanceledException("Windows print job was canceled.");
                     throw new InvalidDataException("Packaged RIP render-result failed validation.");
                 }
-                // A marker arriving after the completed transport is too late
-                // to undo the physical job; preserve the durable SENT outcome.
                 response = RipBrokerResponse.Pass(request);
             }
             catch (OperationCanceledException error)
@@ -648,7 +675,15 @@ namespace pyToneRIP.QueueHelper
                 throw new InvalidDataException("RIP request path contains an invalid quote.");
         }
 
-        private static string ReadPhysicalPrinterKey(string jobFolder)
+        private static void ValidateRawQueueDriver(string jobFolder)
+        {
+            var connection = ReadJson<PhysicalPrinterConfiguration>(Path.Combine(jobFolder, "configuration.json"))?.Connection;
+            if (connection != null && (connection.Kind == "windows_queue"
+                || (connection.Kind == "usb" && connection.UsbTransportMode == "windows_queue")))
+                Program.RequireRawQueueDriver(connection.PhysicalQueueName);
+        }
+
+        internal static string ReadPhysicalPrinterKey(string jobFolder)
         {
             var configuration = ReadJson<PhysicalPrinterConfiguration>(
                 Path.Combine(jobFolder, "configuration.json"));
@@ -672,10 +707,16 @@ namespace pyToneRIP.QueueHelper
                     throw new InvalidDataException("RIP USB device identity is missing.");
                 return "usb|" + deviceId.ToUpperInvariant();
             }
+            if (kind == "windows_queue")
+            {
+                var queue = (connection.PhysicalQueueName ?? "").Trim();
+                if (queue.Length == 0) throw new InvalidDataException("RIP Windows queue is missing.");
+                return "windows_queue|" + queue.ToUpperInvariant();
+            }
             throw new InvalidDataException("RIP connection kind is invalid.");
         }
 
-        private static string PhysicalPrinterMutexName(string printerKey)
+        internal static string PhysicalPrinterMutexName(string printerKey)
         {
             byte[] digest;
             using (var sha = SHA256.Create())
@@ -779,6 +820,13 @@ namespace pyToneRIP.QueueHelper
         [DataMember(Name = "version", Order = 2)] public int Version { get; set; }
         [DataMember(Name = "host", Order = 3)] public string Host { get; set; }
         [DataMember(Name = "port", Order = 4)] public int Port { get; set; }
+        [DataMember(Name = "connection_kind", Order = 5)] public string ConnectionKind { get; set; }
+        [DataMember(Name = "usb_device_id", Order = 6)] public string UsbDeviceId { get; set; }
+        [DataMember(Name = "printer_queue", Order = 7)] public string PhysicalQueueName { get; set; }
+        [DataMember(Name = "printer_queue_driver", Order = 8)] public string PhysicalQueueDriver { get; set; }
+        [DataMember(Name = "action", Order = 9)] public string Action { get; set; }
+        [DataMember(Name = "model", Order = 10)] public string Model { get; set; }
+        [DataMember(Name = "exclusive_usb", Order = 11, EmitDefaultValue = false)] public bool ExclusiveUsb { get; set; }
     }
 
     [DataContract]
@@ -807,6 +855,7 @@ namespace pyToneRIP.QueueHelper
         [DataMember(Name = "port")] public int Port { get; set; }
         [DataMember(Name = "usb_port")] public string UsbPort { get; set; }
         [DataMember(Name = "usb_device_id")] public string UsbDeviceId { get; set; }
+        [DataMember(Name = "usb_transport_mode")] public string UsbTransportMode { get; set; }
         [DataMember(Name = "printer_queue")] public string PhysicalQueueName { get; set; }
     }
 

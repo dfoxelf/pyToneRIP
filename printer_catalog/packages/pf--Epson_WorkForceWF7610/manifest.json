@@ -1,0 +1,25 @@
+{
+  "backend_family": "epson_escp2_workforcenative",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson WorkForceWF7610",
+  "model_id": "WorkForceWF7610",
+  "package_id": "pf--Epson_WorkForceWF7610",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "1f47687675d13e13cd990d5ec6324afa395fc483b06c0db7b92fa0022f694574",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "WorkForceNative",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "41026bc492604d291e13a1cbb4cf2c63d26bbad2decc821f7eacbc9020b26a64",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "b0bab8fcf6879c13d57224d013666d93ef32dd033fb18b9a7dbeba6a97a1dfa8",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "SYNTHETIC_PPD: no Epson manufacturer PPD supplied; technical source ReferenceDriver driver WF7610"
+  ]
+}

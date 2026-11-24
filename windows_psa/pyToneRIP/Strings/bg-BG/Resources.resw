@@ -93,7 +93,7 @@
   <data name="Auto.B388B9C01523.Text"><value>Размер</value></data>
   <data name="Auto.C195019E59CC.Text"><value>Най-светло</value></data>
   <data name="Auto.C681456D80A8.Content"><value>RGB селектори (QTR InkSeparation)</value></data>
-  <data name="Auto.C706B9DFA105.Text"><value>Създава малък, специфичен за модела PRN с необработени ленти за плътност за всеки конфигуриран физически канал. QTR кривите умишлено не се използват от този първи инженерен тест.</value></data>
+  <data name="Auto.C706B9DFA105.Text"><value>Отпечатва тонален тест A4 с градиенти, кръгове и степени на сивото с избраните криви и настройки за печат. Заредете празен лист A4.</value></data>
   <data name="Auto.C84252F663BA.Header"><value>Връзка</value></data>
   <data name="Auto.C8D7FCDF582D.Text"><value>Връзка с принтер</value></data>
   <data name="Auto.CC5611F72641.Text"><value>Изкл. (препоръчително): запазване на страницата, съставена от приложението за печат и Windows. Включено: допълнително мащабирайте и позиционирайте завършената страница в RIP.</value></data>
@@ -277,7 +277,7 @@
   <data name="Maintenance.head_clean.Title"><value>Почистете печатащата глава</value></data>
   <data name="Maintenance.nozzle_check.Description"><value>Помолете фърмуера на принтера да отпечата собствения модел на дюзата.</value></data>
   <data name="Maintenance.nozzle_check.Title"><value>Проверка на дюзите за печат</value></data>
-  <data name="Maintenance.test_page.Description"><value>Отпечатайте малък необработен шаблон за всеки канал, като използвате избраните настройки на модела.</value></data>
+  <data name="Maintenance.test_page.Description"><value>Отпечатва тонален тест A4 с градиенти, кръгове и степени на сивото с избраните криви и настройки за печат. Заредете празен лист A4.</value></data>
   <data name="Maintenance.test_page.Title"><value>Отпечатайте тестова страница на pyToneRIP</value></data>
   <data name="Processing16Bit.Content"><value>16-битова обработка</value></data>
   <data name="Processing16BitExperimental.Text"><value>(експериментален режим)</value></data>
@@ -289,6 +289,9 @@
   <data name="MainPage.SendLogs.Content"><value>Създаване на диагностичен отчет</value></data>
   <data name="Code.SupportReportPrompt"><value>ZIP архивът на работния плот съдържа технически данни за грешките на pyToneRIP и Windows през последните 24 часа. Съдържанието на документите, личните пътища и IP адресите не се включват. Приложението не изпраща архива.</value></data>
   <data name="Code.SupportReportCreated"><value>ZIP архивът е създаден на работния плот: {0}</value></data>
+  <data name="Usb.DirectPrint"><value>Печат директно през USB</value></data>
+  <data name="Usb.DirectPrintHint"><value>Изпраща заданията директно към принтер, свързан чрез USB. Ако драйверът на Epson е инсталиран, изберете опашката на Windows (RAW).</value></data>
+  <data name="Usb.DirectPrintRecommendation"><value>Изберете този вариант, ако официалният драйвер на Epson не е инсталиран.</value></data>
   <data name="Usb.Device"><value>Свързан USB принтер</value></data>
   <data name="Usb.Refresh"><value>Обновяване на USB принтерите</value></data>
   <data name="Usb.Searching"><value>Търсене на USB принтери…</value></data>
@@ -347,6 +350,7 @@
   <data name="PreviewWindow.ProfileMismatch" xml:space="preserve"><value>ICC се различава от запазените условия за печат.</value></data>
   <data name="PreviewWindow.PhysicalUnavailable" xml:space="preserve"><value>Физическото състояние на принтера не е достъпно.</value></data>
   <data name="PreviewWindow.PhysicalUnconfirmed" xml:space="preserve"><value>Състоянието на устройството не потвърждава завършването на тази задача или излизането на листа.</value></data>
+  <data name="PreviewWindow.PhysicalCancelUnconfirmed" xml:space="preserve"><value>Принтерът не потвърди отмяната. Опитайте отново или отменете заданието от контролния панел на принтера.</value></data>
   <data name="PreviewWindow.DeviceOther" xml:space="preserve"><value>Принтер: друго състояние</value></data>
   <data name="PreviewWindow.DeviceUnknown" xml:space="preserve"><value>Принтер: неизвестно състояние</value></data>
   <data name="PreviewWindow.DeviceIdle" xml:space="preserve"><value>Принтер: свободен</value></data>
@@ -368,4 +372,60 @@
   <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>Стрелката показва края на листа, който се отпечатва първи.</value></data>
   <data name="PreviewWindow.PhotoCrop" xml:space="preserve"><value>Плъзнете белите маркери в средата на страните за изрязване; плъзнете навън за възстановяване. Ъгловите маркери променят размера.</value></data>
   <data name="PreviewWindow.PhotoFill" xml:space="preserve"><value>Запълни страницата</value></data>
+  <data name="PrinterInfo.Read.Content" xml:space="preserve"><value>Прочитане на информация за принтера</value></data>
+  <data name="PrinterInfo.Help.Text" xml:space="preserve"><value>Прочита данните, които избраният принтер съобщава чрез USB или мрежата.</value></data>
+  <data name="PrinterInfo.Title.Text" xml:space="preserve"><value>Информация за принтера</value></data>
+  <data name="PrinterInfo.Empty.Text" xml:space="preserve"><value>Изберете „Прочитане на информация за принтера“, за да получите отчета на устройството.</value></data>
+  <data name="PrinterInfo.Reading" xml:space="preserve"><value>Прочитане на информация за принтера…</value></data>
+  <data name="PrinterInfo.Failed" xml:space="preserve"><value>Информацията за принтера не може да бъде прочетена: {0}</value></data>
+  <data name="PrinterInfo.Busy" xml:space="preserve"><value>Принтерът се използва. Изчакайте печатането или поддръжката да приключи.</value></data>
+  <data name="PrinterInfo.Connection" xml:space="preserve"><value>Връзка</value></data>
+  <data name="PrinterInfo.Identity" xml:space="preserve"><value>Идентификация</value></data>
+  <data name="PrinterInfo.Status" xml:space="preserve"><value>Състояние и предупреждения</value></data>
+  <data name="PrinterInfo.Inks" xml:space="preserve"><value>Нива на мастилото</value></data>
+  <data name="PrinterInfo.Details" xml:space="preserve"><value>Допълнителна информация</value></data>
+  <data name="PrinterInfo.Raw" xml:space="preserve"><value>Оригинални отговори на устройството</value></data>
+  <data name="PrinterInfo.Model" xml:space="preserve"><value>Модел</value></data>
+  <data name="PrinterInfo.Firmware" xml:space="preserve"><value>Фърмуер</value></data>
+  <data name="PrinterInfo.DeviceId" xml:space="preserve"><value>Идентификация на устройството</value></data>
+  <data name="PrinterInfo.Cartridges" xml:space="preserve"><value>Видове касети</value></data>
+  <data name="PrinterInfo.Cartridge" xml:space="preserve"><value>Касета</value></data>
+  <data name="PrinterInfo.Error" xml:space="preserve"><value>Грешка</value></data>
+  <data name="PrinterInfo.Warning" xml:space="preserve"><value>Предупреждение</value></data>
+  <data name="PrinterInfo.SerialNumber" xml:space="preserve"><value>Сериен номер</value></data>
+  <data name="PrinterInfo.State" xml:space="preserve"><value>Състояние</value></data>
+  <data name="PrinterInfo.NoData" xml:space="preserve"><value>Не се съобщава</value></data>
+  <data name="PrinterInfo.Field" xml:space="preserve"><value>Поле 0x{0}</value></data>
+  <data name="PrinterInfo.MaintenanceBox" xml:space="preserve"><value>Контейнер за поддръжка</value></data>
+  <data name="PrinterInfo.PaperCounters" xml:space="preserve"><value>Броячи на страници</value></data>
+  <data name="PrinterInfo.Temperature" xml:space="preserve"><value>Температура</value></data>
+  <data name="PrinterInfo.Interface" xml:space="preserve"><value>Състояние на интерфейса</value></data>
+  <data name="PrinterInfo.Unsupported" xml:space="preserve"><value>Не се поддържа или няма отговор</value></data>
+  <data name="PrinterInfo.Source" xml:space="preserve"><value>Източник</value></data>
+  <data name="MainPage.CancelJob.Content"><value>Отмени текущото задание за печат</value></data>
+  <data name="MainPage.NoActiveJob" xml:space="preserve"><value>Избраният принтер няма активно задание.</value></data>
+  <data name="MainPage.CancelJobFailed" xml:space="preserve"><value>Заданието не можа да бъде отменено. Проверете връзката с принтера и опитайте отново.</value></data>
+  <data name="Network.Search"><value>Търсене на принтери</value></data>
+  <data name="Network.Device"><value>Изберете открит принтер</value></data>
+  <data name="Network.DeviceHint"><value>В списъка са показани моделът и IP адресът на всеки принтер.</value></data>
+  <data name="Network.Searching"><value>Търсене на принтери Epson…</value></data>
+  <data name="Network.None"><value>В локалната мрежа няма открити устройства Epson.</value></data>
+  <data name="Network.Choose"><value>Изберете от списъка</value></data>
+  <data name="Network.Manual"><value>Ръчна настройка</value></data>
+  <data name="Network.UnknownModel"><value>Принтерът не съобщи модела си.</value></data>
+  <data name="Network.UnsupportedModel"><value>Този модел липсва в инсталирания каталог с принтери.</value></data>
+  <data name="Network.RawUnavailable"><value>Принтерът не прие връзка на TCP порт 9100.</value></data>
+  <data name="Network.ChooseModel"><value>Изберете подходящ модел от каталога.</value></data>
+  <data name="Network.SearchFailed"><value>Търсенето на мрежови принтери е неуспешно.</value></data>
+  <data name="Network.AddressAssigned"><value>Адрес {0} вече е присвоен на принтер pyToneRIP.</value></data>
+  <data name="Network.SearchHint"><value>Търсене на принтери Epson във вашата локална мрежа.</value></data>
+  <data name="Network.FoundCount"><value>Намерени принтери: {0}</value></data>
+  <data name="Queue.Title"><value>Опашка на Windows (RAW)</value></data>
+  <data name="Queue.Recommended"><value>Препоръчва се, ако за този принтер е инсталиран официалният драйвер на Epson.</value></data>
+  <data name="Queue.RawDriverRequired"><value>Инсталирайте официалния драйвер на Epson за този модел, за да печатате от pyToneRIP през опашката на Windows (RAW).</value></data>
+  <data name="Queue.Select"><value>Изберете инсталирана опашка на Epson</value></data>
+  <data name="Queue.Searching"><value>Търсене на опашки на Epson в Windows…</value></data>
+  <data name="Queue.None"><value>Няма съвместими опашки на Epson в Windows.</value></data>
+  <data name="Queue.SearchFailed"><value>Опашките за печат в Windows не могат да бъдат намерени.</value></data>
+  <data name="Queue.Assigned"><value>Опашката на Windows {0} вече е присвоена на принтер pyToneRIP.</value></data>
 </root>

@@ -50,13 +50,15 @@ namespace pyToneRIP.Shared
             return direct;
         }
 
-        public static async Task<IReadOnlyList<string>> ReadLogicalInksAsync(string path)
+        public static async Task<IReadOnlyList<string>> ReadLogicalInksAsync(
+            string path, bool excludeZeroCurves = false)
         {
             var file = await OpenCurrentAsync(path);
-            return ParseLogicalInks(await FileIO.ReadTextAsync(file));
+            return ParseLogicalInks(await FileIO.ReadTextAsync(file), excludeZeroCurves);
         }
 
-        internal static IReadOnlyList<string> ParseLogicalInks(string text)
+        internal static IReadOnlyList<string> ParseLogicalInks(
+            string text, bool excludeZeroCurves = false)
         {
             List<string> declared = null;
             var markers = new List<string>();
@@ -81,7 +83,37 @@ namespace pyToneRIP.Shared
                 throw new InvalidDataException("QUAD has no valid logical ink declaration.");
             if (declared != null && markers.Count > 0 && !declared.SequenceEqual(markers))
                 throw new InvalidDataException("QUAD header ink order does not match curve markers.");
-            return inks;
+            if (!excludeZeroCurves) return inks;
+
+            // Declarations also contain unused ink tables. Inspect every sample,
+            // since a useful curve can return to zero at either endpoint.
+            var counts = new int[inks.Count];
+            var nonzero = new bool[inks.Count];
+            int index = -1;
+            foreach (var raw in (text ?? "").Split('\n'))
+            {
+                var line = raw.Trim().TrimStart('\uFEFF');
+                var marker = Regex.Match(line, @"^#\s*([^#\s]+)\s+curve\s*$", RegexOptions.IgnoreCase);
+                if (marker.Success)
+                {
+                    index = inks.IndexOf(marker.Groups[1].Value);
+                    continue;
+                }
+                if (line.Length == 0 || line.StartsWith("#") || line.StartsWith("\"#")) continue;
+                if (markers.Count == 0 && (index < 0 || counts[index] == 256)) index++;
+                if (index < 0 || index >= inks.Count || counts[index] >= 256
+                    || !Regex.IsMatch(line, @"^[0-9]+$")
+                    || !ushort.TryParse(line, out ushort sample))
+                    throw new InvalidDataException("QUAD has an invalid curve sample.");
+                counts[index]++;
+                nonzero[index] |= sample != 0;
+            }
+            if (counts.Any(count => count != 256))
+                throw new InvalidDataException("Each QUAD curve must contain exactly 256 samples.");
+            var active = inks.Where((ink, position) => nonzero[position]).ToList();
+            if (active.Count == 0)
+                throw new InvalidDataException("QUAD contains only zero curves.");
+            return active;
         }
 
         private static void Validate(StorageFile file)

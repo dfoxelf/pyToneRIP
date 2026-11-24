@@ -12,6 +12,7 @@ using System.Threading;
 using System.Xml;
 using Microsoft.Win32;
 using pyToneRIP.Models;
+using pyToneRIP.Services;
 
 namespace pyToneRIP.QueueHelper
 {
@@ -29,6 +30,11 @@ namespace pyToneRIP.QueueHelper
             try
             {
                 localState = GetPackageLocalStatePath();
+                if (args.Contains(QueueAppServiceProtocol.LaunchArgument, StringComparer.OrdinalIgnoreCase))
+                {
+                    new QueueAppServiceHost(localState).RunAsync().GetAwaiter().GetResult();
+                    return 0;
+                }
                 if (args.Any(value => string.Equals(
                     value, "--process-rip-requests", StringComparison.OrdinalIgnoreCase)))
                 {
@@ -58,12 +64,7 @@ namespace pyToneRIP.QueueHelper
                             .OrderBy(path => path, StringComparer.OrdinalIgnoreCase)
                             .ToArray();
                         foreach (var requestPath in requests)
-                        {
-                            // A preceding helper can have completed this request while
-                            // this process was waiting for the named mutex.
-                            if (File.Exists(requestPath))
-                                ProcessRequest(requestPath, localState);
-                        }
+                            ProcessRequest(requestPath, localState);
                     }
                     finally
                     {
@@ -82,10 +83,203 @@ namespace pyToneRIP.QueueHelper
 
         private static void ProcessRequest(string requestPath, string localState)
         {
+            var claimedPath = requestPath + ".processing";
+            try
+            {
+                // Claim the file before reading so client cleanup can withdraw
+                // a pending request without touching a request already in use.
+                File.Move(requestPath, claimedPath);
+            }
+            catch (FileNotFoundException)
+            {
+                return;
+            }
+            catch (IOException error)
+            {
+                TryLog(localState, "Could not claim queue request: " + error);
+                return;
+            }
+            try
+            {
+                var response = ExecuteRequest(claimedPath, localState);
+                var responsePath = requestPath.Substring(0, requestPath.Length - RequestSuffix.Length) + ".response.json";
+                WriteJsonAtomically(responsePath, response);
+            }
+            finally
+            {
+                try { File.Delete(claimedPath); } catch (IOException) { } catch (UnauthorizedAccessException) { }
+            }
+        }
+
+        private static QueueHelperResponse ExecuteRequest(string requestPath, string localState)
+        {
+            try
+            {
+                return ExecuteAppServiceRequest(ReadJson<QueueHelperRequest>(requestPath), localState);
+            }
+            catch (Exception error)
+            {
+                return RequestFailure(localState, Path.GetFileName(requestPath), error);
+            }
+        }
+
+        internal static QueueHelperResponse ExecuteAppServiceRequest(QueueHelperRequest request, string localState)
+        {
+            // Keep queue edits mutually exclusive between Manager windows.
+            // Live status, Open Jobs and cancellation bypass these locks.
+            string group;
+            switch (request?.Operation)
+            {
+                case "repair-stale":
+                case "rename":
+                case "set-default":
+                case "set-user-defaults":
+                case "notify-user-defaults":
+                    group = "Settings";
+                    break;
+                case "read-usb-ink":
+                case "read-usb-information":
+                case "read-queue-ink":
+                    group = "UsbStatus";
+                    break;
+                default:
+                    return DispatchRequest(request, localState);
+            }
+            using (var mutex = new Mutex(false, QueueRequestMutexName + "." + group))
+            {
+                var acquired = false;
+                try
+                {
+                    try { acquired = mutex.WaitOne(TimeSpan.FromSeconds(15)); }
+                    catch (AbandonedMutexException) { acquired = true; }
+                    if (!acquired)
+                        throw new TimeoutException("Another queue operation did not release " + group + " in time.");
+                    return DispatchRequest(request, localState);
+                }
+                catch (Exception error)
+                {
+                    return RequestFailure(localState, request.Operation, error);
+                }
+                finally
+                {
+                    if (acquired) mutex.ReleaseMutex();
+                }
+            }
+        }
+
+        private static List<UsbInkLevel> ReadQueueInk(QueueDescriptor queue, string localState)
+        {
+            try
+            {
+                var levels = WindowsQueueInkReader.Read(queue.Name);
+                if (levels.Any(ink => ink.Percent >= 0)) return levels;
+            }
+            catch (Exception error) when (error is COMException || error is System.Xml.XmlException)
+            {
+                TryLog(localState, "Reading Windows queue ink via Bidi: " + error.Message);
+            }
+
+            if (!IsLocalUsbQueue(queue)) return null;
+            try
+            {
+                using (var queueMutex = new Mutex(false, RipRequestProcessor.PhysicalPrinterMutexName(
+                    "windows_queue|" + queue.Name.Trim().ToUpperInvariant())))
+                {
+                    if (!TryAcquire(queueMutex)) return null;
+                    try
+                    {
+                        return WithIdleQueueUsb(queue, deviceId => UsbPrinterStatusReader.ReadInk(deviceId, exclusive: true));
+                    }
+                    finally { queueMutex.ReleaseMutex(); }
+                }
+            }
+            catch (Exception error) when (error is Win32Exception || error is InvalidOperationException || error is TimeoutException)
+            {
+                TryLog(localState, "Reading Windows queue ink via USB: " + error.Message);
+                return null;
+            }
+        }
+
+        private static bool IsLocalUsbQueue(QueueDescriptor queue) => EpsonRawQueueMatcher.IsUsbPort(queue.PortName)
+            && !queue.Name.StartsWith(@"\\", StringComparison.Ordinal);
+
+        private static T WithIdleQueueUsb<T>(QueueDescriptor queue, Func<string, T> operation)
+        {
+            var devices = UsbPrinterDiscovery.Discover().Where(device =>
+                string.Equals(device.PortName, queue.PortName, StringComparison.OrdinalIgnoreCase)
+                && device.QueueNames.Contains(queue.Name, StringComparer.OrdinalIgnoreCase)
+                && UsbPrinterModelMatcher.Matches(queue.DriverName, queue.Name, device)).ToList();
+            if (devices.Count != 1)
+                throw new InvalidOperationException("Could not identify the connected Epson device on " + queue.PortName + ".");
+
+            var deviceId = devices[0].DeviceInstanceId;
+            using (var usbMutex = new Mutex(false, RipRequestProcessor.PhysicalPrinterMutexName(
+                "usb|" + deviceId.ToUpperInvariant())))
+            {
+                if (!TryAcquire(usbMutex)) throw new InvalidOperationException("The USB printer is busy.");
+                try
+                {
+                    if (PrinterApi.ListLocalPrinters().Any(other =>
+                        other.PortName.Split(',').Any(port =>
+                            string.Equals(port.Trim(), queue.PortName, StringComparison.OrdinalIgnoreCase))
+                        && (EpsonRawQueueMatcher.IsPrinting(other.Status)
+                            || (other.Jobs > 0 && PrintQueueCancellationMonitor.HasCurrentJob(other.Name)))))
+                        throw new InvalidOperationException("A Windows print job is using " + queue.PortName + ".");
+                    return operation(deviceId);
+                }
+                finally { usbMutex.ReleaseMutex(); }
+            }
+        }
+
+        internal static string RunMaintenanceTransport(MaintenanceBrokerRequest request, string json, Action<string> send)
+        {
+            var kind = request.ConnectionKind ?? "network";
+            if (kind == "windows_queue")
+            {
+                var queue = FindWindowsQueue(request.PhysicalQueueName);
+                if (EpsonRawQueueMatcher.IsEpsonClassDriver(queue?.DriverName))
+                {
+                    if (request.Action != "nozzle_check" || !IsLocalUsbQueue(queue))
+                        throw new NotSupportedException(EpsonRawQueueMatcher.RawDriverRequiredMessage);
+                    if (!queue.IsEpsonRawDestination || EpsonRawQueueMatcher.IsOffline(queue.Status)
+                        || !string.Equals(queue.DriverName, request.PhysicalQueueDriver, StringComparison.OrdinalIgnoreCase))
+                        throw new InvalidOperationException("The selected Windows printer queue is unavailable.");
+                    return WithIdleQueueUsb(queue, deviceId =>
+                    {
+                        var usbRequest = new MaintenanceBrokerRequest
+                        {
+                            Schema = request.Schema, Version = request.Version, Action = request.Action,
+                            Model = request.Model, ConnectionKind = "usb", UsbDeviceId = deviceId, ExclusiveUsb = true,
+                        };
+                        send(QueueAppServiceProtocol.Serialize(usbRequest));
+                        return usbRequest.ConnectionKind;
+                    });
+                }
+            }
+            send(json);
+            return kind;
+        }
+
+        private static QueueDescriptor FindWindowsQueue(string name) => PrinterApi.ListPrinters()
+            .FirstOrDefault(queue => string.Equals(queue.Name, name, StringComparison.OrdinalIgnoreCase));
+
+        internal static void RequireRawQueueDriver(string name)
+        {
+            if (EpsonRawQueueMatcher.IsEpsonClassDriver(FindWindowsQueue(name)?.DriverName))
+                throw new NotSupportedException(EpsonRawQueueMatcher.RawDriverRequiredMessage);
+        }
+
+        private static bool TryAcquire(Mutex mutex)
+        {
+            try { return mutex.WaitOne(0); }
+            catch (AbandonedMutexException) { return true; }
+        }
+
+        private static QueueHelperResponse DispatchRequest(QueueHelperRequest request, string localState)
+        {
             QueueHelperResponse response;
             try
             {
-                var request = ReadJson<QueueHelperRequest>(requestPath);
                 if (request == null || string.IsNullOrWhiteSpace(request.Operation))
                     throw new InvalidDataException("Queue helper request has no operation.");
 
@@ -107,6 +301,21 @@ namespace pyToneRIP.QueueHelper
                     response = QueueHelperResponse.Pass(new List<QueueDescriptor>());
                     response.UsbInkLevels = UsbPrinterStatusReader.ReadInk(request.UsbDeviceId);
                 }
+                else if (string.Equals(request.Operation, "read-queue-ink", StringComparison.OrdinalIgnoreCase))
+                {
+                    var queue = PrinterApi.ListPrinters().FirstOrDefault(item => item.IsEpsonRawDestination
+                        && string.Equals(item.Name, request.CurrentName, StringComparison.OrdinalIgnoreCase)
+                        && string.Equals(item.DriverName, request.DriverName, StringComparison.OrdinalIgnoreCase));
+                    response = QueueHelperResponse.Pass(queue == null ? new List<QueueDescriptor>()
+                        : new List<QueueDescriptor> { queue });
+                    if (queue != null && !EpsonRawQueueMatcher.IsOffline(queue.Status))
+                        response.UsbInkLevels = ReadQueueInk(queue, localState);
+                }
+                else if (string.Equals(request.Operation, "read-usb-information", StringComparison.OrdinalIgnoreCase))
+                {
+                    response = QueueHelperResponse.Pass(new List<QueueDescriptor>());
+                    response.PrinterInformation = UsbPrinterStatusReader.ReadInformation(request.UsbDeviceId);
+                }
                 else if (string.Equals(request.Operation, "repair-stale", StringComparison.OrdinalIgnoreCase))
                 {
                     response = QueueHelperResponse.Pass(PrinterApi.RepairStaleDuplicates());
@@ -126,8 +335,26 @@ namespace pyToneRIP.QueueHelper
                 }
                 else if (string.Equals(request.Operation, "cancel-current-job", StringComparison.OrdinalIgnoreCase))
                 {
-                    PrinterApi.CancelCurrentJob(request.CurrentName);
+                    var canceled = PrinterApi.CancelCurrentJob(request.CurrentName)
+                        || DeliveredPrintCancellation.CancelQueue(localState, request.CurrentName);
+                    response = QueueHelperResponse.Pass(new List<QueueDescriptor>
+                    {
+                        new QueueDescriptor { Name = request.CurrentName, Jobs = canceled ? 1u : 0u },
+                    });
+                }
+                else if (string.Equals(request.Operation, "cancel-delivered-job", StringComparison.OrdinalIgnoreCase))
+                {
+                    DeliveredPrintCancellation.Request(localState, request.JobId);
                     response = QueueHelperResponse.Pass(new List<QueueDescriptor>());
+                }
+                else if (string.Equals(request.Operation, "cancelable-job", StringComparison.OrdinalIgnoreCase))
+                {
+                    response = QueueHelperResponse.Pass(new List<QueueDescriptor>
+                    {
+                        new QueueDescriptor { Name = request.CurrentName,
+                            Jobs = PrinterApi.HasCurrentJob(request.CurrentName)
+                                || DeliveredPrintCancellation.HasJob(localState, request.CurrentName) ? 1u : 0u },
+                    });
                 }
                 else if (string.Equals(request.Operation, "current-job", StringComparison.OrdinalIgnoreCase))
                 {
@@ -148,6 +375,7 @@ namespace pyToneRIP.QueueHelper
                 else if (string.Equals(
                     request.Operation, "set-user-defaults", StringComparison.OrdinalIgnoreCase))
                 {
+                    var elapsed = Stopwatch.StartNew();
                     PrinterApi.SetUserDefaults(
                         request.CurrentName,
                         request.PageId,
@@ -156,6 +384,8 @@ namespace pyToneRIP.QueueHelper
                         request.Orientation,
                         request.ResolutionX,
                         request.ResolutionY, request.Borderless);
+                    TryLog(localState, "Legacy printer defaults written and verified: queue="
+                        + request.CurrentName + "; elapsedMs=" + elapsed.ElapsedMilliseconds);
                     response = QueueHelperResponse.Pass(new List<QueueDescriptor>());
                 }
                 else if (string.Equals(request.Operation, "verify-user-defaults", StringComparison.OrdinalIgnoreCase))
@@ -195,8 +425,8 @@ namespace pyToneRIP.QueueHelper
                 }
                 else if (string.Equals(request.Operation, "maintenance", StringComparison.OrdinalIgnoreCase))
                 {
-                    RipRequestProcessor.RunMaintenance(localState, request.MaintenanceJson);
                     response = QueueHelperResponse.Pass(new List<QueueDescriptor>());
+                    response.MaintenanceTransport = RipRequestProcessor.RunMaintenance(localState, request.MaintenanceJson);
                 }
                 else if (string.Equals(request.Operation, "install-model-package", StringComparison.OrdinalIgnoreCase))
                 {
@@ -219,14 +449,17 @@ namespace pyToneRIP.QueueHelper
             }
             catch (Exception error)
             {
-                var native = error as Win32Exception;
-                response = QueueHelperResponse.Fail(native?.NativeErrorCode ?? error.HResult, error.Message);
-                TryLog(localState, "Request failed for " + Path.GetFileName(requestPath) + ": " + error);
+                response = RequestFailure(localState, request?.Operation, error);
             }
 
-            var responsePath = requestPath.Substring(0, requestPath.Length - RequestSuffix.Length) + ".response.json";
-            WriteJsonAtomically(responsePath, response);
-            try { File.Delete(requestPath); } catch { }
+            return response;
+        }
+
+        private static QueueHelperResponse RequestFailure(string localState, string request, Exception error)
+        {
+            var native = error as Win32Exception;
+            TryLog(localState, "Request failed for " + request + ": " + error);
+            return QueueHelperResponse.Fail(native?.NativeErrorCode ?? error.HResult, error.Message);
         }
 
         private static T ReadJson<T>(string path)
@@ -422,7 +655,7 @@ namespace pyToneRIP.QueueHelper
         internal static void Log(string localState, string message) =>
             TryLog(localState, message);
 
-        private static void TryLog(string localState, string message)
+        internal static void TryLog(string localState, string message)
         {
             try
             {
@@ -463,14 +696,14 @@ namespace pyToneRIP.QueueHelper
                 throw new InvalidOperationException("Windows could not open the print jobs window.");
         }
 
-        internal static void CancelCurrentJob(string queueName)
+        internal static bool CancelCurrentJob(string queueName)
         {
             if (string.IsNullOrWhiteSpace(queueName) || !ListPrinters().Any(queue =>
                 string.Equals(queue.Name, queueName, StringComparison.OrdinalIgnoreCase)
                 && !queue.IsPendingDeletion))
                 throw new InvalidOperationException("The selected Windows printer queue no longer exists.");
-            if (!PrintQueueCancellationMonitor.CancelCurrentJob(queueName).HasValue)
-                throw new InvalidOperationException("The selected printer has no active print job.");
+            // Finishing between the availability check and click is normal.
+            return PrintQueueCancellationMonitor.CancelCurrentJob(queueName).HasValue;
         }
 
         internal static bool HasCurrentJob(string queueName)
@@ -514,8 +747,27 @@ namespace pyToneRIP.QueueHelper
         private const int DevModeFormNameOffset = 102;
         private const int DevModeFormNameCharacters = 32;
 
-        public static List<QueueDescriptor> ListPrinters() =>
-            ReadPrinters(PrinterEnumLocal | PrinterEnumConnections);
+        public static List<QueueDescriptor> ListPrinters()
+        {
+            var queues = ReadPrinters(PrinterEnumLocal | PrinterEnumConnections);
+            var usb = queues.Where(queue => queue.IsEpsonRawDestination
+                && !EpsonRawQueueMatcher.IsOffline(queue.Status)
+                && !queue.Name.StartsWith(@"\\", StringComparison.Ordinal)
+                && EpsonRawQueueMatcher.IsUsbPort(queue.PortName)).ToList();
+            if (usb.Count == 0) return queues;
+            try
+            {
+                var present = UsbPrinterDiscovery.ReadPresentPorts();
+                foreach (var queue in usb)
+                    if (!present.Contains(queue.PortName)) queue.Status |= EpsonRawQueueMatcher.OfflineStatus;
+            }
+            catch (InvalidOperationException error)
+            {
+                // Keep the spooler's flags if PnP enumeration is temporarily unavailable.
+                System.Diagnostics.Trace.WriteLine("Printer USB presence: " + error.Message);
+            }
+            return queues;
+        }
 
         public static List<QueueDescriptor> ListLocalPrinters() => ReadPrinters(PrinterEnumLocal);
 
@@ -1498,7 +1750,8 @@ namespace pyToneRIP.QueueHelper
             RawUsbReady = string.Equals(Marshal.PtrToStringUni(info.PrintProcessor), "winprint", StringComparison.OrdinalIgnoreCase)
                 && string.Equals(Marshal.PtrToStringUni(info.DataType), "RAW", StringComparison.OrdinalIgnoreCase)
                 && string.IsNullOrEmpty(Marshal.PtrToStringUni(info.SeparatorFile)) && (info.Attributes & 2) == 0,
-            Status = info.Status,
+            Status = (info.Attributes & EpsonRawQueueMatcher.WorkOfflineAttribute) != 0
+                ? info.Status | EpsonRawQueueMatcher.OfflineStatus : info.Status,
             Jobs = info.Jobs,
         };
 
@@ -1613,6 +1866,8 @@ namespace pyToneRIP.QueueHelper
         [DataMember(Name = "maintenance_json", Order = 15)] public string MaintenanceJson { get; set; }
         [DataMember(Name = "manager_log", Order = 16)] public string ManagerLog { get; set; }
         [DataMember(Name = "usb_device_id", Order = 17)] public string UsbDeviceId { get; set; }
+        [DataMember(Name = "job_id", Order = 18)] public string JobId { get; set; }
+        [DataMember(Name = "driver_name", Order = 19, EmitDefaultValue = false)] public string DriverName { get; set; }
     }
 
     [DataContract]
@@ -1627,6 +1882,8 @@ namespace pyToneRIP.QueueHelper
         [DataMember(Name = "legacy_defaults", Order = 7, EmitDefaultValue = false)] public LegacyPrinterDefaults LegacyDefaults { get; set; }
         [DataMember(Name = "usb_ink_levels", Order = 8, EmitDefaultValue = false)] public List<UsbInkLevel> UsbInkLevels { get; set; }
         [DataMember(Name = "configuration_ticket_xml", Order = 9, EmitDefaultValue = false)] public string ConfigurationTicketXml { get; set; }
+        [DataMember(Name = "printer_information", Order = 10, EmitDefaultValue = false)] public PrinterInformationReport PrinterInformation { get; set; }
+        [DataMember(Name = "maintenance_transport", Order = 11, EmitDefaultValue = false)] public string MaintenanceTransport { get; set; }
 
         public static QueueHelperResponse Pass(List<QueueDescriptor> queues) => new QueueHelperResponse
         {
@@ -1668,7 +1925,9 @@ namespace pyToneRIP.QueueHelper
         public bool IsPendingDeletion => (Status & PrinterApi.PendingDeletionStatus) != 0;
         public string PrintProcessor { get; set; }
         public string DataType { get; set; }
-        public bool RawUsbReady { get; set; }
+        [DataMember(Name = "raw_ready", Order = 7)] public bool RawUsbReady { get; set; }
+        public bool IsEpsonRawDestination => EpsonRawQueueMatcher.IsCompatible(
+            Name, PortName, DriverName, RawUsbReady, Status);
         public bool IsPyToneRipSlot => PortName != null && PortName.StartsWith(
             "pyToneRIP.PSA_", StringComparison.OrdinalIgnoreCase);
     }

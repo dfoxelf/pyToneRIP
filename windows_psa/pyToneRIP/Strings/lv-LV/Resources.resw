@@ -93,7 +93,7 @@
   <data name="Auto.B388B9C01523.Text"><value>Izmērs</value></data>
   <data name="Auto.C195019E59CC.Text"><value>Gaišākais</value></data>
   <data name="Auto.C681456D80A8.Content"><value>RGB atlasītāji (QTR InkSeparation)</value></data>
-  <data name="Auto.C706B9DFA105.Text"><value>Katram konfigurētajam fiziskajam kanālam izveido nelielu modelim raksturīgu PRN ar neapstrādāta blīvuma joslām. Šajā pirmajā inženierijas testā QTR līknes ar nolūku netiek izmantotas.</value></data>
+  <data name="Auto.C706B9DFA105.Text"><value>Drukāt A4 toņu testu ar pārejām, apļiem un pelēkā pakāpēm, izmantojot izvēlētās līknes un drukas iestatījumus. Ievietojiet tukšu A4 lapu.</value></data>
   <data name="Auto.C84252F663BA.Header"><value>Savienojums</value></data>
   <data name="Auto.C8D7FCDF582D.Text"><value>Printera savienojums</value></data>
   <data name="Auto.CC5611F72641.Text"><value>Izslēgts (ieteicams): saglabā drukāšanas lietojumprogrammas un Windows izveidoto lapu. Ieslēgts: papildus mērogojiet un novietojiet pabeigto lapu RIP.</value></data>
@@ -277,7 +277,7 @@
   <data name="Maintenance.head_clean.Title"><value>Notīriet drukas galviņu</value></data>
   <data name="Maintenance.nozzle_check.Description"><value>Lūdziet printera programmaparatūrai izdrukāt savu sākotnējo sprauslu rakstu.</value></data>
   <data name="Maintenance.nozzle_check.Title"><value>Drukas sprauslu pārbaude</value></data>
-  <data name="Maintenance.test_page.Description"><value>Drukājiet nelielu neapstrādātu kanālu katram kanālam, izmantojot atlasītos modeļa iestatījumus.</value></data>
+  <data name="Maintenance.test_page.Description"><value>Drukāt A4 toņu testu ar pārejām, apļiem un pelēkā pakāpēm, izmantojot izvēlētās līknes un drukas iestatījumus. Ievietojiet tukšu A4 lapu.</value></data>
   <data name="Maintenance.test_page.Title"><value>Izdrukājiet pyToneRIP testa lapu</value></data>
   <data name="Processing16Bit.Content"><value>16 bitu apstrāde</value></data>
   <data name="Processing16BitExperimental.Text"><value>(eksperimentāls režīms)</value></data>
@@ -289,6 +289,9 @@
   <data name="MainPage.SendLogs.Content"><value>Izveidot diagnostikas pārskatu</value></data>
   <data name="Code.SupportReportPrompt"><value>ZIP darbvirsmā satur pyToneRIP un Windows tehnisko kļūdu informāciju par pēdējām 24 stundām. Dokumentu saturs, personīgie ceļi un IP adreses netiek iekļauti. Lietotne arhīvu nesūta.</value></data>
   <data name="Code.SupportReportCreated"><value>ZIP fails izveidots darbvirsmā: {0}</value></data>
+  <data name="Usb.DirectPrint"><value>Drukāt tieši caur USB</value></data>
+  <data name="Usb.DirectPrintHint"><value>Nosūta darbus tieši printerim, kas pievienots ar USB. Ja ir instalēts Epson draiveris, izvēlieties Windows drukas rindu (RAW).</value></data>
+  <data name="Usb.DirectPrintRecommendation"><value>Izvēlieties šo opciju, ja nav instalēts oficiālais Epson draiveris.</value></data>
   <data name="Usb.Device"><value>Pievienots USB printeris</value></data>
   <data name="Usb.Refresh"><value>Atjaunināt USB printerus</value></data>
   <data name="Usb.Searching"><value>Tiek meklēti USB printeri…</value></data>
@@ -347,6 +350,7 @@
   <data name="PreviewWindow.ProfileMismatch" xml:space="preserve"><value>ICC atšķiras no saglabātajiem drukas nosacījumiem.</value></data>
   <data name="PreviewWindow.PhysicalUnavailable" xml:space="preserve"><value>Printera fiziskais statuss nav pieejams.</value></data>
   <data name="PreviewWindow.PhysicalUnconfirmed" xml:space="preserve"><value>Ierīces statuss neapstiprina šī darba pabeigšanu vai lapas izvadīšanu.</value></data>
+  <data name="PreviewWindow.PhysicalCancelUnconfirmed" xml:space="preserve"><value>Printeris neapstiprināja atcelšanu. Mēģiniet vēlreiz vai atceliet darbu printera vadības panelī.</value></data>
   <data name="PreviewWindow.DeviceOther" xml:space="preserve"><value>Printeris: cits statuss</value></data>
   <data name="PreviewWindow.DeviceUnknown" xml:space="preserve"><value>Printeris: nezināms statuss</value></data>
   <data name="PreviewWindow.DeviceIdle" xml:space="preserve"><value>Printeris: dīkstāve</value></data>
@@ -368,4 +372,60 @@
   <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>Bultiņa norāda lapas malu, kas tiek drukāta pirmā.</value></data>
   <data name="PreviewWindow.PhotoCrop" xml:space="preserve"><value>Velciet baltos rokturus malu vidū, lai apgrieztu; velciet uz āru, lai atjaunotu. Stūru rokturi maina izmēru.</value></data>
   <data name="PreviewWindow.PhotoFill" xml:space="preserve"><value>Aizpildīt lapu</value></data>
+  <data name="PrinterInfo.Read.Content" xml:space="preserve"><value>Nolasīt printera informāciju</value></data>
+  <data name="PrinterInfo.Help.Text" xml:space="preserve"><value>Nolasa atlasītā printera sniegto informāciju, izmantojot USB vai tīklu.</value></data>
+  <data name="PrinterInfo.Title.Text" xml:space="preserve"><value>Printera informācija</value></data>
+  <data name="PrinterInfo.Empty.Text" xml:space="preserve"><value>Lai iegūtu ierīces pārskatu, atlasiet „Nolasīt printera informāciju“.</value></data>
+  <data name="PrinterInfo.Reading" xml:space="preserve"><value>Tiek nolasīta printera informācija…</value></data>
+  <data name="PrinterInfo.Failed" xml:space="preserve"><value>Neizdevās nolasīt printera informāciju: {0}</value></data>
+  <data name="PrinterInfo.Busy" xml:space="preserve"><value>Printeris tiek izmantots. Uzgaidiet, līdz drukāšana vai apkope ir pabeigta.</value></data>
+  <data name="PrinterInfo.Connection" xml:space="preserve"><value>Savienojums</value></data>
+  <data name="PrinterInfo.Identity" xml:space="preserve"><value>Identifikācija</value></data>
+  <data name="PrinterInfo.Status" xml:space="preserve"><value>Statuss un brīdinājumi</value></data>
+  <data name="PrinterInfo.Inks" xml:space="preserve"><value>Tintes līmeņi</value></data>
+  <data name="PrinterInfo.Details" xml:space="preserve"><value>Papildu informācija</value></data>
+  <data name="PrinterInfo.Raw" xml:space="preserve"><value>Ierīces sākotnējās atbildes</value></data>
+  <data name="PrinterInfo.Model" xml:space="preserve"><value>Modelis</value></data>
+  <data name="PrinterInfo.Firmware" xml:space="preserve"><value>Aparātprogrammatūra</value></data>
+  <data name="PrinterInfo.DeviceId" xml:space="preserve"><value>Ierīces identifikācija</value></data>
+  <data name="PrinterInfo.Cartridges" xml:space="preserve"><value>Kasetņu veidi</value></data>
+  <data name="PrinterInfo.Cartridge" xml:space="preserve"><value>Kasetne</value></data>
+  <data name="PrinterInfo.Error" xml:space="preserve"><value>Kļūda</value></data>
+  <data name="PrinterInfo.Warning" xml:space="preserve"><value>Brīdinājums</value></data>
+  <data name="PrinterInfo.SerialNumber" xml:space="preserve"><value>Sērijas numurs</value></data>
+  <data name="PrinterInfo.State" xml:space="preserve"><value>Statuss</value></data>
+  <data name="PrinterInfo.NoData" xml:space="preserve"><value>Nav ziņots</value></data>
+  <data name="PrinterInfo.Field" xml:space="preserve"><value>Lauks 0x{0}</value></data>
+  <data name="PrinterInfo.MaintenanceBox" xml:space="preserve"><value>Apkopes tvertne</value></data>
+  <data name="PrinterInfo.PaperCounters" xml:space="preserve"><value>Lapu skaitītāji</value></data>
+  <data name="PrinterInfo.Temperature" xml:space="preserve"><value>Temperatūra</value></data>
+  <data name="PrinterInfo.Interface" xml:space="preserve"><value>Saskarnes statuss</value></data>
+  <data name="PrinterInfo.Unsupported" xml:space="preserve"><value>Netiek atbalstīts vai nav atbildes</value></data>
+  <data name="PrinterInfo.Source" xml:space="preserve"><value>Avots</value></data>
+  <data name="MainPage.CancelJob.Content"><value>Atcelt pašreizējo drukas darbu</value></data>
+  <data name="MainPage.NoActiveJob" xml:space="preserve"><value>Atlasītajam printerim nav neviena aktīva drukas darba.</value></data>
+  <data name="MainPage.CancelJobFailed" xml:space="preserve"><value>Drukas darbu neizdevās atcelt. Pārbaudiet printera savienojumu un mēģiniet vēlreiz.</value></data>
+  <data name="Network.Search"><value>Meklēt printerus</value></data>
+  <data name="Network.Device"><value>Izvēlieties atrasto printeri</value></data>
+  <data name="Network.DeviceHint"><value>Sarakstā redzams katra printera modelis un IP adrese.</value></data>
+  <data name="Network.Searching"><value>Meklē Epson printerus…</value></data>
+  <data name="Network.None"><value>Lokālajā tīklā nav atrastas Epson ierīces.</value></data>
+  <data name="Network.Choose"><value>Izvēlieties no saraksta</value></data>
+  <data name="Network.Manual"><value>Konfigurēt manuāli</value></data>
+  <data name="Network.UnknownModel"><value>Printeris nenorādīja savu modeli.</value></data>
+  <data name="Network.UnsupportedModel"><value>Šī modeļa nav instalētajā printeru katalogā.</value></data>
+  <data name="Network.RawUnavailable"><value>Printeris nepieņēma savienojumu TCP portā 9100.</value></data>
+  <data name="Network.ChooseModel"><value>Izvēlieties atbilstošu modeli no kataloga.</value></data>
+  <data name="Network.SearchFailed"><value>Tīkla printeru meklēšana neizdevās.</value></data>
+  <data name="Network.AddressAssigned"><value>Adrese {0} jau ir piešķirta pyToneRIP printerim.</value></data>
+  <data name="Network.SearchHint"><value>Meklējiet Epson printerus savā lokālajā tīklā.</value></data>
+  <data name="Network.FoundCount"><value>Atrasti printeri: {0}</value></data>
+  <data name="Queue.Title"><value>Windows rinda (RAW)</value></data>
+  <data name="Queue.Recommended"><value>Ieteicams, ja šim printerim ir instalēts oficiālais Epson draiveris.</value></data>
+  <data name="Queue.RawDriverRequired"><value>Instalējiet oficiālo Epson draiveri šim modelim, lai drukātu no pyToneRIP, izmantojot Windows drukas rindu (RAW).</value></data>
+  <data name="Queue.Select"><value>Izvēlieties instalētu Epson rindu</value></data>
+  <data name="Queue.Searching"><value>Meklē Epson rindas sistēmā Windows…</value></data>
+  <data name="Queue.None"><value>Sistēmā Windows nav atrastas saderīgas Epson rindas.</value></data>
+  <data name="Queue.SearchFailed"><value>Neizdevās atrast Windows drukas rindas.</value></data>
+  <data name="Queue.Assigned"><value>Windows rinda {0} jau ir piešķirta pyToneRIP printerim.</value></data>
 </root>

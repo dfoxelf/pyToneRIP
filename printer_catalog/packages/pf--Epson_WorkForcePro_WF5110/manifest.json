@@ -1,0 +1,25 @@
+{
+  "backend_family": "epson_escp2_workforcenative",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson WorkForcePro_WF5110",
+  "model_id": "WorkForcePro_WF5110",
+  "package_id": "pf--Epson_WorkForcePro_WF5110",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "87c1f77b2c0476fc0649ec173b5cd447038fb9897e2685294e5ee285bfdec34e",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "WorkForceNative",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "4cd3036341fab74866ebfbcd02bf73619ba0b9f7281195b46a200fe310a55a5b",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "d71e3f23aa84c31e6fed852d14b8eb9104dd05044f6e3e67d081473cb338279e",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "SYNTHETIC_PPD: no Epson manufacturer PPD supplied; technical source ReferenceDriver driver WFC5890"
+  ]
+}

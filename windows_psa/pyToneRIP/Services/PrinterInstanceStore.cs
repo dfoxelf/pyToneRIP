@@ -39,6 +39,10 @@ namespace pyToneRIP.Services
         public static async Task WriteAsync(PrinterInstanceRegistry registry)
         {
             ValidateUniqueNetworkHosts(registry);
+            var queueNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var item in registry.Instances.Where(value => value.ConnectionKind == "windows_queue"))
+                if (string.IsNullOrWhiteSpace(item.PhysicalQueueName) || !queueNames.Add(item.PhysicalQueueName))
+                    throw new InvalidOperationException("Missing or duplicate Windows RAW queue: " + item.PhysicalQueueName);
             var file = await pyToneRIP.Shared.SharedApplicationStorage.Root.CreateFileAsync(
                 FileName, CreationCollisionOption.ReplaceExisting);
             using (var stream = await file.OpenStreamForWriteAsync())
@@ -47,6 +51,13 @@ namespace pyToneRIP.Services
                 var serializer = new DataContractJsonSerializer(typeof(PrinterInstanceRegistry));
                 serializer.WriteObject(stream, registry);
             }
+        }
+
+        internal static bool IsPartialIpv4(string value)
+        {
+            var octets = value.Split('.');
+            return octets.Length <= 4 && octets.All(octet => octet.Length <= 3
+                && octet.All(digit => digit >= '0' && digit <= '9'));
         }
 
         public static bool TryNormalizeIpv4(string value, out string normalized)
@@ -82,17 +93,28 @@ namespace pyToneRIP.Services
             if (!TryNormalizeIpv4(host, out normalized))
                 throw new InvalidOperationException("Enter a valid IPv4 address.");
 
-            var conflict = (registry?.Instances ?? new List<PrinterInstanceRecord>())
-                .FirstOrDefault(item =>
-                    !ReferenceEquals(item, excluded)
-                    && !string.Equals(item.ConnectionKind, "usb", StringComparison.OrdinalIgnoreCase)
-                    && TryNormalizeIpv4(item.Host, out string existing)
-                    && string.Equals(existing, normalized, StringComparison.Ordinal));
+            var conflict = FindNetworkHostConflict(registry, normalized, excluded);
             if (conflict != null)
                 throw new InvalidOperationException(
                     "IPv4 address " + normalized + " is already assigned to "
                     + (conflict.QueueName ?? "another pyToneRIP printer") + ".");
         }
+
+        internal static PrinterInstanceRecord FindNetworkHostConflict(
+            PrinterInstanceRegistry registry,
+            string normalizedHost,
+            PrinterInstanceRecord excluded = null) =>
+            registry?.Instances?.FirstOrDefault(item =>
+                !ReferenceEquals(item, excluded)
+                && !string.Equals(item.ConnectionKind, "usb", StringComparison.OrdinalIgnoreCase)
+                && TryNormalizeIpv4(item.Host, out string existing)
+                && string.Equals(existing, normalizedHost, StringComparison.Ordinal));
+
+        internal static PrinterInstanceRecord FindPhysicalQueueConflict(
+            PrinterInstanceRegistry registry, string queue, PrinterInstanceRecord excluded = null) =>
+            registry?.Instances?.FirstOrDefault(item => !ReferenceEquals(item, excluded)
+                && item.ConnectionKind == "windows_queue"
+                && string.Equals(item.PhysicalQueueName, queue, StringComparison.OrdinalIgnoreCase));
 
         private static void ValidateUniqueNetworkHosts(PrinterInstanceRegistry registry)
         {

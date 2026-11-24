@@ -93,7 +93,7 @@
   <data name="Auto.B388B9C01523.Text"><value>Size</value></data>
   <data name="Auto.C195019E59CC.Text"><value>Lightest</value></data>
   <data name="Auto.C681456D80A8.Content"><value>RGB selectors (QTR InkSeparation)</value></data>
-  <data name="Auto.C706B9DFA105.Text"><value>Creates a small model-specific PRN with raw density strips for every configured physical channel. QTR curves are intentionally not used by this first engineering test.</value></data>
+  <data name="Auto.C706B9DFA105.Text"><value>Print an A4 tonal test with gradients, circles and gray steps using the selected curves and print settings. Load a blank A4 sheet.</value></data>
   <data name="Auto.C84252F663BA.Header"><value>Connection</value></data>
   <data name="Auto.C8D7FCDF582D.Text"><value>Printer connection</value></data>
   <data name="Auto.CC5611F72641.Text"><value>Off (recommended): preserve the page composed by the printing application and Windows. On: additionally scale and position the completed page in the RIP.</value></data>
@@ -253,7 +253,7 @@
   <data name="MainPage.Preferences.Label"><value>Preferences</value></data>
   <data name="MainPage.Context.OpenJobs.Text"><value>Open Print Jobs</value></data>
   <data name="MainPage.Context.CancelJob.Text"><value>Cancel the current print job</value></data>
-  <data name="MainPage.PrintJobs.Content"><value>Print jobs</value></data>
+  <data name="MainPage.PrintJobs.Content"><value>Printer Jobs</value></data>
   <data name="MainPage.Progress.Label.Text"><value>RIP progress</value></data>
   <data name="MainPage.Progress.Title.Text"><value>Print job</value></data>
   <data name="MainPage.Refresh.Label"><value>Refresh</value></data>
@@ -277,7 +277,7 @@
   <data name="Maintenance.head_clean.Title"><value>Clean print head</value></data>
   <data name="Maintenance.nozzle_check.Description"><value>Ask the printer firmware to print its native nozzle pattern.</value></data>
   <data name="Maintenance.nozzle_check.Title"><value>Print nozzle check</value></data>
-  <data name="Maintenance.test_page.Description"><value>Print a small raw per-channel pattern using the selected model settings.</value></data>
+  <data name="Maintenance.test_page.Description"><value>Print an A4 tonal test with gradients, circles and gray steps using the selected curves and print settings. Load a blank A4 sheet.</value></data>
   <data name="Maintenance.test_page.Title"><value>Print pyToneRIP test page</value></data>
   <data name="Processing16Bit.Content"><value>16-bit processing</value></data>
   <data name="Processing16BitExperimental.Text"><value>(experimental mode)</value></data>
@@ -289,6 +289,9 @@
   <data name="MainPage.SendLogs.Content"><value>Create diagnostic report</value></data>
   <data name="Code.SupportReportPrompt"><value>The desktop ZIP contains technical error details from pyToneRIP and Windows for the last 24 hours. Document contents, personal paths and IP addresses are excluded. The app does not send the archive.</value></data>
   <data name="Code.SupportReportCreated"><value>ZIP created on your desktop: {0}</value></data>
+  <data name="Usb.DirectPrint"><value>Print directly via USB</value></data>
+  <data name="Usb.DirectPrintHint"><value>Sends jobs directly to a printer connected via USB. If the Epson driver is installed, choose Windows print queue (RAW).</value></data>
+  <data name="Usb.DirectPrintRecommendation"><value>Choose this option if the official Epson driver is not installed.</value></data>
   <data name="Usb.Device"><value>Connected USB printer</value></data>
   <data name="Usb.Refresh"><value>Refresh USB printers</value></data>
   <data name="Usb.Searching"><value>Searching for USB printers…</value></data>
@@ -347,6 +350,7 @@
   <data name="PreviewWindow.ProfileMismatch" xml:space="preserve"><value>ICC differs from the saved print conditions.</value></data>
   <data name="PreviewWindow.PhysicalUnavailable" xml:space="preserve"><value>Physical printer status unavailable.</value></data>
   <data name="PreviewWindow.PhysicalUnconfirmed" xml:space="preserve"><value>Device state does not confirm completion of this job or sheet output.</value></data>
+  <data name="PreviewWindow.PhysicalCancelUnconfirmed" xml:space="preserve"><value>The printer did not confirm cancellation. Try again or cancel on the printer’s control panel.</value></data>
   <data name="PreviewWindow.DeviceOther" xml:space="preserve"><value>Printer: other state</value></data>
   <data name="PreviewWindow.DeviceUnknown" xml:space="preserve"><value>Printer: unknown</value></data>
   <data name="PreviewWindow.DeviceIdle" xml:space="preserve"><value>Printer: idle</value></data>
@@ -368,4 +372,60 @@
   <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>The arrow marks the edge of the sheet that is printed first.</value></data>
   <data name="PreviewWindow.PhotoCrop" xml:space="preserve"><value>Drag the white handles at the middle of each side to crop; drag outward to restore. Corner handles resize the picture.</value></data>
   <data name="PreviewWindow.PhotoFill" xml:space="preserve"><value>Fill page</value></data>
+  <data name="PrinterInfo.Read.Content" xml:space="preserve"><value>Read printer information</value></data>
+  <data name="PrinterInfo.Help.Text" xml:space="preserve"><value>Reads the information reported by the selected printer over USB or the network.</value></data>
+  <data name="PrinterInfo.Title.Text" xml:space="preserve"><value>Printer information</value></data>
+  <data name="PrinterInfo.Empty.Text" xml:space="preserve"><value>Select Read printer information to retrieve the device report.</value></data>
+  <data name="PrinterInfo.Reading" xml:space="preserve"><value>Reading printer information…</value></data>
+  <data name="PrinterInfo.Failed" xml:space="preserve"><value>Could not read printer information: {0}</value></data>
+  <data name="PrinterInfo.Busy" xml:space="preserve"><value>The printer is in use. Wait until printing or maintenance finishes before reading its information.</value></data>
+  <data name="PrinterInfo.Connection" xml:space="preserve"><value>Connection</value></data>
+  <data name="PrinterInfo.Identity" xml:space="preserve"><value>Identification</value></data>
+  <data name="PrinterInfo.Status" xml:space="preserve"><value>Status and warnings</value></data>
+  <data name="PrinterInfo.Inks" xml:space="preserve"><value>Ink levels</value></data>
+  <data name="PrinterInfo.Details" xml:space="preserve"><value>Additional information</value></data>
+  <data name="PrinterInfo.Raw" xml:space="preserve"><value>Original device replies</value></data>
+  <data name="PrinterInfo.Model" xml:space="preserve"><value>Model</value></data>
+  <data name="PrinterInfo.Firmware" xml:space="preserve"><value>Firmware</value></data>
+  <data name="PrinterInfo.DeviceId" xml:space="preserve"><value>Device identification</value></data>
+  <data name="PrinterInfo.Cartridges" xml:space="preserve"><value>Cartridge types</value></data>
+  <data name="PrinterInfo.Cartridge" xml:space="preserve"><value>Cartridge</value></data>
+  <data name="PrinterInfo.Error" xml:space="preserve"><value>Error</value></data>
+  <data name="PrinterInfo.Warning" xml:space="preserve"><value>Warning</value></data>
+  <data name="PrinterInfo.SerialNumber" xml:space="preserve"><value>Serial number</value></data>
+  <data name="PrinterInfo.State" xml:space="preserve"><value>State</value></data>
+  <data name="PrinterInfo.NoData" xml:space="preserve"><value>Not reported</value></data>
+  <data name="PrinterInfo.Field" xml:space="preserve"><value>Field 0x{0}</value></data>
+  <data name="PrinterInfo.MaintenanceBox" xml:space="preserve"><value>Maintenance box</value></data>
+  <data name="PrinterInfo.PaperCounters" xml:space="preserve"><value>Page counters</value></data>
+  <data name="PrinterInfo.Temperature" xml:space="preserve"><value>Temperature</value></data>
+  <data name="PrinterInfo.Interface" xml:space="preserve"><value>Interface status</value></data>
+  <data name="PrinterInfo.Unsupported" xml:space="preserve"><value>Not supported or no response</value></data>
+  <data name="PrinterInfo.Source" xml:space="preserve"><value>Source</value></data>
+  <data name="MainPage.CancelJob.Content"><value>Cancel job</value></data>
+  <data name="MainPage.NoActiveJob" xml:space="preserve"><value>The selected printer has no active job.</value></data>
+  <data name="MainPage.CancelJobFailed" xml:space="preserve"><value>Could not cancel the job. Check the printer connection and try again.</value></data>
+  <data name="Network.Search"><value>Find printers</value></data>
+  <data name="Network.Device"><value>Select a discovered printer</value></data>
+  <data name="Network.DeviceHint"><value>Printers are listed by model and IP address.</value></data>
+  <data name="Network.Searching"><value>Searching for Epson printers…</value></data>
+  <data name="Network.None"><value>No Epson devices found on the local network.</value></data>
+  <data name="Network.Choose"><value>Choose from the list</value></data>
+  <data name="Network.Manual"><value>Configure manually</value></data>
+  <data name="Network.UnknownModel"><value>The printer did not report its model.</value></data>
+  <data name="Network.UnsupportedModel"><value>This model is not in the installed printer catalog.</value></data>
+  <data name="Network.RawUnavailable"><value>The printer did not accept a connection on TCP port 9100.</value></data>
+  <data name="Network.ChooseModel"><value>Select a matching model from the catalog.</value></data>
+  <data name="Network.SearchFailed"><value>Network printer search failed.</value></data>
+  <data name="Network.AddressAssigned"><value>Address {0} is already assigned to a pyToneRIP printer.</value></data>
+  <data name="Network.SearchHint"><value>Find Epson printers on your local network.</value></data>
+  <data name="Network.FoundCount"><value>Printers found: {0}</value></data>
+  <data name="Queue.Title"><value>Windows queue (RAW)</value></data>
+  <data name="Queue.Recommended"><value>Recommended if the official Epson driver is installed for this printer.</value></data>
+  <data name="Queue.RawDriverRequired"><value>Install the official Epson driver for this printer to use Windows queue (RAW) with pyToneRIP.</value></data>
+  <data name="Queue.Select"><value>Select an installed Epson queue</value></data>
+  <data name="Queue.Searching"><value>Searching for Epson Windows queues…</value></data>
+  <data name="Queue.None"><value>No compatible Epson Windows queues found.</value></data>
+  <data name="Queue.SearchFailed"><value>Could not find Windows printer queues.</value></data>
+  <data name="Queue.Assigned"><value>The Windows queue {0} is already assigned to a pyToneRIP printer.</value></data>
 </root>

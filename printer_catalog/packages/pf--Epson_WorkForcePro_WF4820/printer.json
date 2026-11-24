@@ -1,0 +1,105 @@
+{
+  "channels": [
+    {
+      "esc_i_code": "0x0",
+      "role": "black",
+      "slot": "k"
+    },
+    {
+      "esc_i_code": "0x2",
+      "role": "cyan",
+      "slot": "c"
+    },
+    {
+      "esc_i_code": "0x1",
+      "role": "magenta",
+      "slot": "m"
+    },
+    {
+      "esc_i_code": "0x4",
+      "role": "yellow",
+      "slot": "y"
+    }
+  ],
+  "device_features": [],
+  "driver": {
+    "driver_mechanics": {
+      "command_level": 21,
+      "leading_feed_offset_mils": -1333,
+      "mechanical_feature_set": 5
+    },
+    "id": "WF7710",
+    "module": "Epson",
+    "number": "555"
+  },
+  "feeds": [
+    {
+      "feed_mechanics": {
+        "medium_kind": "automatic_cut_sheet",
+        "remote_paper_path": {
+          "number": 1,
+          "type": 1
+        },
+        "roll_cut_mode": "none",
+        "suppress_form_feed_after_page": false
+      },
+      "idx": 1,
+      "name": "Cassette 1"
+    }
+  ],
+  "identity": {
+    "manufacturer": "Epson",
+    "marketing": "WorkForcePro_WF4820",
+    "name": "Epson_WorkForcePro_WF4820"
+  },
+  "media": [
+    {
+      "idx": 0,
+      "match": "plain_paper",
+      "media_mechanics": {
+        "legacy_media_type_code": 0,
+        "physical_raster_layout_variant": 0,
+        "remote_media_type_code": 0,
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "name": "Plain paper"
+    }
+  ],
+  "media_sizes": [
+    {
+      "additional_margin_fields_mils": [
+        540
+      ],
+      "availability": "enabled",
+      "height_mils": 11693,
+      "idx": 3,
+      "margins_mils": {
+        "bottom": 120,
+        "left": 120,
+        "right": 120,
+        "top": 120
+      },
+      "name": "A4",
+      "page_id": "A4",
+      "page_mechanics": {
+        "media_size_code": 0,
+        "sheet_geometry_class": "standard_sheet",
+        "special_media": {
+          "kind": "none"
+        }
+      },
+      "physical_size_mils": [
+        8268,
+        11693
+      ],
+      "width_mils": 8268
+    }
+  ],
+  "protocol": {
+    "cls": "escp2-esci",
+    "family": "WorkForceNative"
+  },
+  "schema": "rip-printer-v1.2"
+}

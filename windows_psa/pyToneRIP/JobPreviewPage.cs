@@ -102,6 +102,9 @@ namespace pyToneRIP
         private DisplayInformation display;
         private uint pageIndex;
         private bool terminal;
+        private bool delivered;
+        private bool physicalCancelUnconfirmed;
+        private bool printerIdleAfterDelivery;
         private bool approved;
         private bool rendering;
         private bool previewValid;
@@ -292,10 +295,6 @@ namespace pyToneRIP
                     for (uint i = 0; i < renderer.PageCount; i++) thumbnailItems.Add(CreateThumbnail(i));
                     await RenderAsync();
                     if (image.Source == null) throw new InvalidDataException("Print preview could not be rendered.");
-                    if (!closed.Task.IsCompleted)
-                    {
-                        print.IsEnabled = printClose.IsEnabled = editSettings.IsEnabled = true;
-                    }
                     await closed.Task;
                 });
             }
@@ -306,7 +305,7 @@ namespace pyToneRIP
                 {
                     if (folder != null)
                         await PreviewWorkflowStore.WriteAtomicAsync(folder, "preview-failed.txt", error.ToString());
-                    terminal = true; print.IsEnabled = printClose.IsEnabled = false; RefreshPhotoActions();
+                    terminal = true; RefreshPhotoActions();
                     status.Text = Text("Failed") + Environment.NewLine + error.Message;
                     cancel.Content = Text("Close");
                     ToolTipService.SetToolTip(cancel, Text("Close"));
@@ -365,7 +364,7 @@ namespace pyToneRIP
             invalidateProof |= invalidate;
             if (rendering) { renderAgain = true; return; }
             rendering = true; previewValid = false;
-            print.IsEnabled = printClose.IsEnabled = false;
+            RefreshPrintActions();
             viewRevision++; ClearDetail();
             var success = false;
             try
@@ -410,7 +409,6 @@ namespace pyToneRIP
             }
             catch (Exception error)
             {
-                print.IsEnabled = false;
                 status.Text = Text("Failed") + Environment.NewLine + error.Message;
                 App.WriteStartupException("Print preview render failed", error);
             }
@@ -418,7 +416,6 @@ namespace pyToneRIP
             {
                 rendering = false; previewValid = success;
                 RefreshPhotoActions();
-                if (success && !approved && !terminal && !editing && !closed.Task.IsCompleted) print.IsEnabled = printClose.IsEnabled = editSettings.IsEnabled = true;
             }
         }
 
@@ -634,7 +631,7 @@ namespace pyToneRIP
 
         private async Task EditSettingsAsync()
         {
-            if (approved || approving || editing || rendering || renderer == null || closed.Task.IsCompleted) return;
+            if (!CanEditPrint) return;
             var restorePhotoMode = photoMode.IsChecked == true;
             var committed = false;
             try
@@ -643,7 +640,8 @@ namespace pyToneRIP
                 if (!await FlushPhotoPlacementsAsync()) return;
                 editing = true; viewRevision++;
                 detailCancellation?.Cancel();
-                print.IsEnabled = printClose.IsEnabled = editSettings.IsEnabled = proof.IsEnabled = false;
+                proof.IsEnabled = false;
+                RefreshPrintActions();
                 previous.IsEnabled = next.IsEnabled = thumbnails.IsEnabled = false;
                 while (detailRunning || thumbnailRunning) await Task.Delay(30);
                 thumbnailQueue.Clear(); thumbnailPending.Clear();
@@ -726,9 +724,8 @@ namespace pyToneRIP
             finally
             {
                 editing = false; proof.IsEnabled = thumbnails.IsEnabled = true;
-                if (!approved && !terminal && !closed.Task.IsCompleted)
+                if (!approved && !approving && !terminal && !closed.Task.IsCompleted)
                 {
-                    print.IsEnabled = printClose.IsEnabled = previewValid; editSettings.IsEnabled = true;
                     previous.IsEnabled = pageIndex > 0; next.IsEnabled = pageIndex+1 < renderer.PageCount;
                     if (restorePhotoMode && previewValid)
                     {
@@ -737,19 +734,30 @@ namespace pyToneRIP
                         changingPhotoMode = false;
                         await SetPhotoModeAsync(true);
                     }
-                    RefreshPhotoActions();
                     ScheduleDetail();
                 }
+                RefreshPhotoActions();
             }
         }
 
         private async void PrintClicked(object sender, RoutedEventArgs args) => await ApproveAsync(false);
 
+        private bool CanEditPrint => folder != null && renderer != null && image.Source != null
+            && !terminal && !approved && !approving && !applyingPhoto && !photoDragging
+            && !rendering && !editing && !closed.Task.IsCompleted;
+
+        private void RefreshPrintActions()
+        {
+            var ready = CanEditPrint;
+            print.IsEnabled = printClose.IsEnabled = ready && previewValid;
+            editSettings.IsEnabled = ready;
+        }
+
         private async Task ApproveAsync(bool closeAfterApproval)
         {
-            if (terminal || approved || approving || applyingPhoto || photoDragging || !previewValid || folder == null || image.Source == null || rendering || editing) return;
+            if (!CanEditPrint || !previewValid) return;
             approving = true;
-            print.IsEnabled = printClose.IsEnabled = editSettings.IsEnabled = false;
+            RefreshPhotoActions();
             try
             {
                 await DisablePhotoModeAsync();
@@ -758,32 +766,92 @@ namespace pyToneRIP
                 if (!await FlushPhotoPlacementsAsync()) return;
                 if (!await renderer.SourceFilesUnchangedAsync())
                     throw new InvalidDataException(Text("SourceChanged"));
+                if (terminal || closed.Task.IsCompleted) return;
                 await PreviewWorkflowStore.WriteAtomicAsync(folder, "preview-approved", "");
                 approved = true;
                 await DisablePhotoModeAsync();
-                RefreshPhotoActions();
-                editSettings.IsEnabled = false;
                 status.Text = Text("Preparing");
                 if (!closeAfterApproval) _ = MonitorPrinterAsync();
                 if (closeAfterApproval) { detached = true; closed.TrySetResult(true); }
             }
-            catch (Exception error) { status.Text = error.Message; print.IsEnabled = printClose.IsEnabled = editSettings.IsEnabled = previewValid && !terminal && !closed.Task.IsCompleted; }
-            finally { approving = false; }
+            catch (Exception error) { status.Text = error.Message; }
+            finally
+            {
+                approving = false;
+                RefreshPhotoActions();
+            }
         }
 
         private async void CancelClicked(object sender, RoutedEventArgs args)
         {
+            if (!cancel.IsEnabled) return;
             cancel.IsEnabled = false;
-            try { if (!terminal && folder != null) await CancelJobAsync(); }
-            catch (Exception error) { App.WriteStartupException("Preview cancellation failed", error); }
-            closed.TrySetResult(true);
+            var requestingPhysical = false;
+            try
+            {
+                if (folder != null && !printerIdleAfterDelivery && (!terminal || delivered || physicalCancelUnconfirmed))
+                {
+                    var result = await folder.TryGetItemAsync("transport-result.json");
+                    if (result == null && !terminal)
+                    {
+                        await CancelJobAsync();
+                        result = await folder.TryGetItemAsync("transport-result.json");
+                    }
+                    if (result is StorageFile && !printerIdleAfterDelivery)
+                    {
+                        var host = renderer?.NetworkHost;
+                        if (!string.IsNullOrWhiteSpace(host) &&
+                            await PrinterSnmpService.ReadReportedStateAsync(host) == PrinterReportedState.Idle)
+                            MarkPrinterIdle();
+                        else if (!printerIdleAfterDelivery)
+                        {
+                            requestingPhysical = true;
+                            await QueueHelperClient.RequestPhysicalCancellationAsync(folder.Name);
+                        }
+                    }
+                }
+                closed.TrySetResult(true);
+            }
+            catch (Exception error)
+            {
+                App.WriteStartupException("Preview cancellation failed", error);
+                if (printerIdleAfterDelivery)
+                {
+                    closed.TrySetResult(true);
+                    return;
+                }
+                physicalCancelUnconfirmed |= requestingPhysical;
+                status.Text = physicalCancelUnconfirmed ? Text("PhysicalCancelUnconfirmed")
+                    : LocalizationService.Get("MainPage.CancelJobFailed");
+                if (physicalCancelUnconfirmed)
+                {
+                    SetCancelAction(true);
+                }
+                cancel.IsEnabled = true;
+            }
         }
 
         private Task CancelJobAsync() => PreviewWorkflowStore.WriteAtomicAsync(folder, "cancel.requested", "Canceled in print preview.");
 
+        private void SetCancelAction(bool canCancel)
+        {
+            var label = Text(canCancel ? "Cancel" : "Close");
+            cancel.Content = label;
+            ToolTipService.SetToolTip(cancel, label);
+        }
+
+        private void MarkPrinterIdle()
+        {
+            printerIdleAfterDelivery = true;
+            physicalCancelUnconfirmed = false;
+            SetCancelAction(false);
+            status.Text = Text("DeviceIdle");
+            physicalStatus.Text = "";
+        }
+
         private void WindowClosed(object sender, CoreWindowEventArgs args)
         {
-            if (!terminal && !detached && folder != null)
+            if (!terminal && !detached && !printerIdleAfterDelivery && folder != null)
             {
                 try { File.WriteAllText(Path.Combine(folder.Path, "cancel.requested"), "Preview window closed."); }
                 catch (Exception error) { App.WriteStartupException("Preview close cancellation failed", error); }
@@ -810,14 +878,17 @@ namespace pyToneRIP
                         progress.Value = Math.Max(0, Math.Min(100, snapshot.Percent));
                         if (snapshot.Terminal)
                         {
-                            terminal = true; print.IsEnabled = printClose.IsEnabled = false; RefreshPhotoActions(); cancel.Content = Text("Close");
-                            ToolTipService.SetToolTip(cancel, Text("Close"));
+                            terminal = true; RefreshPhotoActions();
                             var sent = snapshot.Status == "SENT";
+                            delivered = sent;
+                            SetCancelAction(!printerIdleAfterDelivery && (sent || physicalCancelUnconfirmed));
+                            if (physicalCancelUnconfirmed || printerIdleAfterDelivery) return;
                             status.Text = Text(sent ? "Sent" : snapshot.Status == "CANCELLED" ? "Cancelled" : "Failed");
-                            if (!sent) status.Text += Environment.NewLine + snapshot.Message;
+                            if (!sent) status.Text += Environment.NewLine + LocalizationService.PrintFailureMessage(snapshot.Message);
                             return;
                         }
-                        status.Text = Text((snapshot.Stage ?? "").Contains("SEND") || snapshot.Stage == "RIP_STREAMING" ? "Sending" : "Preparing");
+                        if (!physicalCancelUnconfirmed)
+                            status.Text = Text((snapshot.Stage ?? "").Contains("SEND") || snapshot.Stage == "RIP_STREAMING" ? "Sending" : "Preparing");
                     }
                 }
                 catch (FileNotFoundException) { }
@@ -835,17 +906,26 @@ namespace pyToneRIP
         {
             var host = renderer?.NetworkHost;
             if (string.IsNullOrWhiteSpace(host)) { physicalStatus.Text = Text("PhysicalUnavailable"); return; }
-            while (!closed.Task.IsCompleted)
+            var idleReports = 0;
+            while (!closed.Task.IsCompleted && !printerIdleAfterDelivery)
             {
                 try
                 {
+                    var checkingCompletion = terminal && (delivered || physicalCancelUnconfirmed);
                     var reported = await PrinterSnmpService.ReadReportedStateAsync(host);
-                    if (closed.Task.IsCompleted) return;
+                    if (closed.Task.IsCompleted || printerIdleAfterDelivery) return;
+                    idleReports = checkingCompletion && reported == PrinterReportedState.Idle ? idleReports + 1 : 0;
+                    if (idleReports == 2)
+                    {
+                        MarkPrinterIdle();
+                        return;
+                    }
                     physicalStatus.Text = Text(reported.HasValue ? "Device" + reported.Value : "PhysicalUnavailable")
                         + Environment.NewLine + Text("PhysicalUnconfirmed");
                 }
                 catch (Exception error)
                 {
+                    idleReports = 0;
                     App.WriteStartupException("Preview printer status unavailable", error);
                     physicalStatus.Text = Text("PhysicalUnavailable");
                 }

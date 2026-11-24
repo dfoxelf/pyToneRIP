@@ -52,6 +52,10 @@ namespace pyToneRIP.Services
             string.Format(System.Globalization.CultureInfo.CurrentCulture,
                 Get(key), values);
 
+        internal static string PrintFailureMessage(string message) =>
+            message?.Contains(Models.EpsonRawQueueMatcher.RawDriverRequiredMessage) == true
+                ? Get("Queue.RawDriverRequired") : message;
+
         internal static string DeviceSettingName(Models.DeviceSettingCapability setting) =>
             Get("DeviceSetting." + setting.Id);
 

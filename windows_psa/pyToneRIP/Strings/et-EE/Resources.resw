@@ -93,7 +93,7 @@
   <data name="Auto.B388B9C01523.Text"><value>Suurus</value></data>
   <data name="Auto.C195019E59CC.Text"><value>Heledaim</value></data>
   <data name="Auto.C681456D80A8.Content"><value>RGB-selektorid (QTR InkSeparation)</value></data>
-  <data name="Auto.C706B9DFA105.Text"><value>Loob väikese mudelispetsiifilise PRN-i töötlemata tihedusribadega iga konfigureeritud füüsilise kanali jaoks. Selles esimeses tehnilises testis QTR-kõveraid tahtlikult ei kasutata.</value></data>
+  <data name="Auto.C706B9DFA105.Text"><value>Prindi A4 toonitest üleminekute, ringide ja halliastmetega, kasutades valitud kõveraid ja prindisätteid. Sisesta tühi A4-leht.</value></data>
   <data name="Auto.C84252F663BA.Header"><value>Ühendus</value></data>
   <data name="Auto.C8D7FCDF582D.Text"><value>Printeri ühendus</value></data>
   <data name="Auto.CC5611F72641.Text"><value>Väljas (soovitatav): säilitab printimisrakenduse ja Windowsi koostatud lehe. Sees: täiendavalt skaleerige ja paigutage täidetud leht RIP-is.</value></data>
@@ -277,7 +277,7 @@
   <data name="Maintenance.head_clean.Title"><value>Puhastage prindipea</value></data>
   <data name="Maintenance.nozzle_check.Description"><value>Paluge printeri püsivaral printida oma loomulik düüsimuster.</value></data>
   <data name="Maintenance.nozzle_check.Title"><value>Prindiotsiku kontroll</value></data>
-  <data name="Maintenance.test_page.Description"><value>Printige valitud mudelisätteid kasutades väike toormuster kanali kohta.</value></data>
+  <data name="Maintenance.test_page.Description"><value>Prindi A4 toonitest üleminekute, ringide ja halliastmetega, kasutades valitud kõveraid ja prindisätteid. Sisesta tühi A4-leht.</value></data>
   <data name="Maintenance.test_page.Title"><value>Printige pyToneRIPi testleht</value></data>
   <data name="Processing16Bit.Content"><value>16-bitine töötlus</value></data>
   <data name="Processing16BitExperimental.Text"><value>(eksperimentaalne režiim)</value></data>
@@ -289,6 +289,9 @@
   <data name="MainPage.SendLogs.Content"><value>Loo diagnostikaaruanne</value></data>
   <data name="Code.SupportReportPrompt"><value>Töölaual olev ZIP sisaldab pyToneRIPi ja Windowsi tehnilisi veaandmeid viimase 24 tunni kohta. Dokumentide sisu, isiklikke teid ja IP-aadresse ei lisata. Rakendus ei saada arhiivi.</value></data>
   <data name="Code.SupportReportCreated"><value>ZIP-fail loodi töölauale: {0}</value></data>
+  <data name="Usb.DirectPrint"><value>Printimine otse USB kaudu</value></data>
+  <data name="Usb.DirectPrintHint"><value>Saadab tööd otse USB kaudu ühendatud printerisse. Kui Epsoni draiver on installitud, valige Windowsi prindijärjekord (RAW).</value></data>
+  <data name="Usb.DirectPrintRecommendation"><value>Valige see suvand, kui Epsoni ametlik draiver pole installitud.</value></data>
   <data name="Usb.Device"><value>Ühendatud USB-printer</value></data>
   <data name="Usb.Refresh"><value>Värskenda USB-printereid</value></data>
   <data name="Usb.Searching"><value>USB-printerite otsimine…</value></data>
@@ -347,6 +350,7 @@
   <data name="PreviewWindow.ProfileMismatch" xml:space="preserve"><value>ICC erineb salvestatud printimistingimustest.</value></data>
   <data name="PreviewWindow.PhysicalUnavailable" xml:space="preserve"><value>Printeri füüsiline olek pole saadaval.</value></data>
   <data name="PreviewWindow.PhysicalUnconfirmed" xml:space="preserve"><value>Seadme olek ei kinnita selle töö lõpetamist ega lehe väljumist.</value></data>
+  <data name="PreviewWindow.PhysicalCancelUnconfirmed" xml:space="preserve"><value>Printer ei kinnitanud tühistamist. Proovige uuesti või tühistage töö printeri juhtpaneelil.</value></data>
   <data name="PreviewWindow.DeviceOther" xml:space="preserve"><value>Printer: muu olek</value></data>
   <data name="PreviewWindow.DeviceUnknown" xml:space="preserve"><value>Printer: teadmata olek</value></data>
   <data name="PreviewWindow.DeviceIdle" xml:space="preserve"><value>Printer: jõude</value></data>
@@ -368,4 +372,60 @@
   <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>Nool tähistab lehe serva, mis prinditakse esimesena.</value></data>
   <data name="PreviewWindow.PhotoCrop" xml:space="preserve"><value>Kärpimiseks lohistage külgede keskel olevaid valgeid pidemeid; taastamiseks lohistage väljapoole. Nurgapidemed muudavad suurust.</value></data>
   <data name="PreviewWindow.PhotoFill" xml:space="preserve"><value>Täida leht</value></data>
+  <data name="PrinterInfo.Read.Content" xml:space="preserve"><value>Loe printeri teavet</value></data>
+  <data name="PrinterInfo.Help.Text" xml:space="preserve"><value>Loeb valitud printeri USB või võrgu kaudu edastatud teavet.</value></data>
+  <data name="PrinterInfo.Title.Text" xml:space="preserve"><value>Printeri teave</value></data>
+  <data name="PrinterInfo.Empty.Text" xml:space="preserve"><value>Seadme aruande saamiseks valige „Loe printeri teavet“.</value></data>
+  <data name="PrinterInfo.Reading" xml:space="preserve"><value>Printeri teabe lugemine…</value></data>
+  <data name="PrinterInfo.Failed" xml:space="preserve"><value>Printeri teavet ei saanud lugeda: {0}</value></data>
+  <data name="PrinterInfo.Busy" xml:space="preserve"><value>Printer on kasutusel. Oodake printimise või hoolduse lõppemist.</value></data>
+  <data name="PrinterInfo.Connection" xml:space="preserve"><value>Ühendus</value></data>
+  <data name="PrinterInfo.Identity" xml:space="preserve"><value>Tuvastus</value></data>
+  <data name="PrinterInfo.Status" xml:space="preserve"><value>Olek ja hoiatused</value></data>
+  <data name="PrinterInfo.Inks" xml:space="preserve"><value>Tinditasemed</value></data>
+  <data name="PrinterInfo.Details" xml:space="preserve"><value>Lisateave</value></data>
+  <data name="PrinterInfo.Raw" xml:space="preserve"><value>Seadme algsed vastused</value></data>
+  <data name="PrinterInfo.Model" xml:space="preserve"><value>Mudel</value></data>
+  <data name="PrinterInfo.Firmware" xml:space="preserve"><value>Püsivara</value></data>
+  <data name="PrinterInfo.DeviceId" xml:space="preserve"><value>Seadme tuvastus</value></data>
+  <data name="PrinterInfo.Cartridges" xml:space="preserve"><value>Kassettide tüübid</value></data>
+  <data name="PrinterInfo.Cartridge" xml:space="preserve"><value>Kassett</value></data>
+  <data name="PrinterInfo.Error" xml:space="preserve"><value>Viga</value></data>
+  <data name="PrinterInfo.Warning" xml:space="preserve"><value>Hoiatus</value></data>
+  <data name="PrinterInfo.SerialNumber" xml:space="preserve"><value>Seerianumber</value></data>
+  <data name="PrinterInfo.State" xml:space="preserve"><value>Olek</value></data>
+  <data name="PrinterInfo.NoData" xml:space="preserve"><value>Ei teatata</value></data>
+  <data name="PrinterInfo.Field" xml:space="preserve"><value>Väli 0x{0}</value></data>
+  <data name="PrinterInfo.MaintenanceBox" xml:space="preserve"><value>Hoolduskarp</value></data>
+  <data name="PrinterInfo.PaperCounters" xml:space="preserve"><value>Leheküljeloendurid</value></data>
+  <data name="PrinterInfo.Temperature" xml:space="preserve"><value>Temperatuur</value></data>
+  <data name="PrinterInfo.Interface" xml:space="preserve"><value>Liidese olek</value></data>
+  <data name="PrinterInfo.Unsupported" xml:space="preserve"><value>Pole toetatud või vastus puudub</value></data>
+  <data name="PrinterInfo.Source" xml:space="preserve"><value>Allikas</value></data>
+  <data name="MainPage.CancelJob.Content"><value>Tühista praegune prinditöö</value></data>
+  <data name="MainPage.NoActiveJob" xml:space="preserve"><value>Valitud printeril pole aktiivset prinditööd.</value></data>
+  <data name="MainPage.CancelJobFailed" xml:space="preserve"><value>Prinditööd ei saanud tühistada. Kontrollige printeri ühendust ja proovige uuesti.</value></data>
+  <data name="Network.Search"><value>Otsi printereid</value></data>
+  <data name="Network.Device"><value>Valige leitud printer</value></data>
+  <data name="Network.DeviceHint"><value>Loendis on iga printeri mudel ja IP-aadress.</value></data>
+  <data name="Network.Searching"><value>Epsoni printerite otsimine…</value></data>
+  <data name="Network.None"><value>Kohalikust võrgust ei leitud Epsoni seadmeid.</value></data>
+  <data name="Network.Choose"><value>Valige loendist</value></data>
+  <data name="Network.Manual"><value>Seadista käsitsi</value></data>
+  <data name="Network.UnknownModel"><value>Printer ei teatanud oma mudelit.</value></data>
+  <data name="Network.UnsupportedModel"><value>Seda mudelit pole paigaldatud printerikataloogis.</value></data>
+  <data name="Network.RawUnavailable"><value>Printer ei võtnud TCP-pordil 9100 ühendust vastu.</value></data>
+  <data name="Network.ChooseModel"><value>Valige kataloogist sobiv mudel.</value></data>
+  <data name="Network.SearchFailed"><value>Võrguprinterite otsing nurjus.</value></data>
+  <data name="Network.AddressAssigned"><value>Aadress {0} on juba määratud pyToneRIP-printerile.</value></data>
+  <data name="Network.SearchHint"><value>Otsige Epsoni printereid oma kohalikust võrgust.</value></data>
+  <data name="Network.FoundCount"><value>Leitud printereid: {0}</value></data>
+  <data name="Queue.Title"><value>Windowsi järjekord (RAW)</value></data>
+  <data name="Queue.Recommended"><value>Soovitatav, kui sellele printerile on installitud Epsoni ametlik draiver.</value></data>
+  <data name="Queue.RawDriverRequired"><value>Windowsi prindijärjekorra (RAW) kaudu printimiseks installige sellele mudelile ametlik Epsoni draiver.</value></data>
+  <data name="Queue.Select"><value>Valige installitud Epsoni järjekord</value></data>
+  <data name="Queue.Searching"><value>Epsoni järjekordade otsimine Windowsis…</value></data>
+  <data name="Queue.None"><value>Windowsis ei leitud ühilduvaid Epsoni järjekordi.</value></data>
+  <data name="Queue.SearchFailed"><value>Windowsi printerijärjekordi ei leitud.</value></data>
+  <data name="Queue.Assigned"><value>Windowsi järjekord {0} on juba määratud pyToneRIP-printerile.</value></data>
 </root>

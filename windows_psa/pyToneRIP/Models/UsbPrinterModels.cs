@@ -29,13 +29,17 @@ namespace pyToneRIP.Models
     {
         public static bool Matches(string modelId, string displayName, UsbPrinterDescriptor device)
         {
-            if (device == null) return false;
+            return device != null && (MatchesReportedModel(modelId, displayName, device.DisplayName)
+                || MatchesReportedModel(modelId, displayName, device.ModelName));
+        }
+
+        internal static bool MatchesReportedModel(string modelId, string displayName, string reportedModel)
+        {
+            var detected = Normalize(reportedModel);
+            if (detected.Length == 0) return false;
             var id = Normalize(modelId);
             var label = Normalize(displayName);
-            var detected = Normalize(device.DisplayName);
-            var hardware = Normalize(device.ModelName);
-            return (!string.IsNullOrEmpty(id) && (id == detected || id == hardware))
-                || (!string.IsNullOrEmpty(label) && (label == detected || label == hardware));
+            return id == detected || label == detected;
         }
 
         private static string Normalize(string value)
@@ -44,7 +48,7 @@ namespace pyToneRIP.Models
             // USBPRINT model tokens may have a CRC after the SERIES suffix.
             text = Regex.Replace(text, @"SERIES[0-9A-F]{0,4}$", "");
             text = Regex.Replace(text, "[^A-Z0-9]", "");
-            var prefixes = new[] { "EPSON", "SURECOLOR", "STYLUSPHOTO", "STYLUSPRO", "STYLUS", "ECOTANK", "WORKFORCE", "EXPRESSIONPHOTO", "EXPRESSIONPREMIUM", "EXPRESSIONHOME" };
+            var prefixes = new[] { "EPSON", "SURECOLOR", "STYLUSPHOTO", "STYLUSPRO", "STYLUS", "ECOTANK", "WORKFORCEPRO", "WORKFORCE", "EXPRESSIONPHOTO", "EXPRESSIONPREMIUM", "EXPRESSIONHOME" };
             // Some USBPRINT IDs repeat the manufacturer, e.g.
             // EPSONEPSON_STYLUS_PHOTO_P50. Strip complete leading names until
             // the model token remains; keep the token itself an exact match.
@@ -63,6 +67,46 @@ namespace pyToneRIP.Models
             if (text.StartsWith("SC", StringComparison.Ordinal)) text = text.Substring(2);
             return text.EndsWith("SERIES", StringComparison.Ordinal)
                 ? text.Substring(0, text.Length - 6) : text;
+        }
+    }
+
+    internal static class EpsonRawQueueMatcher
+    {
+        internal const uint OfflineStatus = 0x00000080;
+        internal const uint WorkOfflineAttribute = 0x00000400;
+        internal const string RawDriverRequiredMessage =
+            "Install the official Epson driver for this printer to use Windows queue (RAW) with pyToneRIP.";
+
+        internal static bool IsOffline(uint status) =>
+            (status & (OfflineStatus | 0x00001000u | 0x02000000u)) != 0;
+
+        internal static bool IsPrinting(uint status) => (status & (0x0200u | 0x0400u | 0x4000u)) != 0;
+
+        internal static bool IsUsbPort(string port) => port != null
+            && Regex.IsMatch(port, @"^USB\d+$", RegexOptions.IgnoreCase);
+
+        internal static bool IsEpsonClassDriver(string driver) =>
+            string.Equals(driver, "Epson ESC/P-R V4 Class Driver", StringComparison.OrdinalIgnoreCase)
+            || string.Equals(driver, "Epson ESC/P Standard 2 V4 Class Driver", StringComparison.OrdinalIgnoreCase);
+
+        private static readonly string[] ExcludedPorts =
+            { "pytone-rip:", "pytonerip.", "file:", "portprompt:", "nul:", "wdp", "wsd", "ipp:", "ipps:" };
+
+        internal static bool IsCompatible(string name, string port, string driver, bool rawReady, uint status)
+        {
+            if (!rawReady || (status & 4) != 0 || string.IsNullOrWhiteSpace(name)
+                || name.StartsWith("pyToneRIP", StringComparison.OrdinalIgnoreCase)
+                || driver?.StartsWith("Epson ", StringComparison.OrdinalIgnoreCase) != true
+                || string.IsNullOrWhiteSpace(port))
+                return false;
+            foreach (var value in port.Split(','))
+            {
+                var portName = value.Trim();
+                if (portName.Length == 0) return false;
+                foreach (var prefix in ExcludedPorts)
+                    if (portName.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)) return false;
+            }
+            return true;
         }
     }
 

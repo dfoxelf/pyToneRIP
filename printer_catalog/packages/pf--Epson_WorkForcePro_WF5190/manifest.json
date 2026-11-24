@@ -1,0 +1,25 @@
+{
+  "backend_family": "epson_escp2_workforcenative",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson WorkForcePro_WF5190",
+  "model_id": "WorkForcePro_WF5190",
+  "package_id": "pf--Epson_WorkForcePro_WF5190",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "f344c3d234eff86a4ff7407a320891fb8feb2efc971759fe0ca2f455f60d1f4a",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "WorkForceNative",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "8d1547d74e78ccb5508e8d647f050baa239103b6dfcdcd17d2461055fa69db94",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "78cb253844b054266427b9e4fb7679363932f6a798d247525ff9eaa890d44916",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "SYNTHETIC_PPD: no Epson manufacturer PPD supplied; technical source ReferenceDriver driver WFC5890"
+  ]
+}

@@ -571,6 +571,7 @@ def _flush_weave_buffers(
     reduced_width: int,
     last_pass_offset: int,
     emit: Callable[[WeavePass], None],
+    path_nozzle_counts: dict[PhysicalPathId, int] | None = None,
 ) -> int:
     """Complete only passes to which no future source row can contribute."""
 
@@ -588,7 +589,7 @@ def _flush_weave_buffers(
             if buffer is None or not any(row != blank_row for row in buffer.rows.values()):
                 continue
             pass_meta = pass_meta or buffer.meta
-            max_nozzle = max(buffer.rows)
+            max_nozzle = max(max(buffer.rows), (path_nozzle_counts or {}).get(path, 0) - 1)
             rows = tuple(buffer.rows.get(index, blank_row) for index in range(max_nozzle + 1))
             encoded_rows = tuple(
                 buffer.encoded_rows.get(index, blank_encoded)
@@ -860,6 +861,7 @@ def schedule_model96_softweave(
     absolute_page_edges: bool = False,
     clip_negative_rows: bool = False,
     path_definitions: tuple[PhysicalPathDefinition, ...] | None = None,
+    path_nozzle_counts: dict[PhysicalPathId, int] | None = None,
     trace: PerformanceTrace | None = None,
     timings: WeaveStageTimings | None = None,
     retain_row_trace: bool = False,
@@ -870,6 +872,8 @@ def schedule_model96_softweave(
 
     if rasters.bit_depth != mode.bit_depth:
         raise ValueError("model96 mode and physical raster bit depth differ")
+    if path_nozzle_counts and any(not 1 <= count <= 65535 for count in path_nozzle_counts.values()):
+        raise ValueError("Per-path nozzle count must fit ESC i")
     if initial_feed_offset_rows < 0:
         raise ValueError("initial feed offset cannot be negative")
     if mode.nozzle_count == 1 and initial_feed_offset_rows:
@@ -882,7 +886,8 @@ def schedule_model96_softweave(
         # rows, not the head's empty remainder, are limited by the page bottom.
         first_line += initial_feed_offset_rows
         page_height_rows += (initial_feed_offset_rows
-                             + mode.nozzle_count * mode.effective_nozzle_separation)
+                             + max((path_nozzle_counts or {}).values(), default=mode.nozzle_count)
+                             * mode.effective_nozzle_separation)
         initial_feed_offset_rows = 0
     if path_definitions is None:
         definitions = {
@@ -970,6 +975,34 @@ def schedule_model96_softweave(
 
     pre_base, pre_map, pre_stagger = _dense_mapping(cooked.premap, cooked.prestagger)
     post_base, post_map, post_stagger = _dense_mapping(cooked.postmap, cooked.poststagger)
+    common_parameters = (
+        subpass_count, raw.separation, raw.jets, raw.oversampling,
+        raw.subblocks_per_passblock, raw.passes_per_subblock,
+        cooked.first_premapped, cooked.first_normal, cooked.first_postmapped,
+        cooked.first_row, cooked.last_row,
+        pre_base, pre_map, pre_stagger, post_base, post_map, post_stagger,
+    )
+    parameters = {path: common_parameters for path in rasters.identities}
+    # Independent head lengths have independent raw/cooked pass numbers.
+    # Merge them by the actual paper position, never by those pass numbers.
+    merge_by_position = any((path_nozzle_counts or {}).get(path, mode.nozzle_count) != mode.nozzle_count
+                            for path in rasters.identities)
+    for path in rasters.identities:
+        jets = (path_nozzle_counts or {}).get(path, mode.nozzle_count)
+        if jets == mode.nozzle_count:
+            continue
+        path_raw = _RawWeave(raw.separation, jets, raw.oversampling)
+        path_cooked = _CookedWeave(path_raw, max(0, first_line) if clip_negative_rows else first_line,
+                                  last_line, page_height_rows)
+        pbase, pmap, pstagger = _dense_mapping(path_cooked.premap, path_cooked.prestagger)
+        ebase, emap, estagger = _dense_mapping(path_cooked.postmap, path_cooked.poststagger)
+        parameters[path] = (
+            subpass_count, path_raw.separation, path_raw.jets, path_raw.oversampling,
+            path_raw.subblocks_per_passblock, path_raw.passes_per_subblock,
+            path_cooked.first_premapped, path_cooked.first_normal, path_cooked.first_postmapped,
+            path_cooked.first_row, path_cooked.last_row,
+            pbase, pmap, pstagger, ebase, emap, estagger,
+        )
     # In live mode, precompute assignment *metadata*, never pixels.  The
     # suffix minimum proves that a pass below the threshold cannot receive
     # any row from an unseen band, including cooked top/bottom remapping.
@@ -988,25 +1021,9 @@ def schedule_model96_softweave(
                     first_line + pre_start,
                     pre_height,
                     mode.effective_head_offset(definitions[path].head_offset),
-                    subpass_count,
-                    raw.separation,
-                    raw.jets,
-                    raw.oversampling,
-                    raw.subblocks_per_passblock,
-                    raw.passes_per_subblock,
-                    cooked.first_premapped,
-                    cooked.first_normal,
-                    cooked.first_postmapped,
-                    cooked.first_row,
-                    cooked.last_row,
-                    pre_base,
-                    pre_map,
-                    pre_stagger,
-                    post_base,
-                    post_map,
-                    post_stagger,
+                    *parameters[path],
                 )
-                path_minimum = int(values[:, :, 0].min())
+                path_minimum = int(values[:, :, 2 if merge_by_position else 0].min())
                 minimum = path_minimum if minimum is None else min(minimum, path_minimum)
             assert minimum is not None
             band_minimums.append(minimum)
@@ -1093,23 +1110,7 @@ def schedule_model96_softweave(
                 first_line + band_start,
                 band_height,
                 offset,
-                subpass_count,
-                raw.separation,
-                raw.jets,
-                raw.oversampling,
-                raw.subblocks_per_passblock,
-                raw.passes_per_subblock,
-                cooked.first_premapped,
-                cooked.first_normal,
-                cooked.first_postmapped,
-                cooked.first_row,
-                cooked.last_row,
-                pre_base,
-                pre_map,
-                pre_stagger,
-                post_base,
-                post_map,
-                post_stagger,
+                *parameters[path],
             )
             if timings is not None:
                 timings.cython_assignment += perf_counter() - started
@@ -1134,11 +1135,11 @@ def schedule_model96_softweave(
                 ):
                     values = plane_assignments[band_index, subpass]
                     row_assignment_count += 1
-                    pass_index = int(values[0])
+                    pass_index = int(values[2 if merge_by_position else 0])
                     if clip_negative_rows and pass_index < 0:
                         continue
                     nozzle = int(values[1])
-                    micro_offset = left_position_units + (subpass & (hpasses - 1)) * (
+                    micro_offset = left_position_units + (subpass % hpasses) * (
                         mode.physical_horizontal_dpi // mode.printed_horizontal_dpi
                     )
                     key = (pass_index, subpass, path)
@@ -1204,6 +1205,7 @@ def schedule_model96_softweave(
                 reduced_width=reduced_width,
                 last_pass_offset=last_pass_offset,
                 emit=emit_pass,
+                path_nozzle_counts=path_nozzle_counts,
             )
 
     last_pass_offset = _flush_weave_buffers(
@@ -1215,6 +1217,7 @@ def schedule_model96_softweave(
         reduced_width=reduced_width,
         last_pass_offset=last_pass_offset,
         emit=emit_pass,
+        path_nozzle_counts=path_nozzle_counts,
     )
     schedule = WeaveSchedule(tuple(passes), tuple(row_trace), first_line, page_height_rows)
     if trace is not None:

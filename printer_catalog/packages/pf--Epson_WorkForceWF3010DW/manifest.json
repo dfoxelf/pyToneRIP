@@ -1,0 +1,25 @@
+{
+  "backend_family": "epson_escp2_workforcenative",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson WorkForceWF3010DW",
+  "model_id": "WorkForceWF3010DW",
+  "package_id": "pf--Epson_WorkForceWF3010DW",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "c39760d31d809c7b6879c9cd236aeae6be9e99872b299f51e6d9a5b0b0a5cfdb",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "WorkForceNative",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "fa95502b8af6f26f4fa1efea83470b302667fb73f33c229eac92a1ae03a979a7",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "04e4f5b1572fb0160f3f022b78f8e1f17d1bb6267be8274194990a8ab855f035",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "SYNTHETIC_PPD: no Epson manufacturer PPD supplied; technical source ReferenceDriver driver BX610"
+  ]
+}

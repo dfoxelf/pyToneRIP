@@ -28,5 +28,10 @@ namespace pyToneRIP.Models
         public List<string> LogicalInks { get; set; }
         [DataMember(Name = "routing", Order = 16, EmitDefaultValue = false)]
         public Dictionary<string, string> Routing { get; set; }
+        [DataMember(Name = "connection_kind", Order = 17)] public string ConnectionKind { get; set; } = "network";
+        [DataMember(Name = "usb_device_id", Order = 18, EmitDefaultValue = false)] public string UsbDeviceId { get; set; }
+        [DataMember(Name = "configuration_json", Order = 19, EmitDefaultValue = false)] public string ConfigurationJson { get; set; }
+        [DataMember(Name = "printer_queue", Order = 20, EmitDefaultValue = false)] public string PhysicalQueueName { get; set; }
+        [DataMember(Name = "printer_queue_driver", Order = 21, EmitDefaultValue = false)] public string PhysicalQueueDriver { get; set; }
     }
 }

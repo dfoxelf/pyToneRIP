@@ -134,7 +134,7 @@ EPSON_REMOTE_MAINTENANCE_ACTIONS = (
     MaintenanceActionCapability(
         identity="test_page",
         display_name="Print pyToneRIP test page",
-        description="Print a small raw per-channel pattern using the selected model settings.",
+        description="Print an A4 tonal test using the selected curves and print settings. Load a blank A4 sheet.",
         requires_paper=True,
     ),
 )
@@ -158,6 +158,8 @@ class EpsonEscp2BackendProfile:
     remote_extras: tuple[tuple[str, bytes], ...] = ()
     source: str = ""
     mode_derived_units: bool = False
+    emit_paper_path: bool = True
+    remote_after_paper_path: tuple[tuple[str, bytes], ...] = ()
 
     def __post_init__(self) -> None:
         if len(self.units_payload) != 5:
@@ -168,6 +170,76 @@ class EpsonEscp2BackendProfile:
             raise ValueError("rows_per_pass must fit ESC i")
         if not 0 <= self.default_dot_size <= 0xFF:
             raise ValueError("default_dot_size must fit one byte")
+
+
+@dataclass(frozen=True, slots=True)
+class NativeHeadBank:
+    """One addressable row bank of a physical ink channel.
+
+    Source rows are partitioned by (row // row_group) % bank_count. Offsets
+    are signed command units relative to the primary bank, never millimetres.
+    """
+
+    primary_selector: int
+    selector: int
+    offset_command_units: int
+    row_group: int
+    phase: int
+    bank_count: int
+
+    def __post_init__(self) -> None:
+        if not 0 <= self.primary_selector <= 255 or not 0 <= self.selector <= 255:
+            raise ValueError("Native bank selector must fit a byte")
+        if self.row_group < 1 or not 0 <= self.phase < self.bank_count:
+            raise ValueError("Invalid native bank row partition")
+
+
+@dataclass(frozen=True, slots=True)
+class NativeRasterSetup:
+    """Explicit per-mode grids and primary-bank geometry, in command units.
+
+    Optional data for independently imported models. A missing setup preserves
+    the existing backend contract of every other catalog package.
+    """
+
+    units_payload: bytes
+    resolution_payload: bytes
+    origin_vertical_units: int
+    reference_top_margin_mils: int
+    channel_offsets: tuple[tuple[int, int], ...]
+    banks: tuple[NativeHeadBank, ...] = ()
+    black_only_nozzle_count: int | None = None
+    gray_mode: int = 2
+    channel_nozzle_counts: tuple[tuple[int, int], ...] = ()
+    black_only_channel_offset: int | None = None
+
+    def __post_init__(self) -> None:
+        if len(self.units_payload) != 5 or len(self.resolution_payload) != 4:
+            raise ValueError("Native raster setup requires five U and four D bytes")
+        if self.gray_mode not in (1, 2):
+            raise ValueError("Native raster gray mode must be black-only or colour")
+        if self.black_only_nozzle_count is not None and not 1 <= self.black_only_nozzle_count <= 65535:
+            raise ValueError("Black-only nozzle count must fit ESC i")
+        if (len(dict(self.channel_nozzle_counts)) != len(self.channel_nozzle_counts)
+                or any(not 0 <= selector <= 255 or not 1 <= count <= 65535
+                       for selector, count in self.channel_nozzle_counts)):
+            raise ValueError("Per-channel nozzle counts must have unique valid selectors and counts")
+        scale = int.from_bytes(self.units_payload[3:], "little")
+        if not scale or any(not v or scale % v for v in self.units_payload[:3]):
+            raise ValueError("Native command units must divide their scale exactly")
+        pitch_scale = int.from_bytes(self.resolution_payload[:2], "little")
+        if not pitch_scale or not all(self.resolution_payload[2:]):
+            raise ValueError("Native raster pitch must be positive")
+        if len({s for s, _ in self.channel_offsets}) != len(self.channel_offsets):
+            raise ValueError("Native channel geometry contains duplicate selectors")
+        if len({bank.selector for bank in self.banks}) != len(self.banks):
+            raise ValueError("Native bank addresses must be unique")
+        for selector, _ in self.channel_offsets:
+            group = [b for b in self.banks if b.primary_selector == selector]
+            if group and (len(group) != group[0].bank_count
+                          or {b.phase for b in group} != set(range(len(group)))
+                          or len({(b.row_group, b.bank_count) for b in group}) != 1):
+                raise ValueError("Native banks must partition every source row once")
 
 
 @dataclass(frozen=True, slots=True)
@@ -214,6 +286,7 @@ class PrinterMode:
     # guesses. Existing modes retain their captured one-byte commands.
     escp2_print_method_payload_length: int = 1
     escp2_printer_weave_variant: int | None = None
+    native_raster_setup: NativeRasterSetup | None = None
 
     def __post_init__(self) -> None:
         if self.escp2_print_method_payload_length not in (1, 4):
@@ -359,6 +432,8 @@ class PrinterModel:
     escp2_unit_scale: int = 5760
     # interleave, medium kind, left/right/top/bottom in points.
     escp2_page_margins: tuple[tuple[str, str, tuple[float, ...]], ...] = ()
+    mode_aliases: tuple[tuple[str, str], ...] = ()
+    maintenance_enabled: bool = True
 
     def native_page(self, page: PageCapability, mode: PrinterMode,
                     feed: InputSourceCapability) -> PageCapability:
@@ -367,6 +442,14 @@ class PrinterModel:
         Ordinary PPD pages can describe the entire sheet. Pro models require
         the physical imageable rectangle for the selected weave and feed.
         """
+        if (self.catalog_package_id == "gp--escp2-r3000"
+                and page.ppd.borderless and feed.medium_kind == "roll"):
+            # Own continuous borderless capture uses the enlarged command
+            # canvas; the Windows sheet dimensions remain physical dimensions.
+            original = self.page(page.ppd.name).native_page_format_mils
+            if original is not None:
+                return replace(page, native_page_format_mils=(
+                    original[0] + 200, original[1] + 300, 0))
         if (self.escp2_profile is not None and self.escp2_profile.identity == "P700RIP"
                 and page.ppd.borderless and feed.medium_kind == "roll"):
             # Sheet captures use physical dimensions; continuous borderless
@@ -470,7 +553,7 @@ class PrinterModel:
         profile get no actions and therefore no Maintenance tab in the GUI.
         """
 
-        if not self.backend_family.startswith("epson_escp2_"):
+        if not self.maintenance_enabled or not self.backend_family.startswith("epson_escp2_"):
             return ()
         if self.escp2_profile is not None or self.backend_family == "epson_escp2_model96":
             return EPSON_REMOTE_MAINTENANCE_ACTIONS
@@ -525,8 +608,9 @@ class PrinterModel:
             raise ValueError("Default ink configuration is absent from PrinterModel")
 
     def mode(self, identity: str) -> PrinterMode:
+        canonical = dict(self.mode_aliases).get(identity, identity)
         for item in self.modes:
-            if item.identity == identity:
+            if item.identity == canonical:
                 return item
         raise KeyError(identity)
 

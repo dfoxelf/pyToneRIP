@@ -1,0 +1,25 @@
+{
+  "backend_family": "epson_escp2_workforcenative",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson WorkForceWF2110W",
+  "model_id": "WorkForceWF2110W",
+  "package_id": "pf--Epson_WorkForceWF2110W",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "853cc66d1a1ea33ba1ce00548e915d9526389832e8e7b9555ac9a603555a623f",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "WorkForceNative",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "ab96a1340656f2df4244c9b2f5cc591cb17ae8c6b40a8cd21243fc70b178b2a0",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "3d490de94ff93334f5b91d94da37d1604cbbce0533b8dcfd936e1a205869f2f0",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "SYNTHETIC_PPD: no Epson manufacturer PPD supplied; technical source ReferenceDriver driver D120"
+  ]
+}

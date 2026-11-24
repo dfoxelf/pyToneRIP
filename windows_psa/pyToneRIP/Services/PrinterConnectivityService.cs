@@ -25,7 +25,7 @@ namespace pyToneRIP.Services
     {
         // Epson discovery uses UDP 3289 and does not touch the print stream.
         // The XP-960 and ET-2550 both answered this unicast query.
-        private static readonly byte[] EnpcQuery =
+        internal static readonly byte[] EnpcQuery =
             { 0x45, 0x50, 0x53, 0x4f, 0x4e, 0x51, 0x03, 0, 0, 0, 0x10, 0, 0, 0, 0, 0 };
         private static readonly Dictionary<string, int> MissedByHost =
             new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
@@ -74,8 +74,8 @@ namespace pyToneRIP.Services
             }
         }
 
-        // Called only by the explicit Test button beside port 9100. The
-        // periodic table monitor continues to use ENPC/SNMP exclusively.
+        // The explicit connection test and network discovery can check RAW
+        // reachability. The periodic monitor uses ENPC and SNMP.
         public static async Task<PrinterNetworkState> TestRawTcpPortAsync(
             string host, int port, TimeSpan? timeout = null)
         {
@@ -101,7 +101,7 @@ namespace pyToneRIP.Services
             }
         }
 
-        private static bool IsEnpcReply(byte[] response) =>
+        internal static bool IsEnpcReply(byte[] response) =>
             response != null && response.Length >= 12 &&
             response[0] == (byte)'E' && response[1] == (byte)'P' &&
             response[2] == (byte)'S' && response[3] == (byte)'O' &&

@@ -1,0 +1,25 @@
+{
+  "backend_family": "epson_escp2_workforcenative",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson WorkForceWF2930DWF",
+  "model_id": "WorkForceWF2930DWF",
+  "package_id": "pf--Epson_WorkForceWF2930DWF",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "8d97f13d6166975bcc562402f366c389ac71135473cfaf6e7aee0e1a43d1249f",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "WorkForceNative",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "e72fda6f54eb574d181a0512ba0f400e189a98df0aef994446e3707defdfa069",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "ea156f892fef12eecab7020c987b3f55e7fc8cb213be8021fbcf91c36ddd2680",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "SYNTHETIC_PPD: no Epson manufacturer PPD supplied; technical source ReferenceDriver driver XP305"
+  ]
+}

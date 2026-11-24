@@ -69,10 +69,17 @@
         <uap:Extension Category="windows.appService" EntryPoint="pyToneRIP.Tasks.CoreAppServiceTask">
           <uap:AppService Name="pytone-rip.core.v1" />
         </uap:Extension>
+        <uap:Extension Category="windows.appService" EntryPoint="pyToneRIP.Tasks.QueueCommandServiceTask" ResourceGroup="QueueCommandHost">
+          <uap:AppService Name="pytone-rip.queue.v1" />
+        </uap:Extension>
+        <uap:Extension Category="windows.appService" EntryPoint="pyToneRIP.Tasks.QueueCommandServiceTask" ResourceGroup="QueueCommandHost">
+          <uap:AppService Name="pytone-rip.queue-helper.v1" />
+        </uap:Extension>
         <desktop:Extension Category="windows.fullTrustProcess" Executable="pyToneRIP.QueueHelper.exe">
           <desktop:FullTrustProcess>
             <desktop:ParameterGroup GroupId="QueueCommand" Parameters="--process-requests" />
             <desktop:ParameterGroup GroupId="RipCommand" Parameters="--process-rip-requests" />
+            <desktop:ParameterGroup GroupId="QueueAppService" Parameters="--queue-app-service" />
           </desktop:FullTrustProcess>
         </desktop:Extension>
       </Extensions>

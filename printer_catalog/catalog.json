@@ -1,5 +1,5 @@
 {
-  "count": 190,
+  "count": 256,
   "packages": [
     {
       "backend_status": "IMPLEMENTED",
@@ -1007,6 +1007,468 @@
       "display_name": "Epson SureColor T7200",
       "model_id": "SureColorT7200",
       "package_id": "pf--Epson_SureColorT7200",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForcePro_WF4720",
+      "model_id": "WorkForcePro_WF4720",
+      "package_id": "pf--Epson_WorkForcePro_WF4720",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForcePro_WF4730",
+      "model_id": "WorkForcePro_WF4730",
+      "package_id": "pf--Epson_WorkForcePro_WF4730",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForcePro_WF4740",
+      "model_id": "WorkForcePro_WF4740",
+      "package_id": "pf--Epson_WorkForcePro_WF4740",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForce Pro WF-4820 (Experimental ESC/P2)",
+      "model_id": "WorkForcePro_WF4820",
+      "package_id": "pf--Epson_WorkForcePro_WF4820",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTATION_REQUIRES_PROTOCOL_PROFILE",
+      "display_name": "Epson WorkForcePro_WF4830",
+      "model_id": "WorkForcePro_WF4830",
+      "package_id": "pf--Epson_WorkForcePro_WF4830",
+      "visible": false
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForcePro_WF5110",
+      "model_id": "WorkForcePro_WF5110",
+      "package_id": "pf--Epson_WorkForcePro_WF5110",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForcePro_WF5190",
+      "model_id": "WorkForcePro_WF5190",
+      "package_id": "pf--Epson_WorkForcePro_WF5190",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForcePro_WF5620",
+      "model_id": "WorkForcePro_WF5620",
+      "package_id": "pf--Epson_WorkForcePro_WF5620",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForcePro_WF5690",
+      "model_id": "WorkForcePro_WF5690",
+      "package_id": "pf--Epson_WorkForcePro_WF5690",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForcePro_WF8010",
+      "model_id": "WorkForcePro_WF8010",
+      "package_id": "pf--Epson_WorkForcePro_WF8010",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForcePro_WFC4310",
+      "model_id": "WorkForcePro_WFC4310",
+      "package_id": "pf--Epson_WorkForcePro_WFC4310",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForcePro_WFC4810",
+      "model_id": "WorkForcePro_WFC4810",
+      "package_id": "pf--Epson_WorkForcePro_WFC4810",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForcePro_WFC5210",
+      "model_id": "WorkForcePro_WFC5210",
+      "package_id": "pf--Epson_WorkForcePro_WFC5210",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForcePro_WFC5290",
+      "model_id": "WorkForcePro_WFC5290",
+      "package_id": "pf--Epson_WorkForcePro_WFC5290",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForcePro_WFC5390",
+      "model_id": "WorkForcePro_WFC5390",
+      "package_id": "pf--Epson_WorkForcePro_WFC5390",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForcePro_WFC5710",
+      "model_id": "WorkForcePro_WFC5710",
+      "package_id": "pf--Epson_WorkForcePro_WFC5710",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForcePro_WFC5790",
+      "model_id": "WorkForcePro_WFC5790",
+      "package_id": "pf--Epson_WorkForcePro_WFC5790",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForcePro_WFC5890",
+      "model_id": "WorkForcePro_WFC5890",
+      "package_id": "pf--Epson_WorkForcePro_WFC5890",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTATION_REQUIRES_PROTOCOL_PROFILE",
+      "display_name": "Epson WorkForceWF100",
+      "model_id": "WorkForceWF100",
+      "package_id": "pf--Epson_WorkForceWF100",
+      "visible": false
+    },
+    {
+      "backend_status": "IMPLEMENTATION_REQUIRES_PROTOCOL_PROFILE",
+      "display_name": "Epson WorkForceWF110",
+      "model_id": "WorkForceWF110",
+      "package_id": "pf--Epson_WorkForceWF110",
+      "visible": false
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForceWF2010W",
+      "model_id": "WorkForceWF2010W",
+      "package_id": "pf--Epson_WorkForceWF2010W",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForceWF2110W",
+      "model_id": "WorkForceWF2110W",
+      "package_id": "pf--Epson_WorkForceWF2110W",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForceWF2510WF",
+      "model_id": "WorkForceWF2510WF",
+      "package_id": "pf--Epson_WorkForceWF2510WF",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForceWF2520NF",
+      "model_id": "WorkForceWF2520NF",
+      "package_id": "pf--Epson_WorkForceWF2520NF",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForceWF2530WF",
+      "model_id": "WorkForceWF2530WF",
+      "package_id": "pf--Epson_WorkForceWF2530WF",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForceWF2540WF",
+      "model_id": "WorkForceWF2540WF",
+      "package_id": "pf--Epson_WorkForceWF2540WF",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForceWF2630WF",
+      "model_id": "WorkForceWF2630WF",
+      "package_id": "pf--Epson_WorkForceWF2630WF",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTATION_REQUIRES_PROTOCOL_PROFILE",
+      "display_name": "Epson WorkForceWF2650DWF",
+      "model_id": "WorkForceWF2650DWF",
+      "package_id": "pf--Epson_WorkForceWF2650DWF",
+      "visible": false
+    },
+    {
+      "backend_status": "IMPLEMENTATION_REQUIRES_PROTOCOL_PROFILE",
+      "display_name": "Epson WorkForceWF2660DWF",
+      "model_id": "WorkForceWF2660DWF",
+      "package_id": "pf--Epson_WorkForceWF2660DWF",
+      "visible": false
+    },
+    {
+      "backend_status": "IMPLEMENTATION_REQUIRES_PROTOCOL_PROFILE",
+      "display_name": "Epson WorkForceWF2750DWF",
+      "model_id": "WorkForceWF2750DWF",
+      "package_id": "pf--Epson_WorkForceWF2750DWF",
+      "visible": false
+    },
+    {
+      "backend_status": "IMPLEMENTATION_REQUIRES_PROTOCOL_PROFILE",
+      "display_name": "Epson WorkForceWF2760DWF",
+      "model_id": "WorkForceWF2760DWF",
+      "package_id": "pf--Epson_WorkForceWF2760DWF",
+      "visible": false
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForceWF2810DWF",
+      "model_id": "WorkForceWF2810DWF",
+      "package_id": "pf--Epson_WorkForceWF2810DWF",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForceWF2820DWF",
+      "model_id": "WorkForceWF2820DWF",
+      "package_id": "pf--Epson_WorkForceWF2820DWF",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForceWF2830DWF",
+      "model_id": "WorkForceWF2830DWF",
+      "package_id": "pf--Epson_WorkForceWF2830DWF",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForceWF2840DWF",
+      "model_id": "WorkForceWF2840DWF",
+      "package_id": "pf--Epson_WorkForceWF2840DWF",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForceWF2850DWF",
+      "model_id": "WorkForceWF2850DWF",
+      "package_id": "pf--Epson_WorkForceWF2850DWF",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForceWF2860DWF",
+      "model_id": "WorkForceWF2860DWF",
+      "package_id": "pf--Epson_WorkForceWF2860DWF",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForceWF2870DWF",
+      "model_id": "WorkForceWF2870DWF",
+      "package_id": "pf--Epson_WorkForceWF2870DWF",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForceWF2880DWF",
+      "model_id": "WorkForceWF2880DWF",
+      "package_id": "pf--Epson_WorkForceWF2880DWF",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForceWF2910DWF",
+      "model_id": "WorkForceWF2910DWF",
+      "package_id": "pf--Epson_WorkForceWF2910DWF",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForceWF2930DWF",
+      "model_id": "WorkForceWF2930DWF",
+      "package_id": "pf--Epson_WorkForceWF2930DWF",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForceWF2950DWF",
+      "model_id": "WorkForceWF2950DWF",
+      "package_id": "pf--Epson_WorkForceWF2950DWF",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForceWF2960DWF",
+      "model_id": "WorkForceWF2960DWF",
+      "package_id": "pf--Epson_WorkForceWF2960DWF",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForceWF3010DW",
+      "model_id": "WorkForceWF3010DW",
+      "package_id": "pf--Epson_WorkForceWF3010DW",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForceWF3520DWF",
+      "model_id": "WorkForceWF3520DWF",
+      "package_id": "pf--Epson_WorkForceWF3520DWF",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForceWF3530DTWF",
+      "model_id": "WorkForceWF3530DTWF",
+      "package_id": "pf--Epson_WorkForceWF3530DTWF",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForceWF3540DTWF",
+      "model_id": "WorkForceWF3540DTWF",
+      "package_id": "pf--Epson_WorkForceWF3540DTWF",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForceWF3620",
+      "model_id": "WorkForceWF3620",
+      "package_id": "pf--Epson_WorkForceWF3620",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForceWF3640",
+      "model_id": "WorkForceWF3640",
+      "package_id": "pf--Epson_WorkForceWF3640",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTATION_REQUIRES_PROTOCOL_PROFILE",
+      "display_name": "Epson WorkForceWF3720",
+      "model_id": "WorkForceWF3720",
+      "package_id": "pf--Epson_WorkForceWF3720",
+      "visible": false
+    },
+    {
+      "backend_status": "IMPLEMENTATION_REQUIRES_PROTOCOL_PROFILE",
+      "display_name": "Epson WorkForceWF3820",
+      "model_id": "WorkForceWF3820",
+      "package_id": "pf--Epson_WorkForceWF3820",
+      "visible": false
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForceWF7015",
+      "model_id": "WorkForceWF7015",
+      "package_id": "pf--Epson_WorkForceWF7015",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForceWF7110",
+      "model_id": "WorkForceWF7110",
+      "package_id": "pf--Epson_WorkForceWF7110",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTATION_REQUIRES_PROTOCOL_PROFILE",
+      "display_name": "Epson WorkForceWF7210",
+      "model_id": "WorkForceWF7210",
+      "package_id": "pf--Epson_WorkForceWF7210",
+      "visible": false
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForceWF7210_HQ",
+      "model_id": "WorkForceWF7210_HQ",
+      "package_id": "pf--Epson_WorkForceWF7210_HQ",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForceWF7310_HQ",
+      "model_id": "WorkForceWF7310_HQ",
+      "package_id": "pf--Epson_WorkForceWF7310_HQ",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForceWF7515",
+      "model_id": "WorkForceWF7515",
+      "package_id": "pf--Epson_WorkForceWF7515",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForceWF7525",
+      "model_id": "WorkForceWF7525",
+      "package_id": "pf--Epson_WorkForceWF7525",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForceWF7610",
+      "model_id": "WorkForceWF7610",
+      "package_id": "pf--Epson_WorkForceWF7610",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForceWF7620",
+      "model_id": "WorkForceWF7620",
+      "package_id": "pf--Epson_WorkForceWF7620",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTATION_REQUIRES_PROTOCOL_PROFILE",
+      "display_name": "Epson WorkForceWF7710",
+      "model_id": "WorkForceWF7710",
+      "package_id": "pf--Epson_WorkForceWF7710",
+      "visible": false
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForceWF7710_HQ",
+      "model_id": "WorkForceWF7710_HQ",
+      "package_id": "pf--Epson_WorkForceWF7710_HQ",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTATION_REQUIRES_PROTOCOL_PROFILE",
+      "display_name": "Epson WorkForceWF7720",
+      "model_id": "WorkForceWF7720",
+      "package_id": "pf--Epson_WorkForceWF7720",
+      "visible": false
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForceWF7820_HQ",
+      "model_id": "WorkForceWF7820_HQ",
+      "package_id": "pf--Epson_WorkForceWF7820_HQ",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForceWF7830_HQ",
+      "model_id": "WorkForceWF7830_HQ",
+      "package_id": "pf--Epson_WorkForceWF7830_HQ",
+      "visible": true
+    },
+    {
+      "backend_status": "IMPLEMENTED",
+      "display_name": "Epson WorkForceWF7840_HQ",
+      "model_id": "WorkForceWF7840_HQ",
+      "package_id": "pf--Epson_WorkForceWF7840_HQ",
       "visible": true
     },
     {

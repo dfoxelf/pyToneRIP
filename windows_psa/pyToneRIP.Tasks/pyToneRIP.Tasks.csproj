@@ -93,6 +93,8 @@
     <Compile Include="..\pyToneRIP\Tasks\CoreAppServiceTask.cs">
       <Link>CoreAppServiceTask.cs</Link>
     </Compile>
+    <Compile Include="..\pyToneRIP\Tasks\QueueCommandServiceTask.cs"><Link>QueueCommandServiceTask.cs</Link></Compile>
+    <Compile Include="..\pyToneRIP\Services\QueueAppServiceProtocol.cs"><Link>Services\QueueAppServiceProtocol.cs</Link></Compile>
     <Compile Include="..\pyToneRIP\Services\CoreAppServiceClient.cs">
       <Link>Services\CoreAppServiceClient.cs</Link>
     </Compile>

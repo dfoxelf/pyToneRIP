@@ -1,7 +1,8 @@
 [CmdletBinding()]
 param(
     [string]$ModuleSetRoot,
-    [string]$LogPath
+    [string]$LogPath,
+    [switch]$AppendLog
 )
 
 Set-StrictMode -Version Latest
@@ -10,7 +11,7 @@ if (-not [string]::IsNullOrWhiteSpace($LogPath)) {
     $logDirectory = [System.IO.Path]::GetDirectoryName(
         [System.IO.Path]::GetFullPath($LogPath))
     [System.IO.Directory]::CreateDirectory($logDirectory) | Out-Null
-    Start-Transcript -LiteralPath $LogPath -Force | Out-Null
+    Start-Transcript -LiteralPath $LogPath -Force -Append:$AppendLog | Out-Null
 }
 
 $principal = [Security.Principal.WindowsPrincipal]::new(
@@ -159,12 +160,22 @@ $installParams = @{
 if ($dependencies.Count -gt 0) {
     $installParams.DependencyPath = $dependencies
 }
-Add-AppxPackage @installParams
+try {
+    Add-AppxPackage @installParams
 
-# Do not create a .lnk here. Windows must own the Start registration for the
-# MSIX application so that a fresh install/update is listed normally in Start's
-# Recommended/Recently added area and uses the package's native identity.
-Write-Host 'pyToneRIP installation PASS. Windows registered the MSIX application in Start.'
-if (-not [string]::IsNullOrWhiteSpace($LogPath)) {
-    Stop-Transcript | Out-Null
+    # Windows owns the Start registration and the native MSIX identity.
+    Write-Host 'pyToneRIP installation PASS. Windows registered the MSIX application in Start.'
+} catch {
+    # AppX can wrap the deployment HRESULT in a PowerShell exception.
+    if ($_.Exception.HResult -ne 0x80073D02 -and [string]$_ -notmatch '\b0x80073D02\b') {
+        throw
+    }
+    Write-Host ($_ | Out-String)
+    Write-Warning 'Close the previous version of pyToneRIP and its print settings, then retry the installation.'
+    # Shared with the Inno Setup retry dialog.
+    exit 42
+} finally {
+    if (-not [string]::IsNullOrWhiteSpace($LogPath)) {
+        Stop-Transcript | Out-Null
+    }
 }

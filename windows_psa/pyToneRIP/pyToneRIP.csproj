@@ -55,6 +55,7 @@
     <Compile Include="Models\MaintenanceModels.cs" />
     <Compile Include="Models\PrinterInstanceModels.cs" />
     <Compile Include="Models\UsbPrinterModels.cs" />
+    <Compile Include="Models\PrinterInformation.cs" />
     <Compile Include="Models\RipRuntimeContract.cs" />
     <Compile Include="MainPage.xaml.cs"><DependentUpon>MainPage.xaml</DependentUpon></Compile>
     <Compile Include="PropertiesPage.xaml.cs"><DependentUpon>PropertiesPage.xaml</DependentUpon></Compile>
@@ -86,11 +87,14 @@
     <Compile Include="Services\PrintSettingsContext.cs" />
     <Compile Include="Services\SettingsApplyNotifications.cs" />
     <Compile Include="Services\PrinterConnectivityService.cs" />
+    <Compile Include="Services\EpsonNetworkDiscovery.cs" />
     <Compile Include="Services\PrinterSnmpService.cs" />
     <Compile Include="Services\EpsonBdcStatusParser.cs" />
     <Compile Include="Services\PrinterInstanceStore.cs" />
     <Compile Include="Services\VirtualPrinterManagementService.cs" />
     <Compile Include="Services\QueueHelperClient.cs" />
+    <Compile Include="Services\QueueAppServiceClient.cs" />
+    <Compile Include="Services\QueueAppServiceProtocol.cs" />
   </ItemGroup>
   <ItemGroup>
     <PRIResource Include="Strings\**\*.resw" />

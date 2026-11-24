@@ -334,6 +334,9 @@ def validate_escp2_native(result: BackendRenderResult) -> NativeStreamValidation
     else:
         units_payload = profile.units_payload
         head_payload = profile.printhead_resolution_payload
+        if result.mode.native_raster_setup is not None:
+            units_payload = result.mode.native_raster_setup.units_payload
+            head_payload = result.mode.native_raster_setup.resolution_payload
         if result.model.catalog_package_id in _T3100_NATIVE_GRID_PACKAGES:
             units_payload, head_payload = _t3100_mode_setup(result.mode)
         elif profile.identity == "ET14100":
@@ -377,6 +380,10 @@ def validate_escp2_native(result: BackendRenderResult) -> NativeStreamValidation
         and dot_size.parameters.get("dot_size") == expected_dot
     )
     weave_records = [item for item in records if item.name == "MICROWEAVE"]
+    if result.mode.native_raster_setup is not None:
+        gray = [item for item in records if item.name == "GRAY_MODE"]
+        mode_ok = (mode_ok and len(gray) == 1
+                   and gray[0].parameters.get("value") == result.mode.native_raster_setup.gray_mode)
     expected_weave = bytes((result.mode.escp2_printer_weave_mode or 0,))
     if result.mode.escp2_printer_weave_variant is not None:
         expected_weave += bytes((result.mode.escp2_printer_weave_variant, 0))
@@ -427,7 +434,7 @@ def validate_escp2_native(result: BackendRenderResult) -> NativeStreamValidation
             round(page.imageable_top_points * page_units / 72)
             if result.model.catalog_package_id == "pf--Epson_XP980series"
                 else expected_height - round(
-                    (60 if result.model.catalog_package_id == "gp--escp2-r3000" else 120)
+                    120
                     * page_units / 1000
                 )
         )
@@ -487,6 +494,17 @@ def validate_escp2_native(result: BackendRenderResult) -> NativeStreamValidation
         expected_height = round((height_mils + (1300 if page.borderless else 1000)) * page_units / 1000)
         expected_top = 0 if page.borderless else round(120 * page_units / 1000)
         expected_bottom = expected_height if page.borderless else round((height_mils + 880) * page_units / 1000)
+    if (result.model.catalog_package_id == "gp--escp2-r3000"
+            and result.page.special_media_selector is None):
+        # Independent sheet/roll captures, decoded using ESC (U page units.
+        # R3000's old 500/60-mil expectations used the base before its divisor.
+        roll = result.input_source.medium_kind == "roll"
+        expected_top = (0 if page.borderless else round(120 * page_units / 1000)) if roll else -page_units + 1
+        expected_bottom = (
+            expected_height if roll and page.borderless
+            else expected_height + round(1300 * page_units / 1000) - 1 if page.borderless
+            else expected_height - round(120 * page_units / 1000)
+        )
     page_ok = bool(
         page_length
         and dimensions
@@ -543,6 +561,8 @@ def validate_escp2_native(result: BackendRenderResult) -> NativeStreamValidation
         and remote_pp.parameters.get("path_type") == result.input_source.path_type
         and remote_pp.parameters.get("path_number") == result.input_source.path_number
     )
+    if not profile.emit_paper_path:
+        path_ok = remote_pp is None
     if init_commands:
         expected_init = b"".join(
             command.encode("ascii") + len(payload).to_bytes(2, "little") + payload

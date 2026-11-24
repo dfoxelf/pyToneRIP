@@ -1,0 +1,328 @@
+{
+  "modes": [
+    {
+      "app_raster_dpi": {
+        "horizontal": 300,
+        "vertical": 300
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_index": 0,
+        "media_scope": "one_media"
+      },
+      "display_name": "Draft",
+      "dither_raster_dpi": {
+        "horizontal": 300,
+        "vertical": 300
+      },
+      "drop_levels_percent": [
+        0,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 0
+        },
+        "software_weave": {
+          "encoding": "legacy_direct",
+          "legacy_layout_code": 1,
+          "pass_group_count": 1
+        },
+        "variable_dot_mode": 0
+      },
+      "explicit_weave_sequence": [],
+      "printer_color_coordinate_dpi": {
+        "horizontal": 300,
+        "vertical": 300
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 300,
+        "vertical": 300
+      },
+      "quality_rank": 1,
+      "raster_bit_depth": 8,
+      "variant_index": 0
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 300,
+        "vertical": 300
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_index": 0,
+        "media_scope": "one_media"
+      },
+      "display_name": "Medium",
+      "dither_raster_dpi": {
+        "horizontal": 300,
+        "vertical": 300
+      },
+      "drop_levels_percent": [
+        0,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 1
+        },
+        "software_weave": {
+          "encoding": "legacy_direct",
+          "legacy_layout_code": 1,
+          "pass_group_count": 1
+        },
+        "variable_dot_mode": 0
+      },
+      "explicit_weave_sequence": [],
+      "nominal_output_dpi": {
+        "horizontal": 300,
+        "vertical": 300
+      },
+      "printer_color_coordinate_dpi": {
+        "horizontal": 300,
+        "vertical": 300
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 300,
+        "vertical": 300
+      },
+      "quality_rank": 3,
+      "raster_bit_depth": 8,
+      "variant_index": 1
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 600,
+        "vertical": 600
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_index": 0,
+        "media_scope": "one_media"
+      },
+      "display_name": "High",
+      "dither_raster_dpi": {
+        "horizontal": 600,
+        "vertical": 600
+      },
+      "drop_levels_percent": [
+        0,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 2
+        },
+        "software_weave": {
+          "encoding": "legacy_direct",
+          "legacy_layout_code": 1,
+          "pass_group_count": 1
+        },
+        "variable_dot_mode": 0
+      },
+      "explicit_weave_sequence": [],
+      "nominal_output_dpi": {
+        "horizontal": 600,
+        "vertical": 600
+      },
+      "printer_color_coordinate_dpi": {
+        "horizontal": 600,
+        "vertical": 600
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 600,
+        "vertical": 600
+      },
+      "quality_rank": 5,
+      "raster_bit_depth": 8,
+      "variant_index": 2
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 300,
+        "vertical": 300
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_scope": "all_non_default_media"
+      },
+      "display_name": "High",
+      "dither_raster_dpi": {
+        "horizontal": 300,
+        "vertical": 300
+      },
+      "drop_levels_percent": [
+        0,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 0
+        },
+        "software_weave": {
+          "encoding": "legacy_direct",
+          "legacy_layout_code": 1,
+          "pass_group_count": 1
+        },
+        "variable_dot_mode": 0
+      },
+      "explicit_weave_sequence": [],
+      "nominal_output_dpi": {
+        "horizontal": 300,
+        "vertical": 300
+      },
+      "printer_color_coordinate_dpi": {
+        "horizontal": 300,
+        "vertical": 300
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 300,
+        "vertical": 300
+      },
+      "quality_rank": 5,
+      "raster_bit_depth": 8,
+      "variant_index": 0
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 600,
+        "vertical": 600
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_scope": "all_non_default_media"
+      },
+      "display_name": "Super",
+      "dither_raster_dpi": {
+        "horizontal": 600,
+        "vertical": 600
+      },
+      "drop_levels_percent": [
+        0,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 1
+        },
+        "software_weave": {
+          "encoding": "legacy_direct",
+          "legacy_layout_code": 1,
+          "pass_group_count": 1
+        },
+        "variable_dot_mode": 0
+      },
+      "explicit_weave_sequence": [],
+      "nominal_output_dpi": {
+        "horizontal": 600,
+        "vertical": 600
+      },
+      "printer_color_coordinate_dpi": {
+        "horizontal": 600,
+        "vertical": 600
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 600,
+        "vertical": 600
+      },
+      "quality_rank": 6,
+      "raster_bit_depth": 8,
+      "variant_index": 1
+    },
+    {
+      "app_raster_dpi": {
+        "horizontal": 600,
+        "vertical": 600
+      },
+      "applicability": {
+        "cartridge_index": 0,
+        "cartridge_scope": "one_cartridge",
+        "media_scope": "all_non_default_media"
+      },
+      "display_name": "Photo",
+      "dither_raster_dpi": {
+        "horizontal": 600,
+        "vertical": 600
+      },
+      "drop_levels_percent": [
+        0,
+        100
+      ],
+      "escp2": {
+        "direction_and_layout": {
+          "default_direction": "bidirectional",
+          "emit_legacy_esc_s_mode_2": false,
+          "internal_layout_flag_1": false,
+          "internal_layout_flag_3": false,
+          "unknown_high_bits": 0
+        },
+        "print_method": {
+          "default": 2
+        },
+        "software_weave": {
+          "encoding": "legacy_direct",
+          "legacy_layout_code": 1,
+          "pass_group_count": 1
+        },
+        "variable_dot_mode": 0
+      },
+      "explicit_weave_sequence": [],
+      "nominal_output_dpi": {
+        "horizontal": 1200,
+        "vertical": 600
+      },
+      "printer_color_coordinate_dpi": {
+        "horizontal": 600,
+        "vertical": 600
+      },
+      "printer_coordinate_dpi": {
+        "horizontal": 600,
+        "vertical": 600
+      },
+      "quality_rank": 7,
+      "raster_bit_depth": 8,
+      "variant_index": 2
+    }
+  ],
+  "schema": "pytone-rip.mode-runtime-v2"
+}

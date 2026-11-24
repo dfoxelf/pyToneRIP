@@ -33,8 +33,7 @@ namespace pyToneRIP.QueueHelper
                     ?? ReadProperty(node, DeviceDescriptionProperty) ?? model.Replace('_', ' ');
                 if (!model.StartsWith("EPSON", StringComparison.OrdinalIgnoreCase)
                     && !friendly.StartsWith("EPSON", StringComparison.OrdinalIgnoreCase)) continue;
-                var match = Regex.Match(parts[2], @"(?:^|&)(USB\d+)$", RegexOptions.IgnoreCase);
-                var portName = match.Success ? match.Groups[1].Value.ToUpperInvariant() : null;
+                var portName = ReadPortName(id);
                 string portDescription;
                 if (portName != null && ports.TryGetValue(portName, out portDescription))
                 {
@@ -59,6 +58,15 @@ namespace pyToneRIP.QueueHelper
             }
             return result.OrderBy(item => item.DisplayName, StringComparer.OrdinalIgnoreCase)
                 .ThenBy(item => item.DeviceInstanceId, StringComparer.OrdinalIgnoreCase).ToList();
+        }
+
+        internal static HashSet<string> ReadPresentPorts() => new HashSet<string>(ReadPresentDeviceIds()
+            .Select(ReadPortName).Where(port => port != null), StringComparer.OrdinalIgnoreCase);
+
+        private static string ReadPortName(string id)
+        {
+            var match = Regex.Match(id, @"(?:\\|&)(USB\d+)$", RegexOptions.IgnoreCase);
+            return match.Success ? match.Groups[1].Value.ToUpperInvariant() : null;
         }
 
         private static IEnumerable<string> ReadPresentDeviceIds()
@@ -110,7 +118,7 @@ namespace pyToneRIP.QueueHelper
                 for (var index = 0; index < returned; index++)
                 {
                     var port = (PortInfo2)Marshal.PtrToStructure(IntPtr.Add(buffer, index * stride), typeof(PortInfo2));
-                    if (port.Name != null && Regex.IsMatch(port.Name, @"^USB\d+$", RegexOptions.IgnoreCase))
+                    if (EpsonRawQueueMatcher.IsUsbPort(port.Name))
                         ports[port.Name] = port.Description;
                 }
                 return ports;

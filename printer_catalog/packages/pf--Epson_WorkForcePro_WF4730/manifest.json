@@ -1,0 +1,25 @@
+{
+  "backend_family": "epson_escp2_workforcenative",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson WorkForcePro_WF4730",
+  "model_id": "WorkForcePro_WF4730",
+  "package_id": "pf--Epson_WorkForcePro_WF4730",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "bd735a0ea21edbef034ba482bddf695a1f6b23d9b020a7dd4d1e6abcca3fea3d",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "WorkForceNative",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "766854bb5fd743b588500ca2f21b89e619bdb600317a0d17dadfd96327a4b2bb",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "ce92fda2502019539ff8134cd950d816abdd3b53b332a9e5d9c30759569ee29f",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "SYNTHETIC_PPD: no Epson manufacturer PPD supplied; technical source ReferenceDriver driver WFC5890"
+  ]
+}

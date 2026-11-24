@@ -36,8 +36,11 @@ namespace pyToneRIP.Models
         [DataMember(Name = "usb_device_id", Order = 13, EmitDefaultValue = false)] public string UsbDeviceId { get; set; }
         [DataMember(Name = "usb_port", Order = 14, EmitDefaultValue = false)] public string UsbPort { get; set; }
         [DataMember(Name = "printer_queue", Order = 15, EmitDefaultValue = false)] public string PhysicalQueueName { get; set; }
+        [DataMember(Name = "printer_queue_driver", Order = 16, EmitDefaultValue = false)] public string PhysicalQueueDriver { get; set; }
 
-        public string ConnectionSummary => ConnectionKind == "usb"
+        public string ConnectionSummary => ConnectionKind == "windows_queue"
+            ? (PhysicalQueueName ?? LocalizationService.Get("Queue.Select"))
+            : ConnectionKind == "usb"
             ? "USB" + (string.IsNullOrWhiteSpace(UsbPort) ? "" : " — " + UsbPort)
             : (string.IsNullOrWhiteSpace(Host)
                 ? LocalizationService.Get("Choice.NetworkNotConfigured")

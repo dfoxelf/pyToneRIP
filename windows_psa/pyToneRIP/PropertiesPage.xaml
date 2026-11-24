@@ -1,5 +1,107 @@
 <Page x:Class="pyToneRIP.PropertiesPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:i18n="using:pyToneRIP.Services">
   <Page.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Default">
+          <SolidColorBrush x:Key="PrinterInfoValueBrush" Color="#FFFFFFFF"/>
+          <SolidColorBrush x:Key="PrinterInfoLabelBrush" Color="#FF60CDFF"/>
+          <SolidColorBrush x:Key="PrinterInfoRawBrush" Color="#FFC5C5C5"/>
+          <SolidColorBrush x:Key="PrinterInfoSuccessBrush" Color="#FF6CCB8A"/>
+          <SolidColorBrush x:Key="PrinterInfoWarningBrush" Color="#FFFFD479"/>
+          <SolidColorBrush x:Key="PrinterInfoErrorBrush" Color="#FFFF8A80"/>
+          <SolidColorBrush x:Key="PrinterInfoBackgroundBrush" Color="#FF292929"/>
+          <SolidColorBrush x:Key="PrinterInfoBorderBrush" Color="#33FFFFFF"/>
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Dark">
+          <SolidColorBrush x:Key="PrinterInfoValueBrush" Color="#FFFFFFFF"/>
+          <SolidColorBrush x:Key="PrinterInfoLabelBrush" Color="#FF60CDFF"/>
+          <SolidColorBrush x:Key="PrinterInfoRawBrush" Color="#FFC5C5C5"/>
+          <SolidColorBrush x:Key="PrinterInfoSuccessBrush" Color="#FF6CCB8A"/>
+          <SolidColorBrush x:Key="PrinterInfoWarningBrush" Color="#FFFFD479"/>
+          <SolidColorBrush x:Key="PrinterInfoErrorBrush" Color="#FFFF8A80"/>
+          <SolidColorBrush x:Key="PrinterInfoBackgroundBrush" Color="#FF292929"/>
+          <SolidColorBrush x:Key="PrinterInfoBorderBrush" Color="#33FFFFFF"/>
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Light">
+          <SolidColorBrush x:Key="PrinterInfoValueBrush" Color="#FF000000"/>
+          <SolidColorBrush x:Key="PrinterInfoLabelBrush" Color="#FF0078D4"/>
+          <SolidColorBrush x:Key="PrinterInfoRawBrush" Color="#FF5E6875"/>
+          <SolidColorBrush x:Key="PrinterInfoSuccessBrush" Color="#FF147A4A"/>
+          <SolidColorBrush x:Key="PrinterInfoWarningBrush" Color="#FF9A6500"/>
+          <SolidColorBrush x:Key="PrinterInfoErrorBrush" Color="#FFB42318"/>
+          <SolidColorBrush x:Key="PrinterInfoBackgroundBrush" Color="#FFFFFFFF"/>
+          <SolidColorBrush x:Key="PrinterInfoBorderBrush" Color="#22000000"/>
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="HighContrast">
+          <SolidColorBrush x:Key="PrinterInfoValueBrush" Color="{ThemeResource SystemColorWindowTextColor}"/>
+          <SolidColorBrush x:Key="PrinterInfoLabelBrush" Color="{ThemeResource SystemColorHotlightColor}"/>
+          <SolidColorBrush x:Key="PrinterInfoRawBrush" Color="{ThemeResource SystemColorWindowTextColor}"/>
+          <SolidColorBrush x:Key="PrinterInfoSuccessBrush" Color="{ThemeResource SystemColorWindowTextColor}"/>
+          <SolidColorBrush x:Key="PrinterInfoWarningBrush" Color="{ThemeResource SystemColorWindowTextColor}"/>
+          <SolidColorBrush x:Key="PrinterInfoErrorBrush" Color="{ThemeResource SystemColorWindowTextColor}"/>
+          <SolidColorBrush x:Key="PrinterInfoBackgroundBrush" Color="{ThemeResource SystemColorWindowColor}"/>
+          <SolidColorBrush x:Key="PrinterInfoBorderBrush" Color="{ThemeResource SystemColorWindowTextColor}"/>
+        </ResourceDictionary>
+      </ResourceDictionary.ThemeDictionaries>
+      <Style x:Key="PrinterInfoValueStyle" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{ThemeResource PrinterInfoValueBrush}"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+        <Setter Property="IsTextSelectionEnabled" Value="True"/>
+      </Style>
+      <Style x:Key="PrinterInfoLabelStyle" TargetType="TextBlock" BasedOn="{StaticResource PrinterInfoValueStyle}">
+        <Setter Property="Foreground" Value="{ThemeResource PrinterInfoLabelBrush}"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+      </Style>
+      <Style x:Key="PrinterInfoRawStyle" TargetType="TextBlock" BasedOn="{StaticResource PrinterInfoValueStyle}">
+        <Setter Property="Foreground" Value="{ThemeResource PrinterInfoRawBrush}"/>
+        <Setter Property="FontFamily" Value="Consolas"/>
+        <Setter Property="FontSize" Value="12"/>
+      </Style>
+      <Style x:Key="PrinterInfoSuccessStyle" TargetType="TextBlock" BasedOn="{StaticResource PrinterInfoValueStyle}">
+        <Setter Property="Foreground" Value="{ThemeResource PrinterInfoSuccessBrush}"/>
+      </Style>
+      <Style x:Key="PrinterInfoWarningStyle" TargetType="TextBlock" BasedOn="{StaticResource PrinterInfoValueStyle}">
+        <Setter Property="Foreground" Value="{ThemeResource PrinterInfoWarningBrush}"/>
+      </Style>
+      <Style x:Key="PrinterInfoErrorStyle" TargetType="TextBlock" BasedOn="{StaticResource PrinterInfoValueStyle}">
+        <Setter Property="Foreground" Value="{ThemeResource PrinterInfoErrorBrush}"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+      </Style>
+    <Style x:Key="ConnectionTestOnlineButtonStyle" TargetType="Button">
+      <Setter Property="Background" Value="#FF107C10"/>
+      <Setter Property="Foreground" Value="White"/>
+      <Setter Property="Padding" Value="{StaticResource ButtonPadding}"/>
+      <Setter Property="UseSystemFocusVisuals" Value="True"/>
+      <Setter Property="FocusVisualMargin" Value="-3"/>
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="Button">
+            <ContentPresenter x:Name="OnlineContentPresenter"
+                              Background="{TemplateBinding Background}" Foreground="{TemplateBinding Foreground}"
+                              BackgroundSizing="{TemplateBinding BackgroundSizing}" CornerRadius="{TemplateBinding CornerRadius}"
+                              BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"
+                              Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"
+                              ContentTransitions="{TemplateBinding ContentTransitions}" AutomationProperties.AccessibilityView="Raw"
+                              Padding="{TemplateBinding Padding}"
+                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}">
+              <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup x:Name="CommonStates">
+                  <VisualState x:Name="Normal"/>
+                  <VisualState x:Name="PointerOver"/>
+                  <VisualState x:Name="Pressed">
+                    <VisualState.Setters><Setter Target="OnlineContentPresenter.Opacity" Value="0.8"/></VisualState.Setters>
+                  </VisualState>
+                  <VisualState x:Name="Disabled">
+                    <VisualState.Setters><Setter Target="OnlineContentPresenter.Opacity" Value="0.4"/></VisualState.Setters>
+                  </VisualState>
+                </VisualStateGroup>
+              </VisualStateManager.VisualStateGroups>
+            </ContentPresenter>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
     <Style x:Key="SectionBorder" TargetType="Border">
       <Setter Property="Background" Value="{StaticResource CardBackgroundBrush}"/><Setter Property="BorderBrush" Value="{StaticResource SectionBorderBrush}"/><Setter Property="BorderThickness" Value="1"/><Setter Property="CornerRadius" Value="8"/><Setter Property="Padding" Value="18"/><Setter Property="Margin" Value="0,0,0,14"/>
     </Style>
@@ -8,6 +110,7 @@
     <Style TargetType="TextBox"><Setter Property="MinWidth" Value="0"/><Setter Property="HorizontalAlignment" Value="Stretch"/><Setter Property="Margin" Value="0,4,12,9"/></Style>
     <Style x:Key="Label" TargetType="TextBlock"><Setter Property="Margin" Value="0,5,8,0"/><Setter Property="VerticalAlignment" Value="Center"/><Setter Property="TextWrapping" Value="Wrap"/></Style>
     <Style x:Key="BlendValue" TargetType="TextBlock"><Setter Property="Width" Value="36"/><Setter Property="FontSize" Value="12"/><Setter Property="TextAlignment" Value="Right"/><Setter Property="VerticalAlignment" Value="Center"/><Setter Property="FontWeight" Value="SemiBold"/></Style>
+    </ResourceDictionary>
   </Page.Resources>
   <Grid Background="{StaticResource PageBackgroundBrush}">
     <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
@@ -145,8 +248,9 @@
           <StackPanel Orientation="Horizontal"><TextBlock i18n:DeferredLocalization.Key="Auto/C8D7FCDF582D" Text="Printer connection" Style="{StaticResource SectionTitleStyle}"/><TextBlock Text="*" Foreground="{StaticResource RequiredFieldBorderBrush}" FontWeight="SemiBold" Margin="4,0,0,0" VerticalAlignment="Top"/></StackPanel>
           <RadioButton i18n:DeferredLocalization.Key="Auto/9B6A601A9FC7" x:Name="NetworkRadio" Content="Network (Raw TCP)" GroupName="Connection" IsChecked="True" Checked="ConnectionChanged"/>
           <Grid x:Name="NetworkPanel" Margin="28,4,0,10">
-            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="100"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-            <TextBox i18n:DeferredLocalization.Key="Auto/5C063BCAA06D" x:Name="HostBox" Header="Enter your printer's IPv4 address (e.g. 192.168.1.50)" BeforeTextChanging="NetworkHostBeforeTextChanging" TextChanged="NetworkHostChanged">
+            <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+            <TextBox i18n:DeferredLocalization.Key="Auto/5C063BCAA06D" x:Name="HostBox" Header="Enter your printer's IPv4 address (e.g. 192.168.1.50)" PlaceholderText="___.___.___.___" MaxLength="15" BeforeTextChanging="NetworkHostBeforeTextChanging" TextChanged="NetworkHostChanged">
               <TextBox.Resources>
                 <ResourceDictionary>
                   <ResourceDictionary.ThemeDictionaries>
@@ -167,19 +271,58 @@
                 </ResourceDictionary>
               </TextBox.Resources>
             </TextBox>
-            <TextBox i18n:DeferredLocalization.Key="Auto/89BFB53203CE" x:Name="PortBox" Grid.Column="1" Header="Port" Text="9100" IsReadOnly="True" IsTabStop="False"/>
-            <Button x:Name="TestConnectionButton" Grid.Column="2" Click="TestConnection" Margin="6,24,0,9" MinWidth="82"/>
+            <TextBox i18n:DeferredLocalization.Key="Auto/89BFB53203CE" x:Name="PortBox" Grid.Column="1" Header="Port" Text="9100" IsReadOnly="True" IsTabStop="False" Margin="8,0,0,0"/>
+            <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Spacing="6">
+              <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,6,0,0">
+                <Button x:Name="SearchNetworkButton" Click="SearchNetwork"/>
+                <Button x:Name="TestConnectionButton" Click="TestConnection" MinWidth="82"/>
+              </StackPanel>
+              <TextBlock x:Name="NetworkSearchStatus" TextWrapping="Wrap" Visibility="Collapsed"/>
+              <ComboBox x:Name="NetworkSearchResults" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
+                        Visibility="Collapsed" SelectionChanged="NetworkSearchResultChanged"/>
+              <TextBlock x:Name="NetworkSearchWarning" TextWrapping="Wrap" Visibility="Collapsed"/>
+            </StackPanel>
           </Grid>
-          <RadioButton x:Name="UsbRadio" Content="USB" GroupName="Connection" Checked="ConnectionChanged"/>
-          <StackPanel x:Name="UsbPanel" Margin="28,4,0,0" Visibility="Collapsed">
-            <ComboBox x:Name="UsbDeviceBox" SelectionChanged="UsbDeviceChanged"/>
+          <RadioButton x:Name="WindowsQueueRadio" GroupName="Connection" Checked="ConnectionChanged"/>
+          <TextBlock x:Name="WindowsQueueRecommendation" TextWrapping="Wrap" Margin="28,0,0,4"/>
+          <StackPanel x:Name="WindowsQueuePanel" Margin="28,4,0,0" Spacing="6" Visibility="Collapsed">
+            <ComboBox x:Name="WindowsQueueBox" HorizontalAlignment="Stretch" SelectionChanged="WindowsQueueChanged"/>
+            <TextBlock x:Name="WindowsQueueStatus" TextWrapping="Wrap"/>
+          </StackPanel>
+          <RadioButton x:Name="UsbRadio" GroupName="Connection" Checked="ConnectionChanged"/>
+          <TextBlock x:Name="UsbRecommendation" TextWrapping="Wrap" Margin="28,0,0,4"/>
+          <StackPanel x:Name="UsbPanel" Margin="28,4,0,0" Spacing="6" Visibility="Collapsed">
+            <ComboBox x:Name="UsbDeviceBox" HorizontalAlignment="Stretch" SelectionChanged="UsbDeviceChanged"/>
             <!-- Physical-queue fallback: uncomment this selector and define USB_PHYSICAL_QUEUE_FALLBACK to restore queue routing. -->
             <!-- <ComboBox x:Name="UsbPortBox"/> -->
             <Button x:Name="RefreshUsbButton" Click="RefreshUsb"/>
-            <TextBlock x:Name="UsbStatusText" TextWrapping="Wrap" Margin="0,8,0,0"/>
+            <TextBlock x:Name="UsbStatusText" TextWrapping="Wrap"/>
           </StackPanel>
         </StackPanel></Border>
         <Border Style="{StaticResource SectionBorder}"><StackPanel><StackPanel Orientation="Horizontal"><TextBlock x:Name="InkTitleText" Style="{StaticResource SectionTitleStyle}" VerticalAlignment="Center"/><Button x:Name="ReadStatusButton" Click="ReadStatus" Margin="16,0,0,0" VerticalAlignment="Center"/></StackPanel><TextBlock x:Name="ConnectionStatusText" Margin="0,4,0,8"/><TextBlock x:Name="InkReadoutText" TextWrapping="Wrap" Foreground="{StaticResource SecondaryTextBrush}"/><StackPanel x:Name="InkLevelsPanel" Margin="0,8,0,0"/></StackPanel></Border>
+        <Border BorderBrush="{ThemeResource PrinterInfoBorderBrush}" Background="{ThemeResource PrinterInfoBackgroundBrush}"
+                BorderThickness="1" CornerRadius="8" Padding="18" Margin="0,0,0,14">
+          <StackPanel>
+            <TextBlock i18n:DeferredLocalization.Key="PrinterInfo/Title" Text="Printer information"
+                       Style="{StaticResource SectionTitleStyle}" Foreground="{ThemeResource PrinterInfoValueBrush}"/>
+            <TextBlock i18n:DeferredLocalization.Key="PrinterInfo/Help"
+                       Text="Reads the information reported by the selected printer over USB or the network."
+                       TextWrapping="Wrap" Foreground="{ThemeResource PrinterInfoRawBrush}" Margin="0,4,0,12"/>
+            <StackPanel Orientation="Horizontal">
+              <Button x:Name="ReadPrinterInformationButton" i18n:DeferredLocalization.Key="PrinterInfo/Read"
+                      Content="Read printer information" Click="ReadPrinterInformation"/>
+              <ProgressRing x:Name="PrinterInformationProgress" IsActive="False" Visibility="Collapsed"
+                            Width="24" Height="24" Margin="12,0,0,0"/>
+            </StackPanel>
+            <TextBlock x:Name="PrinterInformationMessage" i18n:DeferredLocalization.Key="PrinterInfo/Empty"
+                       Text="Select Read printer information to retrieve the device report."
+                       Style="{StaticResource PrinterInfoRawStyle}" Margin="0,12,0,0"/>
+            <ScrollViewer MaxHeight="520" VerticalScrollBarVisibility="Auto" HorizontalScrollMode="Disabled"
+                          HorizontalScrollBarVisibility="Disabled" Margin="0,8,0,0">
+              <StackPanel x:Name="PrinterInformationPanel"/>
+            </ScrollViewer>
+          </StackPanel>
+        </Border>
 
       </StackPanel></Grid></ScrollViewer></PivotItem>
       <PivotItem i18n:DeferredLocalization.Key="Auto/250B3437B514" Header="Channels"><ScrollViewer><StackPanel MaxWidth="820" Padding="6,12,6,20"><Border Style="{StaticResource SectionBorder}"><StackPanel><TextBlock i18n:DeferredLocalization.Key="Auto/E2C3E55B34C8" Text="Logical ink channels" Style="{StaticResource SectionTitleStyle}"/><TextBlock i18n:DeferredLocalization.Key="Auto/043112257626" Text="Logical IDs must match every selected .quad profile. Map each logical ink to one physical path of the selected printer." Foreground="{StaticResource SecondaryTextBrush}" TextWrapping="Wrap"/><Border Background="{StaticResource ExampleBackgroundBrush}" CornerRadius="6" Padding="12" Margin="0,12,0,12"><StackPanel><TextBlock i18n:DeferredLocalization.Key="Auto/DE718F64CC20" Text="Examples" FontWeight="SemiBold"/><TextBlock i18n:DeferredLocalization.Key="Auto/73FF0C0FD8CC" Text="Monochrome: K → P0" Margin="0,4,0,0"/><TextBlock i18n:DeferredLocalization.Key="Auto/60BD0F124AC6" Text="Three logical inks: K,C,M → P0,P1,P2"/><TextBlock i18n:DeferredLocalization.Key="Auto/4B91C3C7F924" Text="Use the routing defined for the installed ink set." TextWrapping="Wrap" Foreground="{StaticResource SecondaryTextBrush}" Margin="0,4,0,0"/></StackPanel></Border><TextBox i18n:DeferredLocalization.Key="Auto/55EB8098D769" x:Name="LogicalInksBox" Header="Logical ink IDs (letters, digits, commas)" PlaceholderText="K,C,M" TextChanged="LogicalInksChanged"/><TextBlock i18n:DeferredLocalization.Key="Auto/AE6F3FB9819E" Text="Logical channel → PhysicalPath" FontWeight="SemiBold" Margin="0,8,0,8"/><StackPanel x:Name="RoutePanel"/></StackPanel></Border></StackPanel></ScrollViewer></PivotItem>
@@ -194,7 +337,7 @@
               <Button i18n:DeferredLocalization.Key="Auto/ABC04E88801E" x:Name="NozzleCheckButton" Content="Print nozzle check" Tag="nozzle_check" Click="RunMaintenance" Visibility="Collapsed" HorizontalAlignment="Left" Margin="0,0,0,8"/>
               <TextBlock i18n:DeferredLocalization.Key="Auto/301DB7E579BA" x:Name="NozzleCheckDescription" Text="Uses the printer firmware's native nozzle-check pattern. Load paper first." Foreground="{StaticResource SecondaryTextBrush}" TextWrapping="Wrap" Margin="0,0,0,16" Visibility="Collapsed"/>
               <Button i18n:DeferredLocalization.Key="Auto/36DF58CDF4A6" x:Name="RipTestPageButton" Content="Print pyToneRIP test page" Tag="test_page" Click="RunMaintenance" Visibility="Collapsed" HorizontalAlignment="Left" Margin="0,0,0,8"/>
-              <TextBlock i18n:DeferredLocalization.Key="Auto/C706B9DFA105" x:Name="RipTestPageDescription" Text="Creates a small model-specific PRN with raw density strips for every configured physical channel. QTR curves are intentionally not used by this first engineering test." Foreground="{StaticResource SecondaryTextBrush}" TextWrapping="Wrap" Margin="0,0,0,12" Visibility="Collapsed"/>
+              <TextBlock i18n:DeferredLocalization.Key="Auto/C706B9DFA105" x:Name="RipTestPageDescription" Text="Print an A4 tonal test with gradients, circles and gray steps using the selected curves and print settings. Load a blank A4 sheet." Foreground="{StaticResource SecondaryTextBrush}" TextWrapping="Wrap" Margin="0,0,0,12" Visibility="Collapsed"/>
               <ProgressRing x:Name="MaintenanceProgress" IsActive="False" Visibility="Collapsed" Width="28" Height="28" HorizontalAlignment="Left"/>
               <TextBlock x:Name="MaintenanceResult" TextWrapping="Wrap" Margin="0,10,0,0"/>
             </StackPanel></Border>

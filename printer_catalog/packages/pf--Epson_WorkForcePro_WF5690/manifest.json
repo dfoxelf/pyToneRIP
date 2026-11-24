@@ -1,0 +1,25 @@
+{
+  "backend_family": "epson_escp2_workforcenative",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson WorkForcePro_WF5690",
+  "model_id": "WorkForcePro_WF5690",
+  "package_id": "pf--Epson_WorkForcePro_WF5690",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "b48f7aa3bb445e0ad33cd758e5f2949197c2a4f8f85f171f74544f79d948ba4f",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "WorkForceNative",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "04524b07afa2f308bc9d8c5e40b5c9200e95e49661c4050025d28dd44804b8d3",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "e1137b7c4be1230358a407f0687efc49f87e7bd589e1517288c455cf908828f3",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "SYNTHETIC_PPD: no Epson manufacturer PPD supplied; technical source ReferenceDriver driver WFC5890"
+  ]
+}

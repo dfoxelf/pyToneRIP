@@ -1079,7 +1079,7 @@ def configuration_to_argument_tokens(configuration: Mapping[str, object]) -> lis
         _exact_keys(
             connection,
             required={"kind", "port"},
-            optional={"host", "usb_port", "usb_device_id", "printer_queue", "usb_transport_mode"},
+            optional={"host", "usb_port", "usb_device_id", "printer_queue", "usb_transport_mode", "printer_queue_driver"},
             context="connection",
         )
         connection_kind = _string(connection["kind"], "connection.kind")
@@ -1098,8 +1098,11 @@ def configuration_to_argument_tokens(configuration: Mapping[str, object]) -> lis
                 mode = _string(connection["usb_transport_mode"], "connection.usb_transport_mode")
                 if mode not in {"usbprint", "windows_queue"}:
                     raise ValueError("connection.usb_transport_mode must be usbprint or windows_queue")
+        elif connection_kind == "windows_queue":
+            _string(connection.get("printer_queue"), "connection.printer_queue")
+            _string(connection.get("printer_queue_driver"), "connection.printer_queue_driver")
         else:
-            raise ValueError("connection.kind must be network or usb")
+            raise ValueError("connection.kind must be network, usb or windows_queue")
 
     logical_inks = _string_list(channels["logical_inks"], "channels.logical_inks", minimum=1)
     routing_raw = _mapping(channels["routing"], "channels.routing")

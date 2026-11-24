@@ -5,7 +5,9 @@
 
 from __future__ import annotations
 
+import os
 import socket
+import struct
 from collections.abc import Callable, Iterable
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -18,15 +20,27 @@ from typing import Protocol
 DEFAULT_RAW_TCP_TIMEOUT_SECONDS = 300.0
 
 
-def _abort_native_job(connection: socket.socket, timeout_seconds: float) -> bool:
-    """Try to reset the ESC/P2 parser on the still-open transport connection."""
-
-    from xp750_rip.escp2 import commands
-
+def _close_for_abort(connection: socket.socket) -> None:
+    """Discard pending RAW data before sending the separate control reset."""
     try:
-        connection.settimeout(min(1.0, timeout_seconds))
-        connection.sendall(commands.reset() + commands.reset())
+        # Closing normally may keep draining the OS send queue after rs/Initialize.
+        # Winsock uses two unsigned shorts; POSIX uses two native ints.
+        linger = struct.pack("HH" if os.name == "nt" else "ii", 1, 0)
+        connection.setsockopt(socket.SOL_SOCKET, socket.SO_LINGER, linger)
     except OSError:
+        pass
+    try:
+        connection.close()
+    except OSError:
+        pass
+
+
+def _abort_native_job(host: str, timeout_seconds: float) -> bool:
+    """Cancel buffered physical printing on the independent control channel."""
+    from xp750_rip.printer_cancel import cancel_network_print
+    try:
+        cancel_network_print(host, timeout=min(2.0, timeout_seconds))
+    except (OSError, ValueError):
         return False
     return True
 
@@ -146,8 +160,8 @@ class RawTcpTransport:
 
         The producer must emit a complete native job, including its normal
         trailer, only on success.  A producer or send failure never causes a
-        form feed.  ESC @ is attempted on the same connection before closing;
-        this resets the command parser but cannot retract ink already printed.
+        form feed. Discard pending TCP data before sending one independent
+        physical reset; ink already printed cannot be retracted.
         """
 
         destination = f"raw_tcp://{self.host}:{self.port}"
@@ -195,10 +209,15 @@ class RawTcpTransport:
             connection.shutdown(socket.SHUT_WR)
             return TransmissionReceipt(sent, destination)
         except Exception as error:
-            if connection is not None and sent:
+            needs_abort = connection is not None and sent > 0
+            if connection is not None:
+                _close_for_abort(connection)
+                connection = None
+                self._report_connection(False)
+            if needs_abort:
                 abort_attempted = True
                 # Never send the normal FF for an incomplete job.
-                abort_succeeded = _abort_native_job(connection, self.timeout_seconds)
+                abort_succeeded = _abort_native_job(self.host, self.timeout_seconds)
             if isinstance(error, TransportTransmissionError):
                 raise
             raise TransportTransmissionError(
@@ -276,9 +295,13 @@ class RawTcpTransport:
                 connection.shutdown(socket.SHUT_WR)
         except Exception as error:
             abort_attempted = connection is not None and (sent > 0 or began_send)
+            if connection is not None:
+                _close_for_abort(connection)
+                connection = None
+                self._report_connection(False)
             abort_succeeded = (
-                _abort_native_job(connection, self.timeout_seconds)
-                if abort_attempted and connection is not None
+                _abort_native_job(self.host, self.timeout_seconds)
+                if abort_attempted
                 else False
             )
             raise TransportTransmissionError(

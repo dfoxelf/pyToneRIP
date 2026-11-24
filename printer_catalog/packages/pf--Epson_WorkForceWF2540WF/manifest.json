@@ -1,0 +1,25 @@
+{
+  "backend_family": "epson_escp2_workforcenative",
+  "backend_runtime_file": null,
+  "backend_runtime_sha256": null,
+  "backend_source_file": null,
+  "backend_source_sha256": null,
+  "backend_status": "IMPLEMENTED",
+  "display_name": "Epson WorkForceWF2540WF",
+  "model_id": "WorkForceWF2540WF",
+  "package_id": "pf--Epson_WorkForceWF2540WF",
+  "ppd_file": "printer.ppd",
+  "ppd_sha256": "695c04f33e53696ad32a0afbba3d38a8555726ebe10d333c3e890c7498d38963",
+  "ppd_source": "printer.ppd",
+  "protocol_class": "escp2-esci",
+  "protocol_family": "WorkForceNative",
+  "runtime_source_file": "runtime-source.json",
+  "runtime_source_sha256": "e6e7ac820049035e8de8fff7b5cf7838e17e7a6913fe17153cfddd3e6e6633c0",
+  "schema": "pytone-rip.printer-support-package",
+  "source_sha256": "45578c3b26f2f89b4578706f35c8647c08ee70363e62966e7be452fdf9c1f409",
+  "version": 1,
+  "visible": true,
+  "warnings": [
+    "SYNTHETIC_PPD: no Epson manufacturer PPD supplied; technical source ReferenceDriver driver D120"
+  ]
+}

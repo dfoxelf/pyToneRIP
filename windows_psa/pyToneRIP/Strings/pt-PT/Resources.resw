@@ -93,7 +93,7 @@
   <data name="Auto.B388B9C01523.Text"><value>Tamanho</value></data>
   <data name="Auto.C195019E59CC.Text"><value>Mais claro</value></data>
   <data name="Auto.C681456D80A8.Content"><value>Seletores RGB (QTR InkSeparation)</value></data>
-  <data name="Auto.C706B9DFA105.Text"><value>Cria um pequeno PRN específico do modelo com faixas de densidade bruta para cada canal físico configurado. As curvas QTR não são usadas intencionalmente neste primeiro teste de engenharia.</value></data>
+  <data name="Auto.C706B9DFA105.Text"><value>Imprima um teste tonal A4 com gradientes, círculos e níveis de cinzento com as curvas e definições selecionadas. Coloque uma folha A4 em branco.</value></data>
   <data name="Auto.C84252F663BA.Header"><value>Conexão</value></data>
   <data name="Auto.C8D7FCDF582D.Text"><value>Conexão da impressora</value></data>
   <data name="Auto.CC5611F72641.Text"><value>Desligado (recomendado): preserva a página composta pelo aplicativo de impressão e pelo Windows. Ativado: dimensione e posicione adicionalmente a página concluída no RIP.</value></data>
@@ -277,7 +277,7 @@
   <data name="Maintenance.head_clean.Title"><value>Limpe a cabeça de impressão</value></data>
   <data name="Maintenance.nozzle_check.Description"><value>Peça ao firmware da impressora para imprimir seu padrão de bico nativo.</value></data>
   <data name="Maintenance.nozzle_check.Title"><value>Verificação dos jatos de impressão</value></data>
-  <data name="Maintenance.test_page.Description"><value>Imprima um pequeno padrão bruto por canal usando as configurações do modelo selecionado.</value></data>
+  <data name="Maintenance.test_page.Description"><value>Imprima um teste tonal A4 com gradientes, círculos e níveis de cinzento com as curvas e definições selecionadas. Coloque uma folha A4 em branco.</value></data>
   <data name="Maintenance.test_page.Title"><value>Imprimir página de teste pyToneRIP</value></data>
   <data name="Processing16Bit.Content"><value>Processamento de 16 bits</value></data>
   <data name="Processing16BitExperimental.Text"><value>(modo experimental)</value></data>
@@ -289,6 +289,9 @@
   <data name="MainPage.SendLogs.Content"><value>Criar relatório de diagnóstico</value></data>
   <data name="Code.SupportReportPrompt"><value>O ZIP no ambiente de trabalho contém detalhes técnicos dos erros do pyToneRIP e do Windows das últimas 24 horas. O conteúdo dos documentos, os caminhos pessoais e os endereços IP são excluídos. A aplicação não envia o arquivo.</value></data>
   <data name="Code.SupportReportCreated"><value>ZIP criado no ambiente de trabalho: {0}</value></data>
+  <data name="Usb.DirectPrint"><value>Imprimir diretamente por USB</value></data>
+  <data name="Usb.DirectPrintHint"><value>Envia os trabalhos diretamente para uma impressora ligada por USB. Se o controlador Epson estiver instalado, escolha a fila de impressão do Windows (RAW).</value></data>
+  <data name="Usb.DirectPrintRecommendation"><value>Escolha esta opção se o controlador oficial da Epson não estiver instalado.</value></data>
   <data name="Usb.Device"><value>Impressora USB ligada</value></data>
   <data name="Usb.Refresh"><value>Atualizar impressoras USB</value></data>
   <data name="Usb.Searching"><value>A procurar impressoras USB…</value></data>
@@ -347,6 +350,7 @@
   <data name="PreviewWindow.ProfileMismatch" xml:space="preserve"><value>O ICC difere das condições de impressão guardadas.</value></data>
   <data name="PreviewWindow.PhysicalUnavailable" xml:space="preserve"><value>Estado físico da impressora indisponível.</value></data>
   <data name="PreviewWindow.PhysicalUnconfirmed" xml:space="preserve"><value>O estado do dispositivo não confirma o fim deste trabalho nem a saída da folha.</value></data>
+  <data name="PreviewWindow.PhysicalCancelUnconfirmed" xml:space="preserve"><value>A impressora não confirmou o cancelamento. Tente novamente ou cancele o trabalho no painel de controlo da impressora.</value></data>
   <data name="PreviewWindow.DeviceOther" xml:space="preserve"><value>Impressora: outro estado</value></data>
   <data name="PreviewWindow.DeviceUnknown" xml:space="preserve"><value>Impressora: desconhecido</value></data>
   <data name="PreviewWindow.DeviceIdle" xml:space="preserve"><value>Impressora: inativa</value></data>
@@ -368,4 +372,60 @@
   <data name="PreviewWindow.PrintStartHelp" xml:space="preserve"><value>A seta indica a margem da folha que é impressa primeiro.</value></data>
   <data name="PreviewWindow.PhotoCrop" xml:space="preserve"><value>Arraste as pegas brancas a meio dos lados para recortar; arraste para fora para restaurar. As pegas dos cantos alteram o tamanho.</value></data>
   <data name="PreviewWindow.PhotoFill" xml:space="preserve"><value>Preencher página</value></data>
+  <data name="PrinterInfo.Read.Content" xml:space="preserve"><value>Ler informações da impressora</value></data>
+  <data name="PrinterInfo.Help.Text" xml:space="preserve"><value>Lê as informações comunicadas pela impressora selecionada através de USB ou da rede.</value></data>
+  <data name="PrinterInfo.Title.Text" xml:space="preserve"><value>Informações da impressora</value></data>
+  <data name="PrinterInfo.Empty.Text" xml:space="preserve"><value>Selecione «Ler informações da impressora» para obter o relatório do dispositivo.</value></data>
+  <data name="PrinterInfo.Reading" xml:space="preserve"><value>A ler informações da impressora…</value></data>
+  <data name="PrinterInfo.Failed" xml:space="preserve"><value>Não foi possível ler as informações da impressora: {0}</value></data>
+  <data name="PrinterInfo.Busy" xml:space="preserve"><value>A impressora está a ser utilizada. Aguarde que a impressão ou a manutenção termine.</value></data>
+  <data name="PrinterInfo.Connection" xml:space="preserve"><value>Ligação</value></data>
+  <data name="PrinterInfo.Identity" xml:space="preserve"><value>Identificação</value></data>
+  <data name="PrinterInfo.Status" xml:space="preserve"><value>Estado e avisos</value></data>
+  <data name="PrinterInfo.Inks" xml:space="preserve"><value>Níveis de tinta</value></data>
+  <data name="PrinterInfo.Details" xml:space="preserve"><value>Informações adicionais</value></data>
+  <data name="PrinterInfo.Raw" xml:space="preserve"><value>Respostas originais do dispositivo</value></data>
+  <data name="PrinterInfo.Model" xml:space="preserve"><value>Modelo</value></data>
+  <data name="PrinterInfo.Firmware" xml:space="preserve"><value>Firmware</value></data>
+  <data name="PrinterInfo.DeviceId" xml:space="preserve"><value>Identificação do dispositivo</value></data>
+  <data name="PrinterInfo.Cartridges" xml:space="preserve"><value>Tipos de tinteiros</value></data>
+  <data name="PrinterInfo.Cartridge" xml:space="preserve"><value>Tinteiro</value></data>
+  <data name="PrinterInfo.Error" xml:space="preserve"><value>Erro</value></data>
+  <data name="PrinterInfo.Warning" xml:space="preserve"><value>Aviso</value></data>
+  <data name="PrinterInfo.SerialNumber" xml:space="preserve"><value>Número de série</value></data>
+  <data name="PrinterInfo.State" xml:space="preserve"><value>Estado</value></data>
+  <data name="PrinterInfo.NoData" xml:space="preserve"><value>Não comunicado</value></data>
+  <data name="PrinterInfo.Field" xml:space="preserve"><value>Campo 0x{0}</value></data>
+  <data name="PrinterInfo.MaintenanceBox" xml:space="preserve"><value>Caixa de manutenção</value></data>
+  <data name="PrinterInfo.PaperCounters" xml:space="preserve"><value>Contadores de páginas</value></data>
+  <data name="PrinterInfo.Temperature" xml:space="preserve"><value>Temperatura</value></data>
+  <data name="PrinterInfo.Interface" xml:space="preserve"><value>Estado da interface</value></data>
+  <data name="PrinterInfo.Unsupported" xml:space="preserve"><value>Não suportado ou sem resposta</value></data>
+  <data name="PrinterInfo.Source" xml:space="preserve"><value>Origem</value></data>
+  <data name="MainPage.CancelJob.Content"><value>Cancelar o trabalho de impressão atual</value></data>
+  <data name="MainPage.NoActiveJob" xml:space="preserve"><value>A impressora selecionada não tem nenhum trabalho de impressão ativo.</value></data>
+  <data name="MainPage.CancelJobFailed" xml:space="preserve"><value>Não foi possível cancelar o trabalho. Verifique a ligação à impressora e tente novamente.</value></data>
+  <data name="Network.Search"><value>Procurar impressoras</value></data>
+  <data name="Network.Device"><value>Selecione uma impressora detetada</value></data>
+  <data name="Network.DeviceHint"><value>A lista mostra o modelo e o endereço IP de cada impressora.</value></data>
+  <data name="Network.Searching"><value>A procurar impressoras Epson…</value></data>
+  <data name="Network.None"><value>Não foram encontrados dispositivos Epson na rede local.</value></data>
+  <data name="Network.Choose"><value>Escolha na lista</value></data>
+  <data name="Network.Manual"><value>Configurar manualmente</value></data>
+  <data name="Network.UnknownModel"><value>A impressora não indicou o respetivo modelo.</value></data>
+  <data name="Network.UnsupportedModel"><value>Este modelo não consta do catálogo de impressoras instalado.</value></data>
+  <data name="Network.RawUnavailable"><value>A impressora não aceitou a ligação na porta TCP 9100.</value></data>
+  <data name="Network.ChooseModel"><value>Selecione um modelo correspondente no catálogo.</value></data>
+  <data name="Network.SearchFailed"><value>A procura de impressoras de rede falhou.</value></data>
+  <data name="Network.AddressAssigned"><value>O endereço {0} já está atribuído a uma impressora pyToneRIP.</value></data>
+  <data name="Network.SearchHint"><value>Procure impressoras Epson na sua rede local.</value></data>
+  <data name="Network.FoundCount"><value>Impressoras encontradas: {0}</value></data>
+  <data name="Queue.Title"><value>Fila do Windows (RAW)</value></data>
+  <data name="Queue.Recommended"><value>Recomendado se o controlador oficial da Epson estiver instalado para esta impressora.</value></data>
+  <data name="Queue.RawDriverRequired"><value>Instale o controlador oficial da Epson para este modelo para imprimir a partir do pyToneRIP através da fila do Windows (RAW).</value></data>
+  <data name="Queue.Select"><value>Selecione uma fila Epson instalada</value></data>
+  <data name="Queue.Searching"><value>A procurar filas Epson no Windows…</value></data>
+  <data name="Queue.None"><value>Não foram encontradas filas Epson compatíveis no Windows.</value></data>
+  <data name="Queue.SearchFailed"><value>Não foi possível encontrar as filas de impressão do Windows.</value></data>
+  <data name="Queue.Assigned"><value>A fila do Windows {0} já está atribuída a uma impressora pyToneRIP.</value></data>
 </root>
